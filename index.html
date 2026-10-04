@@ -84,11 +84,11 @@
             <i class="fa-solid fa-circle-check"></i>
           </span>
           <div>
-            <div class="font-bold text-xs sm:text-sm text-emerald-900">ระบบเปิดรับส่งงานตามปกติ</div>
+            <div id="bannerTitle" class="font-bold text-xs sm:text-sm text-emerald-900">ระบบเปิดรับส่งงานตามปกติ</div>
             <div id="bannerSubtitle" class="text-[11px] text-emerald-700">หมดเขต: ประจำวัน 18:00 น. (ส่งช้าหัก 1 คะแนน)</div>
           </div>
         </div>
-        <div class="font-semibold px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs bg-emerald-100 text-emerald-800 border border-emerald-300">
+        <div id="bannerBadge" class="font-semibold px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs bg-emerald-100 text-emerald-800 border border-emerald-300">
           เปิดรับงาน
         </div>
       </div>
@@ -383,14 +383,17 @@
           <button onclick="setTeacherTab('students')" id="tabStudents" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">
             <i class="fa-solid fa-users mr-1 text-cyan-600"></i> จัดการ นศ. & PIN
           </button>
+          <button onclick="setTeacherTab('attendanceMaster')" id="tabAttendanceMaster" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">
+            <i class="fa-solid fa-clipboard-user mr-1 text-indigo-600"></i> บันทึก ขาด/ลา/สาย/ป่วย
+          </button>
           <button onclick="setTeacherTab('skillrpg')" id="tabSkillRpg" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">
             <i class="fa-solid fa-wand-magic-sparkles mr-1 text-amber-500"></i> มอบพลังหัตถการ (EXP)
           </button>
           <button onclick="setTeacherTab('att')" id="tabAtt" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">
             <i class="fa-solid fa-user-clock mr-1 text-rose-500"></i> เช็คอิน GPS & ภาพถ่าย
           </button>
-          <button onclick="setTeacherTab('hero')" id="tabHero" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">
-            <i class="fa-solid fa-crown mr-1 text-amber-500"></i> ให้คะแนน Hero
+          <button onclick="setTeacherTab('settings')" id="tabSettings" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">
+            <i class="fa-solid fa-sliders mr-1 text-indigo-600"></i> ตั้งค่าเปิด/ปิดระบบ
           </button>
         </div>
         <button onclick="lockTeacherAccess()" class="px-3 py-1 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs font-bold">
@@ -398,7 +401,7 @@
         </button>
       </div>
 
-      <!-- Tab: ตรวจ Care Plan 10 ข้อ -->
+      <!-- Tab 1: ตรวจ Care Plan 10 ข้อ -->
       <div id="teacherTabEval" class="glass-card rounded-2xl p-4 sm:p-5 space-y-3">
         <h3 class="font-bold text-xs sm:text-sm text-slate-800 flex items-center gap-1.5 border-b pb-2">
           <i class="fa-solid fa-file-pen text-indigo-600"></i> รายการงาน Care Plan ที่ส่งเข้ามาตรวจ
@@ -421,7 +424,7 @@
         </div>
       </div>
 
-      <!-- Tab: จัดการนักศึกษา & PIN (CRUD) -->
+      <!-- Tab 2: จัดการนักศึกษา & PIN (แก้ไขรหัส, ปรับสถานะ PDPA กลับ, ลบ) -->
       <div id="teacherTabStudents" class="hidden glass-card rounded-2xl p-4 sm:p-5 space-y-3">
         <div class="flex justify-between items-center border-b pb-2">
           <h3 class="font-bold text-xs sm:text-sm text-slate-800 flex items-center gap-1.5">
@@ -441,7 +444,7 @@
                 <th class="p-2 text-center">PIN</th>
                 <th class="p-2 text-center">Level</th>
                 <th class="p-2 text-center">PDPA</th>
-                <th class="p-2 text-center">แก้ไข/ลบ</th>
+                <th class="p-2 text-center">แก้ไข/รีเซ็ต/ลบ</th>
               </tr>
             </thead>
             <tbody id="teacherStudentTableBody" class="divide-y divide-slate-100"></tbody>
@@ -449,7 +452,48 @@
         </div>
       </div>
 
-      <!-- Tab: มอบพลังหัตถการ -->
+      <!-- Tab 3: อาจารย์เช็คชื่อ ขาด ลา มาสาย ป่วย -->
+      <div id="teacherTabAttendanceMaster" class="hidden glass-card rounded-2xl p-4 sm:p-5 space-y-4">
+        <h3 class="font-bold text-xs sm:text-sm text-slate-800 flex items-center gap-1.5 border-b pb-2">
+          <i class="fa-solid fa-user-check text-indigo-600"></i> บันทึก ขาด / ลา / มาสาย / ป่วย / ตรงเวลา โดยอาจารย์
+        </h3>
+        <form onsubmit="handleTeacherAttendanceSubmit(event)" class="max-w-md space-y-3 text-xs bg-slate-50/60 p-4 rounded-2xl border">
+          <div>
+            <label class="block font-semibold mb-1">เลือกนักศึกษา *</label>
+            <select id="teacherAttStuSelect" required class="w-full bg-white border rounded-xl p-2 font-medium"></select>
+          </div>
+          <div class="grid grid-cols-2 gap-2">
+            <div>
+              <label class="block font-semibold mb-1">วันที่ *</label>
+              <input type="date" id="teacherAttDate" required class="w-full bg-white border rounded-xl p-2">
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">เวลา</label>
+              <input type="time" id="teacherAttTime" class="w-full bg-white border rounded-xl p-2">
+            </div>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">สถานะ *</label>
+            <select id="teacherAttStatus" class="w-full bg-white border rounded-xl p-2 font-bold text-slate-800">
+              <option value="ตรงเวลา">ตรงเวลา (+1 โบนัสวินัย)</option>
+              <option value="สาย">มาสาย (หัก 2 คะแนน)</option>
+              <option value="ลา">ลากิจ</option>
+              <option value="ป่วย">ลาป่วย</option>
+              <option value="ขาด">ขาดการฝึก (หัก 5 คะแนน)</option>
+              <option value="ส่งงานช้า">ส่งงานช้า (หัก 1 คะแนน)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold mb-1">หมายเหตุ / เหตุผล</label>
+            <input type="text" id="teacherAttNote" placeholder="เช่น แจ้งลาป่วยล่วงหน้าพร้อมใบรับรองแพทย์" class="w-full bg-white border rounded-xl p-2">
+          </div>
+          <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-xs transition">
+            บันทึกสถานะการเข้าฝึก
+          </button>
+        </form>
+      </div>
+
+      <!-- Tab 4: มอบพลังหัตถการ -->
       <div id="teacherTabSkillRpg" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div class="lg:col-span-1 glass-card p-4 rounded-2xl space-y-3 text-xs">
           <h3 class="font-bold text-slate-800 flex items-center gap-1.5 border-b pb-2">
@@ -488,7 +532,7 @@
         </div>
       </div>
 
-      <!-- Tab: สถิติเวลา GPS & รูปถ่าย -->
+      <!-- Tab 5: สถิติเวลา GPS & รูปถ่าย -->
       <div id="teacherTabAtt" class="hidden glass-card rounded-2xl p-4 space-y-3">
         <h3 class="font-bold text-slate-800 text-xs sm:text-sm border-b pb-2">บันทึกเวลาปฏิบัติงาน, พิกัด GPS & ภาพถ่ายเช็คอิน</h3>
         <div class="overflow-x-auto mobile-scroll">
@@ -508,32 +552,58 @@
         </div>
       </div>
 
-      <!-- Tab: มอบคะแนน Hero -->
-      <div id="teacherTabHero" class="hidden glass-card rounded-2xl p-4 sm:p-5 space-y-3">
-        <h3 class="font-bold text-xs sm:text-sm text-amber-900 border-b pb-2">บันทึกคะแนนความดี Hero of Ward</h3>
-        <form onsubmit="handleHeroSubmit(event)" class="max-w-md space-y-2.5 text-xs">
-          <div>
-            <label class="block font-semibold mb-1">เลือกนักศึกษา *</label>
-            <select id="heroStudentSelect" required class="w-full bg-white border rounded-xl p-2"></select>
+      <!-- Tab 6: ตั้งค่าเปิด/ปิดระบบ & กำหนดเวลาเช็คอิน-ส่งงาน -->
+      <div id="teacherTabSettings" class="hidden glass-card rounded-2xl p-4 sm:p-5 space-y-4">
+        <h3 class="font-bold text-xs sm:text-sm text-slate-800 border-b pb-2 flex items-center gap-1.5">
+          <i class="fa-solid fa-clock-rotate-left text-indigo-600"></i> ควบคุมเวลาเปิด-ปิดเช็คอิน & รับส่งงาน & ซ่อนคะแนนเพื่อน
+        </h3>
+        <form onsubmit="handleSaveSettings(event)" class="max-w-xl space-y-3 text-xs bg-slate-50/60 p-4 rounded-2xl border">
+          <div class="p-3 bg-white rounded-xl border space-y-2">
+            <div class="font-bold text-slate-800 text-xs text-indigo-900 border-b pb-1">1. ระบบเช็คอิน ณ หอผู้ป่วย</div>
+            <div class="flex items-center justify-between">
+              <span>เปิดระบบเช็คอิน</span>
+              <input type="checkbox" id="settingCheckinEnabled" class="w-4 h-4 text-indigo-600 rounded">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block font-semibold mb-1">เวลาเริ่มเช็คอิน</label>
+                <input type="time" id="settingCheckinStart" value="07:00" class="w-full border rounded-lg p-1.5">
+              </div>
+              <div>
+                <label class="block font-semibold mb-1">เวลาสิ้นสุดเช็คอิน</label>
+                <input type="time" id="settingCheckinEnd" value="08:00" class="w-full border rounded-lg p-1.5">
+              </div>
+            </div>
           </div>
-          <div>
-            <label class="block font-semibold mb-1">เตียง / หอผู้ป่วย *</label>
-            <input type="text" id="heroBed" required placeholder="เช่น เตียง 4 วอร์ดอายุรกรรม" class="w-full bg-white border rounded-xl p-2">
+
+          <div class="p-3 bg-white rounded-xl border space-y-2">
+            <div class="font-bold text-slate-800 text-xs text-indigo-900 border-b pb-1">2. ระบบรับส่งงาน Care Plan</div>
+            <div class="flex items-center justify-between">
+              <span>เปิดรับส่งงานตามปกติ</span>
+              <input type="checkbox" id="settingWorkEnabled" class="w-4 h-4 text-indigo-600 rounded">
+            </div>
+            <div class="grid grid-cols-2 gap-2">
+              <div>
+                <label class="block font-semibold mb-1">วันที่หมดเขต (เว้นว่าง = ทุกวัน)</label>
+                <input type="date" id="settingDueDate" class="w-full border rounded-lg p-1.5">
+              </div>
+              <div>
+                <label class="block font-semibold mb-1">เวลาหมดเขตประจำวัน</label>
+                <input type="time" id="settingDueTime" value="18:00" class="w-full border rounded-lg p-1.5">
+              </div>
+            </div>
           </div>
-          <div>
-            <label class="block font-semibold mb-1">กิจกรรมความดี *</label>
-            <textarea id="heroActivity" rows="2" required placeholder="เช่น ช่วยพลิกตัวผู้ป่วยติดเตียงอย่างนุ่มนวล" class="w-full bg-white border rounded-xl p-2"></textarea>
+
+          <div class="p-3 bg-white rounded-xl border flex items-center justify-between">
+            <div>
+              <div class="font-bold text-slate-800">3. ซ่อนคะแนนเพื่อนร่วมรุ่น</div>
+              <div class="text-[10px] text-slate-500">นักศึกษาจะเห็นเฉพาะคะแนนของตัวเอง ไม่เห็นคะแนนเพื่อน</div>
+            </div>
+            <input type="checkbox" id="settingHidePeerScores" class="w-4 h-4 text-indigo-600 rounded">
           </div>
-          <div>
-            <label class="block font-semibold mb-1">คะแนนพิเศษ *</label>
-            <select id="heroPoints" class="w-full bg-white border rounded-xl p-2 font-bold text-amber-600">
-              <option value="3">+3 คะแนน</option>
-              <option value="5" selected>+5 คะแนน (Hero of Ward)</option>
-              <option value="10">+10 คะแนน</option>
-            </select>
-          </div>
-          <button type="submit" class="px-5 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded-xl shadow-xs">
-            บันทึกคะแนน Hero
+
+          <button type="submit" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-xs transition">
+            บันทึกการตั้งค่าทั้งหมด
           </button>
         </form>
       </div>
@@ -736,7 +806,6 @@
 
   <!-- SCRIPT LOGIC -->
   <script>
-    // ป้องกัน F12 และคลิกขวา
     document.addEventListener('contextmenu', e => e.preventDefault());
     document.addEventListener('keydown', e => {
       if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) {
@@ -768,6 +837,7 @@
     let currentViewMode = "personal";
     let isTeacherAuthenticated = false;
     let radarChart = null;
+    let currentSettingsCache = {};
 
     let cameraStream = null;
     let capturedPhotoBase64 = "";
@@ -787,6 +857,11 @@
     ];
 
     window.onload = function() {
+      const today = new Date().toISOString().split('T')[0];
+      const timeNow = new Date().toTimeString().slice(0, 5);
+      if (document.getElementById('teacherAttDate')) document.getElementById('teacherAttDate').value = today;
+      if (document.getElementById('teacherAttTime')) document.getElementById('teacherAttTime').value = timeNow;
+
       buildRubricUI();
       initRadarChart();
       initDashboard();
@@ -836,11 +911,36 @@
         const data = await apiGet("getDashboard", { studentId: currentStudentId, viewMode: currentViewMode });
         if (!data) return;
 
+        if (data.settings) {
+          currentSettingsCache = data.settings;
+          const banner = document.getElementById('studentSubmissionBanner');
+          const bTitle = document.getElementById('bannerTitle');
+          const bSub = document.getElementById('bannerSubtitle');
+          const bBadge = document.getElementById('bannerBadge');
+
+          if (data.settings.enabled) {
+            bTitle.textContent = "ระบบเปิดรับส่งงานตามปกติ";
+            bSub.textContent = `หมดเขต: ${data.settings.dueDate ? data.settings.dueDate + ' ' : 'ประจำวัน '}${data.settings.dueTime || '18:00'} น. (ส่งช้าหัก ${data.settings.lateDeduction} คะแนน)`;
+            bBadge.textContent = "เปิดรับงาน";
+            bBadge.className = "font-semibold px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs bg-emerald-100 text-emerald-800 border border-emerald-300";
+          } else {
+            bTitle.textContent = "อาจารย์ปิดระบบรับส่งงานแล้ว";
+            bSub.textContent = "ไม่สามารถส่งงาน Care Plan ใหม่ได้ในขณะนี้";
+            bBadge.textContent = "ปิดรับงาน";
+            bBadge.className = "font-semibold px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs bg-rose-100 text-rose-800 border border-rose-300";
+          }
+        }
+
         if (data.students) {
           const select = document.getElementById('studentSelect');
           select.innerHTML = data.students.map(s => `
             <option value="${s.studentId}" ${s.studentId === currentStudentId ? 'selected' : ''}>${s.name} (${s.ward || 'วอร์ดอายุรกรรม'})</option>
           `).join('');
+
+          const tAttSel = document.getElementById('teacherAttStuSelect');
+          if (tAttSel) {
+            tAttSel.innerHTML = data.students.map(s => `<option value="${s.studentId}">${s.name} (${s.ward || 'วอร์ดอายุรกรรม'})</option>`).join('');
+          }
         }
 
         if (data.studentInfo) {
@@ -868,6 +968,7 @@
         document.getElementById('statPassedSkills').textContent = skills.filter(k => k.result === 'ผ่าน').length;
         document.getElementById('statTotalSkills').textContent = skills.length;
 
+        // ตารางประวัติเข้าเวร
         document.getElementById('studentAttTableBody').innerHTML = att.length === 0 ? '<tr><td colspan="4" class="p-3 text-center text-slate-400">ไม่มีข้อมูล</td></tr>' : att.map(a => `
           <tr class="hover:bg-slate-50">
             <td class="py-1.5 text-[11px] whitespace-nowrap text-slate-500">${a.date} ${a.time}</td>
@@ -877,6 +978,7 @@
           </tr>
         `).join('');
 
+        // ตารางประเมินหัตถการ
         document.getElementById('studentSkillTableBody').innerHTML = skills.length === 0 ? '<tr><td colspan="4" class="p-3 text-center text-slate-400">ไม่มีข้อมูล</td></tr>' : skills.map(k => `
           <tr class="hover:bg-slate-50">
             <td class="py-1.5 text-[11px]">${k.date}</td>
@@ -886,6 +988,7 @@
           </tr>
         `).join('');
 
+        // ตารางทำเนียบ Hero (รองรับซ่อนคะแนนเพื่อนร่วมรุ่น)
         const deeds = data.deeds || [];
         const leaderboardMap = {};
         (data.students || []).forEach(s => {
@@ -896,15 +999,24 @@
         });
         const leaderboard = Object.values(leaderboardMap).sort((a,b) => b.heroScore - a.heroScore);
 
-        document.getElementById('heroLeaderboardBody').innerHTML = leaderboard.map((lb, idx) => `
-          <tr class="hover:bg-amber-100/50 ${lb.studentId === currentStudentId ? 'bg-amber-100/70 font-bold' : ''}">
-            <td class="py-1.5 text-center font-bold">${idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : idx + 1))}</td>
-            <td class="py-1.5 text-[11px] text-slate-800 truncate max-w-[110px]">${lb.name}</td>
-            <td class="py-1.5 text-center font-extrabold text-amber-600 text-[11px]">+${lb.heroScore}</td>
-            <td class="py-1.5 text-center text-slate-600 text-[11px]">${lb.punctualityScore}</td>
-          </tr>
-        `).join('');
+        const hidePeer = currentSettingsCache.hidePeerScores === true;
 
+        document.getElementById('heroLeaderboardBody').innerHTML = leaderboard.map((lb, idx) => {
+          const isMe = lb.studentId === currentStudentId;
+          const scoreDisplay = (!hidePeer || isMe) ? `+${lb.heroScore}` : '***';
+          const punctDisplay = (!hidePeer || isMe) ? lb.punctualityScore : '***';
+
+          return `
+            <tr class="hover:bg-amber-100/50 ${isMe ? 'bg-amber-100/70 font-bold' : ''}">
+              <td class="py-1.5 text-center font-bold">${idx === 0 ? '🥇' : (idx === 1 ? '🥈' : (idx === 2 ? '🥉' : idx + 1))}</td>
+              <td class="py-1.5 text-[11px] text-slate-800 truncate max-w-[110px]">${lb.name}</td>
+              <td class="py-1.5 text-center font-extrabold text-amber-600 text-[11px]">${scoreDisplay}</td>
+              <td class="py-1.5 text-center text-slate-600 text-[11px]">${punctDisplay}</td>
+            </tr>
+          `;
+        }).join('');
+
+        // ตาราง Care Plan
         document.getElementById('studentWorkTableBody').innerHTML = works.length === 0 ? '<tr><td colspan="7" class="p-4 text-center text-slate-400">ยังไม่มีประวัติการส่งงาน</td></tr>' : works.map(w => {
           let resubmitBtn = w.status === 'ต้องแก้ไข' ? `<button onclick="openResubmitModal('${w.workId}')" class="px-2 py-0.5 bg-orange-500 text-white rounded text-[10px] font-bold">ส่งแก้</button>` : '-';
           let fileLink = w.fileUrl ? `<a href="${w.fileUrl}" target="_blank" class="text-indigo-600 font-semibold underline">ไฟล์งาน</a>` : '-';
@@ -972,26 +1084,28 @@
       await apiPost("acceptPDPA", { studentId: currentStudentId });
       document.getElementById('pdpaModal').classList.add('hidden');
       Swal.fire({ icon: 'success', title: 'ยินดีต้อนรับสู่ระบบฝึกปฏิบัติ' });
+      initDashboard();
     }
 
+    // ล็อกอินนักศึกษา: ใส่แค่ "รหัส PIN" ได้ทันที!
     function promptStudentLoginModal() {
       Swal.fire({
         title: 'เข้าสู่ระบบนักศึกษา',
         html: `
-          <input type="text" id="swalStuId" class="swal2-input" placeholder="รหัสนักศึกษา เช่น STU-01">
-          <input type="password" id="swalPin" class="swal2-input" placeholder="รหัส PIN (เริ่มต้น: 1234)">
+          <p class="text-xs text-slate-500 mb-3">กรอกรหัส PIN ประจำตัวเพื่อเข้าใช้งานระบบ</p>
+          <input type="password" id="swalPinOnly" class="swal2-input" placeholder="กรอกรหัส PIN (เช่น 1234 หรือ 4 ตัวท้าย)">
         `,
         confirmButtonText: 'เข้าสู่ระบบ',
         showCancelButton: true,
         confirmButtonColor: '#4f46e5',
+        focusConfirm: false,
         preConfirm: async () => {
-          const sid = document.getElementById('swalStuId').value.trim();
-          const pin = document.getElementById('swalPin').value.trim();
-          if (!sid || !pin) {
-            Swal.showValidationMessage('กรุณากรอกรหัสและ PIN');
+          const pin = document.getElementById('swalPinOnly').value.trim();
+          if (!pin) {
+            Swal.showValidationMessage('กรุณากรอกรหัส PIN');
             return false;
           }
-          const res = await apiPost("verifyLogin", { studentId: sid, pin: pin });
+          const res = await apiPost("loginByPinOnly", { pin: pin });
           if (!res.success) {
             Swal.showValidationMessage(res.message);
             return false;
@@ -999,7 +1113,7 @@
           return res.student;
         }
       }).then(r => {
-        if (r.isConfirmed) {
+        if (r.isConfirmed && r.value) {
           currentStudentId = r.value.studentId;
           Swal.fire({ icon: 'success', title: 'ยินดีต้อนรับ ' + r.value.name, timer: 1200, showConfirmButton: false });
           initDashboard();
@@ -1236,7 +1350,7 @@
     }
 
     function setTeacherTab(tab) {
-      ['eval', 'students', 'skillrpg', 'att', 'hero'].forEach(t => {
+      ['eval', 'students', 'attendanceMaster', 'skillrpg', 'att', 'settings'].forEach(t => {
         const el = document.getElementById('teacherTab' + t.charAt(0).toUpperCase() + t.slice(1));
         if (el) el.classList.add('hidden');
         const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
@@ -1252,6 +1366,7 @@
       setTeacherTab('eval');
       const data = await apiGet("getDashboard", { studentId: currentStudentId, viewMode: "all" });
       
+      // 1. ตารางงาน Care Plan
       document.getElementById('teacherWorkTableBody').innerHTML = (data.works || []).map(w => `
         <tr class="hover:bg-slate-50 transition">
           <td class="p-2 font-bold text-slate-800">${w.studentName}</td>
@@ -1272,6 +1387,8 @@
         </tr>
       `).join('');
 
+      // 2. ตารางนักศึกษา (มีปุ่มแก้ไขรหัส, รีเซ็ต PDPA, ลบ)
+      window.teacherStudentListCache = data.students || [];
       document.getElementById('teacherStudentTableBody').innerHTML = (data.students || []).map(s => `
         <tr class="hover:bg-slate-50 transition">
           <td class="p-2 font-bold text-indigo-900">${s.studentId}</td>
@@ -1280,16 +1397,27 @@
           <td class="p-2 text-center font-bold text-rose-600"><span class="px-1.5 py-0.5 bg-rose-50 border border-rose-200 rounded">${s.pin}</span></td>
           <td class="p-2 text-center font-bold text-purple-700">Lv.${s.level}</td>
           <td class="p-2 text-center">${s.pdpaAccepted ? '<span class="text-emerald-600 font-bold">ยินยอม</span>' : '<span class="text-slate-400">ยังไม่กดยินยอม</span>'}</td>
-          <td class="p-2 text-center whitespace-nowrap">
-            <button onclick="deleteStudent('${s.studentId}')" class="text-rose-600 font-bold hover:underline">ลบ</button>
+          <td class="p-2 text-center whitespace-nowrap space-x-1">
+            <button onclick="openEditStudentFullModal('${s.studentId}')" class="px-2 py-0.5 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded text-[11px] font-bold hover:bg-indigo-100">
+              <i class="fa-solid fa-pen-to-square"></i> แก้ไข/รีเซ็ต
+            </button>
+            <button onclick="deleteStudent('${s.studentId}')" class="px-2 py-0.5 bg-rose-50 border border-rose-200 text-rose-600 rounded text-[11px] font-bold hover:bg-rose-100">
+              ลบ
+            </button>
           </td>
         </tr>
       `).join('');
 
+      // Dropdown เลือก นศ.
       document.getElementById('grantStudentSelect').innerHTML = (data.students || []).map(s => `<option value="${s.studentId}">${s.name} (${s.ward})</option>`).join('');
-      document.getElementById('heroStudentSelect').innerHTML = (data.students || []).map(s => `<option value="${s.studentId}">${s.name} (${s.ward})</option>`).join('');
       document.getElementById('grantSkillSelect').innerHTML = (data.skills || []).map(sk => `<option value="${sk.name}">${sk.name} (+${sk.exp} EXP)</option>`).join('');
 
+      const tAttSel = document.getElementById('teacherAttStuSelect');
+      if (tAttSel) {
+        tAttSel.innerHTML = (data.students || []).map(s => `<option value="${s.studentId}">${s.name} (${s.ward})</option>`).join('');
+      }
+
+      // คลังหัตถการ
       document.getElementById('catalogListContainer').innerHTML = (data.skills || []).map(sk => `
         <div class="p-2.5 bg-slate-50 rounded-xl border flex justify-between items-center shadow-xs">
           <div><div class="font-bold text-slate-800 text-xs">${sk.name}</div><div class="text-[10px] text-slate-400">${sk.category}</div></div>
@@ -1297,6 +1425,7 @@
         </div>
       `).join('');
 
+      // บันทึกเวลา GPS & ภาพถ่าย
       document.getElementById('allAttTableBody').innerHTML = (data.attendances || []).map(a => {
         let photoBtn = a.photoUrl ? `<a href="${a.photoUrl}" target="_blank" class="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-bold rounded border border-emerald-200 hover:bg-emerald-100"><i class="fa-solid fa-image mr-1"></i>ดูรูปถ่าย</a>` : '<span class="text-slate-300">-</span>';
         return `
@@ -1310,6 +1439,118 @@
           </tr>
         `;
       }).join('');
+
+      // โหลดการตั้งค่าระบบ
+      if (data.settings) {
+        document.getElementById('settingCheckinEnabled').checked = data.settings.checkinEnabled !== false;
+        document.getElementById('settingCheckinStart').value = data.settings.checkinStartTime || "07:00";
+        document.getElementById('settingCheckinEnd').value = data.settings.checkinEndTime || "08:00";
+        document.getElementById('settingWorkEnabled').checked = data.settings.enabled !== false;
+        document.getElementById('settingDueDate').value = data.settings.dueDate || "";
+        document.getElementById('settingDueTime').value = data.settings.dueTime || "18:00";
+        document.getElementById('settingHidePeerScores').checked = data.settings.hidePeerScores === true;
+      }
+    }
+
+    // Modal แก้ไขข้อมูล นศ. แบบเต็มรูปแบบ (แก้ไขรหัส PIN และรีเซ็ต PDPA)
+    function openEditStudentFullModal(studentId) {
+      const student = (window.teacherStudentListCache || []).find(s => s.studentId === studentId);
+      if (!student) return;
+
+      Swal.fire({
+        title: `แก้ไขข้อมูล ${student.studentId}`,
+        html: `
+          <div class="space-y-2 text-left text-xs">
+            <div>
+              <label class="block font-semibold mb-1">ชื่อ-นามสกุล *</label>
+              <input type="text" id="editStuName" class="w-full border p-2 rounded-xl" value="${student.name}">
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">หอผู้ป่วย/วอร์ด *</label>
+              <input type="text" id="editStuWard" class="w-full border p-2 rounded-xl" value="${student.ward}">
+            </div>
+            <div>
+              <label class="block font-semibold mb-1">รหัส PIN เข้าสู่ระบบ *</label>
+              <input type="text" id="editStuPin" class="w-full border p-2 rounded-xl font-bold text-rose-600" value="${student.pin}">
+            </div>
+            <div class="p-2.5 bg-amber-50 rounded-xl border border-amber-200 flex items-center justify-between">
+              <div>
+                <div class="font-bold text-amber-900">สถานะการยินยอม PDPA</div>
+                <div class="text-[10px] text-amber-700">ปรับเป็น "ยังไม่กดยินยอม" เพื่อให้นักศึกษาเข้ามาเจอและกดยอมรับใหม่</div>
+              </div>
+              <select id="editStuPdpa" class="border rounded-lg p-1 font-bold text-xs">
+                <option value="false" ${!student.pdpaAccepted ? 'selected' : ''}>ยังไม่ยินยอม (รีเซ็ต)</option>
+                <option value="true" ${student.pdpaAccepted ? 'selected' : ''}>ยินยอมแล้ว</option>
+              </select>
+            </div>
+          </div>
+        `,
+        confirmButtonText: 'บันทึกการแก้ไข',
+        showCancelButton: true,
+        confirmButtonColor: '#4f46e5',
+        focusConfirm: false,
+        preConfirm: () => {
+          return {
+            studentId: student.studentId,
+            name: document.getElementById('editStuName').value.trim(),
+            ward: document.getElementById('editStuWard').value.trim(),
+            pin: document.getElementById('editStuPin').value.trim(),
+            pdpaAccepted: document.getElementById('editStuPdpa').value === 'true'
+          };
+        }
+      }).then(async r => {
+        if (r.isConfirmed && r.value) {
+          Swal.fire({ title: 'กำลังบันทึก...', didOpen: () => Swal.showLoading(), allowOutsideClick: false });
+          const res = await apiPost("updateStudentFull", r.value);
+          Swal.fire({ icon: res.success ? 'success' : 'error', title: res.message });
+          loadTeacherData();
+        }
+      });
+    }
+
+    // อาจารย์บันทึก ขาด ลา มาสาย ป่วย
+    async function handleTeacherAttendanceSubmit(e) {
+      e.preventDefault();
+      const select = document.getElementById('teacherAttStuSelect');
+      const studentId = select.value;
+      const studentName = select.options[select.selectedIndex].text.split(' (')[0];
+      const date = document.getElementById('teacherAttDate').value;
+      const time = document.getElementById('teacherAttTime').value;
+      const status = document.getElementById('teacherAttStatus').value;
+      const note = document.getElementById('teacherAttNote').value;
+
+      Swal.fire({ title: 'กำลังบันทึก...', didOpen: () => Swal.showLoading(), allowOutsideClick: false });
+
+      const res = await apiPost("teacherRecordAttendance", {
+        studentId: studentId,
+        studentName: studentName,
+        date: date,
+        time: time,
+        status: status,
+        note: note
+      });
+
+      Swal.fire({ icon: res.success ? 'success' : 'error', title: res.message });
+      loadTeacherData();
+    }
+
+    // อาจารย์บันทึกตั้งค่าระบบ
+    async function handleSaveSettings(e) {
+      e.preventDefault();
+      const payload = {
+        checkinEnabled: document.getElementById('settingCheckinEnabled').checked,
+        checkinStartTime: document.getElementById('settingCheckinStart').value,
+        checkinEndTime: document.getElementById('settingCheckinEnd').value,
+        enabled: document.getElementById('settingWorkEnabled').checked,
+        dueDate: document.getElementById('settingDueDate').value,
+        dueTime: document.getElementById('settingDueTime').value,
+        hidePeerScores: document.getElementById('settingHidePeerScores').checked
+      };
+
+      Swal.fire({ title: 'กำลังบันทึกการตั้งค่า...', didOpen: () => Swal.showLoading(), allowOutsideClick: false });
+      const res = await apiPost("updateSettings", payload);
+      Swal.fire({ icon: 'success', title: res.message });
+      loadTeacherData();
     }
 
     function openEvalCarePlanModal(workId, studentId) {
@@ -1376,22 +1617,6 @@
       loadTeacherData();
     }
 
-    async function handleHeroSubmit(e) {
-      e.preventDefault();
-      const sSelect = document.getElementById('heroStudentSelect');
-      const studentId = sSelect.value;
-      const studentName = sSelect.options[sSelect.selectedIndex].text.split(' (')[0];
-      const bed = document.getElementById('heroBed').value;
-      const activity = document.getElementById('heroActivity').value;
-      const points = Number(document.getElementById('heroPoints').value) || 5;
-
-      const res = await apiPost("recordGoodDeed", { studentId, studentName, bed, activity, points });
-      Swal.fire({ icon: 'success', title: res.message });
-      document.getElementById('heroBed').value = '';
-      document.getElementById('heroActivity').value = '';
-      loadTeacherData();
-    }
-
     function openAddStudentModal() {
       Swal.fire({
         title: 'เพิ่มนักศึกษาใหม่ (รุ่น 34)',
@@ -1407,7 +1632,7 @@
             </div>
             <div>
               <label class="block font-semibold mb-1">หอผู้ป่วย/วอร์ด *</label>
-              <input type="text" id="addStuWard" class="w-full border p-2 rounded-xl" placeholder="เช่น อายุรกรรมหญิง">
+              <input type="text" id="addStuWard" class="w-full border p-2 rounded-xl" placeholder="เช่น รพ.อุทัยธานี">
             </div>
             <div>
               <label class="block font-semibold mb-1">รหัส PIN เข้าสู่ระบบ</label>
