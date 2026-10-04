@@ -111,9 +111,10 @@
             <div class="text-[9px] text-emerald-600 font-semibold">ตรงต่อเวลา</div>
           </div>
 
+          <!-- ปุ่มเปิดกล้องเช็คอิน ณ หอผู้ป่วย -->
           <button onclick="openCheckInModal()" class="px-4 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-xs rounded-2xl shadow-md hover:opacity-95 transition flex flex-col items-center justify-center">
-            <i class="fa-solid fa-location-dot text-base mb-1"></i>
-            <span>Check-in เวร</span>
+            <i class="fa-solid fa-camera text-base mb-1 animate-bounce"></i>
+            <span>เช็คอิน + ถ่ายรูป ณ วอร์ด</span>
           </button>
         </div>
       </div>
@@ -197,7 +198,7 @@
             <i class="fa-solid fa-wand-magic-sparkles mr-1 text-amber-500"></i> มอบพลังหัตถการ (EXP)
           </button>
           <button onclick="setTeacherTab('att')" id="tabAtt" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">
-            <i class="fa-solid fa-user-clock mr-1 text-rose-500"></i> ขาด/ลา/สาย/ส่งช้า
+            <i class="fa-solid fa-user-clock mr-1 text-rose-500"></i> เช็คอิน GPS & รูปถ่าย
           </button>
           <button onclick="setTeacherTab('settings')" id="tabSettings" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">
             <i class="fa-solid fa-sliders mr-1 text-indigo-600"></i> ตั้งค่าระบบ
@@ -298,17 +299,18 @@
         </div>
       </div>
 
-      <!-- Tab: สถิติเวลา & ขาดลามาสาย -->
+      <!-- Tab: สถิติเวลา & เช็คอิน GPS/รูปถ่าย -->
       <div id="teacherTabAtt" class="hidden glass-card rounded-3xl p-4 space-y-3">
-        <h3 class="font-bold text-slate-800 text-xs sm:text-sm border-b pb-2">บันทึกเวลาปฏิบัติงาน & การส่งงานช้าทั้งหมด</h3>
+        <h3 class="font-bold text-slate-800 text-xs sm:text-sm border-b pb-2">บันทึกเวลาปฏิบัติงาน, พิกัด GPS & ภาพถ่ายเช็คอิน</h3>
         <div class="overflow-x-auto mobile-scroll">
-          <table class="w-full text-xs text-left min-w-[500px]">
+          <table class="w-full text-xs text-left min-w-[650px]">
             <thead>
               <tr class="bg-indigo-50/70 text-indigo-900 border-b">
                 <th class="p-2">วันที่-เวลา</th>
                 <th class="p-2">นักศึกษา</th>
                 <th class="p-2">สถานะ</th>
-                <th class="p-2">คะแนนวินัย</th>
+                <th class="p-2">พิกัด GPS</th>
+                <th class="p-2 text-center">รูปเช็คอิน</th>
                 <th class="p-2">หมายเหตุ</th>
               </tr>
             </thead>
@@ -358,7 +360,7 @@
         </div>
       </div>
       <div class="text-xs text-slate-600 max-h-48 overflow-y-auto space-y-2 p-3 bg-slate-50 rounded-2xl border leading-relaxed">
-        <p>ระบบนี้จัดทำขึ้นเพื่อการจัดการเรียนการสอนและการฝึกปฏิบัติการพยาบาล ข้อมูลการเข้าเวร คะแนน ผลการประเมิน Care Plan และภาพถ่ายการปฏิบัติงานจะถูกจัดเก็บเป็นความลับเพื่อใช้ในการประเมินผลการศึกษาตามหลักสูตรเท่านั้น</p>
+        <p>ระบบนี้จัดทำขึ้นเพื่อการจัดการเรียนการสอนและการฝึกปฏิบัติการพยาบาล ข้อมูลการเข้าเวร พิกัด GPS ภาพถ่ายเช็คอิน คะแนน ผลการประเมิน Care Plan จะถูกจัดเก็บเป็นความลับเพื่อใช้ในการประเมินผลการศึกษาตามหลักสูตรเท่านั้น</p>
         <p class="font-semibold text-indigo-800">ผู้ดูแลระบบ: อาจารย์ นันตพร ทองเต็ม (nuntabhorn@bcnchainat.ac.th)</p>
       </div>
       <div class="flex items-center gap-2 text-xs">
@@ -371,14 +373,50 @@
     </div>
   </div>
 
-  <!-- Modal 2: Check-in ปฏิบัติงาน -->
-  <div id="checkInModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-3 shadow-2xl">
+  <!-- Modal 2: เช็คอิน ณ หอผู้ป่วย (พร้อมกล้องถ่ายรูป & พิกัด GPS) -->
+  <div id="checkInModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-3 shadow-2xl max-h-[95vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-2">
-        <h3 class="font-bold text-xs sm:text-sm text-slate-800"><i class="fa-solid fa-clock text-emerald-600 mr-1"></i>ลงเวลาปฏิบัติงาน</h3>
-        <button onclick="closeModal('checkInModal')" class="text-slate-400 hover:text-slate-600">&times;</button>
+        <h3 class="font-bold text-xs sm:text-sm text-slate-800 flex items-center gap-1.5">
+          <i class="fa-solid fa-camera text-emerald-600"></i>
+          <span>เช็คอิน ณ หอผู้ป่วย (GPS + ภาพสด)</span>
+        </h3>
+        <button onclick="closeCheckInModal()" class="text-slate-400 hover:text-slate-600">&times;</button>
       </div>
+      
       <form onsubmit="handleAttendanceCheckIn(event)" class="space-y-3 text-xs">
+        <!-- กล้องและภาพถ่าย -->
+        <div class="space-y-1.5 text-center">
+          <div class="relative w-full h-48 bg-slate-100 rounded-2xl overflow-hidden border border-slate-200 flex items-center justify-center">
+            <video id="cameraVideo" autoplay playsinline class="w-full h-full object-cover"></video>
+            <canvas id="cameraCanvas" class="hidden"></canvas>
+            <img id="photoPreview" class="hidden w-full h-full object-cover">
+            <div id="cameraLoading" class="absolute inset-0 bg-black/40 text-white flex flex-col items-center justify-center text-xs">
+              <i class="fa-solid fa-circle-notch fa-spin text-xl mb-1"></i>
+              <span>กำลังเปิดกล้อง...</span>
+            </div>
+          </div>
+          <div class="flex gap-2">
+            <button type="button" onclick="capturePhoto()" id="btnCapture" class="flex-1 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-bold shadow-xs flex items-center justify-center gap-1">
+              <i class="fa-solid fa-camera"></i> กดถ่ายรูปเช็คอิน
+            </button>
+            <button type="button" onclick="retakePhoto()" id="btnRetake" class="hidden flex-1 py-1.5 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-xl font-bold flex items-center justify-center gap-1">
+              <i class="fa-solid fa-rotate-right"></i> ถ่ายใหม่
+            </button>
+          </div>
+        </div>
+
+        <!-- พิกัด GPS -->
+        <div class="bg-indigo-50/60 p-2.5 rounded-xl border border-indigo-100 flex items-center justify-between">
+          <div>
+            <div class="font-bold text-indigo-900 text-[11px]"><i class="fa-solid fa-location-crosshairs mr-1"></i>พิกัด GPS ประจำวอร์ด</div>
+            <div id="gpsCoordsText" class="text-[10px] text-slate-500">กำลังค้นหาตำแหน่ง...</div>
+          </div>
+          <button type="button" onclick="getCurrentLocation()" class="px-2 py-1 bg-white border border-indigo-200 rounded-lg text-[10px] font-bold text-indigo-700 shadow-xs">
+            รีเฟรช GPS
+          </button>
+        </div>
+
         <div>
           <label class="block font-semibold mb-1">สถานะวันนี้ *</label>
           <select id="attStatus" class="w-full bg-white border border-slate-200 rounded-xl p-2 font-bold text-slate-700">
@@ -390,12 +428,14 @@
             <option value="ขาด">ขาดการฝึก</option>
           </select>
         </div>
+
         <div>
           <label class="block font-semibold mb-1">หมายเหตุเพิ่มเติม</label>
-          <input type="text" id="attNote" placeholder="เช่น รายงานตัวขึ้นฝึกเวรเช้า" class="w-full bg-white border border-slate-200 rounded-xl p-2">
+          <input type="text" id="attNote" placeholder="เช่น รายงานตัวขึ้นฝึกเวรเช้า ณ วอร์ดอายุรกรรม" class="w-full bg-white border border-slate-200 rounded-xl p-2">
         </div>
-        <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-xs">
-          ยืนยันการลงเวลา
+
+        <button type="submit" id="btnSubmitCheckin" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-xs transition flex items-center justify-center gap-1">
+          <i class="fa-solid fa-check"></i> บันทึกเช็คอิน ณ หอผู้ป่วย
         </button>
       </form>
     </div>
@@ -514,8 +554,8 @@
       }
     });
 
-    // ** นำ URL Web App ของ Apps Script มาวางแทนที่ตรงนี้ **
-    const API_URL = "https://script.google.com/macros/s/AKfycbxRNWqQxKahQ3r5GBrapnNywBxq5ok7iVUewOXrBUBXezJMpi7Ai1zC3P2ua98N6mlQ/exec";
+    // ** ใส่ Web App URL ของ Apps Script (ลงท้ายด้วย /exec) ที่นี่ **
+    const API_URL = "https://script.google.com/macros/s/AKfycbxXQG2aY3T_-cRki4ArFSWLJ2e-CUFmRKYN4rRkdVj_h4g2qIVBIc9XXVXyzOLzwOYE/exec";
     const ADMIN_EMAIL = "nuntabhorn@bcnchainat.ac.th";
 
     async function apiGet(action, params = {}) {
@@ -537,6 +577,11 @@
     let currentStudentId = "STU-01";
     let isTeacherAuthenticated = false;
     let radarChart = null;
+
+    // ตัวแปรกล้องและ GPS
+    let cameraStream = null;
+    let capturedPhotoBase64 = "";
+    let currentGpsCoords = "";
 
     const CARE_PLAN_CRITERIA = [
       "1. การรวบรวมข้อมูล",
@@ -697,24 +742,124 @@
       });
     }
 
-    function openCheckInModal() { document.getElementById('checkInModal').classList.remove('hidden'); }
-    function openSubmitWorkModal() { document.getElementById('submitWorkModal').classList.remove('hidden'); }
-    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+    // ========================================================
+    // ฟังก์ชันกล้องและ GPS เช็คอิน ณ หอผู้ป่วย
+    // ========================================================
+    async function openCheckInModal() {
+      document.getElementById('checkInModal').classList.remove('hidden');
+      retakePhoto();
+      getCurrentLocation();
+      await startCamera();
+    }
+
+    function closeCheckInModal() {
+      stopCamera();
+      document.getElementById('checkInModal').classList.add('hidden');
+    }
+
+    async function startCamera() {
+      const video = document.getElementById('cameraVideo');
+      const loading = document.getElementById('cameraLoading');
+      loading.classList.remove('hidden');
+      try {
+        cameraStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: "user", width: { ideal: 640 }, height: { ideal: 480 } },
+          audio: false
+        });
+        video.srcObject = cameraStream;
+        loading.classList.add('hidden');
+      } catch(err) {
+        loading.innerHTML = '<span class="text-rose-300 text-xs p-2">ไม่สามารถเปิดกล้องได้ กรุณาอนุญาตสิทธิ์การเข้าถึงกล้อง</span>';
+      }
+    }
+
+    function stopCamera() {
+      if (cameraStream) {
+        cameraStream.getTracks().forEach(track => track.stop());
+        cameraStream = null;
+      }
+    }
+
+    function capturePhoto() {
+      const video = document.getElementById('cameraVideo');
+      const canvas = document.getElementById('cameraCanvas');
+      const preview = document.getElementById('photoPreview');
+      
+      canvas.width = video.videoWidth || 640;
+      canvas.height = video.videoHeight || 480;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      
+      capturedPhotoBase64 = canvas.toDataURL('image/jpeg', 0.8);
+      preview.src = capturedPhotoBase64;
+      preview.classList.remove('hidden');
+      video.classList.add('hidden');
+      
+      document.getElementById('btnCapture').classList.add('hidden');
+      document.getElementById('btnRetake').classList.remove('hidden');
+      stopCamera();
+    }
+
+    function retakePhoto() {
+      capturedPhotoBase64 = "";
+      const video = document.getElementById('cameraVideo');
+      const preview = document.getElementById('photoPreview');
+      preview.classList.add('hidden');
+      video.classList.remove('hidden');
+      document.getElementById('btnCapture').classList.remove('hidden');
+      document.getElementById('btnRetake').classList.add('hidden');
+      startCamera();
+    }
+
+    function getCurrentLocation() {
+      const gpsText = document.getElementById('gpsCoordsText');
+      gpsText.textContent = "กำลังค้นหาพิกัด...";
+      if ("geolocation" in navigator) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            currentGpsCoords = `${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
+            gpsText.innerHTML = `<span class="text-emerald-700 font-bold">${currentGpsCoords}</span> (ระบุพิกัดสำเร็จ)`;
+          },
+          (err) => {
+            currentGpsCoords = "ไม่สามารถระบุพิกัดได้";
+            gpsText.textContent = "ระบุพิกัดไม่สำเร็จ (กรุณาเปิด GPS)";
+          },
+          { enableHighAccuracy: true, timeout: 8000 }
+        );
+      } else {
+        currentGpsCoords = "อุปกรณ์ไม่รองรับ GPS";
+        gpsText.textContent = currentGpsCoords;
+      }
+    }
 
     async function handleAttendanceCheckIn(e) {
       e.preventDefault();
+      if (!capturedPhotoBase64) {
+        Swal.fire({ icon: 'warning', title: 'กรุณาถ่ายรูปเช็คอิน', text: 'ต้องมีภาพถ่ายตนเอง ณ หอผู้ป่วยเพื่อยืนยันการขึ้นฝึก' });
+        return;
+      }
+
       const status = document.getElementById('attStatus').value;
       const note = document.getElementById('attNote').value;
+
+      Swal.fire({ title: 'กำลังบันทึกเช็คอิน...', didOpen: () => Swal.showLoading(), allowOutsideClick: false });
+
       const res = await apiPost("checkInAttendance", {
         studentId: currentStudentId,
         studentName: document.getElementById('displayStudentName').textContent,
         status: status,
-        note: note
+        note: note,
+        coords: currentGpsCoords,
+        photoBase64: capturedPhotoBase64
       });
-      closeModal('checkInModal');
-      Swal.fire({ icon: 'success', title: res.message });
+
+      closeCheckInModal();
+      Swal.fire({ icon: res.success ? 'success' : 'error', title: res.message });
       initDashboard();
     }
+
+    function openSubmitWorkModal() { document.getElementById('submitWorkModal').classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
     function handleWorkSubmit(e) {
       e.preventDefault();
@@ -829,63 +974,83 @@
 
     function setTeacherTab(tab) {
       ['eval', 'students', 'skillrpg', 'att', 'settings'].forEach(t => {
-        document.getElementById('teacherTab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('hidden');
+        const el = document.getElementById('teacherTab' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (el) el.classList.add('hidden');
+        const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+        if (btn) btn.className = "px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition";
       });
-      document.getElementById('teacherTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
+      const curTab = document.getElementById('teacherTab' + tab.charAt(0).toUpperCase() + tab.slice(1));
+      if (curTab) curTab.classList.remove('hidden');
+      const curBtn = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
+      if (curBtn) curBtn.className = "px-3 py-1.5 text-xs font-semibold rounded-xl bg-indigo-600 text-white shadow-xs transition";
     }
 
     async function loadTeacherData() {
+      setTeacherTab('eval');
       const data = await apiGet("getDashboard", { studentId: currentStudentId, viewMode: "all" });
       
-      document.getElementById('teacherWorkTableBody').innerHTML = data.works.map(w => `
-        <tr class="hover:bg-slate-50">
+      // ตารางงาน Care Plan ฝั่งอาจารย์
+      document.getElementById('teacherWorkTableBody').innerHTML = (data.works || []).map(w => `
+        <tr class="hover:bg-slate-50 transition">
           <td class="p-2 font-bold text-slate-800">${w.studentName}</td>
-          <td class="p-2 text-slate-500">${w.submitDate}</td>
-          <td class="p-2">${w.subject}</td>
-          <td class="p-2"><a href="${w.fileUrl}" target="_blank" class="text-indigo-600 font-semibold underline">ดูไฟล์</a></td>
-          <td class="p-2 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${w.status === 'ผ่าน' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${w.status}</span></td>
-          <td class="p-2 text-center font-bold">${w.score || '-'}</td>
-          <td class="p-2 text-center">
-            <button onclick="openEvalCarePlanModal('${w.workId}', '${w.studentId}')" class="px-2.5 py-1 bg-indigo-600 text-white rounded-lg text-xs font-bold shadow-xs">
+          <td class="p-2 text-slate-500 whitespace-nowrap">${w.submitDate}</td>
+          <td class="p-2 font-medium">${w.subject}</td>
+          <td class="p-2 whitespace-nowrap">
+            ${w.fileUrl ? `<a href="${w.fileUrl}" target="_blank" class="text-indigo-600 font-semibold underline">ดูไฟล์</a>` : '-'}
+          </td>
+          <td class="p-2 text-center whitespace-nowrap">
+            <span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${w.status === 'ผ่าน' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${w.status}</span>
+          </td>
+          <td class="p-2 text-center font-bold whitespace-nowrap">${w.score || '-'}</td>
+          <td class="p-2 text-center whitespace-nowrap">
+            <button onclick="openEvalCarePlanModal('${w.workId}', '${w.studentId}')" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold shadow-xs transition">
               ตรวจ 10 ข้อ
             </button>
           </td>
         </tr>
       `).join('');
 
-      document.getElementById('teacherStudentTableBody').innerHTML = data.students.map(s => `
-        <tr class="hover:bg-slate-50">
+      // ตารางนักศึกษา
+      document.getElementById('teacherStudentTableBody').innerHTML = (data.students || []).map(s => `
+        <tr class="hover:bg-slate-50 transition">
           <td class="p-2 font-bold text-indigo-900">${s.studentId}</td>
           <td class="p-2">${s.name}</td>
           <td class="p-2">${s.ward}</td>
-          <td class="p-2 text-center font-bold text-rose-600">${s.pin}</td>
-          <td class="p-2 text-center">Lv.${s.level}</td>
+          <td class="p-2 text-center font-bold text-rose-600"><span class="px-1.5 py-0.5 bg-rose-50 border border-rose-200 rounded">${s.pin}</span></td>
+          <td class="p-2 text-center font-bold text-purple-700">Lv.${s.level}</td>
           <td class="p-2 text-center">${s.pdpaAccepted ? '<span class="text-emerald-600 font-bold">ยินยอม</span>' : '<span class="text-slate-400">ยังไม่กดยินยอม</span>'}</td>
-          <td class="p-2 text-center">
+          <td class="p-2 text-center whitespace-nowrap">
             <button onclick="deleteStudent('${s.studentId}')" class="text-rose-600 font-bold hover:underline">ลบ</button>
           </td>
         </tr>
       `).join('');
 
-      document.getElementById('grantStudentSelect').innerHTML = data.students.map(s => `<option value="${s.studentId}">${s.name} (${s.ward})</option>`).join('');
-      document.getElementById('grantSkillSelect').innerHTML = data.skills.map(sk => `<option value="${sk.name}">${sk.name} (+${sk.exp} EXP)</option>`).join('');
+      // Dropdown หัตถการ
+      document.getElementById('grantStudentSelect').innerHTML = (data.students || []).map(s => `<option value="${s.studentId}">${s.name} (${s.ward})</option>`).join('');
+      document.getElementById('grantSkillSelect').innerHTML = (data.skills || []).map(sk => `<option value="${sk.name}">${sk.name} (+${sk.exp} EXP)</option>`).join('');
 
-      document.getElementById('catalogListContainer').innerHTML = data.skills.map(sk => `
-        <div class="p-2 bg-slate-50 rounded-xl border flex justify-between items-center">
-          <div><div class="font-bold text-slate-800">${sk.name}</div><div class="text-[10px] text-slate-400">${sk.category}</div></div>
-          <span class="font-black text-amber-600">+${sk.exp} EXP</span>
+      // คลังหัตถการ
+      document.getElementById('catalogListContainer').innerHTML = (data.skills || []).map(sk => `
+        <div class="p-2.5 bg-slate-50 rounded-xl border flex justify-between items-center shadow-xs">
+          <div><div class="font-bold text-slate-800 text-xs">${sk.name}</div><div class="text-[10px] text-slate-400">${sk.category}</div></div>
+          <span class="font-black text-amber-600 text-xs">+${sk.exp} EXP</span>
         </div>
       `).join('');
 
-      document.getElementById('allAttTableBody').innerHTML = data.attendances.map(a => `
-        <tr class="hover:bg-slate-50">
-          <td class="p-2 text-slate-500">${a.date} ${a.time}</td>
-          <td class="p-2 font-bold">${a.studentName}</td>
-          <td class="p-2"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${a.status === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${a.status}</span></td>
-          <td class="p-2">${a.deduct > 0 ? '-' + a.deduct : (a.bonus > 0 ? '+' + a.bonus : '-')}</td>
-          <td class="p-2 text-slate-500">${a.note || '-'}</td>
-        </tr>
-      `).join('');
+      // ตารางบันทึกเวลา GPS & รูปถ่าย
+      document.getElementById('allAttTableBody').innerHTML = (data.attendances || []).map(a => {
+        let photoBtn = a.photoUrl ? `<a href="${a.photoUrl}" target="_blank" class="px-2 py-0.5 bg-emerald-50 text-emerald-700 font-bold rounded border border-emerald-200 hover:bg-emerald-100"><i class="fa-solid fa-image mr-1"></i>ดูรูปถ่าย</a>` : '<span class="text-slate-300">-</span>';
+        return `
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-2 text-slate-500 whitespace-nowrap">${a.date} ${a.time}</td>
+            <td class="p-2 font-bold text-slate-800">${a.studentName}</td>
+            <td class="p-2"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${a.status === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${a.status}</span></td>
+            <td class="p-2 text-slate-600 text-[10px] font-mono">${a.coords || '-'}</td>
+            <td class="p-2 text-center whitespace-nowrap">${photoBtn}</td>
+            <td class="p-2 text-slate-500">${a.note || '-'}</td>
+          </tr>
+        `;
+      }).join('');
     }
 
     function openEvalCarePlanModal(workId, studentId) {
