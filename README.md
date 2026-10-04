@@ -1,1 +1,1 @@
-# nurse-practicum-hub
+# bcn-chainat-practicum
