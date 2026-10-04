@@ -3,419 +3,165 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>ระบบจัดการฝึกปฏิบัติการพยาบาล (Nurse Practicum Pro)</title>
+  <title>ระบบจัดการฝึกปฏิบัติการพยาบาล รุ่น 34 (Nurse Practicum Hub)</title>
   
-  <!-- ================= App Icon & PWA Settings สำหรับหน้าจอโฮมมือถือ ================= -->
+  <!-- App Icon & Standalone Mobile -->
   <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
-  <link rel="apple-touch-icon" sizes="152x152" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
-  <link rel="apple-touch-icon" sizes="180x180" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
-  <link rel="apple-touch-icon" sizes="167x167" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
-  <link rel="icon" type="image/png" sizes="192x192" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
-  <link rel="icon" type="image/png" sizes="512x512" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
-  <link rel="shortcut icon" type="image/png" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
-
+  <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="NurseHub">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#4338ca">
+  <meta name="apple-mobile-web-app-title" content="NursePracticum">
+  <meta name="theme-color" content="#4f46e5">
 
-  <!-- Tailwind CSS -->
+  <!-- Tailwind CSS & Fonts & Icons & Charts -->
   <script src="https://cdn.tailwindcss.com"></script>
-  <!-- Google Fonts: Prompt -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-  <!-- FontAwesome 6 -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  <!-- SweetAlert2 -->
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    * { 
-      font-family: 'Prompt', sans-serif; 
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-    body {
-      background: linear-gradient(135deg, #f0f4ff 0%, #e0e7ff 50%, #f5f3ff 100%);
-      min-height: 100vh;
-      overflow-x: hidden;
-      width: 100%;
-    }
-    .glass-card {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(14px);
-      border: 1px solid rgba(255, 255, 255, 0.7);
-      box-shadow: 0 4px 20px -2px rgba(99, 102, 241, 0.08);
-    }
-    .gradient-header {
-      background: linear-gradient(135deg, #4338ca 0%, #3b82f6 50%, #06b6d4 100%);
-    }
-    .gradient-card-blue { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
-    .gradient-card-emerald { background: linear-gradient(135deg, #10b981 0%, #059669 100%); }
-    .gradient-card-amber { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); }
-    .gradient-card-rose { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); }
-    .gradient-card-purple { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); }
-    
-    .role-active {
-      background: #ffffff !important;
-      color: #4338ca !important;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-      font-weight: 700;
-    }
-    .badge-approved { background-color: #dcfce7; color: #15803d; border: 1px solid #86efac; }
-    .badge-revision { background-color: #ffedd5; color: #c2410c; border: 1px solid #fdba74; }
-    .badge-rejected { background-color: #ffe4e6; color: #be123c; border: 1px solid #fda4af; }
-    .badge-pending { background-color: #fef9c3; color: #a16207; border: 1px solid #fde047; }
-    .badge-late { background-color: #fee2e2; color: #b91c1c; border: 1px solid #fca5a5; }
-
-    .mobile-scroll::-webkit-scrollbar { height: 4px; }
-    .mobile-scroll::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+    * { font-family: 'Prompt', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 50%, #fdf4ff 100%); min-height: 100vh; }
+    .glass-card { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.8); box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.08); }
+    .pixar-badge { box-shadow: 0 4px 10px rgba(0,0,0,0.1); border-radius: 9999px; }
   </style>
 </head>
-<body class="text-slate-700 flex flex-col justify-between min-h-screen">
+<body class="text-slate-700 flex flex-col justify-between min-h-screen select-none">
 
   <!-- Header -->
-  <header class="gradient-header text-white shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 sm:py-3 flex flex-col sm:flex-row justify-between items-center gap-2.5 sm:gap-4">
-      
-      <!-- โลโก้และชื่อระบบ -->
-      <div class="flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-start">
-        <div class="flex items-center space-x-2.5">
-          <div class="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-white p-0.5 shadow-sm flex items-center justify-center overflow-hidden shrink-0 border border-white/40">
-            <img src="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq" 
-                 alt="App Logo" 
-                 class="w-full h-full object-contain rounded-lg"
-                 referrerpolicy="no-referrer"
-                 onerror="this.onerror=null; this.src='https://cdn-icons-png.flaticon.com/512/3774/3774299.png';">
-          </div>
-          <div>
-            <div class="flex items-center gap-1.5">
-              <h1 class="text-base sm:text-lg font-bold tracking-tight leading-tight">ระบบฝึกปฏิบัติการพยาบาล</h1>
-              <span class="bg-amber-400 text-amber-950 text-[9px] px-2 py-0.5 rounded-full font-extrabold uppercase">Hero & XP Edition</span>
-            </div>
-            <p class="text-[11px] text-indigo-100 font-light truncate max-w-[200px] sm:max-w-none">
-              สาขาการพยาบาลผู้ใหญ่ผู้สูงอายุ วพบ. ชัยนาท
-            </p>
-          </div>
+  <header class="bg-gradient-to-r from-indigo-700 via-indigo-600 to-cyan-500 text-white shadow-lg sticky top-0 z-40">
+    <div class="max-w-7xl mx-auto px-3 sm:px-4 py-2.5 flex justify-between items-center">
+      <div class="flex items-center space-x-3">
+        <div class="w-11 h-11 rounded-2xl bg-white p-1 shadow-md flex items-center justify-center shrink-0 border border-white/50">
+          <img src="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq" alt="Logo" class="w-full h-full object-contain rounded-xl">
         </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <h1 class="text-sm sm:text-base font-bold tracking-tight">ฝึกปฏิบัติการพยาบาล รุ่น 34</h1>
+            <span class="bg-amber-400 text-amber-950 text-[10px] px-2 py-0.5 rounded-full font-black uppercase">Pixar 3D</span>
+          </div>
+          <p class="text-[11px] text-indigo-100 font-light truncate">อ. นันตพร ทองเต็ม | วพบ. ชัยนาท</p>
+        </div>
+      </div>
 
-        <!-- สลับบทบาท -->
-        <div class="flex items-center bg-black/20 p-0.5 rounded-lg backdrop-blur-md border border-white/20 text-xs">
-          <button id="btnRoleStudent" onclick="switchRole('student')" class="px-2.5 py-1 rounded-md transition-all duration-200 role-active">
-            <i class="fa-solid fa-graduation-cap"></i> นศ.
-          </button>
-          <button id="btnRoleTeacher" onclick="switchRole('teacher')" class="px-2.5 py-1 rounded-md transition-all duration-200 text-indigo-100 hover:text-white font-medium">
-            <i class="fa-solid fa-lock" id="teacherLockIcon"></i> อาจารย์
-          </button>
-        </div>
+      <div class="flex items-center gap-2">
+        <button id="btnRoleStudent" onclick="switchRole('student')" class="px-3 py-1.5 rounded-xl bg-white text-indigo-700 font-bold text-xs shadow-md transition">
+          <i class="fa-solid fa-graduation-cap"></i> นศ.
+        </button>
+        <button id="btnRoleTeacher" onclick="switchRole('teacher')" class="px-3 py-1.5 rounded-xl bg-indigo-900/60 hover:bg-white/20 text-white font-medium text-xs transition">
+          <i class="fa-solid fa-user-shield"></i> อาจารย์
+        </button>
       </div>
     </div>
   </header>
 
   <!-- Main Container -->
-  <main class="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 w-full flex-1 space-y-4 sm:space-y-6 overflow-hidden">
+  <main class="max-w-7xl mx-auto px-3 sm:px-4 py-4 sm:py-6 w-full flex-1 space-y-5">
 
-    <!-- ================= 1. มุมมองนักศึกษา (STUDENT VIEW) ================= -->
-    <div id="studentSection" class="space-y-4 sm:space-y-6">
+    <!-- ================= STUDENT VIEW ================= -->
+    <div id="studentSection" class="space-y-4">
       
-      <!-- แจ้งสถานะเปิด-ปิดรับงาน -->
-      <div id="studentSubmissionBanner" class="p-3 sm:p-4 rounded-2xl flex flex-wrap items-center justify-between gap-2.5 shadow-sm border text-xs">
-        <div class="flex items-center gap-2.5">
-          <span id="bannerIcon" class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl flex items-center justify-center text-sm sm:text-lg shrink-0"></span>
-          <div>
-            <div id="bannerTitle" class="font-bold text-xs sm:text-sm"></div>
-            <div id="bannerSubtitle" class="text-[11px] text-slate-500"></div>
-          </div>
-        </div>
-        <div id="bannerBadge" class="font-semibold px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs"></div>
-      </div>
-
-      <!-- บัตรโปรไฟล์ & ตัวเลือก นศ. -->
-      <div class="glass-card rounded-2xl sm:rounded-3xl p-4 sm:p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-        <div class="flex items-center space-x-3 w-full md:w-auto">
-          <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-indigo-500 to-cyan-400 text-white flex items-center justify-center text-xl sm:text-2xl shadow-sm shrink-0">
-            <i class="fa-solid fa-id-badge"></i>
+      <!-- Profile & RPG Stats Card -->
+      <div class="glass-card rounded-3xl p-4 sm:p-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+        <div class="flex items-center space-x-3.5 w-full md:w-auto">
+          <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-indigo-500 to-amber-400 text-white flex items-center justify-center text-2xl shadow-md shrink-0">
+            <i class="fa-solid fa-user-nurse"></i>
           </div>
           <div class="flex-1 min-w-0">
-            <div class="flex flex-wrap items-center justify-between gap-2 mb-1">
-              <label class="block text-[11px] font-semibold text-slate-500">นักศึกษาพยาบาลที่ล็อกอินอยู่:</label>
-              
-              <div class="flex items-center gap-1.5">
-                <div id="wrapperViewMode" class="flex items-center bg-indigo-50 p-0.5 rounded-lg border border-indigo-200 text-[11px]">
-                  <button type="button" id="btnViewPersonal" onclick="setViewMode('personal')" class="px-2 py-0.5 rounded font-semibold bg-indigo-600 text-white shadow-xs">
-                    เฉพาะฉัน
-                  </button>
-                  <button type="button" id="btnViewAll" onclick="setViewMode('all')" class="px-2 py-0.5 rounded font-medium text-indigo-700 hover:bg-indigo-100">
-                    <i class="fa-solid fa-users mr-0.5"></i> ดูทุกคน
-                  </button>
-                </div>
-
-                <button type="button" onclick="promptStudentLogin()" class="px-2 py-0.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded text-[11px] font-semibold">
-                  <i class="fa-solid fa-key mr-0.5"></i> ล็อกอิน PIN
-                </button>
-              </div>
-            </div>
-
             <div class="flex items-center gap-2">
-              <select id="studentSelect" onchange="onStudentSelectChange()" class="w-full sm:w-auto text-xs sm:text-sm font-semibold text-indigo-900 bg-indigo-50/80 border border-indigo-200 rounded-xl px-2.5 py-1.5 focus:ring-2 focus:ring-indigo-500 outline-none truncate max-w-full">
-              </select>
-
-              <button type="button" id="btnTogglePrivacy" onclick="handleTogglePrivacy()" class="shrink-0 px-2.5 py-1.5 rounded-xl text-xs font-semibold border flex items-center gap-1 transition shadow-xs">
-                <i class="fa-solid fa-eye text-emerald-600" id="privacyIcon"></i>
-                <span id="privacyLabel">เปิดแชร์งาน</span>
+              <span id="displayStudentName" class="font-bold text-sm sm:text-base text-slate-800">กำลังโหลด...</span>
+              <span id="displayStudentWard" class="text-[10px] px-2 py-0.5 bg-indigo-100 text-indigo-700 font-semibold rounded-full">วอร์ดอายุรกรรม</span>
+            </div>
+            <p id="displayStudentGroup" class="text-xs text-slate-500 mt-0.5">รุ่น 34 | รหัส: <span id="displayStudentId">-</span></p>
+            <div class="flex items-center gap-2 mt-1">
+              <button onclick="promptStudentLoginModal()" class="text-[11px] text-indigo-600 font-semibold hover:underline">
+                <i class="fa-solid fa-arrow-right-to-bracket mr-1"></i>สลับผู้ใช้งาน / ใส่รหัส PIN
               </button>
             </div>
-            
-            <p id="studentDetailText" class="text-[11px] text-slate-500 mt-1 truncate">
-              <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 mr-1 animate-pulse"></span>
-              ปี 2 กลุ่ม 11 | วอร์ดอายุรกรรมหญิง
-            </p>
           </div>
         </div>
 
-        <!-- การ์ดคะแนนตรงต่อเวลา + Hero of Ward + เลเวลประสบการณ์ -->
-        <div class="flex items-center gap-2 w-full md:w-auto justify-between md:justify-end flex-wrap sm:flex-nowrap">
-          
-          <div class="flex-1 md:flex-none bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-200 rounded-xl p-2.5 text-center shadow-xs min-w-[110px]">
-            <div class="text-[10px] font-bold text-purple-800 flex items-center justify-center gap-1">
-              <i class="fa-solid fa-bolt text-purple-600"></i> ประสบการณ์ฝึก
+        <!-- RPG Level & Stats -->
+        <div class="flex items-center gap-3 w-full md:w-auto justify-between md:justify-end">
+          <div class="bg-gradient-to-br from-purple-50 to-indigo-50 border border-purple-200 rounded-2xl p-3 text-center min-w-[110px]">
+            <div class="text-[10px] font-bold text-purple-700"><i class="fa-solid fa-bolt text-amber-500 mr-1"></i>Nurse Level</div>
+            <div class="text-xl font-black text-purple-800 my-0.5">Lv.<span id="statLevel">1</span></div>
+            <div class="w-full bg-purple-200 rounded-full h-1.5 overflow-hidden">
+              <div id="statExpBar" class="bg-purple-600 h-1.5" style="width: 20%"></div>
             </div>
-            <div class="text-xl sm:text-2xl font-extrabold text-purple-700 my-0.5">
-              Lv.<span id="displayStudentLevel">1</span>
-            </div>
-            <div class="w-full bg-purple-200 rounded-full h-1.5 mt-1 overflow-hidden">
-              <div id="expProgressBar" class="bg-purple-600 h-1.5 rounded-full" style="width: 30%"></div>
-            </div>
-            <div class="text-[8px] font-semibold text-purple-600 mt-0.5"><span id="displayExpPoints">0</span> EXP</div>
+            <div class="text-[9px] text-purple-600 mt-0.5 font-semibold"><span id="statExp">0</span> EXP</div>
           </div>
 
-          <div class="flex-1 md:flex-none bg-gradient-to-br from-amber-50 to-orange-50 border border-amber-200 rounded-xl p-2.5 text-center shadow-xs min-w-[110px]">
-            <div class="text-[10px] font-bold text-amber-800 flex items-center justify-center gap-1">
-              <i class="fa-solid fa-crown text-amber-500"></i> Hero of Ward
-            </div>
-            <div class="text-xl sm:text-2xl font-extrabold text-amber-600 my-0.5">
-              +<span id="displayHeroScore">0</span> <span class="text-[10px] font-normal text-amber-700">แต้ม</span>
-            </div>
-            <div class="text-[9px] font-semibold text-amber-700">คะแนนความดีช่วยคนไข้</div>
+          <div class="bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-200 rounded-2xl p-3 text-center min-w-[110px]">
+            <div class="text-[10px] font-bold text-emerald-700"><i class="fa-solid fa-heart-pulse text-rose-500 mr-1"></i>คะแนนวินัย</div>
+            <div class="text-xl font-black text-slate-800 my-0.5"><span id="statPunctual">100</span><span class="text-xs font-normal text-slate-400">/100</span></div>
+            <div class="text-[9px] text-emerald-600 font-semibold">วินัยการเข้าเวร</div>
           </div>
 
-          <div class="flex-1 md:flex-none bg-gradient-to-br from-indigo-50 via-white to-sky-50 border border-indigo-100 rounded-xl p-2.5 text-center shadow-xs min-w-[110px]">
-            <div class="text-[10px] font-bold text-indigo-700 flex items-center justify-center gap-1">
-              <i class="fa-solid fa-shield-heart text-indigo-500"></i> วินัยตรงเวลา
-            </div>
-            <div class="text-xl sm:text-2xl font-extrabold text-slate-800 my-0.5">
-              <span id="displayScore" class="text-indigo-600">100</span><span class="text-xs font-normal text-slate-400">/100</span>
-            </div>
-            <div id="scoreStatus" class="text-[9px] font-medium text-emerald-600">ตรงเวลาสม่ำเสมอ</div>
-          </div>
-
+          <button onclick="openCheckInModal()" class="px-4 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold text-xs rounded-2xl shadow-md hover:opacity-95 transition flex flex-col items-center justify-center">
+            <i class="fa-solid fa-location-dot text-base mb-1"></i>
+            <span>Check-in ปฏิบัติงาน</span>
+          </button>
         </div>
       </div>
 
-      <!-- สรุปตัวเลข 5 การ์ด -->
-      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-2.5 sm:gap-4">
-        <div class="gradient-card-blue text-white p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-sm flex items-center justify-between">
-          <div class="min-w-0">
-            <div id="labelTotalWorks" class="text-[11px] sm:text-xs text-indigo-100 truncate">งานที่ส่งแล้ว</div>
-            <div id="statTotalWorks" class="text-xl sm:text-2xl font-bold mt-0.5">0</div>
-            <div class="text-[10px] sm:text-[11px] text-indigo-200 truncate">รอตรวจ <span id="statPendingWorks">0</span> รายการ</div>
-          </div>
-          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white/20 flex items-center justify-center text-sm sm:text-lg shrink-0">
-            <i class="fa-solid fa-file-arrow-up"></i>
-          </div>
+      <!-- 3-Week Mission Tracker -->
+      <div class="glass-card rounded-3xl p-4 sm:p-5 space-y-3">
+        <div class="flex justify-between items-center border-b pb-2">
+          <h2 class="font-bold text-xs sm:text-sm text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-flag-checkered text-indigo-600"></i>
+            <span>ภารกิจฝึกปฏิบัติการพยาบาล 3 สัปดาห์ (Mission Requirements)</span>
+          </h2>
+          <span class="text-[11px] text-slate-400">คู่มือการฝึกภาคปฏิบัติ รุ่น 34</span>
         </div>
-
-        <div class="gradient-card-rose text-white p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-sm flex items-center justify-between">
-          <div class="min-w-0">
-            <div class="text-[11px] sm:text-xs text-rose-100 truncate">ส่งงานล่าช้า</div>
-            <div id="statLateWorks" class="text-xl sm:text-2xl font-bold mt-0.5">0</div>
-            <div class="text-[10px] sm:text-[11px] text-rose-200 truncate">หักคะแนนสะสม</div>
-          </div>
-          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white/20 flex items-center justify-center text-sm sm:text-lg shrink-0">
-            <i class="fa-solid fa-hourglass-end"></i>
-          </div>
-        </div>
-
-        <div class="gradient-card-amber text-white p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-sm flex items-center justify-between">
-          <div class="min-w-0">
-            <div class="text-[11px] sm:text-xs text-amber-100 truncate">งานที่ต้องแก้ไข</div>
-            <div id="statNeedFixWorks" class="text-xl sm:text-2xl font-bold mt-0.5">0</div>
-            <div class="text-[10px] sm:text-[11px] text-amber-200 truncate">กดส่งงานแก้กลับได้ทันที</div>
-          </div>
-          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white/20 flex items-center justify-center text-sm sm:text-lg shrink-0">
-            <i class="fa-solid fa-triangle-exclamation"></i>
-          </div>
-        </div>
-
-        <div class="gradient-card-emerald text-white p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-sm flex items-center justify-between">
-          <div class="min-w-0">
-            <div class="text-[11px] sm:text-xs text-emerald-100 truncate">เข้าเวรตรงเวลา</div>
-            <div id="statAttOnTime" class="text-xl sm:text-2xl font-bold mt-0.5">0</div>
-            <div class="text-[10px] sm:text-[11px] text-emerald-200 truncate">มาสาย <span id="statAttLate">0</span> ครั้ง</div>
-          </div>
-          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white/20 flex items-center justify-center text-sm sm:text-lg shrink-0">
-            <i class="fa-solid fa-clock-rotate-left"></i>
-          </div>
-        </div>
-
-        <div class="gradient-card-purple text-white p-3 sm:p-4 rounded-xl sm:rounded-2xl shadow-sm flex items-center justify-between col-span-2 sm:col-span-1">
-          <div class="min-w-0">
-            <div class="text-[11px] sm:text-xs text-purple-100 truncate">หัตถการผ่านแล้ว</div>
-            <div id="statPassedSkills" class="text-xl sm:text-2xl font-bold mt-0.5">0</div>
-            <div class="text-[10px] sm:text-[11px] text-purple-200 truncate">จาก <span id="statTotalSkills">0</span> เคส</div>
-          </div>
-          <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-white/20 flex items-center justify-center text-sm sm:text-lg shrink-0">
-            <i class="fa-solid fa-stethoscope"></i>
-          </div>
+        <div id="missionListContainer" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2.5">
+          <!-- Dynamic Missions -->
         </div>
       </div>
 
-      <!-- ฟอร์มส่งงาน & ตารางงาน -->
-      <div id="containerWorkSection" class="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
+      <!-- Radar Chart & Evaluation Summary -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         
-        <div class="lg:col-span-1 glass-card p-4 sm:p-5 rounded-2xl sm:rounded-3xl space-y-3 sm:space-y-4">
-          <div class="flex items-center justify-between pb-2.5 border-b border-indigo-100">
-            <h2 class="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-1.5">
-              <span class="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs">
-                <i class="fa-solid fa-cloud-arrow-up"></i>
-              </span>
-              ส่งงาน / Care Plan
-            </h2>
-            <span id="studentDueBadge" class="text-[10px] sm:text-[11px] bg-indigo-50 text-indigo-700 font-semibold px-2 py-0.5 rounded-full border border-indigo-200">
-              <i class="fa-regular fa-clock mr-1"></i>หมดเขต 18:00 น.
-            </span>
+        <!-- Radar Chart Box -->
+        <div class="lg:col-span-1 glass-card rounded-3xl p-4 flex flex-col justify-between space-y-3">
+          <div class="border-b pb-2">
+            <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-chart-pie text-cyan-600"></i> สมรรถนะ Care Plan (Radar Chart)
+            </h3>
+            <p class="text-[10px] text-slate-400">เกณฑ์ประเมิน 10 ด้านตามแบบฟอร์มวิทยาลัย</p>
           </div>
-
-          <form id="formSubmitWork" onsubmit="handleWorkSubmit(event)" class="space-y-3 text-xs">
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">หัวข้องาน / Care Plan <span class="text-rose-500">*</span></label>
-              <input type="text" id="workSubject" required placeholder="เช่น บันทึกการพยาบาลผู้ป่วย Acute Appendicitis" class="w-full text-xs bg-white border border-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 outline-none">
-            </div>
-
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">รายละเอียดงานย่อ</label>
-              <textarea id="workContent" rows="2" placeholder="ระบุข้อวินิจฉัยทางการพยาบาล กิจกรรมที่ให้การดูแล..." class="w-full text-xs bg-white border border-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 outline-none"></textarea>
-            </div>
-
-            <div class="bg-indigo-50/50 p-2.5 rounded-xl border border-indigo-100">
-              <label class="block font-semibold text-slate-700 mb-1 flex items-center gap-1 text-[11px]">
-                <i class="fa-solid fa-file-pdf text-rose-500"></i> แนบไฟล์งาน (PDF หรือ รูปภาพ)
-              </label>
-              <input type="file" id="workFile" accept=".pdf,image/*" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-indigo-600 file:text-white">
-            </div>
-
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1 text-[11px]">หรือแนบลิงก์ Google Drive / Canva</label>
-              <input type="url" id="workLink" placeholder="https://drive.google.com/..." class="w-full text-xs bg-white border border-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-indigo-500 outline-none">
-            </div>
-
-            <button type="submit" id="btnSubmitWork" class="w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-semibold py-2.5 rounded-xl text-xs shadow-sm transition flex items-center justify-center gap-2 cursor-pointer">
-              <i class="fa-solid fa-paper-plane"></i> บันทึกและส่งงานให้อาจารย์
-            </button>
-          </form>
+          <div class="w-full flex items-center justify-center py-2">
+            <canvas id="radarChartCanvas" width="280" height="280"></canvas>
+          </div>
+          <div class="text-[11px] text-center text-slate-500 font-medium">เกณฑ์ผ่าน: ได้คะแนน 60% ขึ้นไป</div>
         </div>
 
-        <div class="lg:col-span-2 glass-card p-4 sm:p-5 rounded-2xl sm:rounded-3xl space-y-3">
-          <div class="flex items-center justify-between pb-2 border-b border-indigo-100">
-            <h2 class="text-xs sm:text-sm font-bold text-slate-800 flex items-center gap-1.5">
-              <span class="w-6 h-6 rounded-lg bg-indigo-100 text-indigo-600 flex items-center justify-center text-xs">
-                <i class="fa-solid fa-clipboard-check"></i>
-              </span>
-              <span id="titleWorkTable">ประวัติงานที่ส่ง & ผลตรวจ (Real-time)</span>
-            </h2>
-            <button onclick="loadStudentDashboard()" class="text-xs text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1">
-              <i class="fa-solid fa-rotate-right"></i> รีเฟรช
+        <!-- Student Works Table -->
+        <div class="lg:col-span-2 glass-card rounded-3xl p-4 space-y-3">
+          <div class="flex justify-between items-center border-b pb-2">
+            <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5">
+              <i class="fa-solid fa-clipboard-check text-indigo-600"></i> ประวัติงานที่ส่ง & ผลการตรวจ
+            </h3>
+            <button onclick="openSubmitWorkModal()" class="px-3 py-1 bg-indigo-600 text-white rounded-xl text-xs font-semibold shadow-xs">
+              <i class="fa-solid fa-plus mr-1"></i> ส่ง Care Plan ใหม่
             </button>
           </div>
-
-          <div class="overflow-x-auto mobile-scroll w-full -mx-1 px-1">
-            <table class="w-full text-left text-xs border-collapse min-w-[550px]">
+          <div class="overflow-x-auto">
+            <table class="w-full text-xs text-left">
               <thead>
-                <tr class="bg-indigo-50/70 text-indigo-900 border-b border-indigo-100 font-semibold">
-                  <th class="p-2">เวลาส่ง</th>
-                  <th class="p-2">นศ. / หัวข้องาน</th>
-                  <th class="p-2">ไฟล์งาน</th>
+                <tr class="bg-indigo-50/70 text-indigo-900 border-b">
+                  <th class="p-2">วันที่</th>
+                  <th class="p-2">หัวข้องาน</th>
                   <th class="p-2 text-center">สถานะ</th>
                   <th class="p-2 text-center">คะแนน</th>
                   <th class="p-2">ข้อเสนอแนะอาจารย์</th>
-                  <th class="p-2 text-center">ส่งงานแก้กลับ</th>
                 </tr>
               </thead>
               <tbody id="studentWorkTableBody" class="divide-y divide-slate-100">
-                <tr><td colspan="7" class="p-4 text-center text-slate-400">กำลังดึงข้อมูล...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- สถิติเข้าเวร & หัตถการ & ทำเนียบ Hero / Leaderboard -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
-        
-        <div id="containerAttSection" class="glass-card p-4 rounded-2xl space-y-2.5">
-          <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5 pb-2 border-b border-slate-100">
-            <i class="fa-solid fa-business-time text-indigo-500"></i> ประวัติการเข้าเวร & ส่งงานล่าช้า
-          </h3>
-          <div class="overflow-x-auto mobile-scroll max-h-56">
-            <table class="w-full text-xs text-left min-w-[280px]">
-              <thead>
-                <tr class="text-slate-400 border-b text-[11px]">
-                  <th class="pb-1.5">วันที่-เวลา</th>
-                  <th class="pb-1.5">นศ.</th>
-                  <th class="pb-1.5">สถานะ</th>
-                  <th class="pb-1.5">คะแนน</th>
-                </tr>
-              </thead>
-              <tbody id="studentAttTableBody" class="divide-y divide-slate-100">
-                <tr><td colspan="4" class="p-3 text-center text-slate-400">ไม่มีข้อมูล</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div id="containerSkillSection" class="glass-card p-4 rounded-2xl space-y-2.5">
-          <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5 pb-2 border-b border-slate-100">
-            <i class="fa-solid fa-notes-medical text-cyan-600"></i> ประเมินหัตถการ (Skill Log)
-          </h3>
-          <div class="overflow-x-auto mobile-scroll max-h-56">
-            <table class="w-full text-xs text-left min-w-[300px]">
-              <thead>
-                <tr class="text-slate-400 border-b text-[11px]">
-                  <th class="pb-1.5">วันที่</th>
-                  <th class="pb-1.5">หัตถการ</th>
-                  <th class="pb-1.5 text-center">ผล</th>
-                  <th class="pb-1.5 text-center">คะแนน</th>
-                </tr>
-              </thead>
-              <tbody id="studentSkillTableBody" class="divide-y divide-slate-100">
-                <tr><td colspan="4" class="p-3 text-center text-slate-400">ไม่มีข้อมูล</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <div id="containerHeroSection" class="glass-card p-4 rounded-2xl space-y-2.5 bg-gradient-to-br from-amber-50/40 to-white border border-amber-200">
-          <div class="flex items-center justify-between pb-2 border-b border-amber-100">
-            <h3 class="font-bold text-xs text-amber-900 flex items-center gap-1.5">
-              <i class="fa-solid fa-trophy text-amber-500"></i> ทำเนียบ Hero (จัดอันดับ)
-            </h3>
-            <span class="text-[10px] text-amber-700 bg-amber-100 px-2 py-0.5 rounded-full font-bold">Top Heroes</span>
-          </div>
-          <div class="overflow-x-auto mobile-scroll max-h-56">
-            <table class="w-full text-xs text-left min-w-[280px]">
-              <thead>
-                <tr class="text-amber-800/60 border-b text-[11px]">
-                  <th class="pb-1.5 text-center">อันดับ</th>
-                  <th class="pb-1.5">นศ.</th>
-                  <th class="pb-1.5 text-center">แต้ม Hero</th>
-                  <th class="pb-1.5 text-center">วินัย</th>
-                </tr>
-              </thead>
-              <tbody id="heroLeaderboardBody" class="divide-y divide-amber-100/60">
-                <tr><td colspan="4" class="p-3 text-center text-slate-400">กำลังประมวลผลอันดับ...</td></tr>
+                <tr><td colspan="5" class="p-4 text-center text-slate-400">กำลังโหลด...</td></tr>
               </tbody>
             </table>
           </div>
@@ -425,459 +171,138 @@
 
     </div>
 
-    <!-- ================= 2. มุมมองอาจารย์ (TEACHER VIEW) ================= -->
-    <div id="teacherSection" class="hidden space-y-4 sm:space-y-6">
+    <!-- ================= TEACHER HUB ================= -->
+    <div id="teacherSection" class="hidden space-y-4">
       
+      <!-- Teacher Toolbar -->
       <div class="glass-card rounded-2xl p-2.5 flex flex-wrap gap-1.5 justify-between items-center">
-        <div class="flex flex-wrap gap-1 w-full sm:w-auto">
-          <button onclick="setTeacherTab('review')" id="tabReview" class="flex-1 sm:flex-none px-3 py-1.5 text-xs font-semibold rounded-xl bg-indigo-600 text-white shadow-sm transition">
-            <i class="fa-solid fa-list-check mr-1"></i> ตรวจงาน
+        <div class="flex flex-wrap gap-1">
+          <button onclick="setTeacherTab('eval')" id="tabEval" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-indigo-600 text-white shadow-xs">
+            <i class="fa-solid fa-feather mr-1"></i> ตรวจ Care Plan (10 ข้อ)
           </button>
-          <button onclick="setTeacherTab('late')" id="tabLate" class="flex-1 sm:flex-none px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
-            <i class="fa-solid fa-clock-rotate-left mr-1 text-rose-500"></i> บันทึกส่งงานช้า
+          <button onclick="setTeacherTab('students')" id="tabStudents" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">
+            <i class="fa-solid fa-users mr-1 text-cyan-600"></i> จัดการ นศ. & PIN
           </button>
-          <button onclick="setTeacherTab('students')" id="tabStudents" class="flex-1 sm:flex-none px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
-            <i class="fa-solid fa-users-gear mr-1 text-cyan-600"></i> จัดการ นศ. & PIN
+          <button onclick="setTeacherTab('skillrpg')" id="tabSkillRpg" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">
+            <i class="fa-solid fa-wand-magic-sparkles mr-1 text-amber-500"></i> มอบพลังหัตถการ (EXP)
           </button>
-          <button onclick="setTeacherTab('hero')" id="tabHero" class="flex-1 sm:flex-none px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
-            <i class="fa-solid fa-crown text-amber-600 mr-1"></i> ให้คะแนน Hero
-          </button>
-          <button onclick="setTeacherTab('settings')" id="tabSettings" class="flex-1 sm:flex-none px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
-            <i class="fa-solid fa-toggle-on mr-1 text-indigo-600"></i> ตั้งค่าระบบ
-          </button>
-          <button onclick="setTeacherTab('attendance')" id="tabAtt" class="flex-1 sm:flex-none px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
-            <i class="fa-solid fa-user-clock mr-1"></i> ขาด-ลา-สาย
-          </button>
-          <button onclick="setTeacherTab('competency')" id="tabSkill" class="flex-1 sm:flex-none px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition">
-            <i class="fa-solid fa-stethoscope mr-1"></i> หัตถการ
+          <button onclick="setTeacherTab('att')" id="tabAtt" class="px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200">
+            <i class="fa-solid fa-user-clock mr-1 text-rose-500"></i> สถิติ ขาด/ลา/สาย/ส่งช้า
           </button>
         </div>
-        <div class="flex items-center justify-end w-full sm:w-auto gap-2 pt-1 sm:pt-0">
-          <button onclick="lockTeacherAccess()" class="px-2.5 py-1 bg-rose-50 hover:bg-rose-100 border border-rose-200 text-rose-700 rounded-xl text-xs font-semibold transition">
-            <i class="fa-solid fa-right-from-bracket mr-1"></i> ออกจากระบบ
-          </button>
-          <button onclick="refreshTeacherData()" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 rounded-xl text-xs font-semibold transition">
-            <i class="fa-solid fa-arrows-rotate mr-1"></i> รีเฟรช
-          </button>
-        </div>
+        <button onclick="lockTeacherAccess()" class="px-3 py-1 bg-rose-50 border border-rose-200 text-rose-700 rounded-xl text-xs font-bold">
+          ออกจากระบบอาจารย์
+        </button>
       </div>
 
-      <!-- Tab: ตรวจงาน -->
-      <div id="teacherTabReview" class="glass-card p-4 sm:p-5 rounded-2xl sm:rounded-3xl space-y-3">
-        <div class="flex justify-between items-center">
-          <h3 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-file-signature text-indigo-600"></i> รายการงานที่ส่งเข้ามาตรวจทั้งหมด
-          </h3>
-          <span class="text-[11px] text-slate-400">แสดงผลงานและการส่งล่าช้าทันที</span>
-        </div>
-
-        <div class="overflow-x-auto mobile-scroll w-full">
-          <table class="w-full text-xs text-left border-collapse min-w-[700px]">
+      <!-- Tab: ตรวจ Care Plan (เกณฑ์ 10 ข้อตามใบประเมิน) -->
+      <div id="teacherTabEval" class="glass-card rounded-3xl p-4 sm:p-5 space-y-3">
+        <h3 class="font-bold text-xs sm:text-sm text-slate-800 flex items-center gap-1.5 border-b pb-2">
+          <i class="fa-solid fa-file-pen text-indigo-600"></i> รายการงานที่รอการตรวจประเมิน
+        </h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left">
             <thead>
-              <tr class="bg-indigo-50/70 text-indigo-900 border-b font-semibold">
-                <th class="p-2.5">นศ. ผู้ส่ง</th>
-                <th class="p-2.5">เวลาส่ง</th>
-                <th class="p-2.5">หัวข้องาน</th>
-                <th class="p-2.5">ไฟล์งาน</th>
-                <th class="p-2.5 text-center">สถานะ</th>
-                <th class="p-2.5 text-center">คะแนน</th>
-                <th class="p-2.5">ข้อเสนอแนะ</th>
-                <th class="p-2.5 text-center">ตรวจ</th>
+              <tr class="bg-indigo-50/70 text-indigo-900 border-b">
+                <th class="p-2">นศ. ผู้ส่ง</th>
+                <th class="p-2">เวลาส่ง</th>
+                <th class="p-2">หัวข้อ Care Plan</th>
+                <th class="p-2">ไฟล์งาน</th>
+                <th class="p-2 text-center">สถานะ</th>
+                <th class="p-2 text-center">คะแนน</th>
+                <th class="p-2 text-center">จัดการ</th>
               </tr>
             </thead>
-            <tbody id="teacherWorkListBody" class="divide-y divide-slate-100">
-              <tr><td colspan="8" class="p-4 text-center text-slate-400">กำลังโหลดข้อมูล...</td></tr>
+            <tbody id="teacherWorkTableBody" class="divide-y divide-slate-100">
+              <tr><td colspan="7" class="p-4 text-center text-slate-400">กำลังโหลด...</td></tr>
             </tbody>
           </table>
         </div>
       </div>
 
-      <!-- Tab: บันทึกส่งงานล่าช้า -->
-      <div id="teacherTabLate" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-        <div class="lg:col-span-1 glass-card p-4 rounded-2xl space-y-3 text-xs bg-gradient-to-br from-rose-50/50 to-white border border-rose-200">
-          <div class="border-b border-rose-200 pb-2">
-            <h3 class="font-bold text-rose-900 text-xs sm:text-sm flex items-center gap-1.5">
-              <i class="fa-solid fa-stopwatch text-rose-600"></i> บันทึก นศ. ส่งงานล่าช้า
-            </h3>
-            <p class="text-[10px] text-rose-700">อาจารย์สามารถระบุคนที่ส่งช้า วันที่ และหักคะแนนได้โดยตรง</p>
-          </div>
-
-          <form onsubmit="handleTeacherRecordLate(event)" class="space-y-2.5">
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">เลือกนักศึกษา *</label>
-              <select id="lateStudentSelect" required class="w-full bg-white border border-slate-200 rounded-xl p-2"></select>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label class="block font-semibold text-slate-700 mb-1">วันที่ส่งช้า *</label>
-                <input type="date" id="lateDate" required class="w-full bg-white border border-slate-200 rounded-xl p-1.5">
-              </div>
-              <div>
-                <label class="block font-semibold text-slate-700 mb-1">เวลา</label>
-                <input type="time" id="lateTime" value="18:30" class="w-full bg-white border border-slate-200 rounded-xl p-1.5">
-              </div>
-            </div>
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">หัวข้องาน / Care Plan ที่ส่งช้า *</label>
-              <input type="text" id="lateSubject" required placeholder="เช่น Care Plan ผู้ป่วยเบาหวาน" class="w-full bg-white border border-slate-200 rounded-xl p-2">
-            </div>
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">คะแนนที่หักวินัย (คะแนน) *</label>
-              <input type="number" id="lateDeductPts" value="1" min="0" max="10" required class="w-full bg-white border border-slate-200 rounded-xl p-1.5 font-bold text-rose-600">
-            </div>
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">หมายเหตุ / เหตุผล</label>
-              <textarea id="lateNote" rows="2" placeholder="เช่น ส่งเกินเวลาที่กำหนด 30 นาที" class="w-full bg-white border border-slate-200 rounded-xl p-2"></textarea>
-            </div>
-            <button type="submit" class="w-full bg-gradient-to-r from-rose-600 to-red-600 hover:from-rose-700 hover:to-red-700 text-white font-bold py-2.5 rounded-xl shadow-xs transition">
-              <i class="fa-solid fa-floppy-disk mr-1"></i> บันทึกส่งงานล่าช้า
-            </button>
-          </form>
-        </div>
-
-        <div class="lg:col-span-2 glass-card p-4 rounded-2xl space-y-3">
-          <h3 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-list-ol text-rose-600"></i> ประวัติรายการส่งงานล่าช้าทั้งหมด
+      <!-- Tab: จัดการนักศึกษา -->
+      <div id="teacherTabStudents" class="hidden glass-card rounded-3xl p-4 sm:p-5 space-y-3">
+        <div class="flex justify-between items-center border-b pb-2">
+          <h3 class="font-bold text-xs sm:text-sm text-slate-800 flex items-center gap-1.5">
+            <i class="fa-solid fa-user-gear text-cyan-600"></i> บัญชีนักศึกษาทั้งหมด (รุ่น 34)
           </h3>
-          <div class="overflow-x-auto mobile-scroll w-full">
-            <table class="w-full text-xs text-left border-collapse min-w-[500px]">
-              <thead>
-                <tr class="bg-rose-50 text-rose-900 border-b font-semibold">
-                  <th class="p-2">วันที่-เวลา</th>
-                  <th class="p-2">นศ.</th>
-                  <th class="p-2">หัวข้องาน</th>
-                  <th class="p-2 text-center">คะแนนที่หัก</th>
-                  <th class="p-2">หมายเหตุ</th>
-                </tr>
-              </thead>
-              <tbody id="allLateListBody" class="divide-y divide-slate-100">
-                <tr><td colspan="5" class="p-3 text-center text-slate-400">กำลังโหลด...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tab: จัดการนักศึกษา & PIN -->
-      <div id="teacherTabStudents" class="hidden glass-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl space-y-4">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b pb-3">
-          <div>
-            <h3 class="font-bold text-slate-800 text-xs sm:text-base flex items-center gap-1.5">
-              <i class="fa-solid fa-user-gear text-cyan-600"></i> จัดการข้อมูลนักศึกษา & แก้ไขรหัส PIN ทุกคน
-            </h3>
-            <p class="text-[11px] text-slate-400">อาจารย์สามารถเปลี่ยนรหัส PIN, แก้ไขคะแนน, วอร์ด และเปิด/ปิดสิทธิ์การแชร์งานได้ทันที</p>
-          </div>
-          <button onclick="openEditStudentModal(null)" class="px-3 py-1.5 bg-cyan-600 hover:bg-cyan-700 text-white rounded-xl text-xs font-semibold shadow-xs">
+          <button onclick="openAddStudentModal()" class="px-3 py-1 bg-cyan-600 text-white rounded-xl text-xs font-bold shadow-xs">
             <i class="fa-solid fa-user-plus mr-1"></i> เพิ่มนักศึกษาใหม่
           </button>
         </div>
-
-        <div class="overflow-x-auto mobile-scroll w-full">
-          <table class="w-full text-xs text-left border-collapse min-w-[650px]">
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left">
             <thead>
-              <tr class="bg-slate-50 text-slate-700 border-b font-semibold">
-                <th class="p-2.5">รหัสนักศึกษา</th>
-                <th class="p-2.5">ชื่อ-นามสกุล</th>
-                <th class="p-2.5">หอผู้ป่วย/วอร์ด</th>
-                <th class="p-2.5 text-center">รหัส PIN</th>
-                <th class="p-2.5 text-center">คะแนนวินัย</th>
-                <th class="p-2.5 text-center">คะแนน Hero</th>
-                <th class="p-2.5 text-center">แชร์งานเพื่อน</th>
-                <th class="p-2.5 text-center">จัดการ</th>
+              <tr class="bg-slate-50 text-slate-700 border-b">
+                <th class="p-2">StudentID</th>
+                <th class="p-2">ชื่อ-สกุล</th>
+                <th class="p-2">หอผู้ป่วย</th>
+                <th class="p-2 text-center">PIN</th>
+                <th class="p-2 text-center">Level</th>
+                <th class="p-2 text-center">PDPA</th>
+                <th class="p-2 text-center">แก้ไข/ลบ</th>
               </tr>
             </thead>
-            <tbody id="teacherStudentTableBody" class="divide-y divide-slate-100">
-              <tr><td colspan="8" class="p-4 text-center text-slate-400">กำลังโหลดรายชื่อนักศึกษา...</td></tr>
-            </tbody>
+            <tbody id="teacherStudentTableBody" class="divide-y divide-slate-100"></tbody>
           </table>
         </div>
       </div>
 
-      <!-- Tab: ให้คะแนน Hero of Ward -->
-      <div id="teacherTabHero" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-        <div class="lg:col-span-1 glass-card p-4 rounded-2xl space-y-3 text-xs bg-gradient-to-br from-amber-50/50 to-white border border-amber-200">
-          <div class="border-b border-amber-200 pb-2">
-            <h3 class="font-bold text-amber-900 text-xs sm:text-sm flex items-center gap-1.5">
-              <i class="fa-solid fa-crown text-amber-600"></i> ให้คะแนน Hero of Ward (ทำความดี)
-            </h3>
-            <p class="text-[10px] text-amber-700">ให้คะแนนพิเศษเมื่อ นศ. ช่วยเหลือคนไข้ตามเตียง</p>
-          </div>
-
-          <form onsubmit="handleHeroSubmit(event)" class="space-y-2.5">
+      <!-- Tab: มอบพลังหัตถการ -->
+      <div id="teacherTabSkillRpg" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <div class="lg:col-span-1 glass-card p-4 rounded-3xl space-y-3 text-xs">
+          <h3 class="font-bold text-slate-800 flex items-center gap-1.5 border-b pb-2">
+            <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i> ให้คะแนน/มอบพลัง EXP
+          </h3>
+          <form onsubmit="handleGrantSkill(event)" class="space-y-2.5">
             <div>
-              <label class="block font-semibold text-slate-700 mb-1">เลือกนักศึกษา *</label>
-              <select id="heroStudentSelect" required class="w-full bg-white border border-slate-200 rounded-xl p-2"></select>
+              <label class="block font-semibold mb-1">เลือกนักศึกษา *</label>
+              <select id="grantStudentSelect" required class="w-full bg-white border border-slate-200 rounded-xl p-2"></select>
             </div>
             <div>
-              <label class="block font-semibold text-slate-700 mb-1">เตียง / หอผู้ป่วย *</label>
-              <input type="text" id="heroBed" required placeholder="เช่น เตียง 4, เตียง 12 วอร์ดอายุรกรรม" class="w-full bg-white border border-slate-200 rounded-xl p-2">
+              <label class="block font-semibold mb-1">เลือกหัตถการ *</label>
+              <select id="grantSkillSelect" required class="w-full bg-white border border-slate-200 rounded-xl p-2"></select>
             </div>
             <div>
-              <label class="block font-semibold text-slate-700 mb-1">กิจกรรมความดี / พฤติกรรมที่น่าชื่นชม *</label>
-              <textarea id="heroActivity" rows="2" required placeholder="เช่น ช่วยพลิกตัวผู้ป่วยติดเตียงอย่างนุ่มนวล" class="w-full bg-white border border-slate-200 rounded-xl p-2"></textarea>
+              <label class="block font-semibold mb-1">พลัง EXP ที่ได้รับ *</label>
+              <input type="number" id="grantExp" value="50" required class="w-full bg-white border border-slate-200 rounded-xl p-2 font-bold text-amber-600">
             </div>
             <div>
-              <label class="block font-semibold text-slate-700 mb-1">คะแนนพิเศษ (Hero Points) *</label>
-              <select id="heroPoints" class="w-full bg-white border border-slate-200 rounded-xl p-2 font-bold text-amber-700">
-                <option value="3">+3 คะแนน (ช่วยเหลือดีเยี่ยม)</option>
-                <option value="5" selected>+5 คะแนน (Hero of Ward ประจำวัน)</option>
-                <option value="10">+10 คะแนน (ช่วยเหลือกู้ชีพ/เคสวิกฤติตอบสนองดีเยี่ยม)</option>
-              </select>
+              <label class="block font-semibold mb-1">ข้อเสนอแนะอาจารย์</label>
+              <textarea id="grantFeedback" rows="2" placeholder="เช่น Sterile Technique ยอดเยี่ยม" class="w-full bg-white border border-slate-200 rounded-xl p-2"></textarea>
             </div>
-            <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-bold py-2.5 rounded-xl shadow-xs transition">
-              <i class="fa-solid fa-award mr-1"></i> บันทึกคะแนนความดี
+            <button type="submit" class="w-full bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold py-2.5 rounded-xl shadow-xs">
+              <i class="fa-solid fa-bolt mr-1"></i> มอบพลังหัตถการ
             </button>
           </form>
         </div>
-
-        <div class="lg:col-span-2 glass-card p-4 rounded-2xl space-y-3">
-          <h3 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-ranking-star text-amber-500"></i> ทำเนียบความดี Hero of Ward ทั้งหมด
-          </h3>
-          <div class="overflow-x-auto mobile-scroll w-full">
-            <table class="w-full text-xs text-left border-collapse min-w-[500px]">
-              <thead>
-                <tr class="bg-amber-50 text-amber-900 border-b font-semibold">
-                  <th class="p-2">วันที่</th>
-                  <th class="p-2">นศ. คนเก่ง</th>
-                  <th class="p-2">เตียง</th>
-                  <th class="p-2">กิจกรรมความดี</th>
-                  <th class="p-2 text-center">คะแนน</th>
-                </tr>
-              </thead>
-              <tbody id="allHeroTableBody" class="divide-y divide-slate-100">
-                <tr><td colspan="5" class="p-3 text-center text-slate-400">ยังไม่มีข้อมูล</td></tr>
-              </tbody>
-            </table>
+        <div class="lg:col-span-2 glass-card p-4 rounded-3xl space-y-3">
+          <div class="flex justify-between items-center border-b pb-2">
+            <h3 class="font-bold text-slate-800 text-xs sm:text-sm">คลังหัตถการ (อาจารย์เพิ่มได้อิสระ)</h3>
+            <button onclick="openAddCatalogModal()" class="px-2.5 py-1 bg-indigo-50 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-bold">
+              + เพิ่มชนิดหัตถการใหม่
+            </button>
           </div>
+          <div id="catalogListContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs"></div>
         </div>
       </div>
 
-      <!-- Tab: ตั้งค่าระบบ -->
-      <div id="teacherTabSettings" class="hidden glass-card p-4 sm:p-6 rounded-2xl sm:rounded-3xl space-y-5">
-        <div class="flex items-center justify-between border-b pb-2.5">
-          <div>
-            <h3 class="font-bold text-slate-800 text-xs sm:text-base flex items-center gap-1.5">
-              <i class="fa-solid fa-sliders text-indigo-600"></i> ตั้งค่าการรับส่งงาน & สิทธิ์การมองเห็นของนักศึกษา
-            </h3>
-            <p class="text-[11px] text-slate-400">อาจารย์สามารถเลือกเปิดหรือปิดส่วนต่างๆ ให้นักศึกษาเห็นได้อิสระ</p>
-          </div>
-          <span id="currentStatusBadge" class="text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full font-semibold"></span>
-        </div>
-
-        <form onsubmit="handleSaveSettings(event)" class="max-w-2xl space-y-4 text-xs">
-          <div class="bg-indigo-50/50 p-3.5 rounded-xl border border-indigo-100 flex items-center justify-between">
-            <div>
-              <div class="font-bold text-slate-800">ระบบรับส่งงานของ นศ.</div>
-              <div class="text-[11px] text-slate-500">หากปิดระบบ นศ. จะไม่สามารถส่งงานใหม่ได้</div>
-            </div>
-            <label class="relative inline-flex items-center cursor-pointer shrink-0">
-              <input type="checkbox" id="settingEnabled" class="sr-only peer">
-              <div class="w-11 h-6 bg-slate-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-600"></div>
-            </label>
-          </div>
-
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div class="bg-white p-3 rounded-xl border border-slate-200">
-              <label class="block font-semibold text-slate-700 mb-1">วันที่หมดเขต (เว้นว่าง = ทุกวัน)</label>
-              <input type="date" id="settingDueDate" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 outline-none">
-            </div>
-            <div class="bg-white p-3 rounded-xl border border-slate-200">
-              <label class="block font-semibold text-slate-700 mb-1">เวลาหมดเขตประจำวัน (Due Time) *</label>
-              <input type="time" id="settingDueTime" required value="18:00" class="w-full bg-slate-50 border border-slate-200 rounded-lg p-2 focus:ring-2 focus:ring-indigo-500 outline-none">
-            </div>
-          </div>
-
-          <div class="bg-white p-3 rounded-xl border border-slate-200 space-y-2.5">
-            <div class="flex items-center justify-between">
-              <div>
-                <div class="font-semibold text-slate-800">อนุญาตให้ส่งงานล่าช้าได้หรือไม่</div>
-                <div class="text-[10px] text-slate-400">หากเปิด นศ. จะส่งงานหลังกำหนดเวลาได้ แต่จะถูกบันทึกสถิติและหักคะแนน</div>
-              </div>
-              <input type="checkbox" id="settingAllowLate" class="w-4 h-4 text-indigo-600 rounded shrink-0">
-            </div>
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">คะแนนที่หักเมื่อส่งช้า (คะแนน/ครั้ง)</label>
-              <input type="number" id="settingLateDeduction" value="1" min="0" class="w-28 bg-slate-50 border border-slate-200 rounded-lg p-1.5 focus:ring-2 focus:ring-indigo-500 outline-none">
-            </div>
-          </div>
-
-          <div class="bg-slate-50 p-3.5 rounded-xl border border-slate-200 space-y-3">
-            <h4 class="font-bold text-slate-800 flex items-center gap-1.5 text-xs border-b pb-2">
-              <i class="fa-solid fa-eye text-indigo-600"></i> ควบคุมการมองเห็นของนักศึกษา (เปิด/ปิด ได้ทุกฟังก์ชัน)
-            </h4>
-            
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-              <label class="flex items-center justify-between p-2 bg-white rounded-lg border border-slate-200 cursor-pointer">
-                <span>1. ตารางส่งงาน & ผลตรวจ</span>
-                <input type="checkbox" id="featViewWork" class="w-4 h-4 text-indigo-600 rounded">
-              </label>
-
-              <label class="flex items-center justify-between p-2 bg-white rounded-lg border border-slate-200 cursor-pointer">
-                <span>2. ประวัติเวลาเข้าเวร & ส่งช้า</span>
-                <input type="checkbox" id="featViewAtt" class="w-4 h-4 text-indigo-600 rounded">
-              </label>
-
-              <label class="flex items-center justify-between p-2 bg-white rounded-lg border border-slate-200 cursor-pointer">
-                <span>3. บันทึกผลหัตถการ (Skills)</span>
-                <input type="checkbox" id="featViewSkills" class="w-4 h-4 text-indigo-600 rounded">
-              </label>
-
-              <label class="flex items-center justify-between p-2 bg-white rounded-lg border border-slate-200 cursor-pointer">
-                <span>4. ทำเนียบความดี Hero of Ward</span>
-                <input type="checkbox" id="featViewHero" class="w-4 h-4 text-indigo-600 rounded">
-              </label>
-            </div>
-          </div>
-
-          <div class="flex justify-end pt-2">
-            <button type="submit" class="w-full sm:w-auto px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-semibold rounded-xl shadow-sm transition">
-              <i class="fa-solid fa-floppy-disk mr-1"></i> บันทึกการตั้งค่าทั้งหมด
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Tab: ขาด ลา มาสาย -->
-      <div id="teacherTabAttendance" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-        <div class="lg:col-span-1 glass-card p-4 rounded-2xl space-y-3 text-xs">
-          <h3 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5 pb-2 border-b">
-            <i class="fa-solid fa-clock text-indigo-600"></i> บันทึกเวลาเข้าเวร / สาย
-          </h3>
-          <form onsubmit="handleAttendanceSubmit(event)" class="space-y-2.5">
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">เลือกนักศึกษา *</label>
-              <select id="attStudentSelect" required class="w-full bg-white border border-slate-200 rounded-xl p-2"></select>
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label class="block font-semibold text-slate-700 mb-1">วันที่</label>
-                <input type="date" id="attDate" class="w-full bg-white border border-slate-200 rounded-xl p-1.5">
-              </div>
-              <div>
-                <label class="block font-semibold text-slate-700 mb-1">เวลาเข้าเวร</label>
-                <input type="time" id="attTime" class="w-full bg-white border border-slate-200 rounded-xl p-1.5">
-              </div>
-            </div>
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">สถานะ *</label>
-              <select id="attStatus" class="w-full bg-white border border-slate-200 rounded-xl p-2">
-                <option value="ตรงเวลา">ตรงเวลา (+1 คะแนนตรงเวลา)</option>
-                <option value="สาย">มาสาย (หัก 2 คะแนน)</option>
-                <option value="ส่งงานล่าช้า">ส่งงานล่าช้า (หัก 1 คะแนน)</option>
-                <option value="ลา">ลากิจ / ลาป่วย</option>
-                <option value="ขาด">ขาดการฝึกงาน (หัก 5 คะแนน)</option>
-              </select>
-            </div>
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">หมายเหตุ</label>
-              <input type="text" id="attNote" placeholder="เช่น ติดเวรรับผู้ป่วย" class="w-full bg-white border border-slate-200 rounded-xl p-2">
-            </div>
-            <button type="submit" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-xl transition shadow-xs">
-              บันทึกเวลาฝึกงาน
-            </button>
-          </form>
-        </div>
-
-        <div class="lg:col-span-2 glass-card p-4 rounded-2xl space-y-3">
-          <h3 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-table-list text-slate-500"></i> บันทึกเวลาฝึกงานทั้งหมด
-          </h3>
-          <div class="overflow-x-auto mobile-scroll w-full">
-            <table class="w-full text-xs text-left border-collapse min-w-[450px]">
-              <thead>
-                <tr class="bg-indigo-50/70 text-indigo-900 border-b font-semibold">
-                  <th class="p-2">วันที่-เวลา</th>
-                  <th class="p-2">นศ.</th>
-                  <th class="p-2">สถานะ</th>
-                  <th class="p-2">คะแนน</th>
-                  <th class="p-2">หมายเหตุ</th>
-                </tr>
-              </thead>
-              <tbody id="allAttTableBody" class="divide-y divide-slate-100">
-                <tr><td colspan="5" class="p-3 text-center text-slate-400">กำลังโหลด...</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      <!-- Tab: ประเมินหัตถการ -->
-      <div id="teacherTabCompetency" class="hidden grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6">
-        <div class="lg:col-span-1 glass-card p-4 rounded-2xl space-y-3 text-xs">
-          <div class="border-b pb-2">
-            <h3 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
-              <i class="fa-solid fa-stethoscope text-cyan-600"></i> ประเมินผลหัตถการ
-            </h3>
-            <p class="text-[10px] text-slate-400">สวนปัสสาวะ, ให้สารน้ำ, หรือ Assignment</p>
-          </div>
-
-          <form onsubmit="handleSkillSubmit(event)" class="space-y-2.5">
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">เลือกนักศึกษา *</label>
-              <select id="skillStudentSelect" required class="w-full bg-white border border-slate-200 rounded-xl p-2"></select>
-            </div>
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">วันที่ทำหัตถการ</label>
-              <input type="date" id="skillDate" class="w-full bg-white border border-slate-200 rounded-xl p-2">
-            </div>
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">ชื่อหัตถการ *</label>
-              <select id="skillNameSelect" onchange="checkCustomSkill(this)" class="w-full bg-white border border-slate-200 rounded-xl p-2 mb-1">
-                <option value="การสวนปัสสาวะ (Foley catheterization)">การสวนปัสสาวะ (Foley catheterization)</option>
-                <option value="การใส่สายให้อาหารทางจมูก (NG tube insertion)">การใส่สายให้อาหารทางจมูก (NG tube insertion)</option>
-                <option value="การให้สารน้ำทางหลอดเลือดดำ (IV Infusion)">การให้สารน้ำทางหลอดเลือดดำ (IV Infusion)</option>
-                <option value="การดูดเสมหะ (Endotracheal Suctioning)">การดูดเสมหะ (Endotracheal Suctioning)</option>
-                <option value="การทำแผลปลอดเชื้อ (Sterile Wound Dressing)">การทำแผลปลอดเชื้อ (Sterile Wound Dressing)</option>
-                <option value="other">-- ระบุหัตถการอื่น ๆ --</option>
-              </select>
-              <input type="text" id="customSkillInput" placeholder="ระบุชื่อหัตถการ..." class="hidden w-full bg-white border border-slate-200 rounded-xl p-1.5">
-            </div>
-            <div class="grid grid-cols-2 gap-2">
-              <div>
-                <label class="block font-semibold text-slate-700 mb-1">ผลประเมิน *</label>
-                <select id="skillResult" class="w-full bg-white border border-slate-200 rounded-xl p-1.5">
-                  <option value="ผ่าน">ผ่าน (Pass)</option>
-                  <option value="ต้องฝึกเพิ่ม">ต้องฝึกเพิ่ม</option>
-                  <option value="ไม่ผ่าน">ไม่ผ่าน</option>
-                </select>
-              </div>
-              <div>
-                <label class="block font-semibold text-slate-700 mb-1">คะแนน (เต็ม 10/100)</label>
-                <input type="number" id="skillScore" placeholder="เช่น 9" class="w-full bg-white border border-slate-200 rounded-xl p-1.5">
-              </div>
-            </div>
-            <div>
-              <label class="block font-semibold text-slate-700 mb-1">ข้อเสนอแนะอาจารย์</label>
-              <textarea id="skillFeedback" rows="2" placeholder="เช่น Sterile technique ดีมาก" class="w-full bg-white border border-slate-200 rounded-xl p-2"></textarea>
-            </div>
-            <button type="submit" class="w-full bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-700 hover:to-indigo-700 text-white font-semibold py-2 rounded-xl transition shadow-xs">
-              บันทึกผลการประเมิน
-            </button>
-          </form>
-        </div>
-
-        <div class="lg:col-span-2 glass-card p-4 rounded-2xl space-y-3">
-          <h3 class="font-bold text-slate-800 text-xs sm:text-sm flex items-center gap-1.5">
-            <i class="fa-solid fa-clipboard-user text-slate-500"></i> รายงานบันทึกหัตถการทั้งหมด
-          </h3>
-          <div class="overflow-x-auto mobile-scroll w-full">
-            <table class="w-full text-xs text-left border-collapse min-w-[500px]">
-              <thead>
-                <tr class="bg-indigo-50/70 text-indigo-900 border-b font-semibold">
-                  <th class="p-2">วันที่</th>
-                  <th class="p-2">นศ.</th>
-                  <th class="p-2">หัตถการ</th>
-                  <th class="p-2 text-center">ผล</th>
-                  <th class="p-2 text-center">คะแนน</th>
-                  <th class="p-2">ข้อเสนอแนะ</th>
-                </tr>
-              </thead>
-              <tbody id="allSkillTableBody" class="divide-y divide-slate-100">
-                <tr><td colspan="6" class="p-3 text-center text-slate-400">กำลังโหลด...</td></tr>
-              </tbody>
-            </table>
-          </div>
+      <!-- Tab: สถิติเวลา & ขาดลามาสาย -->
+      <div id="teacherTabAtt" class="hidden glass-card rounded-3xl p-4 space-y-3">
+        <h3 class="font-bold text-slate-800 text-xs sm:text-sm border-b pb-2">บันทึกเวลาปฏิบัติงาน & การส่งงานช้าทั้งหมด</h3>
+        <div class="overflow-x-auto">
+          <table class="w-full text-xs text-left">
+            <thead>
+              <tr class="bg-indigo-50/70 text-indigo-900 border-b">
+                <th class="p-2">วันที่-เวลา</th>
+                <th class="p-2">นักศึกษา</th>
+                <th class="p-2">สถานะ</th>
+                <th class="p-2">คะแนนวินัย</th>
+                <th class="p-2">หมายเหตุ</th>
+              </tr>
+            </thead>
+            <tbody id="allAttTableBody" class="divide-y divide-slate-100"></tbody>
+          </table>
         </div>
       </div>
 
@@ -885,1347 +310,423 @@
 
   </main>
 
-  <!-- Modal อาจารย์แก้ไขข้อมูลนักศึกษา & PIN -->
-  <div id="editStudentModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden z-50 flex items-center justify-center p-3 sm:p-4">
-    <div class="bg-white rounded-2xl sm:rounded-3xl max-w-md w-full p-4 sm:p-6 space-y-3 shadow-2xl border border-white max-h-[90vh] overflow-y-auto">
-      <div class="flex justify-between items-center border-b pb-2">
-        <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-1.5">
-          <i class="fa-solid fa-user-pen text-indigo-600"></i> แก้ไขข้อมูลนักศึกษา & รหัส PIN
-        </h3>
-        <button onclick="closeEditStudentModal()" class="w-7 h-7 rounded-full bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center">&times;</button>
+  <!-- Modal 1: PDPA Consent Modal -->
+  <div id="pdpaModal" class="fixed inset-0 bg-slate-900/70 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-lg w-full p-5 sm:p-6 space-y-4 shadow-2xl border border-white">
+      <div class="flex items-center gap-3 border-b pb-3 text-indigo-900">
+        <div class="w-10 h-10 rounded-xl bg-indigo-100 flex items-center justify-center text-xl text-indigo-600">
+          <i class="fa-solid fa-shield-halved"></i>
+        </div>
+        <div>
+          <h3 class="font-bold text-sm sm:text-base">นโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)</h3>
+          <p class="text-[11px] text-slate-500">วิทยาลัยพยาบาลบรมราชชนนี ชัยนาท</p>
+        </div>
       </div>
-
-      <form onsubmit="handleSaveStudentInfo(event)" class="space-y-3 text-xs">
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">รหัสนักศึกษา (StudentID) *</label>
-          <input type="text" id="editStuId" required class="w-full bg-slate-100 border border-slate-200 rounded-xl p-2.5 outline-none font-bold text-indigo-900">
-        </div>
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">ชื่อ-นามสกุล *</label>
-          <input type="text" id="editStuName" required class="w-full bg-white border border-slate-200 rounded-xl p-2.5 outline-none">
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block font-semibold text-slate-700 mb-1">รหัส PIN เข้าสู่ระบบ *</label>
-            <input type="text" id="editStuPin" required placeholder="เช่น 1234" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 font-bold text-rose-600 outline-none">
-          </div>
-          <div>
-            <label class="block font-semibold text-slate-700 mb-1">หอผู้ป่วย / วอร์ด</label>
-            <input type="text" id="editStuWard" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 outline-none">
-          </div>
-        </div>
-        <div class="grid grid-cols-2 gap-2">
-          <div>
-            <label class="block font-semibold text-slate-700 mb-1">คะแนนวินัยตรงเวลา</label>
-            <input type="number" id="editStuScore" min="0" max="100" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 outline-none">
-          </div>
-          <div>
-            <label class="block font-semibold text-slate-700 mb-1">คะแนน Hero</label>
-            <input type="number" id="editStuHero" min="0" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 outline-none font-bold text-amber-600">
-          </div>
-        </div>
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">กลุ่ม / ชั้นปี</label>
-          <input type="text" id="editStuGroup" class="w-full bg-white border border-slate-200 rounded-xl p-2.5 outline-none">
-        </div>
-        <div class="flex items-center justify-between p-2.5 bg-slate-50 border border-slate-200 rounded-xl">
-          <span class="font-semibold text-slate-700">อนุญาตให้เพื่อนร่วมรุ่นดู Care Plan</span>
-          <input type="checkbox" id="editStuPublic" class="w-4 h-4 text-indigo-600 rounded">
-        </div>
-
-        <div class="flex justify-end gap-2 pt-2 border-t">
-          <button type="button" onclick="closeEditStudentModal()" class="px-3.5 py-1.5 bg-slate-100 text-slate-600 rounded-xl font-semibold">ยกเลิก</button>
-          <button type="submit" class="px-4 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl font-semibold shadow-xs">
-            <i class="fa-solid fa-floppy-disk mr-1"></i> บันทึกข้อมูล
-          </button>
-        </div>
-      </form>
+      <div class="text-xs text-slate-600 max-h-48 overflow-y-auto space-y-2 p-3 bg-slate-50 rounded-2xl border leading-relaxed">
+        <p>ระบบนี้จัดทำขึ้นเพื่อการจัดการเรียนการสอนและการฝึกปฏิบัติการพยาบาล ข้อมูลการเข้าเวร คะแนน ผลการประเมิน Care Plan และภาพถ่ายการปฏิบัติงานจะถูกจัดเก็บเป็นความลับเพื่อใช้ในการประเมินผลการศึกษาตามหลักสูตรเท่านั้น</p>
+        <p class="font-semibold text-indigo-800">ผู้ดูแลระบบ: อาจารย์ นันตพร ทองเต็ม (nuntabhorn@bcnchainat.ac.th)</p>
+      </div>
+      <div class="flex items-center gap-2 text-xs">
+        <input type="checkbox" id="checkPdpa" class="w-4 h-4 text-indigo-600 rounded">
+        <label for="checkPdpa" class="text-slate-700">ข้าพเจ้ารับทราบและยินยอมให้ประมวลผลข้อมูลตามนโยบาย PDPA</label>
+      </div>
+      <button onclick="confirmPDPA()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs shadow-md transition">
+        ยอมรับและเข้าสู่ระบบ
+      </button>
     </div>
   </div>
 
-  <!-- Modal ตรวจงาน -->
-  <div id="reviewModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden z-50 flex items-center justify-center p-3 sm:p-4">
-    <div class="bg-white rounded-2xl sm:rounded-3xl max-w-lg w-full p-4 sm:p-6 space-y-3 shadow-2xl border border-white max-h-[90vh] overflow-y-auto">
+  <!-- Modal 2: Check-in ปฏิบัติงาน -->
+  <div id="checkInModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-3 shadow-2xl">
       <div class="flex justify-between items-center border-b pb-2">
-        <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-1.5">
-          <i class="fa-solid fa-feather-pointed text-indigo-600"></i> ตรวจงานและให้คะแนนออนไลน์
-        </h3>
-        <button onclick="closeReviewModal()" class="w-7 h-7 rounded-full bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center">&times;</button>
+        <h3 class="font-bold text-xs sm:text-sm text-slate-800"><i class="fa-solid fa-clock text-emerald-600 mr-1"></i>ลงเวลาปฏิบัติงาน</h3>
+        <button onclick="closeModal('checkInModal')" class="text-slate-400 hover:text-slate-600">&times;</button>
       </div>
-
-      <div class="space-y-1 text-xs bg-indigo-50/60 p-3 rounded-xl border border-indigo-100">
-        <div><strong class="text-indigo-900">นักศึกษา:</strong> <span id="modalStudentName" class="font-semibold text-slate-700"></span></div>
-        <div><strong class="text-indigo-900">หัวข้องาน:</strong> <span id="modalSubject" class="text-slate-700"></span></div>
-        <div><strong class="text-indigo-900">เนื้อหาย่อ:</strong> <span id="modalContent" class="text-slate-600 break-words"></span></div>
-        <div id="modalFileContainer" class="pt-1"></div>
-      </div>
-
-      <form onsubmit="submitReview(event)" class="space-y-2.5 text-xs">
-        <input type="hidden" id="modalInputWorkId">
+      <form onsubmit="handleAttendanceCheckIn(event)" class="space-y-3 text-xs">
         <div>
-          <label class="block font-semibold text-slate-700 mb-1">ผลการตรวจงาน *</label>
-          <select id="modalSelectStatus" required class="w-full bg-white border border-slate-200 rounded-xl p-2">
-            <option value="ผ่าน">ผ่าน (Approved)</option>
-            <option value="ต้องแก้ไข">ต้องแก้ไข (Needs Revision)</option>
-            <option value="ไม่ผ่าน">ไม่ผ่าน (Rejected)</option>
+          <label class="block font-semibold mb-1">สถานะวันนี้ *</label>
+          <select id="attStatus" class="w-full bg-white border border-slate-200 rounded-xl p-2 font-bold text-slate-700">
+            <option value="ตรงเวลา">ตรงเวลา (เวรเช้า 07:30 - 15:30)</option>
+            <option value="สาย">มาสาย</option>
+            <option value="ส่งงานช้า">ส่งงานช้ากว่ากำหนด</option>
+            <option value="ลา">ลากิจ</option>
+            <option value="ป่วย">ลาป่วย</option>
+            <option value="ขาด">ขาดการฝึก</option>
           </select>
         </div>
         <div>
-          <label class="block font-semibold text-slate-700 mb-1">คะแนน (เช่น 9/10 หรือ 90/100)</label>
-          <input type="text" id="modalInputScore" placeholder="เช่น 9 หรือ 85" class="w-full bg-white border border-slate-200 rounded-xl p-2">
+          <label class="block font-semibold mb-1">หมายเหตุเพิ่มเติม</label>
+          <input type="text" id="attNote" placeholder="เช่น รายงานตัวขึ้นฝึกเวรเช้า" class="w-full bg-white border border-slate-200 rounded-xl p-2">
         </div>
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1">ข้อเสนอแนะอาจารย์ *</label>
-          <textarea id="modalInputComment" rows="3" required placeholder="ระบุสิ่งที่ทำได้ดี และจุดที่ต้องแก้ไขเพิ่มเติม..." class="w-full bg-white border border-slate-200 rounded-xl p-2"></textarea>
-        </div>
-        <div>
-          <label class="block font-semibold text-slate-700 mb-1 flex items-center justify-between">
-            <span><i class="fa-solid fa-file-arrow-up text-indigo-600 mr-1"></i> แนบไฟล์งานที่ตรวจกลับ (ถ้ามี)</span>
-            <span id="existingReturnFileSpan" class="text-[10px] text-emerald-600 font-normal"></span>
-          </label>
-          <input type="file" id="modalInputReturnFile" class="w-full text-xs text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-indigo-50 file:text-indigo-700 hover:file:bg-indigo-100 border border-slate-200 rounded-xl p-1 bg-white">
-          <p class="text-[10px] text-slate-400 mt-0.5">แนบไฟล์ PDF, Word หรือรูปภาพที่ตรวจคอมเมนต์แล้วส่งคืน นศ.</p>
-        </div>
-        <div class="flex justify-end gap-2 pt-2">
-          <button type="button" onclick="closeReviewModal()" class="px-3.5 py-1.5 bg-slate-100 text-slate-600 rounded-xl font-semibold">ยกเลิก</button>
-          <button type="submit" class="px-4 py-1.5 bg-indigo-600 text-white rounded-xl font-semibold shadow-xs">บันทึกผลการตรวจ</button>
-        </div>
+        <button type="submit" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl shadow-xs">
+          ยืนยันการลงเวลา
+        </button>
       </form>
     </div>
   </div>
 
-  <!-- Modal ส่งงานแก้ไขกลับ -->
-  <div id="resubmitModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden z-50 flex items-center justify-center p-3 sm:p-4">
-    <div class="bg-white rounded-2xl sm:rounded-3xl max-w-md w-full p-4 sm:p-6 space-y-3 shadow-2xl border border-white">
+  <!-- Modal 3: อาจารย์ตรวจ Care Plan 10 ข้อ (ตามแบบฟอร์มวิทยาลัย) -->
+  <div id="evalModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="bg-white rounded-3xl max-w-xl w-full p-4 sm:p-6 space-y-3 shadow-2xl max-h-[92vh] overflow-y-auto">
       <div class="flex justify-between items-center border-b pb-2">
-        <h3 class="font-bold text-slate-800 text-sm sm:text-base flex items-center gap-1.5">
-          <i class="fa-solid fa-paper-plane text-orange-600"></i> ส่งงานฉบับแก้ไขกลับให้อาจารย์
-        </h3>
-        <button onclick="closeResubmitModal()" class="w-7 h-7 rounded-full bg-slate-100 text-slate-400 hover:text-slate-600 flex items-center justify-center">&times;</button>
-      </div>
-
-      <div class="space-y-1 text-xs bg-orange-50/60 p-3 rounded-xl border border-orange-200">
-        <div><strong class="text-orange-900">หัวข้องานเดิม:</strong> <span id="resubmitSubjectText" class="font-semibold text-slate-700"></span></div>
-        <div><strong class="text-orange-900">คำแนะนำเดิมของอาจารย์:</strong> <span id="resubmitCommentText" class="text-amber-800 font-medium"></span></div>
-      </div>
-
-      <form onsubmit="handleResubmitWork(event)" class="space-y-3 text-xs">
-        <input type="hidden" id="resubmitWorkId">
         <div>
-          <label class="block font-semibold text-slate-700 mb-1">สิ่งที่แก้ไขเพิ่มเติม / ชี้แจงอาจารย์ *</label>
-          <textarea id="resubmitContent" rows="3" required placeholder="เช่น ได้เพิ่มการประเมิน Pain Score แล้ว..." class="w-full bg-white border border-slate-200 rounded-xl p-2.5 focus:ring-2 focus:ring-orange-500 outline-none"></textarea>
+          <h3 class="font-bold text-xs sm:text-sm text-indigo-950">แบบประเมินการวางแผนการพยาบาลประจำวัน (Daily Care Plan)</h3>
+          <p class="text-[10px] text-slate-400">เกณฑ์มาตรฐาน 10 ข้อ (เต็ม 40 คะแนน คิดเป็น %)</p>
         </div>
-        <div class="bg-orange-50/40 p-2.5 rounded-xl border border-orange-100">
-          <label class="block font-semibold text-slate-700 mb-1 flex items-center gap-1 text-[11px]">
-            <i class="fa-solid fa-file-pdf text-rose-500"></i> แนบไฟล์งานฉบับแก้ไขใหม่ (PDF/รูปภาพ)
-          </label>
-          <input type="file" id="resubmitFile" accept=".pdf,image/*" class="w-full text-[11px] text-slate-500 file:mr-2 file:py-1 file:px-2.5 file:rounded-lg file:border-0 file:text-[11px] file:font-semibold file:bg-orange-600 file:text-white">
+        <button onclick="closeModal('evalModal')" class="text-slate-400 hover:text-slate-600">&times;</button>
+      </div>
+      <form onsubmit="handleCarePlanEvaluation(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="evalWorkId">
+        <input type="hidden" id="evalStudentId">
+
+        <div id="rubricContainer" class="space-y-2 border rounded-2xl p-3 bg-slate-50/50">
+          <!-- 10 Rubric Items Dynamic Generation -->
         </div>
+
         <div>
-          <label class="block font-semibold text-slate-700 mb-1 text-[11px]">หรือแนบลิงก์ Google Drive ใหม่</label>
-          <input type="url" id="resubmitLink" placeholder="https://drive.google.com/..." class="w-full text-xs bg-white border border-slate-200 rounded-xl p-2 focus:ring-2 focus:ring-orange-500 outline-none">
+          <label class="block font-semibold mb-1">ข้อเสนอแนะอาจารย์นิเทศก์ *</label>
+          <textarea id="evalComment" rows="2" required placeholder="ระบุจุดเด่น และประเด็นที่ควรพัฒนา..." class="w-full bg-white border border-slate-200 rounded-xl p-2"></textarea>
         </div>
-        <div class="flex justify-end gap-2 pt-2">
-          <button type="button" onclick="closeResubmitModal()" class="px-3.5 py-1.5 bg-slate-100 text-slate-600 rounded-xl font-semibold">ยกเลิก</button>
-          <button type="submit" class="px-4 py-1.5 bg-gradient-to-r from-orange-600 to-amber-600 text-white rounded-xl font-semibold shadow-xs">
-            <i class="fa-solid fa-check mr-1"></i> ยืนยันส่งงานแก้กลับ
+
+        <div class="flex justify-end gap-2 pt-1 border-t">
+          <button type="button" onclick="closeModal('evalModal')" class="px-3.5 py-1.5 bg-slate-100 rounded-xl font-bold">ยกเลิก</button>
+          <button type="submit" class="px-4 py-1.5 bg-indigo-600 text-white rounded-xl font-bold shadow-xs">
+            คำนวณและบันทึกคะแนน
           </button>
         </div>
       </form>
     </div>
   </div>
 
-  <!-- Footer -->
   <footer class="bg-white/80 border-t border-indigo-50 py-2.5 text-center text-[11px] text-slate-400">
-    ระบบจัดการและบันทึกการฝึกปฏิบัติการพยาบาล &copy; 2026 | พัฒนาโดย อาจารย์ นันตพร ทองเต็ม สาขาการพยาบาลผู้ใหญ่ผู้สูงอายุ วพบ. ชัยนาท
+    ระบบจัดการฝึกปฏิบัติการพยาบาล &copy; 2026 | พัฒนาโดย อาจารย์ นันตพร ทองเต็ม สาขาการพยาบาลผู้ใหญ่ผู้สูงอายุ วพบ. ชัยนาท
   </footer>
 
-  <!-- ================= Scripts (เชื่อมต่อ REST API แบบ Fetch) ================= -->
+  <!-- SCRIPT LOGIC -->
   <script>
-    // Developer Console Log
-    console.log(
-      "%cระบบจัดการฝึกปฏิบัติการพยาบาล (Nurse Practicum Pro)%c\n" +
-      "ผู้พัฒนา: อาจารย์ นันตพร ทองเต็ม\n" +
-      "ตำแหน่ง: สาขาการพยาบาลผู้ใหญ่ผู้สูงอายุ\n" +
-      "สถาบัน: วิทยาลัยพยาบาลบรมราชชนนี ชัยนาท (วพบ. ชัยนาท)\n" +
-      "สถานะระบบ: เชื่อมต่อ REST API ไปยัง Google Spreadsheet สำเร็จ (2026)",
-      "color: #ffffff; background: linear-gradient(135deg, #4338ca, #06b6d4); font-size: 14px; font-weight: bold; padding: 6px 12px; border-radius: 6px;",
-      "color: #374151; font-size: 11px; font-weight: 500; line-height: 1.6; padding-top: 4px;"
-    );
-
     // ========================================================
-    // **นำ URL Web App ที่ได้จาก Apps Script มาใส่ตรงนี้**
+    // ข้อ 7: ระบบป้องกัน F12, Inspect, และการคัดลอก
     // ========================================================
-    const API_URL = "https://script.google.com/macros/s/AKfycbxQE9llMZek1oHMYC0dPmpb6WKmvUuWcXj7mNca1cZKIC4T6W8Rb-FgRBGnquiehVRw/exec";
+    document.addEventListener('contextmenu', e => e.preventDefault());
+    document.addEventListener('keydown', e => {
+      if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && (e.keyCode === 73 || e.keyCode === 74 || e.keyCode === 67)) || (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83))) {
+        e.preventDefault();
+        return false;
+      }
+    });
 
-    // ฟังก์ชันยิง API กลาง (GET)
+    const API_URL = "https://script.google.com/macros/s/AKfycbz_XXXXXXXX_REPLACE_WITH_YOUR_EXEC_URL/exec";
+    const ADMIN_EMAIL = "nuntabhorn@bcnchainat.ac.th";
+
     async function apiGet(action, params = {}) {
       let url = new URL(API_URL);
       url.searchParams.append("action", action);
-      for (const k in params) {
-        if (params[k] !== undefined && params[k] !== null) {
-          url.searchParams.append(k, params[k]);
-        }
-      }
-      const response = await fetch(url.toString());
-      return await response.json();
+      for (const k in params) if (params[k] !== undefined && params[k] !== null) url.searchParams.append(k, params[k]);
+      const res = await fetch(url.toString());
+      return await res.json();
     }
 
-    // ฟังก์ชันยิง API กลาง (POST)
-    async function apiPost(action, data = {}) {
-      const response = await fetch(API_URL, {
+    async function apiPost(action, data = {}, adminEmail = "") {
+      const res = await fetch(API_URL, {
         method: "POST",
-        body: JSON.stringify({ action: action, data: data })
+        body: JSON.stringify({ action: action, data: data, adminEmail: adminEmail })
       });
-      return await response.json();
+      return await res.json();
     }
 
-    let currentRole = 'student';
-    let currentStudentId = 'STU-01';
-    let currentViewMode = 'personal';
+    let currentStudentId = "STU-01";
     let isTeacherAuthenticated = false;
-    let isStudentAuthenticated = false;
-    let currentStudentIsPublic = true;
-    const TEACHER_PIN = "22122531";
+    let radarChart = null;
 
-    let studentListCache = [];
-    let currentSubmissionSettings = { 
-      enabled: true, 
-      dueDate: '', 
-      dueTime: '18:00', 
-      allowLate: true, 
-      lateDeduction: 1,
-      featViewWork: true,
-      featViewAtt: true,
-      featViewSkills: true,
-      featViewHero: true
-    };
+    const CARE_PLAN_CRITERIA = [
+      "1. การรวบรวมข้อมูล",
+      "2. การกำหนดข้อวินิจฉัยการพยาบาล",
+      "3. การกำหนดวัตถุประสงค์",
+      "4. การกำหนดเกณฑ์การประเมิน",
+      "5. การวางแผนกิจกรรมการพยาบาล",
+      "6. การประเมินผลการพยาบาล",
+      "7. ความซื่อสัตย์",
+      "8. ตรงต่อเวลา",
+      "9. การอ้างอิงแหล่งข้อมูล",
+      "10. การเขียนรายงาน"
+    ];
 
     window.onload = function() {
-      const today = new Date().toISOString().split('T')[0];
-      const timeNow = new Date().toTimeString().slice(0, 5);
-      if (document.getElementById('attDate')) document.getElementById('attDate').value = today;
-      if (document.getElementById('attTime')) document.getElementById('attTime').value = timeNow;
-      if (document.getElementById('skillDate')) document.getElementById('skillDate').value = today;
-      if (document.getElementById('lateDate')) document.getElementById('lateDate').value = today;
-
-      if (sessionStorage.getItem('nurse_teacher_auth') === 'true') {
-        isTeacherAuthenticated = true;
-        updateTeacherLockUI(true);
-      }
-
-      initData();
+      buildRubricUI();
+      initRadarChart();
+      initDashboard();
     };
 
-    async function initData() {
+    function buildRubricUI() {
+      const c = document.getElementById('rubricContainer');
+      c.innerHTML = CARE_PLAN_CRITERIA.map((crit, idx) => `
+        <div class="flex items-center justify-between text-[11px] bg-white p-2 rounded-xl border border-slate-100">
+          <span class="font-medium text-slate-700">${crit}</span>
+          <div class="flex gap-2">
+            ${[1, 2, 3, 4].map(val => `
+              <label class="flex items-center gap-0.5 cursor-pointer">
+                <input type="radio" name="rubric_${idx}" value="${val}" ${val === 3 ? 'checked' : ''} class="w-3.5 h-3.5 text-indigo-600">
+                <span>${val}</span>
+              </label>
+            `).join('')}
+          </div>
+        </div>
+      `).join('');
+    }
+
+    function initRadarChart(scores = [3, 3, 3, 3, 3, 3, 4, 4, 3, 3]) {
+      const ctx = document.getElementById('radarChartCanvas').getContext('2d');
+      if (radarChart) radarChart.destroy();
+      radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['ข้อมูล', 'ข้อวินิจฉัย', 'วัตถุประสงค์', 'เกณฑ์วัด', 'กิจกรรม', 'ประเมินผล', 'ซื่อสัตย์', 'ตรงเวลา', 'อ้างอิง', 'เขียนรายงาน'],
+          datasets: [{
+            label: 'สมรรถนะ Care Plan (เต็ม 4)',
+            data: scores,
+            backgroundColor: 'rgba(79, 70, 229, 0.2)',
+            borderColor: '#4f46e5',
+            pointBackgroundColor: '#06b6d4'
+          }]
+        },
+        options: {
+          scales: { r: { min: 0, max: 4, ticks: { stepSize: 1 } } },
+          plugins: { legend: { display: false } }
+        }
+      });
+    }
+
+    async function initDashboard() {
       try {
-        const students = await apiGet("getStudentList");
-        if (students && students.length > 0) {
-          studentListCache = students;
-          populateStudentDropdowns(students);
-        }
-      } catch (e) {
-        console.warn("API Fetch Student List error:", e);
-      }
-      loadStudentDashboard();
-    }
+        const data = await apiGet("getDashboard", { studentId: currentStudentId, viewMode: "personal" });
+        if (data.studentInfo) {
+          document.getElementById('displayStudentName').textContent = data.studentInfo.name;
+          document.getElementById('displayStudentId').textContent = data.studentInfo.studentId;
+          document.getElementById('displayStudentWard').textContent = data.studentInfo.ward || "อายุรกรรม";
+          document.getElementById('statLevel').textContent = data.studentInfo.level || 1;
+          document.getElementById('statExp').textContent = data.studentInfo.exp || 0;
+          document.getElementById('statPunctual').textContent = data.studentInfo.punctualityScore || 100;
+          document.getElementById('statExpBar').style.width = ((data.studentInfo.exp % 100) || 0) + '%';
 
-    function populateStudentDropdowns(students) {
-      const studentSelect = document.getElementById('studentSelect');
-      const attSelect = document.getElementById('attStudentSelect');
-      const skillSelect = document.getElementById('skillStudentSelect');
-      const heroSelect = document.getElementById('heroStudentSelect');
-      const lateSelect = document.getElementById('lateStudentSelect');
-      if (!students || students.length === 0) return;
-
-      let html = '';
-      students.forEach(s => {
-        html += `<option value="${s.studentId}">${s.name} (${s.ward || 'วอร์ดอายุรกรรมหญิง'})</option>`;
-      });
-
-      if (studentSelect) studentSelect.innerHTML = html;
-      if (attSelect) attSelect.innerHTML = html;
-      if (skillSelect) skillSelect.innerHTML = html;
-      if (heroSelect) heroSelect.innerHTML = html;
-      if (lateSelect) lateSelect.innerHTML = html;
-    }
-
-    function onStudentSelectChange() {
-      const newId = document.getElementById('studentSelect').value;
-      const cached = sessionStorage.getItem('logged_student_' + newId);
-      if (cached === 'true') {
-        isStudentAuthenticated = true;
-        currentStudentId = newId;
-        loadStudentDashboard();
-      } else {
-        promptStudentPinLogin(newId);
-      }
-    }
-
-    function promptStudentLogin() {
-      const sid = document.getElementById('studentSelect').value;
-      promptStudentPinLogin(sid);
-    }
-
-    function promptStudentPinLogin(targetStudentId) {
-      const studentObj = studentListCache.find(s => s.studentId === targetStudentId);
-      const studentName = studentObj ? studentObj.name : targetStudentId;
-
-      Swal.fire({
-        title: 'ยืนยันรหัส PIN ส่วนบุคคล',
-        html: `<p class="text-xs text-slate-500 mb-2">เพื่อความเป็นส่วนตัว กรุณาระบุรหัส PIN ของ <strong>${studentName}</strong> (ค่าเริ่มต้น: 1234 หรือที่อาจารย์ตั้งให้)</p>`,
-        input: 'password',
-        inputAttributes: { maxlength: '10', placeholder: 'กรอก PIN' },
-        showCancelButton: true,
-        confirmButtonText: 'เข้าสู่ระบบ',
-        cancelButtonText: 'ยกเลิก',
-        confirmButtonColor: '#4338ca',
-        preConfirm: async (pin) => {
-          if (!pin) {
-            Swal.showValidationMessage('กรุณากรอกรหัส PIN');
-            return false;
-          }
-          try {
-            const res = await apiPost("verifyStudentPin", { studentId: targetStudentId, pin: pin });
-            if (res.success) return true;
-            Swal.showValidationMessage(res.message);
-            return false;
-          } catch (err) {
-            Swal.showValidationMessage(err.message);
-            return false;
+          // ตรวจสอบ PDPA Consent
+          if (!data.studentInfo.pdpaAccepted) {
+            document.getElementById('pdpaModal').classList.remove('hidden');
           }
         }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          isStudentAuthenticated = true;
-          sessionStorage.setItem('logged_student_' + targetStudentId, 'true');
-          currentStudentId = targetStudentId;
-          document.getElementById('studentSelect').value = targetStudentId;
-          Swal.fire({ icon: 'success', title: 'ยืนยันตัวตนสำเร็จ', timer: 1000, showConfirmButton: false });
-          loadStudentDashboard();
-        } else {
-          document.getElementById('studentSelect').value = currentStudentId;
-        }
-      });
-    }
 
-    function handleTogglePrivacy() {
-      const targetState = !currentStudentIsPublic;
-      Swal.fire({
-        title: targetState ? 'เปิดแชร์งานให้เพื่อน?' : 'ปิดการแชร์งาน?',
-        text: targetState ? 'เพื่อนร่วมรุ่นจะสามารถเปิดดู Care Plan ของคุณเพื่อศึกษาได้' : 'เพื่อนร่วมรุ่นจะไม่สามารถดูเนื้อหาและไฟล์งานของคุณได้อีก',
-        icon: 'question',
-        showCancelButton: true,
-        confirmButtonText: 'ยืนยัน',
-        cancelButtonText: 'ยกเลิก',
-        confirmButtonColor: targetState ? '#10b981' : '#f59e0b'
-      }).then(async (r) => {
-        if (r.isConfirmed) {
-          try {
-            const res = await apiPost("toggleStudentWorkPrivacy", { studentId: currentStudentId, isPublic: targetState });
-            Swal.fire({ icon: 'success', title: 'สำเร็จ', text: res.message });
-            currentStudentIsPublic = res.isWorkPublic;
-            updatePrivacyUI(currentStudentIsPublic);
-          } catch (e) {
-            Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: e.message });
+        // Render Missions
+        if (data.missions) {
+          document.getElementById('missionListContainer').innerHTML = data.missions.map(m => `
+            <div class="bg-indigo-50/50 border border-indigo-100 p-2.5 rounded-2xl">
+              <div class="flex justify-between items-center text-[10px] text-indigo-700 font-bold mb-1">
+                <span>${m.week}</span>
+                <span class="bg-indigo-200 px-1.5 py-0.5 rounded">${m.weight}</span>
+              </div>
+              <div class="text-xs font-semibold text-slate-800">${m.title}</div>
+              <div class="text-[10px] text-slate-500 mt-1">จำนวน: <strong>${m.amount}</strong> | กำหนดส่ง: ${m.due}</div>
+            </div>
+          `).join('');
+        }
+
+        // Render Works Table
+        if (data.works) {
+          const tbody = document.getElementById('studentWorkTableBody');
+          tbody.innerHTML = data.works.map(w => `
+            <tr class="hover:bg-slate-50">
+              <td class="p-2 whitespace-nowrap text-slate-500">${w.submitDate}</td>
+              <td class="p-2 font-medium text-slate-800">${w.subject}</td>
+              <td class="p-2 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${w.status === 'ผ่าน' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${w.status}</span></td>
+              <td class="p-2 text-center font-bold">${w.score || '-'}</td>
+              <td class="p-2 text-slate-600">${w.comment || '-'}</td>
+            </tr>
+          `).join('');
+
+          // ดึงคะแนน 10 ข้อ ล่าสุดมาขึ้น Radar Chart
+          const lastRubric = data.works.find(w => w.rubricScores);
+          if (lastRubric && lastRubric.rubricScores) {
+            initRadarChart(lastRubric.rubricScores);
           }
         }
+      } catch(e) { console.error(e); }
+    }
+
+    async function confirmPDPA() {
+      if (!document.getElementById('checkPdpa').checked) {
+        Swal.fire({ icon: 'warning', title: 'กรุณายินยอมนโยบาย PDPA' });
+        return;
+      }
+      await apiPost("acceptPDPA", { studentId: currentStudentId });
+      document.getElementById('pdpaModal').classList.add('hidden');
+      Swal.fire({ icon: 'success', title: 'ยินดีต้อนรับสู่ระบบฝึกปฏิบัติ' });
+    }
+
+    function openCheckInModal() { document.getElementById('checkInModal').classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    async function handleAttendanceCheckIn(e) {
+      e.preventDefault();
+      const status = document.getElementById('attStatus').value;
+      const note = document.getElementById('attNote').value;
+      const res = await apiPost("checkInAttendance", {
+        studentId: currentStudentId,
+        studentName: document.getElementById('displayStudentName').textContent,
+        status: status,
+        note: note
       });
-    }
-
-    function updatePrivacyUI(isPublic) {
-      const btn = document.getElementById('btnTogglePrivacy');
-      const icon = document.getElementById('privacyIcon');
-      const label = document.getElementById('privacyLabel');
-      if (isPublic) {
-        btn.className = 'shrink-0 px-2.5 py-1.5 rounded-xl text-xs font-semibold border border-emerald-300 bg-emerald-50 text-emerald-800 flex items-center gap-1 shadow-xs';
-        icon.className = 'fa-solid fa-eye text-emerald-600';
-        label.textContent = 'แชร์งานให้เพื่อนอยู่';
-      } else {
-        btn.className = 'shrink-0 px-2.5 py-1.5 rounded-xl text-xs font-semibold border border-rose-300 bg-rose-50 text-rose-800 flex items-center gap-1 shadow-xs';
-        icon.className = 'fa-solid fa-eye-slash text-rose-600';
-        label.textContent = 'ปิดเป็นส่วนตัว';
-      }
-    }
-
-    function setViewMode(mode) {
-      currentViewMode = mode;
-      const btnPersonal = document.getElementById('btnViewPersonal');
-      const btnAll = document.getElementById('btnViewAll');
-      const title = document.getElementById('titleWorkTable');
-      const labelWorks = document.getElementById('labelTotalWorks');
-
-      if (mode === 'all') {
-        btnAll.className = 'px-2 py-0.5 rounded font-semibold bg-indigo-600 text-white shadow-xs';
-        btnPersonal.className = 'px-2 py-0.5 rounded font-medium text-indigo-700 hover:bg-indigo-100';
-        title.innerHTML = '<i class="fa-solid fa-users text-indigo-600 mr-1"></i> ประวัติงานที่ส่งของทุกคนในวอร์ด';
-        labelWorks.textContent = 'งานทั้งหมดในวอร์ด';
-      } else {
-        btnPersonal.className = 'px-2 py-0.5 rounded font-semibold bg-indigo-600 text-white shadow-xs';
-        btnAll.className = 'px-2 py-0.5 rounded font-medium text-indigo-700 hover:bg-indigo-100';
-        title.innerHTML = 'ประวัติงานที่ส่ง & ผลตรวจ (เฉพาะฉัน)';
-        labelWorks.textContent = 'งานที่ส่งแล้ว';
-      }
-      loadStudentDashboard();
+      closeModal('checkInModal');
+      Swal.fire({ icon: 'success', title: res.message });
+      initDashboard();
     }
 
     function switchRole(role) {
-      if (role === 'teacher' && !isTeacherAuthenticated) {
-        promptTeacherPin();
-        return;
-      }
-
-      currentRole = role;
-      const btnStudent = document.getElementById('btnRoleStudent');
-      const btnTeacher = document.getElementById('btnRoleTeacher');
-      const studentSection = document.getElementById('studentSection');
-      const teacherSection = document.getElementById('teacherSection');
-
-      if (role === 'student') {
-        btnStudent.classList.add('role-active');
-        btnStudent.classList.remove('text-indigo-100');
-        btnTeacher.classList.remove('role-active');
-        btnTeacher.classList.add('text-indigo-100');
-        studentSection.classList.remove('hidden');
-        teacherSection.classList.add('hidden');
-        loadStudentDashboard();
-      } else {
-        btnTeacher.classList.add('role-active');
-        btnTeacher.classList.remove('text-indigo-100');
-        btnStudent.classList.remove('role-active');
-        btnStudent.classList.add('text-indigo-100');
-        studentSection.classList.add('hidden');
-        teacherSection.classList.remove('hidden');
-        refreshTeacherData();
-      }
-    }
-
-    function promptTeacherPin() {
-      Swal.fire({
-        title: 'ยืนยันตัวตนอาจารย์',
-        text: 'กรุณากรอกรหัส PIN สำหรับเข้าสู่ระบบอาจารย์',
-        input: 'password',
-        inputAttributes: { maxlength: '10', placeholder: 'กรอกรหัส 8 หลัก' },
-        showCancelButton: true,
-        confirmButtonText: 'เข้าสู่ระบบ',
-        cancelButtonText: 'ยกเลิก',
-        confirmButtonColor: '#4338ca',
-        preConfirm: (pin) => {
-          if (pin === TEACHER_PIN) {
-            return true;
-          } else {
-            Swal.showValidationMessage('รหัสผ่านไม่ถูกต้อง');
+      if (role === 'teacher') {
+        Swal.fire({
+          title: 'เข้าสู่ระบบอาจารย์นิเทศก์',
+          html: `<p class="text-xs text-slate-500 mb-2">เฉพาะ <strong>${ADMIN_EMAIL}</strong></p>`,
+          input: 'password',
+          inputAttributes: { placeholder: 'กรอกรหัสผ่านอาจารย์' },
+          showCancelButton: true,
+          confirmButtonText: 'ยืนยัน',
+          confirmButtonColor: '#4f46e5',
+          preConfirm: (pin) => {
+            if (pin === "22122531") return true;
+            Swal.showValidationMessage('รหัสผ่านอาจารย์ไม่ถูกต้อง');
             return false;
           }
-        }
-      }).then((result) => {
-        if (result.isConfirmed) {
-          isTeacherAuthenticated = true;
-          sessionStorage.setItem('nurse_teacher_auth', 'true');
-          updateTeacherLockUI(true);
-          switchRole('teacher');
-        }
-      });
-    }
-
-    function updateTeacherLockUI(unlocked) {
-      const lockIcon = document.getElementById('teacherLockIcon');
-      if (lockIcon) {
-        lockIcon.className = unlocked ? 'fa-solid fa-chalkboard-user' : 'fa-solid fa-lock';
+        }).then((r) => {
+          if (r.isConfirmed) {
+            isTeacherAuthenticated = true;
+            document.getElementById('studentSection').classList.add('hidden');
+            document.getElementById('teacherSection').classList.remove('hidden');
+            loadTeacherData();
+          }
+        });
+      } else {
+        document.getElementById('teacherSection').classList.add('hidden');
+        document.getElementById('studentSection').classList.remove('hidden');
       }
     }
 
     function lockTeacherAccess() {
       isTeacherAuthenticated = false;
-      sessionStorage.removeItem('nurse_teacher_auth');
-      updateTeacherLockUI(false);
       switchRole('student');
     }
 
     function setTeacherTab(tab) {
-      const tabs = ['review', 'late', 'students', 'hero', 'settings', 'attendance', 'competency'];
-      tabs.forEach(t => {
-        const el = document.getElementById(`teacherTab${capitalize(t)}`);
-        if (el) el.classList.add('hidden');
-        let btnId = `tab${capitalize(t === 'competency' ? 'Skill' : (t === 'attendance' ? 'Att' : (t === 'settings' ? 'Settings' : (t === 'hero' ? 'Hero' : (t === 'students' ? 'Students' : (t === 'late' ? 'Late' : 'Review'))))))}`;
-        const btn = document.getElementById(btnId);
-        if (btn) btn.className = 'flex-1 sm:flex-none px-3 py-1.5 text-xs font-semibold rounded-xl bg-slate-100 text-slate-600 hover:bg-slate-200 transition';
+      ['eval', 'students', 'skillrpg', 'att'].forEach(t => {
+        document.getElementById('teacherTab' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('hidden');
       });
-
-      const currentTabEl = document.getElementById(`teacherTab${capitalize(tab)}`);
-      if (currentTabEl) currentTabEl.classList.remove('hidden');
-
-      let activeBtnId = `tab${capitalize(tab === 'competency' ? 'Skill' : (tab === 'attendance' ? 'Att' : (tab === 'settings' ? 'Settings' : (tab === 'hero' ? 'Hero' : (tab === 'students' ? 'Students' : (tab === 'late' ? 'Late' : 'Review'))))))}`;
-      const activeBtn = document.getElementById(activeBtnId);
-      if (activeBtn) activeBtn.className = 'flex-1 sm:flex-none px-3 py-1.5 text-xs font-semibold rounded-xl bg-indigo-600 text-white shadow-sm transition';
-
-      if (tab === 'hero') refreshHeroTable();
-      else if (tab === 'settings') loadTeacherSettings();
-      else if (tab === 'students') renderTeacherStudentTable();
-      else if (tab === 'late') refreshLateTable();
+      document.getElementById('teacherTab' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
     }
 
-    function capitalize(s) { return s.charAt(0).toUpperCase() + s.slice(1); }
-
-    async function loadStudentDashboard() {
-      currentStudentId = document.getElementById('studentSelect').value;
-      try {
-        const data = await apiGet("getDashboard", { studentId: currentStudentId, viewMode: currentViewMode });
-        renderStudentDashboard(data);
-      } catch (e) {
-        console.error("Fetch Dashboard Error:", e);
-      }
-    }
-
-    function renderStudentDashboard(data) {
-      if (!data) return;
-
-      window.cachedStudentWorks = data.recentWorks || [];
-
-      if (data.settings) {
-        currentSubmissionSettings = data.settings;
-        
-        const cWork = document.getElementById('containerWorkSection');
-        const cAtt = document.getElementById('containerAttSection');
-        const cSkill = document.getElementById('containerSkillSection');
-        const cHero = document.getElementById('containerHeroSection');
-
-        if (cWork) cWork.style.display = data.settings.featViewWork !== false ? '' : 'none';
-        if (cAtt) cAtt.style.display = data.settings.featViewAtt !== false ? '' : 'none';
-        if (cSkill) cSkill.style.display = data.settings.featViewSkills !== false ? '' : 'none';
-        if (cHero) cHero.style.display = data.settings.featViewHero !== false ? '' : 'none';
-
-        const banner = document.getElementById('studentSubmissionBanner');
-        const icon = document.getElementById('bannerIcon');
-        const title = document.getElementById('bannerTitle');
-        const subtitle = document.getElementById('bannerSubtitle');
-        const badge = document.getElementById('bannerBadge');
-        const dueBadge = document.getElementById('studentDueBadge');
-        const submitBtn = document.getElementById('btnSubmitWork');
-
-        const dueStr = (data.settings.dueDate ? `${data.settings.dueDate} เวลา ` : 'ประจำวัน ') + (data.settings.dueTime || '18:00') + ' น.';
-        dueBadge.innerHTML = `<i class="fa-regular fa-clock mr-1"></i>หมดเขต ${data.settings.dueTime || '18:00'} น.`;
-
-        if (data.settings.enabled) {
-          banner.className = 'p-3 sm:p-4 rounded-2xl flex flex-wrap items-center justify-between gap-2.5 shadow-sm border border-emerald-200 bg-emerald-50/40 text-xs';
-          icon.className = 'w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm sm:text-lg shrink-0';
-          icon.innerHTML = '<i class="fa-solid fa-circle-check"></i>';
-          title.textContent = 'ระบบเปิดรับส่งงานตามปกติ';
-          title.className = 'font-bold text-xs sm:text-sm text-emerald-900';
-          subtitle.textContent = `หมดเขต: ${dueStr} (ส่งช้าหัก ${data.settings.lateDeduction} คะแนน)`;
-          subtitle.className = 'text-[11px] text-emerald-700';
-          badge.textContent = 'เปิดรับงาน';
-          badge.className = 'font-semibold px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs bg-emerald-100 text-emerald-800 border border-emerald-300';
-          
-          submitBtn.disabled = false;
-          submitBtn.className = 'w-full bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-semibold py-2.5 rounded-xl text-xs shadow-sm transition flex items-center justify-center gap-2 cursor-pointer';
-          submitBtn.innerHTML = '<i class="fa-solid fa-paper-plane"></i> บันทึกและส่งงานให้อาจารย์';
-        } else {
-          banner.className = 'p-3 sm:p-4 rounded-2xl flex flex-wrap items-center justify-between gap-2.5 shadow-sm border border-rose-200 bg-rose-50/50 text-xs';
-          icon.className = 'w-8 h-8 sm:w-10 sm:h-10 rounded-xl bg-rose-100 text-rose-600 flex items-center justify-center text-sm sm:text-lg shrink-0';
-          icon.innerHTML = '<i class="fa-solid fa-lock"></i>';
-          title.textContent = 'อาจารย์ปิดระบบรับส่งงานแล้ว';
-          title.className = 'font-bold text-xs sm:text-sm text-rose-900';
-          subtitle.textContent = 'ไม่สามารถส่งงานใหม่ได้ในขณะนี้';
-          subtitle.className = 'text-[11px] text-rose-700';
-          badge.textContent = 'ปิดรับงานแล้ว';
-          badge.className = 'font-semibold px-2.5 py-0.5 rounded-full text-[10px] sm:text-xs bg-rose-100 text-rose-800 border border-rose-300';
-
-          submitBtn.disabled = true;
-          submitBtn.className = 'w-full bg-slate-300 text-slate-500 font-semibold py-2.5 rounded-xl text-xs cursor-not-allowed flex items-center justify-center gap-2';
-          submitBtn.innerHTML = '<i class="fa-solid fa-lock"></i> ระบบปิดรับงานชั่วคราว';
-        }
-      }
-
-      if (data.studentInfo) {
-        document.getElementById('studentDetailText').innerHTML = `
-          <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 mr-1"></span>
-          กลุ่ม: <strong>${data.studentInfo.group || 'ปี 2 กลุ่ม 11'}</strong> | วอร์ด: <strong>${data.studentInfo.ward || 'วอร์ดอายุรกรรมหญิง'}</strong>
-        `;
-        document.getElementById('displayScore').textContent = data.studentInfo.punctualityScore !== undefined ? data.studentInfo.punctualityScore : 100;
-        document.getElementById('displayHeroScore').textContent = data.totalHeroScore !== undefined ? data.totalHeroScore : (data.studentInfo.heroScore || 0);
-
-        currentStudentIsPublic = data.studentInfo.isWorkPublic !== false;
-        updatePrivacyUI(currentStudentIsPublic);
-
-        const score = Number(data.studentInfo.punctualityScore) || 100;
-        const scoreStatus = document.getElementById('scoreStatus');
-        if (score >= 90) {
-          scoreStatus.textContent = 'ตรงเวลาสม่ำเสมอ (ดีเยี่ยม)';
-          scoreStatus.className = 'text-[9px] font-medium text-emerald-600';
-        } else if (score >= 80) {
-          scoreStatus.textContent = 'วินัยปานกลาง (มีสาย/ช้า)';
-          scoreStatus.className = 'text-[9px] font-medium text-amber-600';
-        } else {
-          scoreStatus.textContent = 'ควรปรับปรุงความตรงเวลา';
-          scoreStatus.className = 'text-[9px] font-medium text-rose-600';
-        }
-      }
-
-      if (data.expStats) {
-        document.getElementById('displayStudentLevel').textContent = data.expStats.currentLevel || 1;
-        document.getElementById('displayExpPoints').textContent = data.expStats.totalExp || 0;
-        document.getElementById('expProgressBar').style.width = (data.expStats.expProgress || 0) + '%';
-      }
-
-      document.getElementById('statTotalWorks').textContent = data.workStats.total;
-      document.getElementById('statPendingWorks').textContent = data.workStats.pending;
-      document.getElementById('statNeedFixWorks').textContent = data.workStats.needsRevision;
-      document.getElementById('statLateWorks').textContent = data.workStats.lateSubmissions || 0;
-      document.getElementById('statAttOnTime').textContent = data.attStats.onTime;
-      document.getElementById('statAttLate').textContent = data.attStats.late;
-      document.getElementById('statPassedSkills').textContent = data.skillStats.passed;
-      document.getElementById('statTotalSkills').textContent = data.skillStats.total;
-
-      const workTbody = document.getElementById('studentWorkTableBody');
-      if (!data.recentWorks || data.recentWorks.length === 0) {
-        workTbody.innerHTML = `<tr><td colspan="7" class="p-4 text-center text-slate-400">ยังไม่มีประวัติการส่งงาน</td></tr>`;
-      } else {
-        workTbody.innerHTML = data.recentWorks.map(w => {
-          const isMyWork = (String(w.studentId) === String(currentStudentId)) || (w.isOwner === true);
-
-          let badgeClass = 'badge-pending';
-          if (w.status === 'ผ่าน') badgeClass = 'badge-approved';
-          else if (w.status === 'ต้องแก้ไข') badgeClass = 'badge-revision';
-          else if (w.status === 'ไม่ผ่าน') badgeClass = 'badge-rejected';
-          else if (w.status === 'ส่งแก้ไขแล้ว (รอตรวจใหม่)') badgeClass = 'bg-blue-100 text-blue-800 border border-blue-300';
-
-          let fileHtml = '-';
-          let commentHtml = '-';
-          let resubmitBtnHtml = '-';
-
-          if (isMyWork) {
-            fileHtml = w.fileUrl ? `<a href="${w.fileUrl}" target="_blank" class="text-indigo-600 hover:text-indigo-800 font-semibold flex items-center gap-1 text-[11px]"><i class="fa-solid fa-paperclip"></i> ไฟล์งาน</a>` : '<span class="text-slate-400">-</span>';
-            
-            if (w.teacherReturnFileUrl) {
-              fileHtml += `<div class="mt-1"><a href="${w.teacherReturnFileUrl}" target="_blank" class="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-emerald-100 text-emerald-800 hover:bg-emerald-200 font-bold text-[10px] border border-emerald-300 shadow-xs"><i class="fa-solid fa-file-circle-check text-emerald-600"></i> ไฟล์ตรวจกลับ</a></div>`;
-            }
-
-            if (w.comment && w.comment !== '-') {
-              commentHtml = `<div class="bg-amber-50 text-amber-900 border border-amber-200 p-1.5 rounded-lg text-[11px] font-medium"><i class="fa-solid fa-comment-dots text-amber-600 mr-1"></i> ${escapeHtml(w.comment)}</div>`;
-            }
-
-            if (w.status === 'ต้องแก้ไข') {
-              resubmitBtnHtml = `
-                <button onclick="openResubmitModal('${w.workId}')" class="px-2.5 py-1 bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white rounded-lg text-[11px] font-bold shadow-xs flex items-center gap-1">
-                  <i class="fa-solid fa-reply"></i> ส่งงานแก้กลับ
-                </button>
-              `;
-            } else if (w.status === 'ส่งแก้ไขแล้ว (รอตรวจใหม่)') {
-              resubmitBtnHtml = `<span class="text-[10px] text-blue-600 font-semibold">ส่งแก้แล้ว</span>`;
-            }
-          } else {
-            if (w.fileUrl) {
-              fileHtml = `<a href="${w.fileUrl}" target="_blank" class="text-emerald-700 hover:text-emerald-900 font-medium flex items-center gap-1 text-[10px]"><i class="fa-solid fa-book-open"></i> ดูตัวอย่าง</a>`;
-            } else {
-              fileHtml = `<span class="text-slate-400 text-[10px]"><i class="fa-solid fa-lock text-slate-300"></i> ส่วนตัว</span>`;
-            }
-            commentHtml = `<span class="text-slate-400 text-[10px] italic"><i class="fa-solid fa-lock text-slate-300"></i> เฉพาะเจ้าของงาน</span>`;
-            resubmitBtnHtml = `<span class="text-slate-300 text-[10px]">-</span>`;
-          }
-
-          const lateBadge = w.isLate ? '<span class="ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold badge-late">ส่งช้า</span>' : '';
-
-          return `
-            <tr class="hover:bg-indigo-50/40 transition ${isMyWork ? 'bg-indigo-50/20' : ''}">
-              <td class="p-2 text-slate-500 whitespace-nowrap text-[11px]">${w.submitDate} ${lateBadge}</td>
-              <td class="p-2">
-                <div class="font-medium text-slate-800 text-[11px]">${escapeHtml(w.subject)}</div>
-                <div class="text-[10px] text-slate-400 flex items-center gap-1">
-                  ${escapeHtml(w.studentName)}
-                  ${isMyWork ? '<span class="bg-indigo-100 text-indigo-700 px-1 rounded text-[9px] font-bold">ของฉัน</span>' : ''}
-                </div>
-              </td>
-              <td class="p-2 whitespace-nowrap">${fileHtml}</td>
-              <td class="p-2 text-center whitespace-nowrap"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${badgeClass}">${w.status}</span></td>
-              <td class="p-2 text-center font-bold text-slate-800 whitespace-nowrap">${w.score || '-'}</td>
-              <td class="p-2 text-slate-700 min-w-[140px]">${commentHtml}</td>
-              <td class="p-2 text-center whitespace-nowrap">${resubmitBtnHtml}</td>
-            </tr>
-          `;
-        }).join('');
-      }
-
-      const attTbody = document.getElementById('studentAttTableBody');
-      if (!data.recentAtt || data.recentAtt.length === 0) {
-        attTbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-400">ไม่มีข้อมูล</td></tr>`;
-      } else {
-        attTbody.innerHTML = data.recentAtt.map(a => {
-          let stColor = 'text-slate-600 bg-slate-50 border border-slate-200';
-          if (a.status === 'ตรงเวลา') stColor = 'text-emerald-700 bg-emerald-50 border border-emerald-200';
-          else if (a.status === 'สาย') stColor = 'text-amber-700 bg-amber-50 border border-amber-200';
-          else if (a.status === 'ส่งงานล่าช้า') stColor = 'text-orange-700 bg-orange-50 border border-orange-200';
-          else if (a.status === 'ขาด') stColor = 'text-rose-700 bg-rose-50 border border-rose-200';
-          else if (a.status === 'ลา') stColor = 'text-blue-700 bg-blue-50 border border-blue-200';
-
-          let pts = a.deductScore > 0 ? `<span class="text-rose-600 font-bold">-${a.deductScore}</span>` : (a.bonusScore > 0 ? `<span class="text-emerald-600 font-bold">+${a.bonusScore}</span>` : '-');
-          let isMe = (String(a.studentId) === String(currentStudentId));
-
-          return `
-            <tr class="hover:bg-slate-50 ${isMe ? 'bg-indigo-50/20 font-medium' : ''}">
-              <td class="py-1.5 text-[11px] whitespace-nowrap text-slate-500">${a.date} ${a.time || ''}</td>
-              <td class="py-1.5 text-[11px] whitespace-nowrap text-slate-800">
-                ${escapeHtml(a.studentName || '')}
-                ${isMe ? '<span class="text-[9px] text-indigo-600 font-bold ml-1">(ฉัน)</span>' : ''}
-              </td>
-              <td class="py-1.5 whitespace-nowrap"><span class="px-1.5 py-0.5 rounded text-[10px] font-semibold ${stColor}">${a.status}</span></td>
-              <td class="py-1.5 text-[11px] whitespace-nowrap">${pts}</td>
-            </tr>
-          `;
-        }).join('');
-      }
-
-      const skillTbody = document.getElementById('studentSkillTableBody');
-      if (!data.recentSkills || data.recentSkills.length === 0) {
-        skillTbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-400">ไม่มีข้อมูล</td></tr>`;
-      } else {
-        skillTbody.innerHTML = data.recentSkills.map(k => `
-          <tr class="hover:bg-slate-50">
-            <td class="py-1.5 text-[11px]">${k.date}</td>
-            <td class="py-1.5 font-medium text-slate-800 text-[11px] truncate max-w-[120px]">${escapeHtml(k.skillName)}</td>
-            <td class="py-1.5 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${k.result === 'ผ่าน' ? 'badge-approved' : 'badge-rejected'}">${k.result}</span></td>
-            <td class="py-1.5 text-center font-bold text-[11px]">${k.score || '-'}</td>
-          </tr>
-        `).join('');
-      }
-
-      const lbTbody = document.getElementById('heroLeaderboardBody');
-      if (!data.leaderboard || data.leaderboard.length === 0) {
-        lbTbody.innerHTML = `<tr><td colspan="4" class="p-3 text-center text-slate-400">ยังไม่มีข้อมูลอันดับ</td></tr>`;
-      } else {
-        lbTbody.innerHTML = data.leaderboard.map(lb => {
-          let rankBadge = `<span class="font-bold text-slate-500">${lb.rank}</span>`;
-          if (lb.rank === 1) rankBadge = `<span class="w-5 h-5 rounded-full bg-amber-400 text-white inline-flex items-center justify-center font-black shadow-xs text-[10px]">🥇</span>`;
-          else if (lb.rank === 2) rankBadge = `<span class="w-5 h-5 rounded-full bg-slate-300 text-slate-800 inline-flex items-center justify-center font-black shadow-xs text-[10px]">🥈</span>`;
-          else if (lb.rank === 3) rankBadge = `<span class="w-5 h-5 rounded-full bg-amber-600 text-white inline-flex items-center justify-center font-black shadow-xs text-[10px]">🥉</span>`;
-
-          const isMe = (String(lb.studentId) === String(currentStudentId));
-
-          return `
-            <tr class="hover:bg-amber-100/50 ${isMe ? 'bg-amber-100/70 font-bold' : ''}">
-              <td class="py-1.5 text-center">${rankBadge}</td>
-              <td class="py-1.5 text-[11px] text-slate-800 truncate max-w-[110px]">
-                ${escapeHtml(lb.name)}
-                ${isMe ? '<span class="text-[9px] text-amber-700 ml-1 font-bold">(ฉัน)</span>' : ''}
-              </td>
-              <td class="py-1.5 text-center font-extrabold text-amber-600 text-[11px]">+${lb.heroScore}</td>
-              <td class="py-1.5 text-center text-slate-600 text-[11px]">${lb.punctualityScore}</td>
-            </tr>
-          `;
-        }).join('');
-      }
-    }
-
-    function renderTeacherStudentTable() {
-      const tbody = document.getElementById('teacherStudentTableBody');
-      if (!studentListCache || studentListCache.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="p-3 text-center text-slate-400">ไม่พบรายชื่อนักศึกษา</td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = studentListCache.map(s => `
-        <tr class="hover:bg-slate-50 transition">
-          <td class="p-2.5 font-bold text-indigo-900 whitespace-nowrap">${s.studentId}</td>
-          <td class="p-2.5 font-semibold text-slate-800 whitespace-nowrap">${escapeHtml(s.name)}</td>
-          <td class="p-2.5 text-slate-600 whitespace-nowrap">${escapeHtml(s.ward || '-')}</td>
-          <td class="p-2.5 text-center whitespace-nowrap"><span class="px-2 py-0.5 rounded bg-rose-50 text-rose-700 font-bold border border-rose-200">${escapeHtml(s.pin || '1234')}</span></td>
-          <td class="p-2.5 text-center font-bold text-slate-700 whitespace-nowrap">${s.punctualityScore || 100}</td>
-          <td class="p-2.5 text-center font-bold text-amber-600 whitespace-nowrap">+${s.heroScore || 0}</td>
-          <td class="p-2.5 text-center whitespace-nowrap">${s.isWorkPublic !== false ? '<span class="text-emerald-600 font-semibold">เปิด</span>' : '<span class="text-rose-600 font-semibold">ปิด</span>'}</td>
-          <td class="p-2.5 text-center whitespace-nowrap">
-            <button onclick="openEditStudentModal('${s.studentId}')" class="px-2.5 py-1 bg-indigo-50 hover:bg-indigo-100 text-indigo-700 border border-indigo-200 rounded-lg text-xs font-semibold">
-              <i class="fa-solid fa-pen-to-square mr-1"></i> แก้ไข PIN/ข้อมูล
+    async function loadTeacherData() {
+      const data = await apiGet("getDashboard", { studentId: currentStudentId, viewMode: "all" });
+      
+      // Render Works
+      document.getElementById('teacherWorkTableBody').innerHTML = data.works.map(w => `
+        <tr class="hover:bg-slate-50">
+          <td class="p-2 font-bold text-slate-800">${w.studentName}</td>
+          <td class="p-2 text-slate-500">${w.submitDate}</td>
+          <td class="p-2">${w.subject}</td>
+          <td class="p-2"><a href="${w.fileUrl}" target="_blank" class="text-indigo-600 font-semibold underline">ดูไฟล์งาน</a></td>
+          <td class="p-2 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${w.status === 'ผ่าน' ? 'bg-emerald-100 text-emerald-700' : 'bg-amber-100 text-amber-700'}">${w.status}</span></td>
+          <td class="p-2 text-center font-bold">${w.score || '-'}</td>
+          <td class="p-2 text-center">
+            <button onclick="openEvalCarePlanModal('${w.workId}', '${w.studentId}')" class="px-2.5 py-1 bg-indigo-600 text-white rounded-lg text-xs font-bold">
+              ประเมิน 10 ข้อ
             </button>
+          </td>
+        </tr>
+      `).join('');
+
+      // Populate Dropdowns
+      const optHtml = data.students.map(s => `<option value="${s.studentId}">${s.name} (${s.ward})</option>`).join('');
+      document.getElementById('grantStudentSelect').innerHTML = optHtml;
+
+      const skillOpt = data.skills.map(sk => `<option value="${sk.name}">${sk.name} (+${sk.exp} EXP)</option>`).join('');
+      document.getElementById('grantSkillSelect').innerHTML = skillOpt;
+
+      // Render Students Table
+      document.getElementById('teacherStudentTableBody').innerHTML = data.students.map(s => `
+        <tr class="hover:bg-slate-50">
+          <td class="p-2 font-bold text-indigo-900">${s.studentId}</td>
+          <td class="p-2">${s.name}</td>
+          <td class="p-2">${s.ward}</td>
+          <td class="p-2 text-center font-bold text-rose-600">${s.pin}</td>
+          <td class="p-2 text-center">Lv.${s.level}</td>
+          <td class="p-2 text-center">${s.pdpaAccepted ? '<span class="text-emerald-600">ยินยอม</span>' : '<span class="text-slate-400">ยังไม่กดยินยอม</span>'}</td>
+          <td class="p-2 text-center">
+            <button onclick="deleteStudent('${s.studentId}')" class="text-rose-600 hover:underline font-bold">ลบ</button>
           </td>
         </tr>
       `).join('');
     }
 
-    function openEditStudentModal(studentId) {
-      let stu = null;
-      if (studentId) {
-        stu = studentListCache.find(s => s.studentId === studentId);
-      }
+    function openEvalCarePlanModal(workId, studentId) {
+      document.getElementById('evalWorkId').value = workId;
+      document.getElementById('evalStudentId').value = studentId;
+      document.getElementById('evalModal').classList.remove('hidden');
+    }
+
+    async function handleCarePlanEvaluation(e) {
+      e.preventDefault();
+      const workId = document.getElementById('evalWorkId').value;
+      const studentId = document.getElementById('evalStudentId').value;
+      const comment = document.getElementById('evalComment').value;
       
-      document.getElementById('editStuId').value = stu ? stu.studentId : ('STU-' + (studentListCache.length + 1 < 10 ? '0' : '') + (studentListCache.length + 1));
-      document.getElementById('editStuId').readOnly = !!stu;
-      document.getElementById('editStuName').value = stu ? stu.name : '';
-      document.getElementById('editStuPin').value = stu ? (stu.pin || '1234') : '1234';
-      document.getElementById('editStuWard').value = stu ? (stu.ward || 'วอร์ดอายุรกรรมหญิง') : 'วอร์ดอายุรกรรมหญิง';
-      document.getElementById('editStuScore').value = stu ? (stu.punctualityScore !== undefined ? stu.punctualityScore : 100) : 100;
-      document.getElementById('editStuHero').value = stu ? (stu.heroScore || 0) : 0;
-      document.getElementById('editStuGroup').value = stu ? (stu.group || 'ปี 2 กลุ่ม 11') : 'ปี 2 กลุ่ม 11';
-      document.getElementById('editStuPublic').checked = stu ? (stu.isWorkPublic !== false) : true;
+      const scores = [];
+      for (let i = 0; i < 10; i++) {
+        const val = document.querySelector(`input[name="rubric_${i}"]:checked`).value;
+        scores.push(Number(val));
+      }
 
-      document.getElementById('editStudentModal').classList.remove('hidden');
+      const res = await apiPost("evaluateDailyCarePlan", {
+        workId: workId,
+        studentId: studentId,
+        rubricScores: scores,
+        comment: comment
+      }, ADMIN_EMAIL);
+
+      closeModal('evalModal');
+      Swal.fire({ icon: 'success', title: 'ผลการประเมิน', text: res.message });
+      loadTeacherData();
     }
 
-    function closeEditStudentModal() {
-      document.getElementById('editStudentModal').classList.add('hidden');
-    }
-
-    async function handleSaveStudentInfo(e) {
+    async function handleGrantSkill(e) {
       e.preventDefault();
-      const payload = {
-        studentId: document.getElementById('editStuId').value.trim(),
-        name: document.getElementById('editStuName').value.trim(),
-        pin: document.getElementById('editStuPin').value.trim(),
-        ward: document.getElementById('editStuWard').value.trim(),
-        punctualityScore: Number(document.getElementById('editStuScore').value) || 100,
-        heroScore: Number(document.getElementById('editStuHero').value) || 0,
-        group: document.getElementById('editStuGroup').value.trim(),
-        isWorkPublic: document.getElementById('editStuPublic').checked
-      };
+      const sSelect = document.getElementById('grantStudentSelect');
+      const studentId = sSelect.value;
+      const studentName = sSelect.options[sSelect.selectedIndex].text.split(' (')[0];
+      const skillName = document.getElementById('grantSkillSelect').value;
+      const exp = document.getElementById('grantExp').value;
+      const feedback = document.getElementById('grantFeedback').value;
 
-      Swal.fire({ title: 'กำลังบันทึกข้อมูล นศ. & PIN...', didOpen: () => Swal.showLoading() });
-
-      try {
-        const res = await apiPost("updateStudentInfo", payload);
-        Swal.fire({ icon: 'success', title: 'สำเร็จ', text: res.message });
-        closeEditStudentModal();
-        initData();
-      } catch (err) {
-        Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: err.message });
-      }
-    }
-
-    async function handleTeacherRecordLate(e) {
-      e.preventDefault();
-      const select = document.getElementById('lateStudentSelect');
-      const studentId = select.value;
-      const studentName = select.options[select.selectedIndex].text.split(' (')[0];
-      const date = document.getElementById('lateDate').value;
-      const time = document.getElementById('lateTime').value;
-      const subject = document.getElementById('lateSubject').value;
-      const deductPoints = Number(document.getElementById('lateDeductPts').value) || 1;
-      const note = document.getElementById('lateNote').value;
-
-      Swal.fire({ title: 'กำลังบันทึกส่งงานล่าช้า...', didOpen: () => Swal.showLoading() });
-
-      const payload = { studentId, studentName, date, time, subject, deductPoints, note };
-
-      try {
-        const res = await apiPost("recordTeacherManualLate", payload);
-        Swal.fire({ icon: 'success', title: 'สำเร็จ!', text: res.message });
-        document.getElementById('lateSubject').value = '';
-        document.getElementById('lateNote').value = '';
-        refreshLateTable();
-        refreshTeacherData();
-      } catch (err) {
-        Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: err.message });
-      }
-    }
-
-    async function refreshLateTable() {
-      try {
-        const works = await apiGet("getDailyWorkList");
-        renderLateTable(works);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    function renderLateTable(works) {
-      const tbody = document.getElementById('allLateListBody');
-      if (!works) return;
-      const lateList = works.filter(w => w.isLate === true);
-
-      if (lateList.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">ยังไม่มีรายการส่งงานล่าช้า</td></tr>';
-        return;
-      }
-
-      tbody.innerHTML = lateList.map(w => `
-        <tr class="hover:bg-rose-50/40">
-          <td class="p-2 whitespace-nowrap text-slate-500">${w.submitDate}</td>
-          <td class="p-2 font-bold text-slate-800 whitespace-nowrap">${escapeHtml(w.studentName)}</td>
-          <td class="p-2 font-semibold text-slate-700">${escapeHtml(w.subject)}</td>
-          <td class="p-2 text-center font-bold text-rose-600">-1 คะแนน</td>
-          <td class="p-2 text-slate-500">${escapeHtml(w.comment || 'ส่งงานล่าช้า')}</td>
-        </tr>
-      `).join('');
-    }
-
-    function openResubmitModal(workId) {
-      const work = (window.cachedStudentWorks || []).find(w => w.workId === workId);
-      if (!work) return;
-
-      document.getElementById('resubmitWorkId').value = work.workId;
-      document.getElementById('resubmitSubjectText').textContent = work.subject;
-      document.getElementById('resubmitCommentText').textContent = work.comment || 'ให้อาจารย์ตรวจสอบใหม่';
-      document.getElementById('resubmitContent').value = '';
-      document.getElementById('resubmitFile').value = '';
-      document.getElementById('resubmitLink').value = '';
-      document.getElementById('resubmitModal').classList.remove('hidden');
-    }
-
-    function closeResubmitModal() {
-      document.getElementById('resubmitModal').classList.add('hidden');
-    }
-
-    function handleResubmitWork(e) {
-      e.preventDefault();
-      const workId = document.getElementById('resubmitWorkId').value;
-      const content = document.getElementById('resubmitContent').value;
-      const link = document.getElementById('resubmitLink').value;
-      const fileInput = document.getElementById('resubmitFile');
-
-      Swal.fire({
-        title: 'กำลังส่งงานแก้ไขกลับ...',
-        text: 'ระบบกำลังส่งการแก้ไขให้อาจารย์ตรวจใหม่...',
-        allowOutsideClick: false,
-        didOpen: () => Swal.showLoading()
-      });
-
-      const sendData = {
-        resubmitWorkId: workId,
-        content: content,
-        externalLink: link
-      };
-
-      if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          sendData.fileBase64 = evt.target.result;
-          sendData.fileName = file.name;
-          sendData.mimeType = file.type;
-          executeResubmit(sendData);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        executeResubmit(sendData);
-      }
-    }
-
-    async function executeResubmit(sendData) {
-      try {
-        const res = await apiPost("submitDailyWork", sendData);
-        Swal.fire({ icon: 'success', title: 'ส่งงานแก้ไขแล้ว!', text: res.message });
-        closeResubmitModal();
-        loadStudentDashboard();
-      } catch (err) {
-        Swal.fire({ icon: 'error', title: 'เชื่อมต่อล้มเหลว', text: err.message });
-      }
-    }
-
-    async function handleHeroSubmit(e) {
-      e.preventDefault();
-      const select = document.getElementById('heroStudentSelect');
-      const studentId = select.value;
-      const studentName = select.options[select.selectedIndex].text.split(' (')[0];
-      const bed = document.getElementById('heroBed').value;
-      const activity = document.getElementById('heroActivity').value;
-      const points = Number(document.getElementById('heroPoints').value) || 5;
-
-      Swal.fire({ title: 'กำลังบันทึกคะแนน Hero...', didOpen: () => Swal.showLoading() });
-
-      const deedData = { studentId, studentName, bed, activity, points, recorder: 'อาจารย์นิเทศก์' };
-
-      try {
-        const res = await apiPost("recordGoodDeed", deedData);
-        Swal.fire({ icon: 'success', title: 'มอบคะแนน Hero สำเร็จ!', text: res.message });
-        document.getElementById('heroBed').value = '';
-        document.getElementById('heroActivity').value = '';
-        refreshHeroTable();
-      } catch (err) {
-        Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: err.message });
-      }
-    }
-
-    async function refreshHeroTable() {
-      try {
-        const deeds = await apiGet("getGoodDeedsList");
-        renderAllHeroTable(deeds);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    function renderAllHeroTable(deeds) {
-      const tbody = document.getElementById('allHeroTableBody');
-      if (!deeds || deeds.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">ยังไม่มีบันทึกความดี</td></tr>';
-        return;
-      }
-      tbody.innerHTML = deeds.map(d => `
-        <tr class="hover:bg-amber-50/50">
-          <td class="p-2 whitespace-nowrap text-slate-500">${d.date}</td>
-          <td class="p-2 font-bold text-slate-800 whitespace-nowrap">${escapeHtml(d.studentName)}</td>
-          <td class="p-2 font-semibold text-amber-900">${escapeHtml(d.bed)}</td>
-          <td class="p-2 text-slate-700">${escapeHtml(d.activity)}</td>
-          <td class="p-2 text-center font-extrabold text-amber-600">+${d.points}</td>
-        </tr>
-      `).join('');
-    }
-
-    async function loadTeacherSettings() {
-      try {
-        const settings = await apiGet("getSettings");
-        populateSettingsForm(settings);
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    function populateSettingsForm(settings) {
-      currentSubmissionSettings = settings;
-      document.getElementById('settingEnabled').checked = settings.enabled;
-      document.getElementById('settingDueDate').value = settings.dueDate || '';
-      document.getElementById('settingDueTime').value = settings.dueTime || '18:00';
-      document.getElementById('settingAllowLate').checked = settings.allowLate;
-      document.getElementById('settingLateDeduction').value = settings.lateDeduction || 1;
-
-      document.getElementById('featViewWork').checked = settings.featViewWork !== false;
-      document.getElementById('featViewAtt').checked = settings.featViewAtt !== false;
-      document.getElementById('featViewSkills').checked = settings.featViewSkills !== false;
-      document.getElementById('featViewHero').checked = settings.featViewHero !== false;
-
-      const badge = document.getElementById('currentStatusBadge');
-      if (settings.enabled) {
-        badge.textContent = 'กำลังเปิดรับงาน';
-        badge.className = 'text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full font-semibold bg-emerald-100 text-emerald-800 border border-emerald-300';
-      } else {
-        badge.textContent = 'ปิดรับงานแล้ว';
-        badge.className = 'text-[10px] sm:text-xs px-2.5 py-0.5 rounded-full font-semibold bg-rose-100 text-rose-800 border border-rose-300';
-      }
-    }
-
-    async function handleSaveSettings(e) {
-      e.preventDefault();
-      const newSettings = {
-        enabled: document.getElementById('settingEnabled').checked,
-        dueDate: document.getElementById('settingDueDate').value,
-        dueTime: document.getElementById('settingDueTime').value,
-        allowLate: document.getElementById('settingAllowLate').checked,
-        lateDeduction: Number(document.getElementById('settingLateDeduction').value) || 1,
-        featViewWork: document.getElementById('featViewWork').checked,
-        featViewAtt: document.getElementById('featViewAtt').checked,
-        featViewSkills: document.getElementById('featViewSkills').checked,
-        featViewHero: document.getElementById('featViewHero').checked
-      };
-
-      Swal.fire({ title: 'กำลังบันทึกการตั้งค่า...', didOpen: () => Swal.showLoading() });
-
-      try {
-        const res = await apiPost("updateSettings", newSettings);
-        Swal.fire({ icon: 'success', title: 'สำเร็จ!', text: res.message });
-        loadTeacherSettings();
-      } catch (err) {
-        Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: err.message });
-      }
-    }
-
-    function handleWorkSubmit(e) {
-      e.preventDefault();
-      const selectElement = document.getElementById('studentSelect');
-      const studentId = selectElement.value;
-      const studentName = selectElement.options[selectElement.selectedIndex].text.split(' (')[0];
-      const subject = document.getElementById('workSubject').value;
-      const content = document.getElementById('workContent').value;
-      const link = document.getElementById('workLink').value;
-      const fileInput = document.getElementById('workFile');
-
-      Swal.fire({
-        title: 'กำลังส่งงาน...',
-        text: 'ระบบกำลังบันทึกไปยัง Google Drive & Sheet',
-        allowOutsideClick: false,
-        didOpen: () => Swal.showLoading()
-      });
-
-      const sendData = {
+      const res = await apiPost("grantSkillExp", {
         studentId: studentId,
         studentName: studentName,
-        subject: subject,
-        content: content,
-        externalLink: link
-      };
+        skillName: skillName,
+        exp: exp,
+        feedback: feedback
+      }, ADMIN_EMAIL);
 
-      if (fileInput.files.length > 0) {
-        const file = fileInput.files[0];
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          sendData.fileBase64 = evt.target.result;
-          sendData.fileName = file.name;
-          sendData.mimeType = file.type;
-          executeWorkSubmit(sendData);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        executeWorkSubmit(sendData);
-      }
+      Swal.fire({ icon: 'success', title: res.message });
     }
 
-    async function executeWorkSubmit(sendData) {
-      try {
-        const res = await apiPost("submitDailyWork", sendData);
-        if (res.success) {
-          if (res.isLate) {
-            Swal.fire({
-              icon: 'warning',
-              title: 'ส่งงานล่าช้า!',
-              html: `<div class="text-left text-xs sm:text-sm">
-                <p class="font-bold text-rose-600 mb-1">⚠️ ส่งงานเกินเวลาที่กำหนด</p>
-                <p class="text-slate-700">${res.message}</p>
-                <p class="text-[11px] text-slate-500 mt-2">ระบบได้เพิ่มสถิติ <strong>'ส่งงานล่าช้า'</strong> ในแดชบอร์ดและหักคะแนนเรียบร้อยแล้ว</p>
-              </div>`,
-              confirmButtonColor: '#ea580c'
-            });
-          } else {
-            Swal.fire({ icon: 'success', title: 'ส่งงานสำเร็จ!', text: res.message });
-          }
-          document.getElementById('formSubmitWork').reset();
-          loadStudentDashboard();
-        } else {
-          Swal.fire({ icon: 'error', title: 'ไม่สามารถส่งงานได้', text: res.message });
-        }
-      } catch (err) {
-        Swal.fire({ icon: 'error', title: 'เชื่อมต่อล้มเหลว', text: err.message });
+    async function deleteStudent(studentId) {
+      const confirm = await Swal.fire({
+        title: 'ยืนยันลบนักศึกษา?',
+        text: 'ข้อมูลคะแนนและประวัติงานของรหัสนี้จะถูกลบออก',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#e11d48',
+        confirmButtonText: 'ลบข้อมูล'
+      });
+      if (confirm.isConfirmed) {
+        await apiPost("deleteStudent", { studentId: studentId }, ADMIN_EMAIL);
+        Swal.fire({ icon: 'success', title: 'ลบเรียบร้อย' });
+        loadTeacherData();
       }
-    }
-
-    async function refreshTeacherData() {
-      try {
-        const works = await apiGet("getDailyWorkList");
-        renderTeacherWorkList(works);
-        const att = await apiGet("getAttendanceList");
-        renderTeacherAttList(att);
-        const skills = await apiGet("getSkillCompetencyList");
-        renderTeacherSkillList(skills);
-        const stus = await apiGet("getStudentList");
-        studentListCache = stus;
-        renderTeacherStudentTable();
-      } catch (e) {
-        console.error(e);
-      }
-    }
-
-    function renderTeacherWorkList(works) {
-      const tbody = document.getElementById('teacherWorkListBody');
-      if (!works || works.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="p-4 text-center text-slate-400">ยังไม่มีงานที่ส่งเข้ามา</td></tr>';
-        return;
-      }
-      window.cachedWorks = works;
-
-      tbody.innerHTML = works.map(w => {
-        let badgeClass = 'badge-pending';
-        if (w.status === 'ผ่าน') badgeClass = 'badge-approved';
-        else if (w.status === 'ต้องแก้ไข') badgeClass = 'badge-revision';
-        else if (w.status === 'ไม่ผ่าน') badgeClass = 'badge-rejected';
-        else if (w.status === 'ส่งแก้ไขแล้ว (รอตรวจใหม่)') badgeClass = 'bg-blue-100 text-blue-800 border border-blue-300';
-
-        let fileLink = w.fileUrl ? `<a href="${w.fileUrl}" target="_blank" class="text-indigo-600 hover:underline font-semibold"><i class="fa-solid fa-paperclip mr-1"></i>ไฟล์งาน นศ.</a>` : '<span class="text-slate-400">-</span>';
-        if (w.teacherReturnFileUrl) {
-          fileLink += `<div class="mt-1"><a href="${w.teacherReturnFileUrl}" target="_blank" class="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200 hover:bg-emerald-100"><i class="fa-solid fa-file-circle-check"></i> ไฟล์ตรวจกลับ</a></div>`;
-        }
-
-        const lateTag = w.isLate ? '<span class="ml-1 px-1.5 py-0.5 rounded text-[9px] font-bold badge-late">ส่งช้า</span>' : '';
-
-        return `
-          <tr class="hover:bg-slate-50 transition">
-            <td class="p-2.5 font-semibold text-slate-800 whitespace-nowrap">${escapeHtml(w.studentName)}</td>
-            <td class="p-2.5 text-slate-500 whitespace-nowrap">${w.submitDate} ${lateTag}</td>
-            <td class="p-2.5 font-medium text-slate-800 max-w-xs">${escapeHtml(w.subject)}</td>
-            <td class="p-2.5 whitespace-nowrap">${fileLink}</td>
-            <td class="p-2.5 text-center whitespace-nowrap"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${badgeClass}">${w.status}</span></td>
-            <td class="p-2.5 text-center font-bold text-slate-800 whitespace-nowrap">${w.score || '-'}</td>
-            <td class="p-2.5 text-slate-600 max-w-xs">${escapeHtml(w.comment || '-')}</td>
-            <td class="p-2.5 text-center whitespace-nowrap">
-              <button onclick="openReviewModal('${w.workId}')" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-semibold shadow-xs transition">
-                <i class="fa-solid fa-pen-to-square mr-1"></i> ตรวจ
-              </button>
-            </td>
-          </tr>
-        `;
-      }).join('');
-    }
-
-    function renderTeacherAttList(attList) {
-      const tbody = document.getElementById('allAttTableBody');
-      if (!attList || attList.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="5" class="p-3 text-center text-slate-400">ไม่มีข้อมูล</td></tr>';
-        return;
-      }
-      tbody.innerHTML = attList.map(a => `
-        <tr class="hover:bg-slate-50">
-          <td class="p-2 whitespace-nowrap">${a.date} ${a.time}</td>
-          <td class="p-2 font-medium whitespace-nowrap">${escapeHtml(a.studentName)}</td>
-          <td class="p-2 font-bold whitespace-nowrap">${a.status}</td>
-          <td class="p-2 whitespace-nowrap">${a.deductScore > 0 ? `<span class="text-rose-600">-${a.deductScore}</span>` : (a.bonusScore > 0 ? `<span class="text-emerald-600">+${a.bonusScore}</span>` : '-')}</td>
-          <td class="p-2 text-slate-500">${escapeHtml(a.note || '-')}</td>
-        </tr>
-      `).join('');
-    }
-
-    function renderTeacherSkillList(skills) {
-      const tbody = document.getElementById('allSkillTableBody');
-      if (!skills || skills.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="6" class="p-3 text-center text-slate-400">ไม่มีข้อมูล</td></tr>';
-        return;
-      }
-      tbody.innerHTML = skills.map(k => `
-        <tr class="hover:bg-slate-50">
-          <td class="p-2 whitespace-nowrap">${k.date}</td>
-          <td class="p-2 font-medium whitespace-nowrap">${escapeHtml(k.studentName)}</td>
-          <td class="p-2 font-semibold text-slate-700 whitespace-nowrap">${escapeHtml(k.skillName)}</td>
-          <td class="p-2 text-center whitespace-nowrap"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${k.result === 'ผ่าน' ? 'badge-approved' : 'badge-rejected'}">${k.result}</span></td>
-          <td class="p-2 text-center font-bold whitespace-nowrap">${k.score || '-'}</td>
-          <td class="p-2 text-slate-600">${escapeHtml(k.feedback || '-')}</td>
-        </tr>
-      `).join('');
-    }
-
-    function openReviewModal(workId) {
-      const work = (window.cachedWorks || []).find(w => w.workId === workId);
-      if (!work) return;
-
-      document.getElementById('modalStudentName').textContent = work.studentName;
-      document.getElementById('modalSubject').textContent = work.subject;
-      document.getElementById('modalContent').textContent = work.content || '-';
-      document.getElementById('modalInputWorkId').value = work.workId;
-      document.getElementById('modalSelectStatus').value = work.status !== 'รออาจารย์ตรวจ' ? work.status : 'ผ่าน';
-      document.getElementById('modalInputScore').value = work.score !== '-' ? work.score : '';
-      document.getElementById('modalInputComment').value = work.comment !== '-' ? work.comment : '';
-
-      const returnFileInput = document.getElementById('modalInputReturnFile');
-      if (returnFileInput) returnFileInput.value = '';
-
-      const existSpan = document.getElementById('existingReturnFileSpan');
-      if (existSpan) {
-        if (work.teacherReturnFileUrl) {
-          existSpan.innerHTML = `<a href="${work.teacherReturnFileUrl}" target="_blank" class="hover:underline"><i class="fa-solid fa-file-circle-check text-emerald-600"></i> มีไฟล์ตรวจกลับแล้ว</a>`;
-        } else {
-          existSpan.innerHTML = '';
-        }
-      }
-
-      const fileBox = document.getElementById('modalFileContainer');
-      if (work.fileUrl) {
-        fileBox.innerHTML = `<a href="${work.fileUrl}" target="_blank" class="text-indigo-600 hover:underline font-semibold"><i class="fa-solid fa-arrow-up-right-from-square mr-1"></i> เปิดดูไฟล์แนบของ นศ.</a>`;
-      } else {
-        fileBox.innerHTML = '<span class="text-slate-400">ไม่มีไฟล์แนบ</span>';
-      }
-
-      document.getElementById('reviewModal').classList.remove('hidden');
-    }
-
-    function closeReviewModal() {
-      document.getElementById('reviewModal').classList.add('hidden');
-    }
-
-    function submitReview(e) {
-      e.preventDefault();
-      const submitBtn = e.target.querySelector('button[type="submit"]');
-      const originalText = submitBtn.innerHTML;
-      submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-1"></i> กำลังบันทึก...';
-
-      const fileInput = document.getElementById('modalInputReturnFile');
-      const file = fileInput && fileInput.files && fileInput.files[0];
-
-      const reviewData = {
-        workId: document.getElementById('modalInputWorkId').value,
-        status: document.getElementById('modalSelectStatus').value,
-        score: document.getElementById('modalInputScore').value || '-',
-        comment: document.getElementById('modalInputComment').value
-      };
-
-      const sendToBackend = async (payload) => {
-        try {
-          const res = await apiPost("reviewDailyWork", payload);
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalText;
-          Swal.fire({ icon: 'success', title: 'สำเร็จ', text: res.message });
-          closeReviewModal();
-          refreshTeacherData();
-        } catch (err) {
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalText;
-          Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: err.message });
-        }
-      };
-
-      if (file) {
-        if (file.size > 20 * 1024 * 1024) {
-          Swal.fire({ icon: 'warning', title: 'ไฟล์ใหญ่เกินไป', text: 'ขนาดไฟล์ต้องไม่เกิน 20MB' });
-          submitBtn.disabled = false;
-          submitBtn.innerHTML = originalText;
-          return;
-        }
-        const reader = new FileReader();
-        reader.onload = function(evt) {
-          reviewData.returnFileBase64 = evt.target.result;
-          reviewData.returnFileName = file.name;
-          reviewData.returnMimeType = file.type;
-          sendToBackend(reviewData);
-        };
-        reader.readAsDataURL(file);
-      } else {
-        sendToBackend(reviewData);
-      }
-    }
-
-    async function handleAttendanceSubmit(e) {
-      e.preventDefault();
-      const select = document.getElementById('attStudentSelect');
-      const studentId = select.value;
-      const studentName = select.options[select.selectedIndex].text.split(' (')[0];
-      const date = document.getElementById('attDate').value;
-      const time = document.getElementById('attTime').value;
-      const status = document.getElementById('attStatus').value;
-      const note = document.getElementById('attNote').value;
-
-      const data = { studentId, studentName, date, time, status, note };
-
-      try {
-        const res = await apiPost("recordAttendance", data);
-        Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', text: res.message });
-        refreshTeacherData();
-      } catch (err) {
-        Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: err.message });
-      }
-    }
-
-    function checkCustomSkill(sel) {
-      const customInput = document.getElementById('customSkillInput');
-      if (sel.value === 'other') {
-        customInput.classList.remove('hidden');
-        customInput.required = true;
-      } else {
-        customInput.classList.add('hidden');
-        customInput.required = false;
-      }
-    }
-
-    async function handleSkillSubmit(e) {
-      e.preventDefault();
-      const select = document.getElementById('skillStudentSelect');
-      const studentId = select.value;
-      const studentName = select.options[select.selectedIndex].text.split(' (')[0];
-      const date = document.getElementById('skillDate').value;
-      const selSkill = document.getElementById('skillNameSelect').value;
-      const skillName = selSkill === 'other' ? document.getElementById('customSkillInput').value : selSkill;
-      const result = document.getElementById('skillResult').value;
-      const score = document.getElementById('skillScore').value;
-      const feedback = document.getElementById('skillFeedback').value;
-
-      const data = { studentId, studentName, date, skillName, result, score, feedback, evaluator: 'อาจารย์นิเทศก์' };
-
-      try {
-        const res = await apiPost("recordSkillCompetency", data);
-        Swal.fire({ icon: 'success', title: 'บันทึกสำเร็จ', text: res.message });
-        document.getElementById('skillFeedback').value = '';
-        document.getElementById('skillScore').value = '';
-        refreshTeacherData();
-      } catch (err) {
-        Swal.fire({ icon: 'error', title: 'ผิดพลาด', text: err.message });
-      }
-    }
-
-    function escapeHtml(text) {
-      if (!text) return '';
-      return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
     }
   </script>
 </body>
