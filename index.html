@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>ระบบจัดการฝึกปฏิบัติการพยาบาล รุ่น 34 (Nurse Practicum Pro - 3D Pixar Edition)</title>
   
-  <!-- App Icon & PWA Standalone -->
   <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
   <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -13,7 +12,6 @@
   <meta name="apple-mobile-web-app-title" content="NurseHub34">
   <meta name="theme-color" content="#4338ca">
 
-  <!-- Tailwind CSS & Fonts & FontAwesome & SweetAlert2 & Chart.js -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -53,6 +51,18 @@
       50% { transform: scale(1.04); filter: drop-shadow(0 8px 16px rgba(79, 70, 229, 0.4)); }
     }
     .animate-glow-pixar { animation: pulseGlow 2.8s ease-in-out infinite; }
+
+    /* แอนิเมชันเด็กพยาบาลวิ่งดุ๊กดิ๊ก */
+    @keyframes nurseRunTrack {
+      0% { transform: translateX(-150%); }
+      100% { transform: translateX(120vw); }
+    }
+    .animate-nurse-run { animation: nurseRunTrack 16s linear infinite; }
+    @keyframes nurseLegBounce {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-4px) rotate(4deg); }
+    }
+    .animate-nurse-bounce { animation: nurseLegBounce 0.4s ease-in-out infinite; }
   </style>
 </head>
 <body class="text-slate-800 flex flex-col justify-between min-h-screen select-none">
@@ -68,13 +78,13 @@
           <div>
             <div class="flex items-center gap-2">
               <h1 class="text-lg sm:text-xl font-black tracking-tight leading-tight">ระบบฝึกปฏิบัติการพยาบาล</h1>
-              <span class="bg-amber-400 text-amber-950 text-xs px-2.5 py-0.5 rounded-full font-black uppercase shadow-xs">Hero Edition</span>
+              <span class="bg-amber-400 text-amber-950 text-xs px-2.5 py-0.5 rounded-full font-black uppercase shadow-xs">3D Pixar Edition</span>
             </div>
             <p class="text-xs sm:text-sm text-indigo-100 font-normal">สาขาการพยาบาลผู้ใหญ่และผู้สูงอายุ วพบ. ชัยนาท</p>
           </div>
         </div>
 
-        <!-- เมนูหลัก -->
+        <!-- เมนูสลับมุมมอง -->
         <div class="flex items-center bg-black/25 p-1 rounded-xl backdrop-blur-md border border-white/25 text-xs sm:text-sm">
           <button id="btnRoleStudent" onclick="switchViewSection('student')" class="px-3.5 py-1.5 rounded-lg transition-all duration-200 role-active">
             <i class="fa-solid fa-graduation-cap text-base mr-1"></i> นศ.
@@ -90,6 +100,63 @@
     </div>
   </header>
 
+  <!-- แถบการ์ตูนพยาบาล 3D วิ่งดุ๊กดิ๊กด้านบน 2 คน (ชาย-หญิง) น่ารักๆ -->
+  <div class="w-full bg-gradient-to-r from-indigo-100 via-sky-50 to-purple-100 h-16 relative overflow-hidden border-b border-indigo-200/60 shadow-inner flex items-center">
+    <div class="absolute whitespace-nowrap flex items-center gap-5 animate-nurse-run">
+      
+      <!-- คนที่ 1: พยาบาลหญิงน่ารัก -->
+      <div class="flex items-center gap-2.5 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-3xl shadow-sm border-2 border-indigo-200 animate-nurse-bounce">
+        <!-- SVG Avatar สาวน้อยพยาบาลแก้มชมพู -->
+        <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="#E0F2FE"/>
+          <!-- หมวกพยาบาลพร้อมแถบน้ำเงิน -->
+          <path d="M24 32C24 20 76 20 76 32L70 38H30L24 32Z" fill="#FFFFFF" stroke="#38BDF8" stroke-width="2"/>
+          <rect x="32" y="32" width="36" height="4" rx="2" fill="#2563EB"/>
+          <!-- หน้าแก้มชมพู -->
+          <circle cx="50" cy="54" r="22" fill="#FED7AA"/>
+          <circle cx="41" cy="58" r="4" fill="#F472B6" opacity="0.6"/>
+          <circle cx="59" cy="58" r="4" fill="#F472B6" opacity="0.6"/>
+          <!-- ตาโตวิ้งวับแบบการ์ตูน -->
+          <circle cx="42" cy="51" r="5" fill="#0F172A"/>
+          <circle cx="43.5" cy="49" r="2" fill="#FFFFFF"/>
+          <circle cx="58" cy="51" r="5" fill="#0F172A"/>
+          <circle cx="59.5" cy="49" r="2" fill="#FFFFFF"/>
+          <path d="M46 58C46 60.5 54 60.5 54 58" stroke="#9A3412" stroke-width="2.5" stroke-linecap="round"/>
+          <path d="M26 44C26 34 35 28 50 28C65 28 74 34 74 44C74 48 69 50 69 50C69 46 60 40 50 40C40 40 31 46 31 50C31 50 26 48 26 44Z" fill="#334155"/>
+          <!-- ชุดสีฟ้า ปกขาว -->
+          <path d="M28 78C28 66 72 66 72 78L78 98H22L28 78Z" fill="#2563EB"/>
+          <path d="M42 70L50 82L58 70L68 76L50 96L32 76L42 70Z" fill="#FFFFFF"/>
+        </svg>
+        <span class="text-sm font-black text-indigo-900">หนูไปขึ้นเวรแล้วนะคะ 🏃‍♀️💨</span>
+      </div>
+
+      <!-- คนที่ 2: พยาบาลชายน่ารัก ถือสเตท -->
+      <div class="flex items-center gap-2.5 bg-white/95 backdrop-blur-sm px-4 py-1.5 rounded-3xl shadow-sm border-2 border-emerald-200 animate-nurse-bounce" style="animation-delay: -0.2s;">
+        <!-- SVG Avatar เด็กหนุ่มพยาบาล -->
+        <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="#F0FDF4"/>
+          <!-- หน้า -->
+          <circle cx="50" cy="52" r="22" fill="#FED7AA"/>
+          <circle cx="41" cy="57" r="3.5" fill="#F472B6" opacity="0.4"/>
+          <circle cx="59" cy="57" r="3.5" fill="#F472B6" opacity="0.4"/>
+          <!-- ทรงผมหล่อเท่ -->
+          <path d="M26 42C26 28 36 22 50 22C64 22 74 28 74 42C74 46 71 48 68 45C64 38 58 34 50 34C42 34 36 38 32 45C29 48 26 46 26 42Z" fill="#1E293B"/>
+          <!-- ตา -->
+          <circle cx="42" cy="50" r="5" fill="#0F172A"/>
+          <circle cx="43.5" cy="48" r="2" fill="#FFFFFF"/>
+          <circle cx="58" cy="50" r="5" fill="#0F172A"/>
+          <circle cx="59.5" cy="48" r="2" fill="#FFFFFF"/>
+          <path d="M46 58C46 61 54 61 54 58" stroke="#9A3412" stroke-width="2.5" stroke-linecap="round"/>
+          <!-- ชุดกาวน์ขาว -->
+          <path d="M28 76C28 64 72 64 72 76L76 98H24L28 76Z" fill="#F8FAFC" stroke="#CBD5E1" stroke-width="2"/>
+          <circle cx="62" cy="78" r="4" fill="#DC2626"/>
+        </svg>
+        <span class="text-sm font-black text-emerald-900">ตรวจคนไข้รอบเช้าฮะ 🩺✨</span>
+      </div>
+
+    </div>
+  </div>
+
   <!-- Main Container -->
   <main class="max-w-7xl mx-auto px-3 sm:px-5 py-4 sm:py-6 w-full flex-1 space-y-5 overflow-hidden">
 
@@ -99,32 +166,46 @@
       <!-- การ์ดเขียวแจ้งสถานะเปิดรับส่งงาน (เวลาไทยกระชับ ไม่กินพื้นที่) -->
       <div id="studentSubmissionBanner" class="p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-2.5 shadow-sm border-2 border-emerald-300 bg-emerald-50/70 text-xs sm:text-sm">
         <div class="flex items-center gap-2.5">
-          <span class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg shrink-0 shadow-xs">
+          <span class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg shrink-0 shadow-xs">
             <i class="fa-solid fa-circle-check"></i>
           </span>
           <div>
-            <div id="bannerTitle" class="font-bold text-slate-800">ระบบเปิดรับส่งงานตามปกติ</div>
-            <div id="bannerSubtitle" class="text-emerald-800 font-semibold text-[11px] sm:text-xs">หมดเขตประจำวัน 18:00 น. (ส่งช้าหัก 1 คะแนน)</div>
+            <div id="bannerTitle" class="font-bold text-slate-800 text-sm">ระบบเปิดรับส่งงานตามปกติ</div>
+            <div id="bannerSubtitle" class="text-emerald-800 font-semibold text-xs mt-0.5">หมดเขตประจำวัน 18:00 น. (ส่งช้าหัก 1 คะแนน)</div>
           </div>
         </div>
-        <div id="bannerBadge" class="font-black px-3 py-1 rounded-full text-xs bg-emerald-200 text-emerald-950 border border-emerald-400">
+        <div id="bannerBadge" class="font-black px-3.5 py-1.5 rounded-full text-xs bg-emerald-200 text-emerald-950 border border-emerald-400">
           เปิดรับงาน
         </div>
       </div>
 
-      <!-- บัตรโปรไฟล์ & สถิติ 3 ช่อง -->
+      <!-- บัตรโปรไฟล์ Avatar น่ารัก & สถิติ 3 ช่อง -->
       <div class="glass-card rounded-3xl p-5 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5">
         <div class="flex items-center space-x-4 w-full lg:w-auto">
           
-          <!-- กล่องโปรไฟล์ 3D RN Badge พรีเมียม คมชัด 100% -->
-          <div class="relative w-14 h-14 sm:w-16 sm:h-16 shrink-0">
-            <div class="w-full h-full rounded-2xl bg-gradient-to-tr from-indigo-600 via-sky-500 to-amber-400 p-0.5 shadow-md flex items-center justify-center">
-              <div class="w-full h-full bg-white rounded-[14px] flex flex-col items-center justify-center text-indigo-600 shadow-inner">
-                <i class="fa-solid fa-user-nurse text-2xl sm:text-3xl text-indigo-600 drop-shadow-xs"></i>
-                <span class="text-[9px] font-black uppercase text-indigo-950 mt-0.5 tracking-wider">RN34</span>
+          <!-- ภาพโปรไฟล์ SVG นางพยาบาล 3D น่ารัก คมชัด 100% -->
+          <div class="relative w-16 h-16 sm:w-20 sm:h-20 shrink-0">
+            <div class="w-full h-full rounded-3xl bg-gradient-to-tr from-indigo-500 via-sky-400 to-amber-300 p-1 shadow-md animate-float-pixar flex items-center justify-center">
+              <div class="w-full h-full bg-white rounded-2xl overflow-hidden flex items-center justify-center p-1">
+                <svg viewBox="0 0 100 100" class="w-full h-full" fill="none" xmlns="http://www.w3.org/2000/svg">
+                  <circle cx="50" cy="50" r="48" fill="#E0F2FE"/>
+                  <path d="M24 32C24 20 76 20 76 32L70 38H30L24 32Z" fill="#FFFFFF" stroke="#38BDF8" stroke-width="2"/>
+                  <rect x="32" y="32" width="36" height="4" rx="2" fill="#2563EB"/>
+                  <circle cx="50" cy="54" r="22" fill="#FED7AA"/>
+                  <circle cx="41" cy="58" r="4" fill="#F472B6" opacity="0.6"/>
+                  <circle cx="59" cy="58" r="4" fill="#F472B6" opacity="0.6"/>
+                  <circle cx="42" cy="51" r="5" fill="#0F172A"/>
+                  <circle cx="43.5" cy="49" r="2" fill="#FFFFFF"/>
+                  <circle cx="58" cy="51" r="5" fill="#0F172A"/>
+                  <circle cx="59.5" cy="49" r="2" fill="#FFFFFF"/>
+                  <path d="M46 58C46 60.5 54 60.5 54 58" stroke="#9A3412" stroke-width="2.5" stroke-linecap="round"/>
+                  <path d="M26 44C26 34 35 28 50 28C65 28 74 34 74 44C74 48 69 50 69 50C69 46 60 40 50 40C40 40 31 46 31 50C31 50 26 48 26 44Z" fill="#334155"/>
+                  <path d="M28 78C28 66 72 66 72 78L78 98H22L28 78Z" fill="#2563EB"/>
+                  <path d="M42 70L50 82L58 70L68 76L50 96L32 76L42 70Z" fill="#FFFFFF"/>
+                </svg>
               </div>
             </div>
-            <div class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center text-[10px] text-white font-bold shadow-xs">
+            <div class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center text-[11px] text-white font-bold shadow-xs">
               ✓
             </div>
           </div>
@@ -198,7 +279,6 @@
             <div id="scoreStatus" class="text-[11px] font-bold text-emerald-600">สม่ำเสมอ (ดีเยี่ยม)</div>
           </div>
 
-          <!-- ปุ่มเปิดกล้องเช็คอิน ณ หอผู้ป่วย -->
           <button onclick="openCheckInModal()" class="px-4 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs sm:text-sm rounded-2xl shadow-md transition flex flex-col items-center justify-center">
             <i class="fa-solid fa-camera text-base mb-1 animate-bounce"></i>
             <span>เช็คอินเวร</span>
@@ -312,7 +392,7 @@
         <div class="glass-card p-4 sm:p-5 rounded-3xl space-y-3 bg-gradient-to-br from-amber-50/50 to-white border border-amber-200">
           <div class="flex items-center justify-between pb-2.5 border-b border-amber-200">
             <h3 class="font-bold text-sm sm:text-base text-amber-950 flex items-center gap-2">
-              <i class="fa-solid fa-trophy text-amber-500"></i> ทำเนียบ Hero (จัดอันดับ)
+              <i class="fa-solid fa-trophy text-amber-500"></i> ทำเนียบ Hero
             </h3>
             <span class="text-xs text-amber-800 bg-amber-200 px-3 py-0.5 rounded-full font-black">Top Heroes</span>
           </div>
@@ -341,7 +421,7 @@
         <div class="lg:col-span-1 glass-card rounded-3xl p-5 flex flex-col justify-between space-y-3">
           <div class="border-b pb-2.5">
             <h3 class="font-bold text-sm sm:text-base text-slate-800 flex items-center gap-2">
-              <i class="fa-solid fa-chart-pie text-indigo-600"></i> สมรรถนะ Care Plan (Radar Chart)
+              <i class="fa-solid fa-chart-pie text-indigo-600"></i> สมรรถนะ Care Plan
             </h3>
             <p class="text-xs text-slate-500 font-medium">เกณฑ์มาตรฐาน 10 ด้านตามแบบประเมิน วพบ. ชัยนาท</p>
           </div>
@@ -572,9 +652,9 @@
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-3">
           <div>
             <h3 class="font-bold text-sm sm:text-base text-slate-800 flex items-center gap-2">
-              <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i> ตารางมอบพลังหัตถการทางการพยาบาล (18 หัตถการ + หัตถการอื่นๆ)
+              <i class="fa-solid fa-wand-magic-sparkles text-amber-500"></i> ตารางมอบพลังหัตถการทางการพยาบาล
             </h3>
-            <p class="text-xs text-slate-500 font-medium">ประเมินโดยอาจารย์หรือพี่พยาบาล (Staff Nurse / Preceptor) พร้อมระบุข้อเสนอแนะ</p>
+            <p class="text-xs text-slate-500 font-medium">ประเมินโดยอาจารย์หรือพี่พยาบาล (Staff Nurse / Preceptor) พร้อมระบุข้อเสนอแนะและหัตถการอื่นๆ</p>
           </div>
           
           <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
@@ -613,7 +693,9 @@
                 <th class="p-3">ข้อเสนอแนะอาจารย์หรือพี่พยาบาล</th>
               </tr>
             </thead>
-            <tbody id="skillMatrixBody" class="divide-y divide-slate-100"></tbody>
+            <tbody id="skillMatrixBody" class="divide-y divide-slate-100">
+              <tr><td colspan="6" class="p-4 text-center text-slate-400">กำลังโหลดรายการหัตถการ...</td></tr>
+            </tbody>
             <tfoot class="bg-amber-50/60 border-t-2 border-amber-300">
               <tr>
                 <td class="p-3 text-center font-black text-amber-700">+</td>
@@ -1140,6 +1222,18 @@
       });
     }
 
+    // แปลงวันที่อังกฤษเป็นภาษาไทย (เช่น 05 ต.ค. 2569)
+    function formatThaiDate(dateStr) {
+      if (!dateStr) return "-";
+      const dt = new Date(dateStr);
+      if (isNaN(dt.getTime())) return dateStr.split("T")[0];
+      const thaiMonths = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+      const d = dt.getDate().toString().padStart(2, '0');
+      const m = thaiMonths[dt.getMonth()];
+      const y = dt.getFullYear() + 543;
+      return `${d} ${m} ${y}`;
+    }
+
     async function initDashboard() {
       try {
         const data = await apiGet("getDashboard", { studentId: currentStudentId, viewMode: currentViewMode });
@@ -1154,7 +1248,8 @@
           if (data.settings.enabled) {
             bTitle.textContent = "ระบบเปิดรับส่งงานตามปกติ";
             let timeClean = (data.settings.dueTime || '18:00').replace(/.*(\d{2}:\d{2}).*/, '$1');
-            bSub.textContent = `หมดเขตประจำวัน ${timeClean} น. (ส่งช้าหัก ${data.settings.lateDeduction || 1} คะแนน)`;
+            let dateClean = data.settings.dueDate ? formatThaiDate(data.settings.dueDate) + " " : "ประจำวัน ";
+            bSub.textContent = `หมดเขต${dateClean}เวลา ${timeClean} น. (ส่งช้าหัก ${data.settings.lateDeduction || 1} คะแนน)`;
             bBadge.textContent = "เปิดรับงาน";
             bBadge.className = "font-black px-3 py-1 rounded-full text-xs bg-emerald-200 text-emerald-950 border border-emerald-400";
           } else {
@@ -1206,11 +1301,11 @@
         document.getElementById('statTotalSkills').textContent = skills.length;
 
         document.getElementById('studentAttTableBody').innerHTML = att.length === 0 ? '<tr><td colspan="4" class="p-4 text-center text-slate-400 font-bold">ไม่มีข้อมูล</td></tr>' : att.map(a => {
-          let dateClean = String(a.date || '').split('T')[0].replace(/GMT.*/, '').trim();
-          let timeClean = String(a.time || '').replace(/.*(\d{2}:\d{2}).*/, '$1');
+          let dateClean = formatThaiDate(a.date);
+          let timeClean = String(a.time || '').replace(/.*(\d{2}:\d{2}).*/, '$1') + ' น.';
           return `
             <tr class="hover:bg-slate-50 transition">
-              <td class="py-2.5 whitespace-nowrap text-slate-500 font-medium">${dateClean} ${timeClean}</td>
+              <td class="py-2.5 whitespace-nowrap text-slate-500 font-medium">${dateClean} <span class="text-indigo-600 ml-1 font-bold">${timeClean}</span></td>
               <td class="py-2.5 font-bold text-slate-800">${a.studentName}</td>
               <td class="py-2.5 whitespace-nowrap"><span class="px-2 py-0.5 rounded-lg text-xs font-bold ${a.status === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${a.status}</span></td>
               <td class="py-2.5 whitespace-nowrap font-black">${a.deduct > 0 ? '-' + a.deduct : (a.bonus > 0 ? '+' + a.bonus : '-')}</td>
@@ -1220,7 +1315,7 @@
 
         document.getElementById('studentSkillTableBody').innerHTML = skills.length === 0 ? '<tr><td colspan="4" class="p-4 text-center text-slate-400">ไม่มีข้อมูล</td></tr>' : skills.map(k => `
           <tr class="hover:bg-slate-50 transition">
-            <td class="py-2.5">${k.date}</td>
+            <td class="py-2.5 text-slate-500 font-medium">${formatThaiDate(k.date)}</td>
             <td class="py-2.5 font-bold text-slate-800 truncate max-w-[140px]">${k.skillName}</td>
             <td class="py-2.5 text-center"><span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${k.result === 'ผ่าน' ? 'badge-approved' : 'bg-rose-100 text-rose-700'}">${k.result}</span></td>
             <td class="py-2.5 text-center font-black text-amber-600">+${k.exp} EXP</td>
@@ -1257,9 +1352,11 @@
           let resubmitBtn = w.status === 'ต้องแก้ไข' ? `<button onclick="openResubmitModal('${w.workId}')" class="px-2.5 py-1 bg-orange-500 text-white rounded-lg text-xs font-bold shadow-xs">ส่งแก้</button>` : '-';
           let fileLink = w.fileUrl ? `<a href="${w.fileUrl}" target="_blank" class="text-indigo-600 font-bold underline">ไฟล์งาน</a>` : '-';
           if (w.teacherReturnFileUrl) fileLink += `<br><a href="${w.teacherReturnFileUrl}" target="_blank" class="text-emerald-600 text-xs font-black underline">ตรวจกลับ</a>`;
+          
+          let dateClean = w.submitDate.includes("(") ? w.submitDate : (formatThaiDate(w.submitDate.split(' ')[0]) + ' ' + (w.submitDate.split(' ')[1]||''));
           return `
             <tr class="hover:bg-slate-50 transition">
-              <td class="p-2.5 whitespace-nowrap text-slate-500">${w.submitDate}</td>
+              <td class="p-2.5 whitespace-nowrap text-slate-500">${dateClean}</td>
               <td class="p-2.5 font-bold text-slate-800">${w.subject}</td>
               <td class="p-2.5 whitespace-nowrap">${fileLink}</td>
               <td class="p-2.5 text-center whitespace-nowrap"><span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${w.status === 'ผ่าน' ? 'badge-approved' : 'badge-pending'}">${w.status}</span></td>
@@ -1328,7 +1425,7 @@
         title: 'เข้าสู่ระบบนักศึกษา',
         html: `
           <p class="text-xs sm:text-sm text-slate-500 mb-3 font-medium">กรอกรหัส PIN ประจำตัวเพื่อเข้าใช้งานระบบ</p>
-          <input type="password" id="swalPinOnly" class="swal2-input font-bold" placeholder="กรอกรหัส PIN (เช่น 1033 หรือ 1234)">
+          <input type="password" id="swalPinOnly" class="swal2-input font-bold" placeholder="กรอกรหัส PIN (เช่น 1234 หรือ 4 ตัวท้าย)">
         `,
         confirmButtonText: 'เข้าสู่ระบบ',
         showCancelButton: true,
@@ -1694,8 +1791,10 @@
       const curBtn = document.getElementById(activeBtnId);
       if (curBtn) curBtn.className = "px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl bg-indigo-600 text-white shadow-xs transition";
 
+      // แก้บั๊กกล่องหัตถการไม่กาง
       if (tab === 'skillrpg') {
-        renderSkillMatrix(window.cachedSkillList || DEFAULT_NURSING_SKILLS);
+        const skillsToRender = (window.cachedSkillList && window.cachedSkillList.length > 0) ? window.cachedSkillList : DEFAULT_NURSING_SKILLS;
+        renderSkillMatrix(skillsToRender);
       }
       if (tab === 'attendanceMaster') {
         renderAttendanceMatrix();
@@ -1706,10 +1805,12 @@
       setTeacherTab('eval');
       const data = await apiGet("getDashboard", { studentId: currentStudentId, viewMode: "all" });
       
-      document.getElementById('teacherWorkTableBody').innerHTML = (data.works || []).map(w => `
+      document.getElementById('teacherWorkTableBody').innerHTML = (data.works || []).map(w => {
+        let dateClean = w.submitDate.includes("(") ? w.submitDate : (formatThaiDate(w.submitDate.split(' ')[0]) + ' ' + (w.submitDate.split(' ')[1]||''));
+        return `
         <tr class="hover:bg-slate-50 transition">
           <td class="p-3 font-bold text-slate-800">${w.studentName}</td>
-          <td class="p-3 text-slate-500 whitespace-nowrap">${w.submitDate}</td>
+          <td class="p-3 text-slate-500 whitespace-nowrap text-xs">${dateClean}</td>
           <td class="p-3 font-medium">${w.subject}</td>
           <td class="p-3 whitespace-nowrap">
             ${w.fileUrl ? `<a href="${w.fileUrl}" target="_blank" class="text-indigo-600 font-bold underline">ดูไฟล์</a>` : '-'}
@@ -1724,11 +1825,10 @@
             </button>
           </td>
         </tr>
-      `).join('');
+      `}).join('');
 
       window.teacherStudentListCache = data.students || [];
       renderStudentTable(window.teacherStudentListCache);
-
       renderAttendanceMatrix();
 
       const matrixStuSel = document.getElementById('matrixSkillStudentSelect');
@@ -1738,7 +1838,6 @@
         matrixStuSel.innerHTML = targetList.map(s => `<option value="${s.studentId}">${s.name} (${s.ward || 'รพ.อุทัยธานี'})</option>`).join('');
       }
       window.cachedSkillList = (data.skills && data.skills.length > 0) ? data.skills : DEFAULT_NURSING_SKILLS;
-      renderSkillMatrix(window.cachedSkillList);
 
       document.getElementById('allAttTableBody').innerHTML = (data.attendances || []).map(a => {
         let photoBtn = a.photoUrl ? `<a href="${a.photoUrl}" target="_blank" class="px-2.5 py-1 bg-emerald-50 text-emerald-800 font-bold rounded-lg border border-emerald-200 hover:bg-emerald-100 text-xs"><i class="fa-solid fa-image mr-1"></i>ดูรูปถ่าย</a>` : '<span class="text-slate-300 text-xs">-</span>';
@@ -1748,7 +1847,7 @@
 
         return `
           <tr class="hover:bg-slate-50 transition">
-            <td class="p-3 text-slate-500 whitespace-nowrap">${a.date} ${a.time}</td>
+            <td class="p-3 text-slate-500 whitespace-nowrap text-xs font-medium">${formatThaiDate(a.date)} ${a.time}</td>
             <td class="p-3 font-bold text-slate-800 whitespace-nowrap">${a.studentName}</td>
             <td class="p-3 whitespace-nowrap"><span class="px-2.5 py-0.5 rounded-lg text-xs font-bold ${a.status === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${a.status}</span></td>
             <td class="p-3 text-slate-800 max-w-xs font-medium">
@@ -1942,7 +2041,7 @@
         });
 
         if (res && res.success) {
-          Swal.fire({ icon: 'success', title: 'บันทึกเรียบร้อย!', text: `บันทึกการเช็คชื่อกลุ่ม 5 ครบทั้ง ${recordsToSave.length} คนแล้ว` });
+          Swal.fire({ icon: 'success', title: 'บันทึกเรียบร้อย!', text: res.message });
           loadTeacherData();
         } else {
           Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: res ? res.message : 'ไม่สามารถบันทึกได้' });
