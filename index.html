@@ -74,7 +74,7 @@
           </div>
         </div>
 
-        <!-- เมนูสลับมุมมอง -->
+        <!-- เมนูหลัก -->
         <div class="flex items-center bg-black/25 p-1 rounded-xl backdrop-blur-md border border-white/25 text-xs sm:text-sm">
           <button id="btnRoleStudent" onclick="switchViewSection('student')" class="px-3.5 py-1.5 rounded-lg transition-all duration-200 role-active">
             <i class="fa-solid fa-graduation-cap text-base mr-1"></i> นศ.
@@ -96,7 +96,7 @@
     <!-- ================= 1. มุมมองนักศึกษา (STUDENT VIEW) ================= -->
     <div id="studentSection" class="space-y-5">
       
-      <!-- การ์ดเขียวแจ้งสถานะเปิดรับส่งงาน (กะทัดรัด ไม่กินพื้นที่) -->
+      <!-- การ์ดเขียวแจ้งสถานะเปิดรับส่งงาน (เวลาไทยกระชับ ไม่กินพื้นที่) -->
       <div id="studentSubmissionBanner" class="p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-2.5 shadow-sm border-2 border-emerald-300 bg-emerald-50/70 text-xs sm:text-sm">
         <div class="flex items-center gap-2.5">
           <span class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-lg shrink-0 shadow-xs">
@@ -1156,12 +1156,18 @@
             let timeClean = (data.settings.dueTime || '18:00').replace(/.*(\d{2}:\d{2}).*/, '$1');
             bSub.textContent = `หมดเขตประจำวัน ${timeClean} น. (ส่งช้าหัก ${data.settings.lateDeduction || 1} คะแนน)`;
             bBadge.textContent = "เปิดรับงาน";
-            bBadge.className = "font-black px-3.5 py-1 rounded-full text-xs sm:text-sm bg-emerald-200 text-emerald-950 border border-emerald-400";
+            bBadge.className = "font-black px-3 py-1 rounded-full text-xs bg-emerald-200 text-emerald-950 border border-emerald-400";
           } else {
             bTitle.textContent = "อาจารย์ปิดระบบรับส่งงานแล้ว";
             bSub.textContent = "ไม่สามารถส่งงาน Care Plan ใหม่ได้ในขณะนี้";
             bBadge.textContent = "ปิดรับงาน";
-            bBadge.className = "font-black px-3.5 py-1 rounded-full text-xs sm:text-sm bg-rose-200 text-rose-950 border border-rose-400";
+            bBadge.className = "font-black px-3 py-1 rounded-full text-xs bg-rose-200 text-rose-950 border border-rose-400";
+          }
+
+          const libNavBtn = document.getElementById('btnNavLibrary');
+          if (libNavBtn) {
+            if (data.settings.libraryEnabled === false) libNavBtn.classList.add('hidden');
+            else libNavBtn.classList.remove('hidden');
           }
         }
 
@@ -1169,7 +1175,7 @@
           window.teacherStudentListCache = data.students;
           const select = document.getElementById('studentSelect');
           select.innerHTML = data.students.map(s => `
-            <option value="${s.studentId}" ${s.studentId === currentStudentId ? 'selected' : ''}>${s.name} (${s.ward || 'วอร์ดอายุรกรรม'}) [${s.group || 'กลุ่ม 5'}]</option>
+            <option value="${s.studentId}" ${s.studentId === currentStudentId ? 'selected' : ''}>${s.name} (${s.ward || 'รพ.อุทัยธานี'}) [${s.group || 'กลุ่ม 5'}]</option>
           `).join('');
         }
 
@@ -1322,7 +1328,7 @@
         title: 'เข้าสู่ระบบนักศึกษา',
         html: `
           <p class="text-xs sm:text-sm text-slate-500 mb-3 font-medium">กรอกรหัส PIN ประจำตัวเพื่อเข้าใช้งานระบบ</p>
-          <input type="password" id="swalPinOnly" class="swal2-input font-bold" placeholder="กรอกรหัส PIN (เช่น 1234 หรือ 4 ตัวท้าย)">
+          <input type="password" id="swalPinOnly" class="swal2-input font-bold" placeholder="กรอกรหัส PIN (เช่น 1033 หรือ 1234)">
         `,
         confirmButtonText: 'เข้าสู่ระบบ',
         showCancelButton: true,
@@ -1418,8 +1424,8 @@
       const gpsBox = document.getElementById('gpsCoordsText');
       const mapLink = document.getElementById('linkGoogleMaps');
 
-      addressBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-indigo-500 mr-1"></i> กำลังดึงพิกัดและที่อยู่ส่งของ...';
-      gpsBox.textContent = 'พิกัด GPS: กำลังค้นหา...';
+      addressBox.innerHTML = '<i class="fa-solid fa-spinner fa-spin text-indigo-500 mr-1"></i> กำลังดึงพิกัด...';
+      gpsBox.textContent = 'พิกัด: ค้นหา...';
       if (mapLink) mapLink.classList.add('hidden');
 
       if ("geolocation" in navigator) {
@@ -1430,7 +1436,7 @@
             currentGpsCoords = `${lat.toFixed(6)}, ${lon.toFixed(6)}`;
             currentGoogleMapUrl = `https://www.google.com/maps?q=${lat},${lon}`;
             
-            gpsBox.textContent = `พิกัด GPS: ${currentGpsCoords}`;
+            gpsBox.textContent = `พิกัด: ${currentGpsCoords}`;
             if (mapLink) {
               mapLink.href = currentGoogleMapUrl;
               mapLink.classList.remove('hidden');
@@ -1465,15 +1471,15 @@
           },
           (err) => {
             currentGpsCoords = "ไม่สามารถระบุพิกัดได้";
-            currentThaiAddress = "กรุณาเปิดสิทธิ์ระบุตำแหน่ง GPS บนมือถือ/เบราว์เซอร์";
-            addressBox.innerHTML = '<span class="text-rose-600 font-bold"><i class="fa-solid fa-triangle-exclamation mr-1"></i>ไม่สามารถดึงตำแหน่งได้ (กรุณาเปิด GPS)</span>';
-            gpsBox.textContent = 'พิกัด GPS: ปิดอยู่';
+            currentThaiAddress = "กรุณาเปิด GPS";
+            addressBox.innerHTML = '<span class="text-rose-600 font-bold">ไม่สามารถดึงตำแหน่งได้ (กรุณาเปิด GPS)</span>';
+            gpsBox.textContent = 'พิกัด: ปิดอยู่';
           },
           { enableHighAccuracy: true, timeout: 10000 }
         );
       } else {
         currentGpsCoords = "อุปกรณ์ไม่รองรับ GPS";
-        currentThaiAddress = "อุปกรณ์ไม่รองรับระบบนำทาง";
+        currentThaiAddress = "อุปกรณ์ไม่รองรับ GPS";
         addressBox.textContent = currentThaiAddress;
       }
     }
@@ -1804,13 +1810,11 @@
       }
     }
 
-    // กางตารางเช็คชื่อ เฉพาะกลุ่ม 5 (STU-09 ถึง STU-16 ที่กำลังฝึกปฏิบัติ)
     function renderAttendanceMatrix() {
       const tbody = document.getElementById('attendanceMatrixBody');
       const allStudents = window.teacherStudentListCache || [];
       if (!tbody || allStudents.length === 0) return;
 
-      // กรองเฉพาะกลุ่ม 5 หรือคนที่สถานะกำลังฝึกปฏิบัติ
       const group5Students = allStudents.filter(s => (s.group || '').includes('5') || (s.ward || '').includes('อุทัยธานี') || s.status === 'กำลังฝึกปฏิบัติ');
       const targetStudents = group5Students.length > 0 ? group5Students : allStudents;
 
