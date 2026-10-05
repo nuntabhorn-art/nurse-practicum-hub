@@ -1699,24 +1699,59 @@
       switchViewSection('student');
     }
 
+    f// แก้ไขเฉพาะฟังก์ชันนี้: กำหนด ID ตรงตัว 100% ป้องกันชื่อแท็บพิมพ์เล็ก/ใหญ่ไม่ตรงกัน
     function setTeacherTab(tab) {
-      const allTabs = ['eval', 'students', 'attendanceMaster', 'skillrpg', 'att', 'settings'];
-      allTabs.forEach(t => {
-        const el = document.getElementById('teacherTab' + t.charAt(0).toUpperCase() + t.slice(1));
+      // รายการ ID ของแท็บอาจารย์ทั้งหมด
+      const tabMap = {
+        'eval': 'teacherTabEval',
+        'students': 'teacherTabStudents',
+        'attendanceMaster': 'teacherTabAttendanceMaster',
+        'skillrpg': 'teacherTabSkillRpg',
+        'att': 'teacherTabAtt',
+        'settings': 'teacherTabSettings'
+      };
+
+      const btnMap = {
+        'eval': 'tabEval',
+        'students': 'tabStudents',
+        'attendanceMaster': 'tabAttendanceMaster',
+        'skillrpg': 'tabSkillRpg',
+        'att': 'tabAtt',
+        'settings': 'tabSettings'
+      };
+
+      // ซ่อนทุกแท็บและรีเซ็ตสีปุ่ม
+      Object.keys(tabMap).forEach(key => {
+        const el = document.getElementById(tabMap[key]);
         if (el) el.classList.add('hidden');
-        const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
+        const btn = document.getElementById(btnMap[key]);
         if (btn) btn.className = "px-3.5 py-2 text-xs sm:text-sm font-semibold rounded-xl bg-slate-100 text-slate-700 hover:bg-slate-200 transition";
       });
 
-      const targetId = 'teacherTab' + tab.charAt(0).toUpperCase() + tab.slice(1);
-      const curTab = document.getElementById(targetId);
-      if (curTab) curTab.classList.remove('hidden');
+      // เปิดแท็บที่กดเลือกทันที
+      const activeTabId = tabMap[tab];
+      const curTab = document.getElementById(activeTabId);
+      if (curTab) {
+        curTab.classList.remove('hidden');
+      }
 
-      const curBtn = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
-      if (curBtn) curBtn.className = "px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl bg-indigo-600 text-white shadow-xs transition";
+      // ไฮไลต์ปุ่มที่กดเลือก
+      const activeBtnId = btnMap[tab];
+      const curBtn = document.getElementById(activeBtnId);
+      if (curBtn) {
+        curBtn.className = "px-3.5 py-2 text-xs sm:text-sm font-bold rounded-xl bg-indigo-600 text-white shadow-xs transition";
+      }
 
-      if (tab === 'skillrpg') renderSkillMatrix(window.cachedSkillList || DEFAULT_NURSING_SKILLS);
-      if (tab === 'attendanceMaster') renderAttendanceMatrix();
+      // กางตาราง 18 หัตถการออกมาทันที
+      if (tab === 'skillrpg') {
+        const skillsToRender = (window.cachedSkillList && window.cachedSkillList.length > 0) ? window.cachedSkillList : DEFAULT_NURSING_SKILLS;
+        renderSkillMatrix(skillsToRender);
+      }
+
+      // กางตารางเช็คชื่อ นศ. ออกมาทันที
+      if (tab === 'attendanceMaster') {
+        renderAttendanceMatrix();
+      }
     }
 
     async function loadTeacherData() {
