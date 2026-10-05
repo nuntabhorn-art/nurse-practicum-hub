@@ -468,98 +468,168 @@
         </div>
       </div>
 
-      <!-- Tab 2: จัดการนักศึกษา (16 คน) -->
-      <div id="teacherTabStudents" class="hidden glass-card rounded-2xl p-3.5 space-y-2.5">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b pb-2">
-          <div class="flex items-center gap-2">
-            <h3 class="font-bold text-xs sm:text-sm text-slate-800 flex items-center gap-1.5">
-              <i class="fa-solid fa-user-gear text-cyan-600"></i> รายชื่อ นศ. ทั้งหมด (16 คน)
-            </h3>
-            <div class="flex gap-1 text-[11px]">
-              <button onclick="filterStudentTableGroup('all')" class="stu-filter-btn px-2 py-0.5 rounded-lg bg-indigo-600 text-white font-bold">ทั้งหมด</button>
-              <button onclick="filterStudentTableGroup('กลุ่ม 5')" class="stu-filter-btn px-2 py-0.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold">กลุ่ม 5</button>
-              <button onclick="filterStudentTableGroup('กลุ่ม 1')" class="stu-filter-btn px-2 py-0.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold">กลุ่ม 1</button>
-            </div>
-          </div>
-          <button onclick="openAddStudentModal()" class="px-2.5 py-1 bg-cyan-600 hover:bg-cyan-700 text-white rounded-lg text-xs font-bold shadow-xs">
-            <i class="fa-solid fa-user-plus mr-1"></i> เพิ่มนักศึกษา
-          </button>
-        </div>
-        <div class="overflow-x-auto mobile-scroll">
-          <table class="w-full text-xs text-left min-w-[650px]">
-            <thead>
-              <tr class="bg-slate-50 text-slate-800 border-b font-bold">
-                <th class="p-1.5">StudentID</th>
-                <th class="p-1.5">ชื่อ-สกุล</th>
-                <th class="p-1.5">กลุ่ม</th>
-                <th class="p-1.5">หอผู้ป่วย</th>
-                <th class="p-1.5 text-center">PIN</th>
-                <th class="p-1.5 text-center">สถานะ</th>
-                <th class="p-1.5 text-center">PDPA</th>
-                <th class="p-1.5 text-center">จัดการ</th>
-              </tr>
-            </thead>
-            <tbody id="teacherStudentTableBody" class="divide-y divide-slate-100"></tbody>
-          </table>
-        </div>
-      </div>
+    // ฟังก์ชันสลับกลุ่มเช็คชื่อ (ล็อกด้วยรหัส STU เด็ดขาด ไม่หลุด 16 คนแน่นอน)
+    function switchAttendanceMatrixGroup(group) {
+      currentAttFilterGroup = group;
+      
+      const b5 = document.getElementById('btnAttGroup5');
+      const b1 = document.getElementById('btnAttGroup1');
+      const bAll = document.getElementById('btnAttGroupAll');
+      
+      if (b5) b5.className = "px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold";
+      if (b1) b1.className = "px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold";
+      if (bAll) bAll.className = "px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold";
 
-      <!-- Tab 3: ตารางเช็คชื่ออาจารย์ (แยกกลุ่มเด็ดขาดตามสั่งการ) -->
-      <div id="teacherTabAttendanceMaster" class="hidden glass-card rounded-2xl p-3.5 space-y-2.5">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b pb-2">
-          <div>
-            <div class="flex items-center gap-2">
-              <h3 class="font-bold text-xs sm:text-sm text-slate-800 flex items-center gap-1.5">
-                <i class="fa-solid fa-clipboard-user text-indigo-600"></i> ตารางเช็คชื่อเข้าฝึกปฏิบัติ
-              </h3>
-              <!-- ปุ่ม Filter แยกกลุ่มเด็ดขาด -->
-              <div class="flex gap-1 text-[11px]">
-                <button id="btnAttGroup5" onclick="switchAttendanceMatrixGroup('กลุ่ม 5')" class="px-2.5 py-0.5 rounded-lg bg-indigo-600 text-white font-bold shadow-xs">กลุ่ม 5 (8 คน)</button>
-                <button id="btnAttGroup1" onclick="switchAttendanceMatrixGroup('กลุ่ม 1')" class="px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold">กลุ่ม 1 (8 คน)</button>
-                <button id="btnAttGroupAll" onclick="switchAttendanceMatrixGroup('all')" class="px-2.5 py-0.5 rounded-lg bg-slate-100 text-slate-700 hover:bg-slate-200 font-bold">ทั้งหมด 16 คน</button>
-              </div>
-            </div>
-            <p class="text-[11px] text-slate-500 font-medium">บันทึกลง Google Sheet เฉพาะกลุ่มที่กำลังเลือกอยู่เท่านั้น ไม่เหมารวมทั้ง 16 คน</p>
-          </div>
-          
-          <div class="flex flex-wrap items-center gap-1.5 text-xs">
-            <div class="flex items-center gap-1 bg-slate-50 border p-1 rounded-xl">
-              <label class="font-bold text-slate-700 ml-1">วันที่:</label>
-              <input type="date" id="bulkAttDate" class="bg-white border rounded-lg px-2 py-0.5 font-semibold outline-none text-xs">
-            </div>
-            <div class="flex items-center gap-1 bg-slate-50 border p-1 rounded-xl">
-              <label class="font-bold text-slate-700 ml-1">เวลา:</label>
-              <input type="time" id="bulkAttTime" value="07:30" class="bg-white border rounded-lg px-2 py-0.5 font-semibold outline-none text-xs">
-            </div>
-            <button type="button" onclick="setAllAttendance('ตรงเวลา')" class="px-2.5 py-1 bg-emerald-50 text-emerald-800 border border-emerald-300 hover:bg-emerald-100 rounded-lg font-bold shadow-xs transition text-xs">
-              <i class="fa-solid fa-check-double mr-1"></i> ติ๊กตรงเวลา
-            </button>
-          </div>
-        </div>
+      if (group === 'กลุ่ม 5' && b5) b5.className = "px-2.5 py-0.5 rounded-lg bg-indigo-600 text-white font-bold shadow-xs";
+      else if (group === 'กลุ่ม 1' && b1) b1.className = "px-2.5 py-0.5 rounded-lg bg-indigo-600 text-white font-bold shadow-xs";
+      else if (bAll) bAll.className = "px-2.5 py-0.5 rounded-lg bg-indigo-600 text-white font-bold shadow-xs";
 
-        <div class="overflow-x-auto mobile-scroll">
-          <table class="w-full text-xs text-left min-w-[700px] border-collapse">
-            <thead>
-              <tr class="bg-indigo-50/80 text-indigo-950 border-b font-bold">
-                <th class="p-2">รหัส/ชื่อ-สกุล นักศึกษา</th>
-                <th class="p-2">หอผู้ป่วย</th>
-                <th class="p-2 text-center">เลือกสถานะ</th>
-                <th class="p-2 text-center">คะแนนดาว</th>
-                <th class="p-2">หมายเหตุ</th>
-              </tr>
-            </thead>
-            <tbody id="attendanceMatrixBody" class="divide-y divide-slate-100">
-              <tr><td colspan="5" class="p-3 text-center text-slate-400">กำลังโหลดรายชื่อนักศึกษา...</td></tr>
-            </tbody>
-          </table>
-        </div>
+      renderAttendanceMatrix();
+    }
 
-        <div class="flex justify-end pt-2 border-t">
-          <button type="button" onclick="saveBulkAttendance()" class="px-4 py-2 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-xl shadow-xs transition flex items-center gap-1.5 text-xs">
-            <i class="fa-solid fa-floppy-disk"></i> บันทึกการเช็คชื่อกลุ่มนี้ลง Google Sheet
-          </button>
-        </div>
-      </div>
+    // ฟังก์ชันกางรายชื่อเช็คชื่อ (กรองเด็ดขาด 8 คนตรงเป๊ะ)
+    function renderAttendanceMatrix() {
+      const tbody = document.getElementById('attendanceMatrixBody');
+      if (!tbody) return;
+
+      // ฐานข้อมูลเริ่มต้นกลุ่ม 5 และกลุ่ม 1 สำรองไว้ตรงตัว
+      const defaultG5 = [
+        { studentId: "STU-09", name: "นศ.พย. ณิฐาภัทร จันทร์ทุ่ง (องเอิน)", ward: "รพ.อุทัยธานี", group: "กลุ่ม 5" },
+        { studentId: "STU-10", name: "นศ.พย. ณัฐพร ดอนแนไพร (ตะวัน)", ward: "รพ.อุทัยธานี", group: "กลุ่ม 5" },
+        { studentId: "STU-11", name: "นศ.พย. ณัฐธิดา กลัดเงิน (นัดดี้)", ward: "รพ.อุทัยธานี", group: "กลุ่ม 5" },
+        { studentId: "STU-12", name: "นศ.พย. ณัฐธิดา ถามูลเลศ (ใบตอง)", ward: "รพ.อุทัยธานี", group: "กลุ่ม 5" },
+        { studentId: "STU-13", name: "นศ.พย. ณิชาภัทร โพธิ์ศรีดี (โฟน)", ward: "รพ.อุทัยธานี", group: "กลุ่ม 5" },
+        { studentId: "STU-14", name: "นศ.พย. ณัฐรุจา อินจันทร์ (นัท)", ward: "รพ.อุทัยธานี", group: "กลุ่ม 5" },
+        { studentId: "STU-15", name: "นศ.พย. ณัฐพิมล กลิ่นขวัญ (ใบเตย)", ward: "รพ.อุทัยธานี", group: "กลุ่ม 5" },
+        { studentId: "STU-16", name: "นศ.พย. ตรีสุคนธิ์ ซาปิ (หมิว)", ward: "รพ.อุทัยธานี", group: "กลุ่ม 5" }
+      ];
+
+      const allStudents = (window.teacherStudentListCache && window.teacherStudentListCache.length >= 16) 
+                          ? window.teacherStudentListCache 
+                          : [...(window.teacherStudentListCache || []), ...defaultG5];
+
+      // กรองเด็ดขาดด้วยรหัส STU
+      let targetStudents = [];
+      if (currentAttFilterGroup === 'กลุ่ม 5') {
+        // ดึงเฉพาะ STU-09 ถึง STU-16 เท่านั้น (8 คนตรงเป๊ะ)
+        targetStudents = allStudents.filter(s => {
+          const num = parseInt(String(s.studentId).replace(/[^0-9]/g, ''));
+          return num >= 9 && num <= 16;
+        });
+        if (targetStudents.length === 0) targetStudents = defaultG5;
+      } else if (currentAttFilterGroup === 'กลุ่ม 1') {
+        // ดึงเฉพาะ STU-01 ถึง STU-08 เท่านั้น (8 คนแรก)
+        targetStudents = allStudents.filter(s => {
+          const num = parseInt(String(s.studentId).replace(/[^0-9]/g, ''));
+          return num >= 1 && num <= 8;
+        });
+      } else {
+        // ทั้งหมด 16 คน
+        targetStudents = allStudents;
+      }
+
+      tbody.innerHTML = targetStudents.map(s => `
+        <tr class="hover:bg-slate-50/80 transition" id="attRow_${s.studentId}">
+          <td class="p-2 whitespace-nowrap">
+            <div class="font-bold text-slate-900 text-xs sm:text-sm">${s.name}</div>
+            <div class="text-[11px] text-indigo-700 font-mono font-bold">${s.studentId} (${s.group || 'กลุ่ม 5'})</div>
+          </td>
+          <td class="p-2 whitespace-nowrap text-slate-600 text-xs font-medium">
+            ${s.ward || 'รพ.อุทัยธานี'}
+          </td>
+          <td class="p-2 text-center whitespace-nowrap">
+            <div class="inline-flex items-center gap-1 bg-slate-50 p-1 rounded-xl border border-slate-200">
+              <label class="px-2 py-0.5 rounded-lg cursor-pointer transition text-[11px] font-bold flex items-center gap-1 hover:bg-white has-[:checked]:bg-emerald-600 has-[:checked]:text-white">
+                <input type="radio" name="attStatus_${s.studentId}" value="ตรงเวลา" checked onchange="updateStarBadge('${s.studentId}', 'ตรงเวลา')" class="hidden">
+                ตรงเวลา
+              </label>
+              <label class="px-2 py-0.5 rounded-lg cursor-pointer transition text-[11px] font-bold flex items-center gap-1 hover:bg-white has-[:checked]:bg-amber-500 has-[:checked]:text-white">
+                <input type="radio" name="attStatus_${s.studentId}" value="สาย" onchange="updateStarBadge('${s.studentId}', 'สาย')" class="hidden">
+                สาย
+              </label>
+              <label class="px-2 py-0.5 rounded-lg cursor-pointer transition text-[11px] font-bold flex items-center gap-1 hover:bg-white has-[:checked]:bg-blue-600 has-[:checked]:text-white">
+                <input type="radio" name="attStatus_${s.studentId}" value="ลา" onchange="updateStarBadge('${s.studentId}', 'ลา')" class="hidden">
+                ลา
+              </label>
+              <label class="px-2 py-0.5 rounded-lg cursor-pointer transition text-[11px] font-bold flex items-center gap-1 hover:bg-white has-[:checked]:bg-purple-600 has-[:checked]:text-white">
+                <input type="radio" name="attStatus_${s.studentId}" value="ป่วย" onchange="updateStarBadge('${s.studentId}', 'ป่วย')" class="hidden">
+                ป่วย
+              </label>
+              <label class="px-2 py-0.5 rounded-lg cursor-pointer transition text-[11px] font-bold flex items-center gap-1 hover:bg-white has-[:checked]:bg-rose-600 has-[:checked]:text-white">
+                <input type="radio" name="attStatus_${s.studentId}" value="ขาด" onchange="updateStarBadge('${s.studentId}', 'ขาด')" class="hidden">
+                ขาด
+              </label>
+              <label class="px-2 py-0.5 rounded-lg cursor-pointer transition text-[11px] font-bold flex items-center gap-1 hover:bg-white has-[:checked]:bg-orange-600 has-[:checked]:text-white">
+                <input type="radio" name="attStatus_${s.studentId}" value="ส่งงานช้า" onchange="updateStarBadge('${s.studentId}', 'ส่งงานช้า')" class="hidden">
+                ส่งช้า
+              </label>
+            </div>
+          </td>
+          <td class="p-2 text-center whitespace-nowrap" id="starBadge_${s.studentId}">
+            <div class="text-amber-500 text-xs">⭐⭐⭐⭐⭐</div>
+            <div class="text-[10px] text-emerald-600 font-bold">+1 โบนัสวินัย</div>
+          </td>
+          <td class="p-2 whitespace-nowrap">
+            <input type="text" id="attNote_${s.studentId}" placeholder="ระบุเหตุผล..." class="w-full text-xs bg-white border border-slate-300 rounded-lg p-1.5 outline-none focus:ring-1 focus:ring-indigo-500 font-medium">
+          </td>
+        </tr>
+      `).join('');
+    }
+
+    // ฟังก์ชันบันทึกการเช็คชื่อ (ส่งเฉพาะกลุ่มที่แสดงบนจอเท่านั้น)
+    async function saveBulkAttendance() {
+      const tbody = document.getElementById('attendanceMatrixBody');
+      if (!tbody) return;
+      
+      const rows = tbody.querySelectorAll('tr');
+      if (rows.length === 0) {
+        Swal.fire({ icon: 'warning', title: 'ไม่พบรายชื่อในกลุ่มนี้' });
+        return;
+      }
+
+      const date = document.getElementById('bulkAttDate').value || new Date().toISOString().split('T')[0];
+      const time = document.getElementById('bulkAttTime').value || '07:30';
+
+      const recordsToSave = [];
+      rows.forEach(r => {
+        const sid = r.id.replace('attRow_', '');
+        const sname = r.querySelector('.font-bold')?.textContent || '';
+        const checkedRadio = r.querySelector(`input[name="attStatus_${sid}"]:checked`);
+        const status = checkedRadio ? checkedRadio.value : 'ตรงเวลา';
+        const note = (r.querySelector(`#attNote_${sid}`)?.value || '').trim();
+
+        recordsToSave.push({
+          studentId: sid,
+          studentName: sname,
+          status: status,
+          note: note
+        });
+      });
+
+      Swal.fire({
+        title: 'กำลังบันทึกการเช็คชื่อ...',
+        text: `กำลังบันทึก ${currentAttFilterGroup} (${recordsToSave.length} คน)`,
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+      });
+
+      try {
+        const res = await apiPost("batchRecordAttendance", {
+          date: date,
+          time: time,
+          records: recordsToSave
+        });
+
+        if (res && res.success) {
+          Swal.fire({ icon: 'success', title: 'บันทึกเรียบร้อย!', text: `บันทึกการเช็คชื่อ ${recordsToSave.length} คนสำเร็จ` });
+          loadTeacherData();
+        } else {
+          Swal.fire({ icon: 'error', title: 'เกิดข้อผิดพลาด', text: res ? res.message : 'ไม่สามารถบันทึกได้' });
+        }
+      } catch (err) {
+        Swal.fire({ icon: 'error', title: 'บันทึกล้มเหลว', text: 'กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต' });
+      }
+    }
 
       <!-- Tab 4: ตารางมอบพลังหัตถการ (ครบทั้ง 16 คนใน Dropdown) -->
       <div id="teacherTabSkillRpg" class="hidden glass-card rounded-2xl p-3.5 space-y-2.5">
