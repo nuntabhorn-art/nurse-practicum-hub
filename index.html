@@ -100,7 +100,7 @@
           </span>
           <div>
             <div id="bannerTitle" class="font-bold text-slate-800 text-xs sm:text-sm">เปิดรับส่งงานตามปกติ</div>
-            <div id="bannerSubtitle" class="text-emerald-800 font-medium text-[11px]">หมดเขตประจำวัน: <span id="bannerDueDateText" class="font-bold">18:00 น.</span> (ส่งช้าหัก 1 คะแนน)</div>
+            <div id="bannerSubtitle" class="text-emerald-800 font-medium text-[11px]">หมดเขตประจำวัน 18:00 น. (ส่งช้าหัก 1 คะแนน)</div>
           </div>
         </div>
         <div id="bannerBadge" class="font-black px-2.5 py-0.5 rounded-full text-xs bg-emerald-200 text-emerald-950 border border-emerald-400">
@@ -147,7 +147,7 @@
               <select id="studentSelect" onchange="onStudentSelectChange()" class="w-full sm:w-auto text-xs sm:text-sm font-bold text-indigo-950 bg-indigo-50 border border-indigo-200 rounded-xl px-2.5 py-1 outline-none truncate max-w-full">
               </select>
 
-              <button type="button" id="btnTogglePrivacy" onclick="handleTogglePrivacy()" class="shrink-0 px-2 py-1 rounded-xl text-xs font-bold border border-rose-300 bg-rose-50 text-rose-800 flex items-center gap-1">
+              <button type="button" id="btnTogglePrivacy" onclick="handleTogglePrivacy()" class="shrink-0 px-2.5 py-1 rounded-xl text-xs font-bold border border-rose-300 bg-rose-50 text-rose-800 flex items-center gap-1">
                 <i class="fa-solid fa-eye-slash text-rose-600" id="privacyIcon"></i>
                 <span id="privacyLabel">ส่วนตัว</span>
               </button>
@@ -258,7 +258,7 @@
         </div>
       </div>
 
-      <!-- 3 ตารางข้อมูลหลักด้านล่าง (แก้ปัญหา undefined น. ถาวร 100%) -->
+      <!-- 3 ตารางข้อมูลหลักด้านล่าง -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div class="glass-card p-3 rounded-xl space-y-1.5">
           <h3 class="font-bold text-xs text-slate-800 flex items-center gap-1.5 pb-1.5 border-b border-slate-100">
@@ -270,8 +270,8 @@
                 <tr class="text-slate-400 border-b font-semibold text-[11px]">
                   <th class="pb-1">วัน-เวลา</th>
                   <th class="pb-1">นศ.</th>
-                  <th class="pb-1 text-center">สถานะ</th>
-                  <th class="pb-1 text-center">คะแนน</th>
+                  <th class="pb-1">สถานะ</th>
+                  <th class="pb-1">คะแนน</th>
                 </tr>
               </thead>
               <tbody id="studentAttTableBody" class="divide-y divide-slate-100">
@@ -355,8 +355,7 @@
             <table class="w-full text-xs text-left">
               <thead>
                 <tr class="bg-indigo-50/80 text-indigo-950 border-b font-bold">
-                  <th class="p-1.5">ผู้ส่ง</th>
-                  <th class="p-1.5">วัน/เวลาที่ส่ง</th>
+                  <th class="p-1.5">วันที่</th>
                   <th class="p-1.5">หัวข้องาน</th>
                   <th class="p-1.5">ไฟล์</th>
                   <th class="p-1.5 text-center">สถานะ</th>
@@ -366,7 +365,7 @@
                 </tr>
               </thead>
               <tbody id="studentWorkTableBody" class="divide-y divide-slate-100">
-                <tr><td colspan="8" class="p-3 text-center text-slate-400">กำลังโหลด...</td></tr>
+                <tr><td colspan="7" class="p-3 text-center text-slate-400">กำลังโหลด...</td></tr>
               </tbody>
             </table>
           </div>
@@ -778,18 +777,6 @@
       </div>
       
       <form onsubmit="handleAttendanceCheckIn(event)" class="space-y-2.5 text-xs">
-        <!-- เพิ่มช่องเลือกวันที่และเวลาเช็คอินเรียลไทม์ -->
-        <div class="grid grid-cols-2 gap-1.5 bg-slate-50 p-1.5 rounded-lg border border-slate-200">
-          <div>
-            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">วันที่เช็คอิน</label>
-            <input type="date" id="cinDate" class="w-full border rounded p-1 text-xs bg-white font-semibold">
-          </div>
-          <div>
-            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">เวลาเช็คอิน</label>
-            <input type="time" id="cinTime" class="w-full border rounded p-1 text-xs bg-white font-semibold">
-          </div>
-        </div>
-
         <div class="space-y-1.5 text-center">
           <div class="relative w-full h-44 bg-slate-100 rounded-xl overflow-hidden border border-slate-200 flex items-center justify-center shadow-inner">
             <video id="cameraVideo" autoplay playsinline class="w-full h-full object-cover"></video>
@@ -893,27 +880,14 @@
     </div>
   </div>
 
-  <!-- Modal 4: ส่งงาน Care Plan ใหม่ (เพิ่มช่องวันที่และเวลาเรียลไทม์) -->
+  <!-- Modal 4: ส่งงาน Care Plan ใหม่ -->
   <div id="submitWorkModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden z-50 flex items-center justify-center p-3">
-    <div class="bg-white rounded-3xl max-w-sm w-full p-4 space-y-2.5 shadow-2xl">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-3.5 space-y-2.5 shadow-2xl">
       <div class="flex justify-between items-center border-b pb-1.5">
         <h3 class="font-bold text-xs sm:text-sm text-slate-800">ส่งงาน / Care Plan ประจำวัน</h3>
         <button onclick="closeModal('submitWorkModal')" class="text-slate-400 hover:text-slate-600 text-base">&times;</button>
       </div>
-
       <form onsubmit="handleWorkSubmit(event)" class="space-y-2 text-xs">
-        <!-- วันที่และเวลาส่งงานเรียลไทม์ & เลือกเองได้ -->
-        <div class="grid grid-cols-2 gap-1.5 bg-indigo-50/70 p-2 rounded-xl border border-indigo-100">
-          <div>
-            <label class="block text-[10px] font-bold text-indigo-950 mb-0.5">วันที่ส่งงาน *</label>
-            <input type="date" id="workDateInput" class="w-full border rounded p-1 text-xs bg-white font-semibold outline-none">
-          </div>
-          <div>
-            <label class="block text-[10px] font-bold text-indigo-950 mb-0.5">เวลาที่ส่งงาน *</label>
-            <input type="time" id="workTimeInput" class="w-full border rounded p-1 text-xs bg-white font-semibold outline-none">
-          </div>
-        </div>
-
         <div>
           <label class="block font-bold mb-0.5">หัวข้องาน / Care Plan *</label>
           <input type="text" id="workSubject" required placeholder="เช่น บันทึกการพยาบาล Acute Appendicitis" class="w-full border rounded-lg p-1.5">
@@ -930,7 +904,7 @@
           <label class="block font-bold mb-0.5">หรือแนบลิงก์ Google Drive</label>
           <input type="url" id="workLink" placeholder="https://drive.google.com/..." class="w-full bg-white border rounded-lg p-1.5">
         </div>
-        <button type="submit" class="w-full py-2 bg-indigo-600 text-white font-bold rounded-xl shadow-xs mt-1">
+        <button type="submit" class="w-full py-2 bg-indigo-600 text-white font-bold rounded-xl shadow-xs">
           บันทึกและส่งงานให้อาจารย์
         </button>
       </form>
@@ -1112,22 +1086,7 @@
       buildRubricUI();
       initRadarChart();
       initDashboard();
-      initRealtimeClock();
     };
-
-    // ฟังก์ชันตั้งค่าวัน-เวลาเรียลไทม์ทุกจุด
-    function initRealtimeClock() {
-      const now = new Date();
-      const dStr = now.toISOString().split('T')[0];
-      const tStr = now.toTimeString().split(' ')[0].substring(0, 5);
-      
-      if (document.getElementById('cinDate')) document.getElementById('cinDate').value = dStr;
-      if (document.getElementById('cinTime')) document.getElementById('cinTime').value = tStr;
-      if (document.getElementById('workDateInput')) document.getElementById('workDateInput').value = dStr;
-      if (document.getElementById('workTimeInput')) document.getElementById('workTimeInput').value = tStr;
-      if (document.getElementById('bulkAttDate')) document.getElementById('bulkAttDate').value = dStr;
-      if (document.getElementById('bulkAttTime')) document.getElementById('bulkAttTime').value = tStr;
-    }
 
     function buildRubricUI() {
       const c = document.getElementById('rubricContainer');
@@ -1177,37 +1136,15 @@
       });
     }
 
-    // แปลงวันที่ให้อ่านง่ายสไตล์ไทย ป้องกันการขึ้น 1899 หรือ GMT ยาว
     function formatThaiDate(dateStr) {
-      if (!dateStr || String(dateStr).includes('1899')) {
-        const now = new Date();
-        const d = String(now.getDate()).padStart(2, '0');
-        const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
-        return `${d} ${months[now.getMonth()]} ${now.getFullYear() + 543}`;
-      }
-      const match = String(dateStr).match(/(\d{4})-(\d{2})-(\d{2})/);
-      if (match) {
-        const months = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
-        const y = parseInt(match[1]) + 543;
-        const m = months[parseInt(match[2]) - 1];
-        const d = match[3];
-        return `${d} ${m} ${y}`;
-      }
-      return String(dateStr).split('T')[0];
-    }
-
-    // แก้ปัญหาเวลา undefined ดึงเวลาจริงเสมอ
-    function formatSafeTimeDisplay(rawTime, logId) {
-      if (rawTime && String(rawTime) !== 'undefined' && String(rawTime) !== 'null' && String(rawTime).trim() !== '') {
-        const m = String(rawTime).match(/(\d{1,2}:\d{2})/);
-        if (m) return m[1].padStart(5, '0') + ' น.';
-      }
-      if (logId) {
-        const m = String(logId).match(/\d{8}-(\d{2})(\d{2})/);
-        if (m) return `${m[1]}:${m[2]} น.`;
-      }
-      const now = new Date();
-      return `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')} น.';
+      if (!dateStr) return "-";
+      const dt = new Date(dateStr);
+      if (isNaN(dt.getTime())) return dateStr.split("T")[0];
+      const thaiMonths = ["ม.ค.", "ก.พ.", "มี.ค.", "เม.ย.", "พ.ค.", "มิ.ย.", "ก.ค.", "ส.ค.", "ก.ย.", "ต.ค.", "พ.ย.", "ธ.ค."];
+      const d = dt.getDate().toString().padStart(2, '0');
+      const m = thaiMonths[dt.getMonth()];
+      const y = dt.getFullYear() + 543;
+      return `${d} ${m} ${y}`;
     }
 
     async function initDashboard() {
@@ -1219,21 +1156,29 @@
           currentSettingsCache = data.settings;
           const banner = document.getElementById('studentSubmissionBanner');
           const bTitle = document.getElementById('bannerTitle');
+          const bSub = document.getElementById('bannerSubtitle');
           const bBadge = document.getElementById('bannerBadge');
-          const bDue = document.getElementById('bannerDueDateText');
+          const bIcon = document.getElementById('bannerIcon');
 
+          // สลับกล่องเปิด/ปิดรับงาน ชัดเจน
           if (data.settings.enabled) {
             banner.className = "p-2.5 rounded-xl flex flex-wrap items-center justify-between gap-2 shadow-xs border bg-emerald-50/80 border-emerald-300 text-xs";
+            bIcon.className = "w-7 h-7 rounded-lg bg-emerald-100 text-emerald-600 flex items-center justify-center text-sm shrink-0";
+            bIcon.innerHTML = `<i class="fa-solid fa-circle-check"></i>`;
             bTitle.textContent = "เปิดรับส่งงานตามปกติ";
+            let timeClean = (data.settings.dueTime || '18:00').replace(/.*(\d{2}:\d{2}).*/, '$1');
+            let dateClean = data.settings.dueDate ? formatThaiDate(data.settings.dueDate) + " " : "ประจำวัน ";
+            bSub.textContent = `หมดเขต${dateClean}เวลา ${timeClean} น. (ส่งช้าหัก ${data.settings.lateDeduction || 1} คะแนน)`;
             bBadge.textContent = "เปิดรับงาน";
             bBadge.className = "font-black px-2.5 py-0.5 rounded-full text-xs bg-emerald-200 text-emerald-950 border border-emerald-400";
-            if (bDue) bDue.textContent = (data.settings.dueTime || "18:00") + " น.";
           } else {
             banner.className = "p-2.5 rounded-xl flex flex-wrap items-center justify-between gap-2 shadow-xs border bg-rose-50/80 border-rose-300 text-xs";
+            bIcon.className = "w-7 h-7 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center text-sm shrink-0";
+            bIcon.innerHTML = `<i class="fa-solid fa-circle-xmark"></i>`;
             bTitle.textContent = "อาจารย์ปิดระบบรับส่งงานแล้ว";
+            bSub.textContent = "ไม่สามารถส่งงาน Care Plan ใหม่ได้ในขณะนี้";
             bBadge.textContent = "ปิดรับงาน";
             bBadge.className = "font-black px-2.5 py-0.5 rounded-full text-xs bg-rose-200 text-rose-950 border border-rose-400";
-            if (bDue) bDue.textContent = "ปิดรับงานแล้ว";
           }
 
           const libNavBtn = document.getElementById('btnNavLibrary');
@@ -1277,17 +1222,23 @@
         document.getElementById('statPassedSkills').textContent = skills.filter(k => k.result === 'ผ่าน').length;
         document.getElementById('statTotalSkills').textContent = skills.length;
 
-        // แก้ไขตารางประวัติเข้าเวร ป้องกันบั๊กเวลา undefined น. อย่างสมบูรณ์ 100%
+        // แก้ไขตารางประวัติเข้าเวร ป้องกันบั๊กเวลา 1899 และตัดให้สั้นกระชับ
         document.getElementById('studentAttTableBody').innerHTML = att.length === 0 ? '<tr><td colspan="4" class="p-3 text-center text-slate-400 font-semibold">ไม่มีข้อมูล</td></tr>' : att.map(a => {
-          let timeClean = formatSafeTimeDisplay(a.time, a.logId);
-          let dateClean = formatThaiDate(a.date);
+          let datePart = a.date ? String(a.date).split('T')[0] : '-';
+          if (datePart.includes('1899') || datePart.length > 15) {
+            let m = String(a.date).match(/\d{4}-\d{2}-\d{2}/);
+            datePart = m ? m[0] : '-';
+          }
+          let dateClean = formatThaiDate(datePart);
+          let timeMatch = String(a.time || '').match(/\d{1,2}:\d{2}/);
+          let timePart = timeMatch ? timeMatch[1] + ' น.' : '-';
 
           return `
             <tr class="hover:bg-slate-50 transition">
-              <td class="py-1.5 whitespace-nowrap text-slate-500 font-medium">${dateClean} <span class="text-indigo-600 font-bold ml-1">${timeClean}</span></td>
+              <td class="py-1.5 whitespace-nowrap text-slate-500 font-medium">${dateClean} <span class="text-indigo-600 font-bold ml-1">${timePart}</span></td>
               <td class="py-1.5 font-bold text-slate-800">${a.studentName}</td>
-              <td class="py-1.5 whitespace-nowrap text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${a.status === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${a.status}</span></td>
-              <td class="py-1.5 whitespace-nowrap text-center font-black">${a.deduct > 0 ? '-' + a.deduct : (a.bonus > 0 ? '+' + a.bonus : '-')}</td>
+              <td class="py-1.5 whitespace-nowrap"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${a.status === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${a.status}</span></td>
+              <td class="py-1.5 whitespace-nowrap font-black">${a.deduct > 0 ? '-' + a.deduct : (a.bonus > 0 ? '+' + a.bonus : '-')}</td>
             </tr>
           `;
         }).join('');
@@ -1327,15 +1278,14 @@
           `;
         }).join('');
 
-        document.getElementById('studentWorkTableBody').innerHTML = works.length === 0 ? '<tr><td colspan="8" class="p-3 text-center text-slate-400">ยังไม่มีประวัติการส่งงาน</td></tr>' : works.map(w => {
+        document.getElementById('studentWorkTableBody').innerHTML = works.length === 0 ? '<tr><td colspan="7" class="p-3 text-center text-slate-400">ยังไม่มีประวัติการส่งงาน</td></tr>' : works.map(w => {
           let resubmitBtn = w.status === 'ต้องแก้ไข' ? `<button onclick="openResubmitModal('${w.workId}')" class="px-2 py-0.5 bg-orange-500 text-white rounded text-[10px] font-bold">ส่งแก้</button>` : '-';
           let fileLink = w.fileUrl ? `<a href="${w.fileUrl}" target="_blank" class="text-indigo-600 font-bold underline">ไฟล์งาน</a>` : '-';
           if (w.teacherReturnFileUrl) fileLink += `<br><a href="${w.teacherReturnFileUrl}" target="_blank" class="text-emerald-600 text-[10px] font-black underline">ตรวจกลับ</a>`;
           
-          let dateClean = w.submitDate ? String(w.submitDate).split(' (')[0] : '-';
+          let dateClean = w.submitDate.includes("(") ? w.submitDate : (formatThaiDate(w.submitDate.split(' ')[0]) + ' ' + (w.submitDate.split(' ')[1]||''));
           return `
             <tr class="hover:bg-slate-50 transition">
-              <td class="p-1.5 font-bold text-slate-800">${w.studentName || '-'}</td>
               <td class="p-1.5 whitespace-nowrap text-slate-500">${dateClean}</td>
               <td class="p-1.5 font-bold text-slate-800">${w.subject}</td>
               <td class="p-1.5 whitespace-nowrap">${fileLink}</td>
@@ -1463,7 +1413,6 @@
         return;
       }
 
-      initRealtimeClock();
       document.getElementById('checkInModal').classList.remove('hidden');
       retakePhoto();
       getCurrentLocation();
@@ -1602,8 +1551,6 @@
       const note = document.getElementById('attNote').value;
       const select = document.getElementById('studentSelect');
       const studentName = select.options[select.selectedIndex].text.split(' (')[0];
-      const customDate = document.getElementById('cinDate').value;
-      const customTime = document.getElementById('cinTime').value;
 
       Swal.fire({ title: 'กำลังบันทึกเช็คอิน...', didOpen: () => Swal.showLoading(), allowOutsideClick: false });
 
@@ -1612,8 +1559,6 @@
         studentName: studentName,
         status: status,
         note: note,
-        customDate: customDate,
-        customTime: customTime,
         coords: currentGpsCoords,
         thaiAddress: currentThaiAddress,
         mapUrl: currentGoogleMapUrl,
@@ -1634,7 +1579,6 @@
         Swal.fire({ icon: 'error', title: 'ปิดรับส่งงาน', text: 'อาจารย์ปิดระบบรับส่งงานในขณะนี้' });
         return;
       }
-      initRealtimeClock();
       document.getElementById('submitWorkModal').classList.remove('hidden'); 
     }
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
@@ -1647,8 +1591,6 @@
       const fileInput = document.getElementById('workFile');
       const select = document.getElementById('studentSelect');
       const studentName = select.options[select.selectedIndex].text.split(' (')[0];
-      const customDate = document.getElementById('workDateInput').value;
-      const customTime = document.getElementById('workTimeInput').value;
 
       Swal.fire({ title: 'กำลังส่งงาน...', didOpen: () => Swal.showLoading(), allowOutsideClick: false });
 
@@ -1657,9 +1599,7 @@
         studentName: studentName,
         subject: subject,
         content: content,
-        externalLink: link,
-        customDate: customDate,
-        customTime: customTime
+        externalLink: link
       };
 
       if (fileInput.files.length > 0) {
@@ -1829,7 +1769,7 @@
       const data = await apiGet("getDashboard", { studentId: currentStudentId, viewMode: "all" });
       
       document.getElementById('teacherWorkTableBody').innerHTML = (data.works || []).map(w => {
-        let dateClean = w.submitDate ? String(w.submitDate).split(' (')[0] : '-';
+        let dateClean = w.submitDate.includes("(") ? w.submitDate : (formatThaiDate(w.submitDate.split(' ')[0]) + ' ' + (w.submitDate.split(' ')[1]||''));
         return `
         <tr class="hover:bg-slate-50 transition">
           <td class="p-1.5 font-bold text-slate-800">${w.studentName}</td>
@@ -1854,6 +1794,7 @@
       renderStudentTable(window.teacherStudentListCache);
       renderAttendanceMatrix();
 
+      // Dropdown หัตถการมีครบทั้ง 16 คนให้เลือกกรอกย้อนหลัง
       const matrixStuSel = document.getElementById('matrixSkillStudentSelect');
       if (matrixStuSel && data.students) {
         matrixStuSel.innerHTML = data.students.map(s => `<option value="${s.studentId}">${s.name} (${s.ward || 'รพ.อุทัยธานี'}) [${s.group || 'กลุ่ม 5'}]</option>`).join('');
@@ -1868,7 +1809,7 @@
 
         return `
           <tr class="hover:bg-slate-50 transition">
-            <td class="p-1.5 text-slate-500 whitespace-nowrap text-xs font-medium">${formatThaiDate(a.date)} ${formatSafeTimeDisplay(a.time, a.logId)}</td>
+            <td class="p-1.5 text-slate-500 whitespace-nowrap text-xs font-medium">${formatThaiDate(a.date)} ${a.time}</td>
             <td class="p-1.5 font-bold text-slate-800 whitespace-nowrap">${a.studentName}</td>
             <td class="p-1.5 whitespace-nowrap"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${a.status === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${a.status}</span></td>
             <td class="p-1.5 text-slate-800 max-w-xs font-medium text-xs">
