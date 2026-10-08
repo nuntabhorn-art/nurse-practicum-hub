@@ -51,23 +51,11 @@
       50% { transform: scale(1.04); filter: drop-shadow(0 8px 16px rgba(79, 70, 229, 0.4)); }
     }
     .animate-glow-pixar { animation: pulseGlow 2.8s ease-in-out infinite; }
-
-    /* แอนิเมชันเด็กพยาบาลวิ่งดุ๊กดิ๊ก */
-    @keyframes nurseRunTrack {
-      0% { transform: translateX(-150%); }
-      100% { transform: translateX(120vw); }
-    }
-    .animate-nurse-run { animation: nurseRunTrack 16s linear infinite; }
-    @keyframes nurseLegBounce {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-4px) rotate(4deg); }
-    }
-    .animate-nurse-bounce { animation: nurseLegBounce 0.4s ease-in-out infinite; }
   </style>
 </head>
 <body class="text-slate-800 flex flex-col justify-between min-h-screen select-none">
 
-  <!-- Header พรีเมียมดั้งเดิม -->
+  <!-- Header -->
   <header class="gradient-header text-white shadow-lg sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3">
       <div class="flex items-center space-x-3.5 w-full sm:w-auto justify-between sm:justify-start">
@@ -100,35 +88,21 @@
     </div>
   </header>
 
-  <!-- แถบการ์ตูนพยาบาล 3D วิ่งดุ๊กดิ๊กด้านบน 2 คน น่ารักคมชัด -->
-  <div class="w-full bg-gradient-to-r from-indigo-100 via-sky-50 to-purple-100 h-14 relative overflow-hidden border-b border-indigo-200/60 shadow-inner flex items-center">
-    <div class="absolute whitespace-nowrap flex items-center gap-5 animate-nurse-run">
-      <div class="flex items-center gap-2 bg-white/95 backdrop-blur-sm px-3.5 py-1 rounded-2xl shadow-sm border-2 border-indigo-200 animate-nurse-bounce">
-        <span class="text-xl">👩‍⚕️</span>
-        <span class="text-xs font-black text-indigo-900">นศ.พย. กำลังไปขึ้นเวร... 🏃‍♀️💨</span>
-      </div>
-      <div class="flex items-center gap-2 bg-white/95 backdrop-blur-sm px-3.5 py-1 rounded-2xl shadow-sm border-2 border-emerald-200 animate-nurse-bounce" style="animation-delay: -0.2s;">
-        <span class="text-xl">👨‍⚕️</span>
-        <span class="text-xs font-black text-emerald-900">ตรวจคนไข้รอบเช้า 🩺✨</span>
-      </div>
-    </div>
-  </div>
-
   <!-- Main Container -->
   <main class="max-w-7xl mx-auto px-3 sm:px-5 py-4 sm:py-5 w-full flex-1 space-y-4 overflow-hidden">
 
     <!-- ================= 1. มุมมองนักศึกษา (STUDENT VIEW) ================= -->
     <div id="studentSection" class="space-y-4">
       
-      <!-- การ์ดเขียวแจ้งสถานะเปิดรับส่งงาน (เวลาไทยกระชับ ไม่ติด GMT ยาว) -->
+      <!-- การ์ดเขียวแจ้งสถานะเปิดรับส่งงาน -->
       <div id="studentSubmissionBanner" class="p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-2.5 shadow-sm border-2 border-emerald-300 bg-emerald-50/70 text-xs sm:text-sm">
         <div class="flex items-center gap-2.5">
           <span class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-base shrink-0 shadow-xs">
             <i class="fa-solid fa-circle-check"></i>
           </span>
           <div>
-            <div id="bannerTitle" class="font-bold text-slate-800 text-sm">ระบบเปิดรับส่งงานตามปกติ</div>
-            <div id="bannerSubtitle" class="text-emerald-800 font-semibold text-xs mt-0.5">หมดเขต: <span id="bannerDueDateText" class="font-bold">ประจำวัน 18:00 น.</span> (ส่งช้าหัก 1 คะแนน)</div>
+            <div id="bannerTitle" class="font-bold text-slate-800 text-sm">เปิดรับส่งงานตามปกติ</div>
+            <div id="bannerSubtitle" class="text-emerald-800 font-semibold text-xs mt-0.5">หมดเขตประจำวัน: <span id="bannerDueDateText" class="font-bold">18:00 น.</span> (ส่งช้าหัก 1 คะแนน)</div>
           </div>
         </div>
         <div id="bannerBadge" class="font-black px-3 py-1 rounded-full text-xs bg-emerald-200 text-emerald-950 border border-emerald-400">
@@ -136,7 +110,7 @@
         </div>
       </div>
 
-      <!-- บัตรโปรไฟล์ & สถิติ 3 ช่องพรีเมียม -->
+      <!-- บัตรโปรไฟล์ & สถิติ 3 ช่อง (เหมือนตามภาพหน้าจอ) -->
       <div class="glass-card rounded-3xl p-5 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5">
         <div class="flex items-center space-x-4 w-full lg:w-auto">
           
@@ -153,7 +127,7 @@
 
           <div class="flex-1 min-w-0">
             <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
-              <label class="block text-xs sm:text-sm font-bold text-slate-600">นักศึกษาพยาบาลที่ล็อกอินอยู่:</label>
+              <label class="block text-xs sm:text-sm font-bold text-slate-600">นศ. ที่ล็อกอิน:</label>
               
               <div class="flex items-center gap-2">
                 <div class="flex items-center bg-indigo-50 p-1 rounded-xl border border-indigo-200 text-xs">
@@ -161,13 +135,14 @@
                     เฉพาะฉัน
                   </button>
                   <button type="button" id="btnViewAll" onclick="setViewMode('all')" class="px-2.5 py-1 rounded-lg font-semibold text-indigo-700 hover:bg-indigo-100">
-                    <i class="fa-solid fa-users mr-1"></i> ดูทุกคน
+                    ดูทุกคน
                   </button>
                 </div>
 
                 <button type="button" onclick="promptStudentLoginModal()" class="px-3 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-xl text-xs font-bold shadow-xs">
-                  <i class="fa-solid fa-key mr-1 text-indigo-600"></i> ล็อกอิน PIN
+                  <i class="fa-solid fa-key mr-1 text-indigo-600"></i> ล็อกอิน
                 </button>
+                <span class="px-2 py-1 bg-rose-50 text-rose-700 border border-rose-200 rounded-xl text-xs font-bold"><i class="fa-solid fa-lock mr-1"></i>ส่วนตัว</span>
               </div>
             </div>
 
@@ -183,11 +158,11 @@
           </div>
         </div>
 
-        <!-- การ์ด 3 ช่อง: Lv.1, Hero of Ward, วินัยตรงเวลา -->
+        <!-- การ์ด 3 ช่อง: Level, Hero, ตรงเวลา + ปุ่มเช็คอินเวร -->
         <div class="flex items-center gap-2.5 w-full lg:w-auto justify-between lg:justify-end flex-wrap sm:flex-nowrap">
           <div class="flex-1 lg:flex-none bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-2xl p-3 text-center shadow-xs min-w-[110px]">
             <div class="text-xs font-bold text-purple-900 flex items-center justify-center gap-1">
-              <i class="fa-solid fa-bolt text-purple-600"></i> Nurse Level
+              <i class="fa-solid fa-bolt text-purple-600"></i> Level
             </div>
             <div class="text-2xl font-black text-purple-700 my-0.5">
               Lv.<span id="displayStudentLevel">1</span>
@@ -197,22 +172,22 @@
 
           <div class="flex-1 lg:flex-none bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-3 text-center shadow-xs min-w-[110px]">
             <div class="text-xs font-bold text-amber-900 flex items-center justify-center gap-1">
-              <i class="fa-solid fa-crown text-amber-500"></i> Hero of Ward
+              <i class="fa-solid fa-crown text-amber-500"></i> Hero
             </div>
             <div class="text-2xl font-black text-amber-600 my-0.5">
               +<span id="displayHeroScore">0</span> <span class="text-xs font-normal text-amber-700">แต้ม</span>
             </div>
-            <div class="text-[11px] font-bold text-amber-700">คะแนนความดี</div>
+            <div class="text-[11px] font-bold text-amber-700">ความดีคนไข้</div>
           </div>
 
           <div class="flex-1 lg:flex-none bg-gradient-to-br from-indigo-50 via-white to-sky-50 border-2 border-indigo-200 rounded-2xl p-3 text-center shadow-xs min-w-[110px]">
             <div class="text-xs font-bold text-indigo-900 flex items-center justify-center gap-1">
-              <i class="fa-solid fa-shield-heart text-indigo-500"></i> วินัยตรงเวลา
+              <i class="fa-solid fa-shield-heart text-indigo-500"></i> ตรงเวลา
             </div>
             <div class="text-2xl font-black text-slate-800 my-0.5">
               <span id="displayScore" class="text-indigo-600">100</span><span class="text-sm font-normal text-slate-400">/100</span>
             </div>
-            <div id="scoreStatus" class="text-[11px] font-bold text-emerald-600">สม่ำเสมอ (ดีเยี่ยม)</div>
+            <div id="scoreStatus" class="text-[11px] font-bold text-emerald-600">ดีเยี่ยม</div>
           </div>
 
           <button onclick="openCheckInModal()" class="px-4 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs sm:text-sm rounded-2xl shadow-md transition flex flex-col items-center justify-center">
@@ -222,13 +197,13 @@
         </div>
       </div>
 
-      <!-- สรุปตัวเลข 5 การ์ดสีสวยพรีเมียมเดิม (น้ำเงิน, แดง, ส้ม, เขียว, ม่วง) -->
+      <!-- สรุปตัวเลข 5 การ์ดสีสวยพรีเมียม (น้ำเงิน, แดง, ส้ม, เขียว, ม่วง ตามภาพ) -->
       <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
         <div class="gradient-card-blue text-white p-4 rounded-2xl flex items-center justify-between">
           <div class="min-w-0">
-            <div class="text-xs sm:text-sm text-indigo-100 font-semibold truncate">งานทั้งหมดในวอร์ด</div>
+            <div class="text-xs sm:text-sm text-indigo-100 font-semibold truncate">งานในวอร์ด</div>
             <div id="statTotalWorks" class="text-2xl sm:text-3xl font-black mt-1">0</div>
-            <div class="text-xs text-indigo-200 font-medium truncate">รอตรวจ <span id="statPendingWorks" class="font-bold">0</span> รายการ</div>
+            <div class="text-xs text-indigo-200 font-medium truncate">รอตรวจ <span id="statPendingWorks" class="font-bold">0</span></div>
           </div>
           <div class="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center text-xl shrink-0">
             <i class="fa-solid fa-file-arrow-up"></i>
@@ -248,7 +223,7 @@
 
         <div class="gradient-card-amber text-white p-4 rounded-2xl flex items-center justify-between">
           <div class="min-w-0">
-            <div class="text-xs sm:text-sm text-amber-100 font-semibold truncate">งานที่ต้องแก้ไข</div>
+            <div class="text-xs sm:text-sm text-amber-100 font-semibold truncate">ต้องแก้ไข</div>
             <div id="statNeedFixWorks" class="text-2xl sm:text-3xl font-black mt-1">0</div>
             <div class="text-xs text-amber-200 font-medium truncate">ส่งงานแก้กลับได้</div>
           </div>
@@ -259,9 +234,9 @@
 
         <div class="gradient-card-emerald text-white p-4 rounded-2xl flex items-center justify-between">
           <div class="min-w-0">
-            <div class="text-xs sm:text-sm text-emerald-100 font-semibold truncate">เข้าเวรตรงเวลา</div>
+            <div class="text-xs sm:text-sm text-emerald-100 font-semibold truncate">ตรงเวลา</div>
             <div id="statAttOnTime" class="text-2xl sm:text-3xl font-black mt-1">0</div>
-            <div class="text-xs text-emerald-200 font-medium truncate">มาสาย <span id="statAttLate" class="font-bold">0</span> ครั้ง</div>
+            <div class="text-xs text-emerald-200 font-medium truncate">สาย <span id="statAttLate" class="font-bold">0</span> ครั้ง</div>
           </div>
           <div class="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center text-xl shrink-0">
             <i class="fa-solid fa-clock-rotate-left"></i>
@@ -270,7 +245,7 @@
 
         <div class="gradient-card-purple text-white p-4 rounded-2xl flex items-center justify-between col-span-2 sm:col-span-1">
           <div class="min-w-0">
-            <div class="text-xs sm:text-sm text-purple-100 font-semibold truncate">หัตถการผ่านแล้ว</div>
+            <div class="text-xs sm:text-sm text-purple-100 font-semibold truncate">หัตถการผ่าน</div>
             <div id="statPassedSkills" class="text-2xl sm:text-3xl font-black mt-1">0</div>
             <div class="text-xs text-purple-200 font-medium truncate">จาก <span id="statTotalSkills" class="font-bold">0</span> เคส</div>
           </div>
@@ -280,20 +255,20 @@
         </div>
       </div>
 
-      <!-- 3 ตารางข้อมูลหลักด้านล่าง (แก้ปัญหาเวลา undefined เรียบร้อยแล้ว) -->
+      <!-- 3 ตารางข้อมูลหลักด้านล่าง (แก้ปัญหา undefined น. ถาวร) -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
         
         <div class="glass-card p-4 sm:p-5 rounded-3xl space-y-3">
           <h3 class="font-bold text-sm sm:text-base text-slate-800 flex items-center gap-2 pb-2.5 border-b border-slate-100">
-            <i class="fa-solid fa-business-time text-indigo-500"></i> ประวัติการเข้าเวร
+            <i class="fa-solid fa-business-time text-indigo-500"></i> ประวัติเข้าเวร
           </h3>
           <div class="overflow-x-auto mobile-scroll max-h-72">
             <table class="w-full text-xs sm:text-sm text-left min-w-[300px]">
               <thead>
                 <tr class="text-slate-500 border-b font-bold text-xs">
-                  <th class="pb-2">วันที่-เวลา</th>
+                  <th class="pb-2">วัน-เวลา</th>
                   <th class="pb-2">นศ.</th>
-                  <th class="pb-2">สถานะ</th>
+                  <th class="pb-2 text-center">สถานะ</th>
                   <th class="pb-2 text-center">คะแนน</th>
                 </tr>
               </thead>
@@ -338,7 +313,7 @@
                 <tr class="text-amber-900/70 border-b font-bold text-xs">
                   <th class="pb-2 text-center">อันดับ</th>
                   <th class="pb-2">นศ.</th>
-                  <th class="pb-2 text-center">แต้ม Hero</th>
+                  <th class="pb-2 text-center">Hero</th>
                   <th class="pb-2 text-center">วินัย</th>
                 </tr>
               </thead>
@@ -369,7 +344,7 @@
         <div class="lg:col-span-2 glass-card rounded-3xl p-5 space-y-3">
           <div class="flex justify-between items-center border-b pb-2.5">
             <h3 class="font-bold text-sm sm:text-base text-slate-800 flex items-center gap-2">
-              <i class="fa-solid fa-clipboard-check text-indigo-600"></i> ประวัติงาน Care Plan ที่ส่ง & ผลตรวจ
+              <i class="fa-solid fa-clipboard-check text-indigo-600"></i> ประวัติงาน Care Plan
             </h3>
             <button onclick="openSubmitWorkModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs transition">
               <i class="fa-solid fa-plus mr-1"></i> ส่ง Care Plan ใหม่
@@ -763,10 +738,10 @@
 
       if (set.enabled) {
         banner.className = "p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-2.5 shadow-sm border-2 border-emerald-300 bg-emerald-50/70 text-xs sm:text-sm";
-        bTitle.textContent = "ระบบเปิดรับส่งงานตามปกติ";
+        bTitle.textContent = "เปิดรับส่งงานตามปกติ";
         bBadge.className = "font-black px-3 py-1 rounded-full text-xs bg-emerald-200 text-emerald-950 border border-emerald-400";
         bBadge.textContent = "เปิดรับงาน";
-        bDue.textContent = (set.dueDate ? set.dueDate + " " : "ประจำวัน ") + (set.dueTime || "18:00") + " น.";
+        bDue.textContent = (set.dueTime || "18:00") + " น.";
       } else {
         banner.className = "p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-2.5 shadow-sm border-2 border-rose-300 bg-rose-50/70 text-xs sm:text-sm";
         bTitle.textContent = "อาจารย์ปิดระบบรับส่งงานแล้ว";
@@ -775,7 +750,6 @@
         bDue.textContent = "ปิดรับงานแล้ว";
       }
 
-      // ปิด/เปิด แสดงกล่องหัตถการและกล่อง Hero
       const sBox = document.getElementById('boxSkillEvalPane');
       if (sBox) sBox.style.display = set.skillEvalEnabled === false ? 'none' : 'block';
 
@@ -792,7 +766,7 @@
 
     function renderStudentDropdown(list) {
       const sel = document.getElementById('studentSelect');
-      sel.innerHTML = list.map(s => `<option value="${s.studentId}" ${s.studentId === currentStudentId ? 'selected' : ''}>${s.name} (${s.ward || 'รพ.อุทัยธานี'})</option>`).join('');
+      sel.innerHTML = list.map(s => `<option value="${s.studentId}" ${s.studentId === currentStudentId ? 'selected' : ''}>${s.name} (${s.ward || 'รพ.อุทัยธานี'}) [${s.group || 'กลุ่ม 5'}]</option>`).join('');
 
       const teaSel = document.getElementById('teaSkillStuSel');
       teaSel.innerHTML = list.map(s => `<option value="${s.studentId}">${s.name} (${s.studentId})</option>`).join('');
@@ -813,7 +787,7 @@
       loadDashboard();
     }
 
-    // เรนเดอร์ตารางประวัติเข้าเวร (แก้ปัญหา undefined น. ถาวร 100%)
+    // เรนเดอร์ตารางประวัติเข้าเวร แก้ปัญหา undefined น. อย่างสมบูรณ์ 100%
     function renderAttendanceTable(attList) {
       const tbody = document.getElementById('studentAttTableBody');
       if (attList.length === 0) {
@@ -827,7 +801,7 @@
           <tr class="hover:bg-slate-50 transition">
             <td class="py-2.5 whitespace-nowrap text-slate-500 font-medium">${dateClean} <span class="text-indigo-600 font-bold ml-1">${timeClean}</span></td>
             <td class="py-2.5 font-bold text-slate-800">${a.studentName || '-'}</td>
-            <td class="py-2.5 whitespace-nowrap"><span class="px-2 py-0.5 rounded text-xs font-bold ${a.status === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${a.status}</span></td>
+            <td class="py-2.5 whitespace-nowrap text-center"><span class="px-2 py-0.5 rounded text-xs font-bold ${a.status === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${a.status}</span></td>
             <td class="py-2.5 whitespace-nowrap text-center font-black">${a.deduct > 0 ? '-' + a.deduct : (a.bonus > 0 ? '+' + a.bonus : '-')}</td>
           </tr>
         `;
@@ -844,13 +818,12 @@
         <tr class="hover:bg-slate-50 transition">
           <td class="py-2.5 text-slate-500">${formatThaiDateDisplay(k.date)}</td>
           <td class="py-2.5 font-bold text-slate-800 truncate max-w-[130px]">${k.skillName}</td>
-          <td class="py-2.5 text-center"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${k.result === 'ผ่าน' ? 'badge-approved' : 'bg-rose-100 text-rose-800'}">${k.result}</span></td>
+          <td class="py-2.5 text-center"><span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${k.result === 'ผ่าน' ? 'badge-approved' : 'bg-rose-100 text-rose-800'}">${k.result}</span></td>
           <td class="py-2.5 text-center font-bold text-amber-600">+${k.exp}</td>
         </tr>
       `).join('');
     }
 
-    // ตารางส่งงาน Care Plan (ล็อกรหัส PIN ถ้าดูงานเพื่อน)
     function renderWorkTable(works) {
       const tbody = document.getElementById('studentWorkTableBody');
       if (works.length === 0) {
