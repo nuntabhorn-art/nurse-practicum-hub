@@ -2,323 +2,555 @@
 <html lang="th">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>ระบบฝึกปฏิบัติการพยาบาล รุ่น 34 (Full Realtime Fix)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>ระบบจัดการฝึกปฏิบัติการพยาบาล รุ่น 34 (Nurse Practicum Pro - 3D Pixar Edition)</title>
   
+  <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
+  <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NurseHub34">
+  <meta name="theme-color" content="#4338ca">
+
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
   <style>
-    * { font-family: 'Prompt', sans-serif; box-sizing: border-box; }
-    body { background: #f8fafc; min-height: 100vh; font-size: 13.5px; }
-    .glass-card { background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 2px 6px rgba(0,0,0,0.03); }
-    .gradient-header { background: linear-gradient(135deg, #4338ca 0%, #3b82f6 100%); }
-    .role-active { background: #ffffff !important; color: #4338ca !important; font-weight: 800; }
+    * { font-family: 'Prompt', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { background: linear-gradient(135deg, #eef2ff 0%, #e0e7ff 40%, #fdf4ff 100%); min-height: 100vh; font-size: 14.5px; }
+    
+    .glass-card { 
+      background: rgba(255, 255, 255, 0.96); 
+      backdrop-filter: blur(16px); 
+      border: 1.5px solid rgba(255, 255, 255, 0.9); 
+      box-shadow: 0 10px 30px -5px rgba(79, 70, 229, 0.12), 0 4px 6px -2px rgba(0, 0, 0, 0.05); 
+    }
+    
+    .gradient-header { background: linear-gradient(135deg, #4338ca 0%, #3b82f6 50%, #06b6d4 100%); }
+    .gradient-card-blue { background: linear-gradient(135deg, #6366f1 0%, #4338ca 100%); box-shadow: 0 8px 20px rgba(79, 70, 229, 0.25); }
+    .gradient-card-rose { background: linear-gradient(135deg, #f43f5e 0%, #e11d48 100%); box-shadow: 0 8px 20px rgba(225, 29, 72, 0.25); }
+    .gradient-card-amber { background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%); box-shadow: 0 8px 20px rgba(217, 119, 6, 0.25); }
+    .gradient-card-emerald { background: linear-gradient(135deg, #10b981 0%, #059669 100%); box-shadow: 0 8px 20px rgba(5, 150, 105, 0.25); }
+    .gradient-card-purple { background: linear-gradient(135deg, #8b5cf6 0%, #6d28d9 100%); box-shadow: 0 8px 20px rgba(109, 40, 217, 0.25); }
+    
+    .role-active { background: #ffffff !important; color: #4338ca !important; box-shadow: 0 4px 12px rgba(0,0,0,0.15); font-weight: 800; }
+    .badge-approved { background-color: #dcfce7; color: #15803d; border: 1.5px solid #86efac; font-weight: 700; }
+    .badge-revision { background-color: #ffedd5; color: #c2410c; border: 1.5px solid #fdba74; font-weight: 700; }
+    .badge-pending { background-color: #fef9c3; color: #a16207; border: 1.5px solid #fde047; font-weight: 700; }
+    
+    .mobile-scroll::-webkit-scrollbar { height: 6px; }
+    .mobile-scroll::-webkit-scrollbar-thumb { background: #a5b4fc; border-radius: 9999px; }
+
+    @keyframes pulseGlow {
+      0%, 100% { transform: scale(1); filter: drop-shadow(0 4px 8px rgba(79, 70, 229, 0.2)); }
+      50% { transform: scale(1.04); filter: drop-shadow(0 8px 16px rgba(79, 70, 229, 0.4)); }
+    }
+    .animate-glow-pixar { animation: pulseGlow 2.8s ease-in-out infinite; }
+
+    /* แอนิเมชันเด็กพยาบาลวิ่งดุ๊กดิ๊ก */
+    @keyframes nurseRunTrack {
+      0% { transform: translateX(-150%); }
+      100% { transform: translateX(120vw); }
+    }
+    .animate-nurse-run { animation: nurseRunTrack 16s linear infinite; }
+    @keyframes nurseLegBounce {
+      0%, 100% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-4px) rotate(4deg); }
+    }
+    .animate-nurse-bounce { animation: nurseLegBounce 0.4s ease-in-out infinite; }
   </style>
 </head>
-<body class="text-slate-800 flex flex-col justify-between min-h-screen">
+<body class="text-slate-800 flex flex-col justify-between min-h-screen select-none">
 
-  <!-- Header -->
-  <header class="gradient-header text-white shadow-md sticky top-0 z-50">
-    <div class="max-w-7xl mx-auto px-3.5 py-2 flex justify-between items-center">
-      <div class="flex items-center space-x-2">
-        <span class="text-2xl">👩‍⚕️</span>
-        <div>
-          <div class="flex items-center gap-1.5">
-            <h1 class="text-sm sm:text-base font-bold leading-tight">ระบบฝึกปฏิบัติการพยาบาล</h1>
-            <span class="bg-amber-400 text-amber-950 text-[10px] px-1.5 py-0.2 rounded font-black">รุ่น 34</span>
+  <!-- Header พรีเมียมดั้งเดิม -->
+  <header class="gradient-header text-white shadow-lg sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-col sm:flex-row justify-between items-center gap-3">
+      <div class="flex items-center space-x-3.5 w-full sm:w-auto justify-between sm:justify-start">
+        <div class="flex items-center space-x-3">
+          <div class="w-12 h-12 rounded-2xl bg-white p-1 shadow-md flex items-center justify-center overflow-hidden shrink-0 border-2 border-white/60 animate-glow-pixar">
+            <img src="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq" alt="Logo" class="w-full h-full object-contain rounded-xl">
           </div>
-          <p class="text-[11px] text-indigo-100">สาขาการพยาบาลผู้ใหญ่และผู้สูงอายุ วพบ. ชัยนาท</p>
+          <div>
+            <div class="flex items-center gap-2">
+              <h1 class="text-lg sm:text-xl font-black tracking-tight leading-tight">ระบบฝึกปฏิบัติการพยาบาล</h1>
+              <span class="bg-amber-400 text-amber-950 text-xs px-2.5 py-0.5 rounded-full font-black uppercase shadow-xs">รุ่น 34</span>
+            </div>
+            <p class="text-xs sm:text-sm text-indigo-100 font-normal">สาขาการพยาบาลผู้ใหญ่และผู้สูงอายุ วพบ. ชัยนาท</p>
+          </div>
         </div>
-      </div>
-      <div class="flex items-center bg-black/25 p-0.5 rounded-lg text-xs">
-        <button id="btnRoleStudent" onclick="switchView('student')" class="px-2.5 py-1 rounded role-active">นศ.</button>
-        <button id="btnRoleTeacher" onclick="switchView('teacher')" class="px-2.5 py-1 rounded text-white font-semibold">อาจารย์</button>
+
+        <!-- เมนูหลัก -->
+        <div class="flex items-center bg-black/25 p-1 rounded-xl backdrop-blur-md border border-white/25 text-xs sm:text-sm">
+          <button id="btnRoleStudent" onclick="switchViewSection('student')" class="px-3.5 py-1.5 rounded-lg transition-all duration-200 role-active">
+            <i class="fa-solid fa-graduation-cap text-base mr-1"></i> นศ.
+          </button>
+          <button id="btnNavLibrary" onclick="switchViewSection('library')" class="px-3.5 py-1.5 rounded-lg transition-all duration-200 text-indigo-100 hover:text-white font-semibold">
+            <i class="fa-solid fa-book-bookmark text-base mr-1"></i> ห้องสมุด
+          </button>
+          <button id="btnRoleTeacher" onclick="switchViewSection('teacher')" class="px-3.5 py-1.5 rounded-lg transition-all duration-200 text-indigo-100 hover:text-white font-semibold">
+            <i class="fa-solid fa-lock text-base mr-1" id="teacherLockIcon"></i> อาจารย์
+          </button>
+        </div>
       </div>
     </div>
   </header>
 
-  <!-- Main Container -->
-  <main class="max-w-7xl mx-auto px-3 py-3 w-full flex-1 space-y-3">
+  <!-- แถบการ์ตูนพยาบาล 3D วิ่งดุ๊กดิ๊กด้านบน 2 คน น่ารักคมชัด -->
+  <div class="w-full bg-gradient-to-r from-indigo-100 via-sky-50 to-purple-100 h-14 relative overflow-hidden border-b border-indigo-200/60 shadow-inner flex items-center">
+    <div class="absolute whitespace-nowrap flex items-center gap-5 animate-nurse-run">
+      <div class="flex items-center gap-2 bg-white/95 backdrop-blur-sm px-3.5 py-1 rounded-2xl shadow-sm border-2 border-indigo-200 animate-nurse-bounce">
+        <span class="text-xl">👩‍⚕️</span>
+        <span class="text-xs font-black text-indigo-900">นศ.พย. กำลังไปขึ้นเวร... 🏃‍♀️💨</span>
+      </div>
+      <div class="flex items-center gap-2 bg-white/95 backdrop-blur-sm px-3.5 py-1 rounded-2xl shadow-sm border-2 border-emerald-200 animate-nurse-bounce" style="animation-delay: -0.2s;">
+        <span class="text-xl">👨‍⚕️</span>
+        <span class="text-xs font-black text-emerald-900">ตรวจคนไข้รอบเช้า 🩺✨</span>
+      </div>
+    </div>
+  </div>
 
-    <!-- ================= VIEW นักศึกษา ================= -->
-    <div id="studentSection" class="space-y-3">
+  <!-- Main Container -->
+  <main class="max-w-7xl mx-auto px-3 sm:px-5 py-4 sm:py-5 w-full flex-1 space-y-4 overflow-hidden">
+
+    <!-- ================= 1. มุมมองนักศึกษา (STUDENT VIEW) ================= -->
+    <div id="studentSection" class="space-y-4">
       
-      <!-- การ์ดแจ้งสถานะเปิด/ปิดรับงาน -->
-      <div id="bannerCard" class="p-2.5 rounded-xl border bg-emerald-50 border-emerald-300 flex justify-between items-center text-xs">
-        <div class="flex items-center gap-2">
-          <i id="bannerIcon" class="fa-solid fa-circle-check text-emerald-600 text-base"></i>
+      <!-- การ์ดเขียวแจ้งสถานะเปิดรับส่งงาน (เวลาไทยกระชับ ไม่ติด GMT ยาว) -->
+      <div id="studentSubmissionBanner" class="p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-2.5 shadow-sm border-2 border-emerald-300 bg-emerald-50/70 text-xs sm:text-sm">
+        <div class="flex items-center gap-2.5">
+          <span class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-600 flex items-center justify-center text-base shrink-0 shadow-xs">
+            <i class="fa-solid fa-circle-check"></i>
+          </span>
           <div>
-            <span id="bannerTitle" class="font-bold text-slate-800">ระบบเปิดรับส่งงานตามปกติ</span>
-            <span id="bannerSub" class="text-slate-600 text-[11px] block">กำหนดส่ง: <span id="bannerDueDateText" class="font-bold">ประจำวัน 18:00 น.</span></span>
+            <div id="bannerTitle" class="font-bold text-slate-800 text-sm">ระบบเปิดรับส่งงานตามปกติ</div>
+            <div id="bannerSubtitle" class="text-emerald-800 font-semibold text-xs mt-0.5">หมดเขต: <span id="bannerDueDateText" class="font-bold">ประจำวัน 18:00 น.</span> (ส่งช้าหัก 1 คะแนน)</div>
           </div>
         </div>
-        <span id="bannerBadge" class="px-2 py-0.5 bg-emerald-200 text-emerald-900 rounded-full font-bold text-[11px]">เปิดรับงาน</span>
+        <div id="bannerBadge" class="font-black px-3 py-1 rounded-full text-xs bg-emerald-200 text-emerald-950 border border-emerald-400">
+          เปิดรับงาน
+        </div>
       </div>
 
-      <!-- บัตรโปรไฟล์ & ช่องทางล็อกอินดูเฉพาะงานตนเอง -->
-      <div class="glass-card rounded-2xl p-3 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-3">
-        <div class="flex items-center space-x-3 w-full lg:w-auto">
-          <div class="w-12 h-12 rounded-2xl bg-indigo-50 border border-indigo-200 flex items-center justify-center text-2xl shrink-0">
-            👩‍⚕️
-          </div>
-          <div class="flex-1 min-w-0">
-            <div class="flex items-center justify-between mb-1">
-              <label class="text-[11px] font-bold text-slate-500">นศ. ที่ล็อกอิน:</label>
-              <div class="flex gap-1 text-[11px]">
-                <button onclick="setViewMode('personal')" id="btnViewMe" class="px-2 py-0.5 bg-indigo-600 text-white rounded font-bold">เฉพาะฉัน</button>
-                <button onclick="setViewMode('all')" id="btnViewAll" class="px-2 py-0.5 bg-slate-100 text-slate-700 rounded font-medium">ดูงานเพื่อน</button>
-                <button onclick="promptStudentLogin()" class="px-2 py-0.5 bg-white border border-slate-300 text-indigo-700 rounded font-bold ml-1">ล็อกอิน PIN</button>
+      <!-- บัตรโปรไฟล์ & สถิติ 3 ช่องพรีเมียม -->
+      <div class="glass-card rounded-3xl p-5 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-5">
+        <div class="flex items-center space-x-4 w-full lg:w-auto">
+          
+          <div class="relative w-16 h-16 sm:w-20 sm:h-20 shrink-0">
+            <div class="w-full h-full rounded-3xl bg-gradient-to-tr from-indigo-500 via-sky-400 to-amber-300 p-1 shadow-md flex items-center justify-center">
+              <div class="w-full h-full bg-white rounded-2xl overflow-hidden flex flex-col items-center justify-center shadow-inner text-3xl sm:text-4xl">
+                👩‍⚕️
               </div>
             </div>
-            <select id="studentSelect" onchange="onStudentChange()" class="w-full text-xs font-bold bg-slate-50 border border-slate-200 rounded-lg p-1 text-indigo-950"></select>
+            <div class="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-emerald-500 border-2 border-white flex items-center justify-center text-[10px] text-white font-bold shadow-xs">
+              ✓
+            </div>
+          </div>
+
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-1.5">
+              <label class="block text-xs sm:text-sm font-bold text-slate-600">นักศึกษาพยาบาลที่ล็อกอินอยู่:</label>
+              
+              <div class="flex items-center gap-2">
+                <div class="flex items-center bg-indigo-50 p-1 rounded-xl border border-indigo-200 text-xs">
+                  <button type="button" id="btnViewPersonal" onclick="setViewMode('personal')" class="px-2.5 py-1 rounded-lg font-bold bg-indigo-600 text-white shadow-xs">
+                    เฉพาะฉัน
+                  </button>
+                  <button type="button" id="btnViewAll" onclick="setViewMode('all')" class="px-2.5 py-1 rounded-lg font-semibold text-indigo-700 hover:bg-indigo-100">
+                    <i class="fa-solid fa-users mr-1"></i> ดูทุกคน
+                  </button>
+                </div>
+
+                <button type="button" onclick="promptStudentLoginModal()" class="px-3 py-1 bg-white hover:bg-slate-100 text-slate-700 border border-slate-300 rounded-xl text-xs font-bold shadow-xs">
+                  <i class="fa-solid fa-key mr-1 text-indigo-600"></i> ล็อกอิน PIN
+                </button>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2">
+              <select id="studentSelect" onchange="onStudentSelectChange()" class="w-full sm:w-auto text-sm sm:text-base font-bold text-indigo-950 bg-indigo-50 border-2 border-indigo-200 rounded-xl px-3 py-2 focus:ring-2 focus:ring-indigo-500 outline-none truncate max-w-full">
+              </select>
+            </div>
+            
+            <p id="studentDetailText" class="text-xs sm:text-sm text-slate-600 mt-1.5 truncate font-medium">
+              <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 mr-1.5 animate-pulse"></span>
+              <span id="displayStudentGroup" class="font-bold text-slate-700">กลุ่ม 5</span> | วอร์ด: <span id="displayStudentWard" class="font-bold text-indigo-800">รพ.อุทัยธานี</span>
+            </p>
           </div>
         </div>
 
-        <!-- คะแนน & ปุ่มเช็คอิน -->
-        <div class="flex items-center gap-2 w-full lg:w-auto justify-between lg:justify-end">
-          <div class="bg-indigo-50 border border-indigo-200 p-1.5 rounded-xl text-center min-w-[85px]">
-            <span class="text-[10px] text-indigo-700 font-bold block">ตรงต่อเวลา</span>
-            <span id="dispScore" class="text-base font-black text-indigo-900">100</span>
+        <!-- การ์ด 3 ช่อง: Lv.1, Hero of Ward, วินัยตรงเวลา -->
+        <div class="flex items-center gap-2.5 w-full lg:w-auto justify-between lg:justify-end flex-wrap sm:flex-nowrap">
+          <div class="flex-1 lg:flex-none bg-gradient-to-br from-purple-50 to-indigo-50 border-2 border-purple-200 rounded-2xl p-3 text-center shadow-xs min-w-[110px]">
+            <div class="text-xs font-bold text-purple-900 flex items-center justify-center gap-1">
+              <i class="fa-solid fa-bolt text-purple-600"></i> Nurse Level
+            </div>
+            <div class="text-2xl font-black text-purple-700 my-0.5">
+              Lv.<span id="displayStudentLevel">1</span>
+            </div>
+            <div class="text-[11px] font-bold text-purple-600"><span id="displayExpPoints">0</span> EXP</div>
           </div>
-          <div class="bg-amber-50 border border-amber-200 p-1.5 rounded-xl text-center min-w-[85px]">
-            <span class="text-[10px] text-amber-700 font-bold block">Nurse Level</span>
-            <span id="dispLevel" class="text-base font-black text-amber-900">Lv.1</span>
+
+          <div class="flex-1 lg:flex-none bg-gradient-to-br from-amber-50 to-orange-50 border-2 border-amber-200 rounded-2xl p-3 text-center shadow-xs min-w-[110px]">
+            <div class="text-xs font-bold text-amber-900 flex items-center justify-center gap-1">
+              <i class="fa-solid fa-crown text-amber-500"></i> Hero of Ward
+            </div>
+            <div class="text-2xl font-black text-amber-600 my-0.5">
+              +<span id="displayHeroScore">0</span> <span class="text-xs font-normal text-amber-700">แต้ม</span>
+            </div>
+            <div class="text-[11px] font-bold text-amber-700">คะแนนความดี</div>
           </div>
-          <button onclick="openCheckInModal()" class="px-3.5 py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs rounded-xl flex items-center gap-1.5 shadow-sm">
-            <i class="fa-solid fa-camera"></i> เช็คอินเวร
+
+          <div class="flex-1 lg:flex-none bg-gradient-to-br from-indigo-50 via-white to-sky-50 border-2 border-indigo-200 rounded-2xl p-3 text-center shadow-xs min-w-[110px]">
+            <div class="text-xs font-bold text-indigo-900 flex items-center justify-center gap-1">
+              <i class="fa-solid fa-shield-heart text-indigo-500"></i> วินัยตรงเวลา
+            </div>
+            <div class="text-2xl font-black text-slate-800 my-0.5">
+              <span id="displayScore" class="text-indigo-600">100</span><span class="text-sm font-normal text-slate-400">/100</span>
+            </div>
+            <div id="scoreStatus" class="text-[11px] font-bold text-emerald-600">สม่ำเสมอ (ดีเยี่ยม)</div>
+          </div>
+
+          <button onclick="openCheckInModal()" class="px-4 py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:from-emerald-600 hover:to-teal-700 text-white font-bold text-xs sm:text-sm rounded-2xl shadow-md transition flex flex-col items-center justify-center">
+            <i class="fa-solid fa-camera text-base mb-1 animate-bounce"></i>
+            <span>เช็คอินเวร</span>
           </button>
         </div>
       </div>
 
-      <!-- สถิติย่อ 3 ช่อง -->
-      <div class="grid grid-cols-3 gap-2 text-center text-xs">
-        <div class="bg-blue-50 border border-blue-200 p-2 rounded-xl">
-          <span class="text-blue-700 text-[11px] block">งานที่ส่งแล้ว</span>
-          <span id="statWorks" class="text-lg font-black text-blue-900">0</span>
+      <!-- สรุปตัวเลข 5 การ์ดสีสวยพรีเมียมเดิม (น้ำเงิน, แดง, ส้ม, เขียว, ม่วง) -->
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 sm:gap-4">
+        <div class="gradient-card-blue text-white p-4 rounded-2xl flex items-center justify-between">
+          <div class="min-w-0">
+            <div class="text-xs sm:text-sm text-indigo-100 font-semibold truncate">งานทั้งหมดในวอร์ด</div>
+            <div id="statTotalWorks" class="text-2xl sm:text-3xl font-black mt-1">0</div>
+            <div class="text-xs text-indigo-200 font-medium truncate">รอตรวจ <span id="statPendingWorks" class="font-bold">0</span> รายการ</div>
+          </div>
+          <div class="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center text-xl shrink-0">
+            <i class="fa-solid fa-file-arrow-up"></i>
+          </div>
         </div>
-        <div class="bg-emerald-50 border border-emerald-200 p-2 rounded-xl">
-          <span class="text-emerald-700 text-[11px] block">เข้าเวรตรงเวลา</span>
-          <span id="statOnTime" class="text-lg font-black text-emerald-900">0</span>
+
+        <div class="gradient-card-rose text-white p-4 rounded-2xl flex items-center justify-between">
+          <div class="min-w-0">
+            <div class="text-xs sm:text-sm text-rose-100 font-semibold truncate">ส่งงานล่าช้า</div>
+            <div id="statLateWorks" class="text-2xl sm:text-3xl font-black mt-1">0</div>
+            <div class="text-xs text-rose-200 font-medium truncate">หักคะแนนสะสม</div>
+          </div>
+          <div class="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center text-xl shrink-0">
+            <i class="fa-solid fa-hourglass-end"></i>
+          </div>
         </div>
-        <div class="bg-rose-50 border border-rose-200 p-2 rounded-xl">
-          <span class="text-rose-700 text-[11px] block">หัตถการที่ผ่าน</span>
-          <span id="statSkills" class="text-lg font-black text-rose-900">0</span>
+
+        <div class="gradient-card-amber text-white p-4 rounded-2xl flex items-center justify-between">
+          <div class="min-w-0">
+            <div class="text-xs sm:text-sm text-amber-100 font-semibold truncate">งานที่ต้องแก้ไข</div>
+            <div id="statNeedFixWorks" class="text-2xl sm:text-3xl font-black mt-1">0</div>
+            <div class="text-xs text-amber-200 font-medium truncate">ส่งงานแก้กลับได้</div>
+          </div>
+          <div class="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center text-xl shrink-0">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+        </div>
+
+        <div class="gradient-card-emerald text-white p-4 rounded-2xl flex items-center justify-between">
+          <div class="min-w-0">
+            <div class="text-xs sm:text-sm text-emerald-100 font-semibold truncate">เข้าเวรตรงเวลา</div>
+            <div id="statAttOnTime" class="text-2xl sm:text-3xl font-black mt-1">0</div>
+            <div class="text-xs text-emerald-200 font-medium truncate">มาสาย <span id="statAttLate" class="font-bold">0</span> ครั้ง</div>
+          </div>
+          <div class="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center text-xl shrink-0">
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </div>
+        </div>
+
+        <div class="gradient-card-purple text-white p-4 rounded-2xl flex items-center justify-between col-span-2 sm:col-span-1">
+          <div class="min-w-0">
+            <div class="text-xs sm:text-sm text-purple-100 font-semibold truncate">หัตถการผ่านแล้ว</div>
+            <div id="statPassedSkills" class="text-2xl sm:text-3xl font-black mt-1">0</div>
+            <div class="text-xs text-purple-200 font-medium truncate">จาก <span id="statTotalSkills" class="font-bold">0</span> เคส</div>
+          </div>
+          <div class="w-11 h-11 rounded-2xl bg-white/20 flex items-center justify-center text-xl shrink-0">
+            <i class="fa-solid fa-stethoscope"></i>
+          </div>
         </div>
       </div>
 
-      <!-- 2 ตารางหลัก (ประวัติเข้าเวร & ประเมินหัตถการ) -->
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <!-- ตารางเข้าเวร (แก้ undefined น. ถาวร) -->
-        <div class="glass-card rounded-xl p-3 space-y-1.5">
-          <div class="flex justify-between items-center border-b pb-1">
-            <span class="font-bold text-xs"><i class="fa-solid fa-clock text-indigo-500 mr-1"></i>ประวัติการเข้าเวร</span>
-            <span class="text-[10px] text-slate-400">เวลาจริง</span>
-          </div>
-          <div class="overflow-x-auto max-h-52">
-            <table class="w-full text-xs text-left">
+      <!-- 3 ตารางข้อมูลหลักด้านล่าง (แก้ปัญหาเวลา undefined เรียบร้อยแล้ว) -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6">
+        
+        <div class="glass-card p-4 sm:p-5 rounded-3xl space-y-3">
+          <h3 class="font-bold text-sm sm:text-base text-slate-800 flex items-center gap-2 pb-2.5 border-b border-slate-100">
+            <i class="fa-solid fa-business-time text-indigo-500"></i> ประวัติการเข้าเวร
+          </h3>
+          <div class="overflow-x-auto mobile-scroll max-h-72">
+            <table class="w-full text-xs sm:text-sm text-left min-w-[300px]">
               <thead>
-                <tr class="text-slate-400 border-b text-[10px]">
-                  <th class="pb-1">วัน/เวลา</th>
-                  <th class="pb-1">ชื่อ</th>
-                  <th class="pb-1 text-center">สถานะ</th>
+                <tr class="text-slate-500 border-b font-bold text-xs">
+                  <th class="pb-2">วันที่-เวลา</th>
+                  <th class="pb-2">นศ.</th>
+                  <th class="pb-2">สถานะ</th>
+                  <th class="pb-2 text-center">คะแนน</th>
                 </tr>
               </thead>
-              <tbody id="attTableBody" class="divide-y">
-                <tr><td colspan="3" class="p-2 text-center text-slate-400">กำลังโหลด...</td></tr>
+              <tbody id="studentAttTableBody" class="divide-y divide-slate-100">
+                <tr><td colspan="4" class="p-4 text-center text-slate-400 font-bold">ไม่มีข้อมูล</td></tr>
               </tbody>
             </table>
           </div>
         </div>
 
-        <!-- ตารางประเมินหัตถการ -->
-        <div id="boxSkillEvalPane" class="glass-card rounded-xl p-3 space-y-1.5">
-          <div class="flex justify-between items-center border-b pb-1">
-            <span class="font-bold text-xs"><i class="fa-solid fa-stethoscope text-emerald-500 mr-1"></i>ประวัติประเมินหัตถการ</span>
-            <span class="text-[10px] text-slate-400">ตามที่อาจารย์ประเมิน</span>
-          </div>
-          <div class="overflow-x-auto max-h-52">
-            <table class="w-full text-xs text-left">
+        <div id="boxSkillEvalPane" class="glass-card p-4 sm:p-5 rounded-3xl space-y-3">
+          <h3 class="font-bold text-sm sm:text-base text-slate-800 flex items-center gap-2 pb-2.5 border-b border-slate-100">
+            <i class="fa-solid fa-notes-medical text-cyan-600"></i> ประเมินหัตถการ (Skill Log)
+          </h3>
+          <div class="overflow-x-auto mobile-scroll max-h-72">
+            <table class="w-full text-xs sm:text-sm text-left min-w-[320px]">
               <thead>
-                <tr class="text-slate-400 border-b text-[10px]">
-                  <th class="pb-1">วันที่</th>
-                  <th class="pb-1">หัตถการ</th>
-                  <th class="pb-1 text-center">ผล</th>
-                  <th class="pb-1 text-center">EXP</th>
+                <tr class="text-slate-500 border-b font-bold text-xs">
+                  <th class="pb-2">วันที่</th>
+                  <th class="pb-2">หัตถการ</th>
+                  <th class="pb-2 text-center">ผล</th>
+                  <th class="pb-2 text-center">คะแนน</th>
                 </tr>
               </thead>
-              <tbody id="skillLogBody" class="divide-y">
-                <tr><td colspan="4" class="p-2 text-center text-slate-400">กำลังโหลด...</td></tr>
+              <tbody id="studentSkillTableBody" class="divide-y divide-slate-100">
+                <tr><td colspan="4" class="p-4 text-center text-slate-400">กำลังโหลด...</td></tr>
               </tbody>
             </table>
           </div>
         </div>
+
+        <div id="boxHeroPane" class="glass-card p-4 sm:p-5 rounded-3xl space-y-3 bg-gradient-to-br from-amber-50/50 to-white border border-amber-200">
+          <div class="flex items-center justify-between pb-2.5 border-b border-amber-200">
+            <h3 class="font-bold text-sm sm:text-base text-amber-950 flex items-center gap-2">
+              <i class="fa-solid fa-trophy text-amber-500"></i> ทำเนียบ Hero
+            </h3>
+            <span class="text-xs text-amber-800 bg-amber-200 px-3 py-0.5 rounded-full font-black">Top Heroes</span>
+          </div>
+          <div class="overflow-x-auto mobile-scroll max-h-72">
+            <table class="w-full text-xs sm:text-sm text-left min-w-[300px]">
+              <thead>
+                <tr class="text-amber-900/70 border-b font-bold text-xs">
+                  <th class="pb-2 text-center">อันดับ</th>
+                  <th class="pb-2">นศ.</th>
+                  <th class="pb-2 text-center">แต้ม Hero</th>
+                  <th class="pb-2 text-center">วินัย</th>
+                </tr>
+              </thead>
+              <tbody id="heroLeaderboardBody" class="divide-y divide-amber-100">
+                <tr><td colspan="4" class="p-4 text-center text-slate-400">กำลังโหลด...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
       </div>
 
-      <!-- ตารางส่งงาน Care Plan -->
-      <div class="glass-card rounded-xl p-3 space-y-2">
-        <div class="flex justify-between items-center border-b pb-1.5">
-          <span class="font-bold text-xs"><i class="fa-solid fa-file-pen text-indigo-600 mr-1"></i>ประวัติการส่งงาน Daily Care Plan</span>
-          <button onclick="openSubmitWorkModal()" class="px-2.5 py-1 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-xs font-bold">
-            + ส่ง Care Plan ใหม่
-          </button>
+      <!-- ส่วนส่งงาน Care Plan & Radar Chart -->
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 pt-2">
+        <div class="lg:col-span-1 glass-card rounded-3xl p-5 flex flex-col justify-between space-y-3">
+          <div class="border-b pb-2.5">
+            <h3 class="font-bold text-sm sm:text-base text-slate-800 flex items-center gap-2">
+              <i class="fa-solid fa-chart-pie text-indigo-600"></i> สมรรถนะ Care Plan
+            </h3>
+            <p class="text-xs text-slate-500 font-medium">เกณฑ์มาตรฐาน 10 ด้าน วพบ. ชัยนาท</p>
+          </div>
+          <div class="w-full flex items-center justify-center py-2">
+            <canvas id="radarChartCanvas" width="280" height="280"></canvas>
+          </div>
+          <div class="text-xs text-center text-slate-600 font-bold bg-indigo-50/60 p-2 rounded-xl">เกณฑ์ผ่าน: ได้คะแนน 60% ขึ้นไป</div>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-xs text-left">
-            <thead>
-              <tr class="bg-indigo-50/60 text-indigo-950 border-b font-bold text-[11px]">
-                <th class="p-1.5">ผู้ส่ง</th>
-                <th class="p-1.5">วัน/เวลาที่ส่ง</th>
-                <th class="p-1.5">หัวข้องาน</th>
-                <th class="p-1.5 text-center">สถานะ</th>
-                <th class="p-1.5 text-center">เปิดดูไฟล์</th>
-              </tr>
-            </thead>
-            <tbody id="workTableBody" class="divide-y">
-              <tr><td colspan="5" class="p-2 text-center text-slate-400">กำลังโหลด...</td></tr>
-            </tbody>
-          </table>
+
+        <div class="lg:col-span-2 glass-card rounded-3xl p-5 space-y-3">
+          <div class="flex justify-between items-center border-b pb-2.5">
+            <h3 class="font-bold text-sm sm:text-base text-slate-800 flex items-center gap-2">
+              <i class="fa-solid fa-clipboard-check text-indigo-600"></i> ประวัติงาน Care Plan ที่ส่ง & ผลตรวจ
+            </h3>
+            <button onclick="openSubmitWorkModal()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs transition">
+              <i class="fa-solid fa-plus mr-1"></i> ส่ง Care Plan ใหม่
+            </button>
+          </div>
+          <div class="overflow-x-auto mobile-scroll">
+            <table class="w-full text-xs sm:text-sm text-left">
+              <thead>
+                <tr class="bg-indigo-50/80 text-indigo-950 border-b font-bold">
+                  <th class="p-2.5">ผู้ส่ง</th>
+                  <th class="p-2.5">วัน/เวลาที่ส่ง</th>
+                  <th class="p-2.5">หัวข้องาน</th>
+                  <th class="p-2.5 text-center">สถานะ</th>
+                  <th class="p-2.5 text-center">เปิดดูไฟล์</th>
+                </tr>
+              </thead>
+              <tbody id="studentWorkTableBody" class="divide-y divide-slate-100">
+                <tr><td colspan="5" class="p-4 text-center text-slate-400">กำลังโหลด...</td></tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
 
     </div>
 
-    <!-- ================= VIEW อาจารย์ ================= -->
-    <div id="teacherSection" class="hidden space-y-3">
+    <!-- ================= 2. มุมมองห้องสมุดความรู้ ================= -->
+    <div id="librarySection" class="hidden space-y-4">
+      <div class="glass-card rounded-3xl p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+        <div>
+          <h2 class="text-base sm:text-lg font-bold text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-book-open-reader text-indigo-600"></i>
+            <span>ห้องสมุดความรู้ & แหล่งเรียนรู้รายวัน</span>
+          </h2>
+          <p class="text-xs sm:text-sm text-slate-500 mt-0.5">คลังแชร์ความรู้ งานวิจัย คลิปหัตถการ YouTube และโพสต์ Facebook</p>
+        </div>
+      </div>
+      <div class="glass-card rounded-3xl p-8 text-center text-slate-400">
+        <i class="fa-solid fa-book-open text-4xl mb-2 text-indigo-400"></i>
+        <p class="font-bold text-slate-600 text-sm">ยินดีต้อนรับสู่ห้องสมุดความรู้ทางการพยาบาล</p>
+      </div>
+    </div>
+
+    <!-- ================= 3. มุมมองอาจารย์ (TEACHER VIEW) ================= -->
+    <div id="teacherSection" class="hidden space-y-4">
       
       <!-- Toolbar เมนูอาจารย์ -->
-      <div class="glass-card rounded-xl p-2 flex flex-wrap gap-1 justify-between items-center text-xs">
-        <div class="flex flex-wrap gap-1">
-          <button onclick="setTeacherTab('att')" id="tabBtnAtt" class="px-2.5 py-1 bg-indigo-600 text-white font-bold rounded-lg">เช็คชื่อรายวัน</button>
-          <button onclick="setTeacherTab('skill')" id="tabBtnSkill" class="px-2.5 py-1 bg-slate-100 text-slate-700 font-semibold rounded-lg">มอบ/แก้ไข หัตถการ</button>
-          <button onclick="setTeacherTab('score')" id="tabBtnScore" class="px-2.5 py-1 bg-slate-100 text-slate-700 font-semibold rounded-lg">แก้ไขคะแนนวินัย</button>
-          <button onclick="setTeacherTab('settings')" id="tabBtnSettings" class="px-2.5 py-1 bg-slate-100 text-slate-700 font-semibold rounded-lg">เปิด-ปิดระบบ</button>
+      <div class="glass-card rounded-2xl p-3 flex flex-wrap gap-2 justify-between items-center text-xs sm:text-sm">
+        <div class="flex flex-wrap gap-1.5">
+          <button onclick="setTeacherTab('att')" id="tabBtnAtt" class="px-3.5 py-2 bg-indigo-600 text-white font-bold rounded-xl shadow-xs">เช็คชื่อรายวัน</button>
+          <button onclick="setTeacherTab('skill')" id="tabBtnSkill" class="px-3.5 py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl">มอบ/แก้ไข หัตถการ</button>
+          <button onclick="setTeacherTab('score')" id="tabBtnScore" class="px-3.5 py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl">แก้ไขคะแนนวินัย</button>
+          <button onclick="setTeacherTab('settings')" id="tabBtnSettings" class="px-3.5 py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl">เปิด-ปิดระบบ</button>
         </div>
-        <button onclick="switchView('student')" class="px-2.5 py-1 bg-rose-50 text-rose-700 border border-rose-200 rounded-lg font-bold">ออกจากระบบอาจารย์</button>
+        <button onclick="switchViewSection('student')" class="px-3.5 py-2 bg-rose-50 text-rose-700 border border-rose-200 rounded-xl font-bold">ออกจากระบบอาจารย์</button>
       </div>
 
       <!-- Tab 1: เช็คชื่อกลุ่ม 5 (8 คนตรงเป๊ะ) -->
-      <div id="paneTeacherAtt" class="glass-card rounded-xl p-3 space-y-2">
-        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 border-b pb-2">
+      <div id="paneTeacherAtt" class="glass-card rounded-3xl p-5 space-y-3">
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 border-b pb-3">
           <div>
-            <div class="flex items-center gap-1.5">
-              <span class="font-bold text-xs text-slate-800">เช็คชื่อเข้าฝึกปฏิบัติ (กลุ่ม 5 - รพ.อุทัยธานี 8 คน)</span>
-              <span class="bg-indigo-100 text-indigo-800 text-[10px] px-1.5 py-0.2 rounded font-bold">เฉพาะกลุ่ม 5</span>
+            <div class="flex items-center gap-2">
+              <h3 class="font-bold text-sm sm:text-base text-slate-800">เช็คชื่อเข้าฝึกปฏิบัติ (กลุ่ม 5 - รพ.อุทัยธานี 8 คน)</h3>
+              <span class="bg-indigo-100 text-indigo-800 text-xs px-2.5 py-0.5 rounded-full font-bold">เฉพาะกลุ่ม 5</span>
             </div>
-            <p class="text-[11px] text-slate-500">บันทึกลงชีตเฉพาะ 8 คนนี้เท่านั้น ไม่รวมกลุ่ม 1</p>
+            <p class="text-xs text-slate-500 font-medium">บันทึกลงชีตเฉพาะ 8 คนนี้เท่านั้น ไม่รวมกลุ่ม 1</p>
           </div>
-          <div class="flex items-center gap-1.5 text-xs">
-            <input type="date" id="teaAttDate" class="border rounded p-1 text-xs">
-            <input type="time" id="teaAttTime" value="07:30" class="border rounded p-1 text-xs">
-            <button onclick="setAllAtt('ตรงเวลา')" class="px-2 py-1 bg-emerald-50 text-emerald-700 border border-emerald-300 rounded text-xs font-bold">ตรงเวลาทุกคน</button>
+          <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+            <input type="date" id="teaAttDate" class="border rounded-xl p-1.5 font-semibold text-xs bg-white">
+            <input type="time" id="teaAttTime" value="07:30" class="border rounded-xl p-1.5 font-semibold text-xs bg-white">
+            <button onclick="setAllAtt('ตรงเวลา')" class="px-3 py-1.5 bg-emerald-50 text-emerald-800 border-2 border-emerald-300 rounded-xl text-xs font-bold shadow-xs">ตรงเวลาทุกคน</button>
           </div>
         </div>
-        <div class="overflow-x-auto">
-          <table class="w-full text-xs text-left">
+        <div class="overflow-x-auto mobile-scroll">
+          <table class="w-full text-xs sm:text-sm text-left min-w-[700px]">
             <thead>
-              <tr class="bg-slate-50 border-b">
-                <th class="p-1.5">ชื่อ-สกุล (กลุ่ม 5)</th>
-                <th class="p-1.5 text-center">สถานะ</th>
-                <th class="p-1.5">หมายเหตุ</th>
+              <tr class="bg-indigo-50/80 text-indigo-950 border-b font-bold">
+                <th class="p-3">ชื่อ-สกุล (กลุ่ม 5)</th>
+                <th class="p-3 text-center">สถานะ</th>
+                <th class="p-3">หมายเหตุ</th>
               </tr>
             </thead>
-            <tbody id="teaAttBody" class="divide-y"></tbody>
+            <tbody id="teaAttBody" class="divide-y divide-slate-100"></tbody>
           </table>
         </div>
-        <div class="flex justify-end pt-1">
-          <button onclick="saveTeacherAtt()" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-lg text-xs shadow-xs">
-            <i class="fa-solid fa-floppy-disk mr-1"></i> บันทึกการเช็คชื่อกลุ่ม 5 ลงชีต
+        <div class="flex justify-end pt-2 border-t">
+          <button onclick="saveTeacherAtt()" class="px-5 py-2.5 bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-700 hover:to-blue-700 text-white font-bold rounded-xl text-xs sm:text-sm shadow-md">
+            <i class="fa-solid fa-floppy-disk mr-1.5"></i> บันทึกการเช็คชื่อกลุ่ม 5 ลงชีต
           </button>
         </div>
       </div>
 
       <!-- Tab 2: มอบ / แก้ไข / ลบ หัตถการ (ครบ 16 คน) -->
-      <div id="paneTeacherSkill" class="hidden glass-card rounded-xl p-3 space-y-3">
-        <div class="border-b pb-2">
-          <span class="font-bold text-xs block text-slate-800">1. มอบพลังหัตถการใหม่ (เลือก นศ. ได้ทั้ง 16 คน)</span>
-          <div class="flex flex-wrap items-center gap-1.5 text-xs mt-1.5">
-            <select id="teaSkillStuSel" class="border rounded p-1 font-bold text-indigo-900 text-xs"></select>
-            <input type="date" id="teaSkillDate" class="border rounded p-1 text-xs">
-            <select id="teaSkillItemSel" class="border rounded p-1 text-xs"></select>
-            <select id="teaSkillResult" class="border rounded p-1 font-bold text-xs">
+      <div id="paneTeacherSkill" class="hidden glass-card rounded-3xl p-5 space-y-4">
+        <div class="border-b pb-3">
+          <h3 class="font-bold text-sm sm:text-base text-slate-800 mb-2">1. มอบพลังหัตถการใหม่ (เลือก นศ. ได้ทั้ง 16 คน)</h3>
+          <div class="flex flex-wrap items-center gap-2 text-xs sm:text-sm">
+            <select id="teaSkillStuSel" class="border rounded-xl p-2 font-bold text-indigo-900 bg-white"></select>
+            <input type="date" id="teaSkillDate" class="border rounded-xl p-2 bg-white font-semibold">
+            <select id="teaSkillItemSel" class="border rounded-xl p-2 bg-white"></select>
+            <select id="teaSkillResult" class="border rounded-xl p-2 font-bold bg-white">
               <option value="ผ่าน">ผ่าน (+EXP)</option>
               <option value="ต้องฝึกเพิ่ม">ต้องฝึกเพิ่ม</option>
               <option value="ไม่ผ่าน">ไม่ผ่าน</option>
             </select>
-            <input type="text" id="teaSkillFeedback" placeholder="ข้อเสนอแนะอาจารย์..." class="border rounded p-1 flex-1 min-w-[120px] text-xs">
-            <button onclick="grantSkillDirect()" class="px-3 py-1 bg-amber-500 hover:bg-amber-600 text-white font-bold rounded text-xs">มอบพลัง</button>
+            <input type="text" id="teaSkillFeedback" placeholder="ข้อเสนอแนะอาจารย์..." class="border rounded-xl p-2 flex-1 min-w-[150px] bg-white">
+            <button onclick="grantSkillDirect()" class="px-4 py-2 bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold rounded-xl shadow-xs">มอบพลัง</button>
           </div>
         </div>
 
         <div>
-          <span class="font-bold text-xs block text-slate-800 mb-1.5">2. ประวัติหัตถการทั้งหมด (อาจารย์สามารถลบรายการได้)</span>
-          <div class="overflow-x-auto max-h-60">
-            <table class="w-full text-xs text-left">
+          <h3 class="font-bold text-sm sm:text-base text-slate-800 mb-2">2. ประวัติหัตถการทั้งหมด (อาจารย์สามารถกดลบรายการได้)</h3>
+          <div class="overflow-x-auto mobile-scroll max-h-72">
+            <table class="w-full text-xs sm:text-sm text-left min-w-[700px]">
               <thead>
-                <tr class="bg-amber-50/60 border-b text-[11px]">
-                  <th class="p-1.5">วัน</th>
-                  <th class="p-1.5">นศ.</th>
-                  <th class="p-1.5">หัตถการ</th>
-                  <th class="p-1.5 text-center">ผล</th>
-                  <th class="p-1.5 text-center">จัดการ</th>
+                <tr class="bg-amber-50/70 border-b font-bold text-amber-950">
+                  <th class="p-2.5">วันที่</th>
+                  <th class="p-2.5">นศ.</th>
+                  <th class="p-2.5">หัตถการ</th>
+                  <th class="p-2.5 text-center">ผล</th>
+                  <th class="p-2.5 text-center">จัดการ</th>
                 </tr>
               </thead>
-              <tbody id="teaSkillLogsBody" class="divide-y"></tbody>
+              <tbody id="teaSkillLogsBody" class="divide-y divide-slate-100"></tbody>
             </table>
           </div>
         </div>
       </div>
 
       <!-- Tab 3: แก้ไขคะแนนวินัยตรงต่อเวลาโดยตรง -->
-      <div id="paneTeacherScore" class="hidden glass-card rounded-xl p-3 space-y-2">
-        <span class="font-bold text-xs block text-slate-800 border-b pb-1">เพิ่ม / ลด / แก้ไข คะแนนวินัยตรงต่อเวลา (100 คะแนน)</span>
-        <div class="overflow-x-auto">
-          <table class="w-full text-xs text-left">
+      <div id="paneTeacherScore" class="hidden glass-card rounded-3xl p-5 space-y-3">
+        <h3 class="font-bold text-sm sm:text-base text-slate-800 border-b pb-2">เพิ่ม / ลด / แก้ไข คะแนนวินัยตรงต่อเวลา (100 คะแนน)</h3>
+        <div class="overflow-x-auto mobile-scroll">
+          <table class="w-full text-xs sm:text-sm text-left min-w-[650px]">
             <thead>
-              <tr class="bg-slate-50 border-b text-[11px]">
-                <th class="p-1.5">StudentID</th>
-                <th class="p-1.5">ชื่อ-สกุล</th>
-                <th class="p-1.5">กลุ่ม</th>
-                <th class="p-1.5 text-center">คะแนนปัจจุบัน</th>
-                <th class="p-1.5 text-center">ปรับแก้คะแนน</th>
+              <tr class="bg-slate-50 border-b font-bold">
+                <th class="p-2.5">StudentID</th>
+                <th class="p-2.5">ชื่อ-สกุล</th>
+                <th class="p-2.5">กลุ่ม</th>
+                <th class="p-2.5 text-center">คะแนนปัจจุบัน</th>
+                <th class="p-2.5 text-center">ปรับแก้คะแนน</th>
               </tr>
             </thead>
-            <tbody id="teaScoreBody" class="divide-y"></tbody>
+            <tbody id="teaScoreBody" class="divide-y divide-slate-100"></tbody>
           </table>
         </div>
       </div>
 
       <!-- Tab 4: ตั้งค่าเปิด-ปิดระบบ (Master Flags) -->
-      <div id="paneTeacherSettings" class="hidden glass-card rounded-xl p-3 space-y-2 text-xs">
-        <span class="font-bold text-xs block text-slate-800 border-b pb-1">ควบคุมการเปิด / ปิดแต่ละฟังก์ชันในระบบ</span>
-        <div class="space-y-2 max-w-sm">
-          <label class="flex items-center justify-between p-2 bg-slate-50 rounded-lg">
-            <span>1. เปิดระบบเช็คอินเวร (กล้อง/GPS)</span>
-            <input type="checkbox" id="setCheckin" class="w-4 h-4 text-indigo-600 rounded">
+      <div id="paneTeacherSettings" class="hidden glass-card rounded-3xl p-5 space-y-3 text-xs sm:text-sm">
+        <h3 class="font-bold text-sm sm:text-base text-slate-800 border-b pb-2">ควบคุมการเปิด / ปิดแต่ละฟังก์ชันในระบบ</h3>
+        <div class="space-y-3 max-w-md bg-slate-50/70 p-4 rounded-2xl border">
+          <label class="flex items-center justify-between p-3 bg-white rounded-xl border">
+            <span class="font-bold text-slate-800">1. เปิดระบบเช็คอินเวร (กล้อง/GPS)</span>
+            <input type="checkbox" id="setCheckin" class="w-5 h-5 text-indigo-600 rounded">
           </label>
-          <div class="grid grid-cols-2 gap-1.5 px-2">
+          <div class="grid grid-cols-2 gap-2 px-1">
             <div>
-              <span class="text-[10px] text-slate-500 block">เวลาเริ่ม</span>
-              <input type="time" id="setCheckinStart" class="w-full border rounded p-1 text-xs">
+              <span class="text-xs text-slate-500 font-bold block mb-1">เวลาเริ่ม</span>
+              <input type="time" id="setCheckinStart" class="w-full border rounded-xl p-2 bg-white font-semibold">
             </div>
             <div>
-              <span class="text-[10px] text-slate-500 block">เวลาสิ้นสุด</span>
-              <input type="time" id="setCheckinEnd" class="w-full border rounded p-1 text-xs">
+              <span class="text-xs text-slate-500 font-bold block mb-1">เวลาสิ้นสุด</span>
+              <input type="time" id="setCheckinEnd" class="w-full border rounded-xl p-2 bg-white font-semibold">
             </div>
           </div>
-          <label class="flex items-center justify-between p-2 bg-slate-50 rounded-lg">
-            <span>2. เปิดรับส่งงาน Daily Care Plan</span>
-            <input type="checkbox" id="setWork" class="w-4 h-4 text-indigo-600 rounded">
+          <label class="flex items-center justify-between p-3 bg-white rounded-xl border">
+            <span class="font-bold text-slate-800">2. เปิดรับส่งงาน Daily Care Plan</span>
+            <input type="checkbox" id="setWork" class="w-5 h-5 text-indigo-600 rounded">
           </label>
-          <label class="flex items-center justify-between p-2 bg-slate-50 rounded-lg">
-            <span>3. เปิดแสดงกล่องประเมินหัตถการให้นักศึกษาดู</span>
-            <input type="checkbox" id="setSkillBox" class="w-4 h-4 text-indigo-600 rounded">
+          <label class="flex items-center justify-between p-3 bg-white rounded-xl border">
+            <span class="font-bold text-slate-800">3. เปิดแสดงกล่องประเมินหัตถการให้นักศึกษาดู</span>
+            <input type="checkbox" id="setSkillBox" class="w-5 h-5 text-indigo-600 rounded">
           </label>
-          <button onclick="saveFlags()" class="w-full py-2 bg-indigo-600 text-white font-bold rounded-lg mt-2">บันทึกการตั้งค่า</button>
+          <label class="flex items-center justify-between p-3 bg-white rounded-xl border">
+            <span class="font-bold text-slate-800">4. เปิดแสดงทำเนียบ Hero</span>
+            <input type="checkbox" id="setHeroBox" class="w-5 h-5 text-indigo-600 rounded">
+          </label>
+          <button onclick="saveFlags()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl shadow-xs transition mt-2">
+            บันทึกการตั้งค่าระบบ
+          </button>
         </div>
       </div>
 
@@ -327,23 +559,23 @@
   </main>
 
   <!-- Modal เช็คอิน (เลือกวันเวลาเรียลไทม์) -->
-  <div id="checkInModal" class="fixed inset-0 bg-slate-900/60 hidden z-50 flex items-center justify-center p-3">
-    <div class="bg-white rounded-2xl max-w-xs w-full p-3.5 space-y-2.5 text-xs shadow-xl">
-      <div class="flex justify-between items-center border-b pb-1">
-        <span class="font-bold text-slate-800">เช็คอินขึ้นฝึกเวรเช้า</span>
-        <button onclick="closeModal('checkInModal')" class="text-slate-400 text-base">&times;</button>
+  <div id="checkInModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-sm w-full p-5 space-y-3.5 text-xs sm:text-sm shadow-2xl">
+      <div class="flex justify-between items-center border-b pb-2">
+        <span class="font-bold text-slate-800 text-base">เช็คอินขึ้นฝึกเวรเช้า</span>
+        <button onclick="closeModal('checkInModal')" class="text-slate-400 hover:text-slate-600 text-xl">&times;</button>
       </div>
       <div>
-        <label class="block text-[11px] font-bold text-slate-600 mb-0.5">วันที่เช็คอิน (เลือกเองได้):</label>
-        <input type="date" id="cinDate" class="w-full border rounded p-1 text-xs font-semibold">
+        <label class="block text-xs font-bold text-slate-700 mb-1">วันที่เช็คอิน (เลือกเองได้):</label>
+        <input type="date" id="cinDate" class="w-full border rounded-xl p-2 text-xs sm:text-sm font-semibold bg-slate-50">
       </div>
       <div>
-        <label class="block text-[11px] font-bold text-slate-600 mb-0.5">เวลาเช็คอิน (เลือกเองได้):</label>
-        <input type="time" id="cinTime" class="w-full border rounded p-1 text-xs font-semibold">
+        <label class="block text-xs font-bold text-slate-700 mb-1">เวลาเช็คอิน (เลือกเองได้):</label>
+        <input type="time" id="cinTime" class="w-full border rounded-xl p-2 text-xs sm:text-sm font-semibold bg-slate-50">
       </div>
       <div>
-        <label class="block text-[11px] font-bold text-slate-600 mb-0.5">สถานะวันนี้:</label>
-        <select id="cinStatus" class="w-full border rounded p-1 font-bold text-slate-800 text-xs">
+        <label class="block text-xs font-bold text-slate-700 mb-1">สถานะวันนี้:</label>
+        <select id="cinStatus" class="w-full border rounded-xl p-2 font-bold text-slate-800 text-xs sm:text-sm bg-slate-50">
           <option value="ตรงเวลา">ตรงเวลา (เวรเช้า 07:30 - 15:30)</option>
           <option value="สาย">มาสาย</option>
           <option value="ลา">ลากิจ</option>
@@ -351,54 +583,60 @@
           <option value="ขาด">ขาดการฝึก</option>
         </select>
       </div>
-      <button onclick="submitCheckIn()" class="w-full py-2 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-xs mt-1">
+      <button onclick="submitCheckIn()" class="w-full py-2.5 bg-emerald-600 hover:bg-emerald-700 text-white font-bold rounded-xl text-sm shadow-xs transition mt-2">
         ยืนยันเช็คอิน
       </button>
     </div>
   </div>
 
-  <!-- Modal ส่งงาน Care Plan (มีวันเวลาเรียลไทม์) -->
-  <div id="workModal" class="fixed inset-0 bg-slate-900/60 hidden z-50 flex items-center justify-center p-3">
-    <div class="bg-white rounded-2xl max-w-sm w-full p-4 space-y-2.5 text-xs shadow-xl">
-      <div class="flex justify-between items-center border-b pb-1.5">
-        <span class="font-bold text-slate-800 text-sm">ส่งงาน / Care Plan ประจำวัน</span>
-        <button onclick="closeModal('workModal')" class="text-slate-400 text-base">&times;</button>
+  <!-- Modal ส่งงาน Care Plan (เพิ่มฟิลด์วัน-เวลาเรียลไทม์ครบถ้วน) -->
+  <div id="workModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-xs hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-3xl max-w-md w-full p-5 space-y-3.5 text-xs sm:text-sm shadow-2xl">
+      <div class="flex justify-between items-center border-b pb-2">
+        <span class="font-bold text-slate-800 text-base">ส่งงาน / Care Plan ประจำวัน</span>
+        <button onclick="closeModal('workModal')" class="text-slate-400 hover:text-slate-600 text-xl">&times;</button>
       </div>
 
-      <div class="grid grid-cols-2 gap-2 bg-indigo-50/60 p-2 rounded-xl border border-indigo-100">
+      <!-- วันที่และเวลาส่งงานแบบเรียลไทม์ & เลือกเองได้ -->
+      <div class="grid grid-cols-2 gap-2.5 bg-indigo-50/70 p-2.5 rounded-2xl border border-indigo-100">
         <div>
-          <label class="block text-[11px] font-bold text-indigo-950 mb-0.5">วันที่ส่งงาน *</label>
-          <input type="date" id="wDate" class="w-full border rounded-lg p-1.5 text-xs bg-white font-semibold">
+          <label class="block text-xs font-bold text-indigo-950 mb-1">วันที่ส่งงาน *</label>
+          <input type="date" id="wDate" class="w-full border rounded-xl p-2 text-xs sm:text-sm bg-white font-semibold outline-none">
         </div>
         <div>
-          <label class="block text-[11px] font-bold text-indigo-950 mb-0.5">เวลาที่ส่งงาน *</label>
-          <input type="time" id="wTime" class="w-full border rounded-lg p-1.5 text-xs bg-white font-semibold">
+          <label class="block text-xs font-bold text-indigo-950 mb-1">เวลาที่ส่งงาน *</label>
+          <input type="time" id="wTime" class="w-full border rounded-xl p-2 text-xs sm:text-sm bg-white font-semibold outline-none">
         </div>
       </div>
 
       <div>
-        <label class="block text-[11px] font-bold text-slate-700 mb-0.5">หัวข้องาน / Care Plan *</label>
-        <input type="text" id="wSubject" placeholder="เช่น บันทึกการพยาบาล Acute Appendicitis" class="w-full border rounded-lg p-1.5 text-xs">
+        <label class="block text-xs font-bold text-slate-700 mb-1">หัวข้องาน / Care Plan *</label>
+        <input type="text" id="wSubject" placeholder="เช่น บันทึกการพยาบาล Acute Appendicitis" class="w-full border rounded-xl p-2 text-xs sm:text-sm outline-none">
       </div>
       <div>
-        <label class="block text-[11px] font-bold text-slate-700 mb-0.5">รายละเอียดงานย่อ</label>
-        <textarea id="wContent" rows="2" placeholder="ระบุข้อวินิจฉัยทางการพยาบาล กิจกรรมที่ให้การดูแล..." class="w-full border rounded-lg p-1.5 text-xs"></textarea>
+        <label class="block text-xs font-bold text-slate-700 mb-1">รายละเอียดงานย่อ</label>
+        <textarea id="wContent" rows="2.5" placeholder="ระบุข้อวินิจฉัยทางการพยาบาล กิจกรรมที่ให้การดูแล..." class="w-full border rounded-xl p-2 text-xs sm:text-sm outline-none"></textarea>
       </div>
       <div>
-        <label class="block text-[11px] font-bold text-slate-700 mb-0.5">ลิงก์ Google Drive ไฟล์งาน (ถ้ามี)</label>
-        <input type="url" id="wLink" placeholder="https://drive.google.com/..." class="w-full border rounded-lg p-1.5 text-xs">
+        <label class="block text-xs font-bold text-slate-700 mb-1">ลิงก์ Google Drive ไฟล์งาน (ถ้ามี)</label>
+        <input type="url" id="wLink" placeholder="https://drive.google.com/..." class="w-full border rounded-xl p-2 text-xs sm:text-sm outline-none">
       </div>
-      <button onclick="submitWork()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs mt-1 shadow-sm">
+      <button onclick="submitWork()" class="w-full py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-sm shadow-md transition mt-2">
         บันทึกและส่งงานให้อาจารย์
       </button>
     </div>
   </div>
 
+  <!-- Footer -->
+  <footer class="bg-white/80 border-t border-indigo-50 py-3 text-center text-xs text-slate-500 font-medium">
+    ระบบจัดการฝึกปฏิบัติการพยาบาล &copy; 2026 | พัฒนาโดย อาจารย์ นันตพร ทองเต็ม สาขาการพยาบาลผู้ใหญ่และผู้สูงอายุ วพบ. ชัยนาท
+  </footer>
+
   <!-- SCRIPT LOGIC -->
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbygTRS3dp8WQkGKpiRxKbsDdDjfQUAeZnHwid6PTX3ABskdSbQdbEBch7dkia3UlaSJ/exec";
 
-    // รายชื่อกลุ่ม 5 (8 คนตรงตัว)
+    // รายชื่อกลุ่ม 5 (8 คนตรงตัว 100%)
     const GROUP_5 = [
       { studentId: "STU-09", name: "นางสาวณิฐาภัทร จันทร์ทุ่ง (องเอิน)" },
       { studentId: "STU-10", name: "นางสาวณัฐพร ดอนแนไพร (ตะวัน)" },
@@ -435,6 +673,7 @@
       renderTeacherAttTable();
     };
 
+    // ตั้งค่าวันและเวลาเรียลไทม์ในทุกช่องฟอร์ม
     function initRealtimeClock() {
       const now = new Date();
       const dStr = now.toISOString().split('T')[0];
@@ -449,7 +688,7 @@
       if (document.getElementById('teaSkillDate')) document.getElementById('teaSkillDate').value = dStr;
     }
 
-    // แปลงวันที่เป็นวันที่ไทยอ่านง่าย ป้องกันการขึ้น 1899 หรือ GMT ยาวๆ
+    // แปลงวันที่เป็นวันที่ไทยสั้นกระชับ ตัดปัญหา 1899 หรือ GMT ยาวทิ้ง 100%
     function formatThaiDateDisplay(rawDate) {
       if (!rawDate || String(rawDate).includes('1899')) {
         const now = new Date();
@@ -504,9 +743,12 @@
         renderSkillLogTable(data.compList || []);
         renderWorkTable(data.works || []);
 
-        if (data.works) document.getElementById('statWorks').textContent = data.works.length;
-        if (data.attendances) document.getElementById('statOnTime').textContent = data.attendances.filter(a => a.status === 'ตรงเวลา').length;
-        if (data.compList) document.getElementById('statSkills').textContent = data.compList.filter(c => c.result === 'ผ่าน').length;
+        if (data.works) document.getElementById('statTotalWorks').textContent = data.works.length;
+        if (data.attendances) document.getElementById('statAttOnTime').textContent = data.attendances.filter(a => a.status === 'ตรงเวลา').length;
+        if (data.compList) {
+          document.getElementById('statPassedSkills').textContent = data.compList.filter(c => c.result === 'ผ่าน').length;
+          document.getElementById('statTotalSkills').textContent = data.compList.length;
+        }
 
       } catch(e) {
         console.error("Load Dashboard error", e);
@@ -514,36 +756,38 @@
     }
 
     function applySettings(set) {
-      const banner = document.getElementById('bannerCard');
+      const banner = document.getElementById('studentSubmissionBanner');
       const bTitle = document.getElementById('bannerTitle');
       const bBadge = document.getElementById('bannerBadge');
-      const bIcon = document.getElementById('bannerIcon');
       const bDue = document.getElementById('bannerDueDateText');
 
       if (set.enabled) {
-        banner.className = "p-2.5 rounded-xl border bg-emerald-50 border-emerald-300 flex justify-between items-center text-xs";
-        bIcon.className = "fa-solid fa-circle-check text-emerald-600 text-base";
+        banner.className = "p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-2.5 shadow-sm border-2 border-emerald-300 bg-emerald-50/70 text-xs sm:text-sm";
         bTitle.textContent = "ระบบเปิดรับส่งงานตามปกติ";
-        bBadge.className = "px-2 py-0.5 bg-emerald-200 text-emerald-900 rounded-full font-bold text-[11px]";
+        bBadge.className = "font-black px-3 py-1 rounded-full text-xs bg-emerald-200 text-emerald-950 border border-emerald-400";
         bBadge.textContent = "เปิดรับงาน";
         bDue.textContent = (set.dueDate ? set.dueDate + " " : "ประจำวัน ") + (set.dueTime || "18:00") + " น.";
       } else {
-        banner.className = "p-2.5 rounded-xl border bg-rose-50 border-rose-300 flex justify-between items-center text-xs";
-        bIcon.className = "fa-solid fa-circle-xmark text-rose-600 text-base";
+        banner.className = "p-3.5 rounded-2xl flex flex-wrap items-center justify-between gap-2.5 shadow-sm border-2 border-rose-300 bg-rose-50/70 text-xs sm:text-sm";
         bTitle.textContent = "อาจารย์ปิดระบบรับส่งงานแล้ว";
-        bBadge.className = "px-2 py-0.5 bg-rose-200 text-rose-900 rounded-full font-bold text-[11px]";
+        bBadge.className = "font-black px-3 py-1 rounded-full text-xs bg-rose-200 text-rose-950 border border-rose-400";
         bBadge.textContent = "ปิดรับงาน";
         bDue.textContent = "ปิดรับงานแล้ว";
       }
 
+      // ปิด/เปิด แสดงกล่องหัตถการและกล่อง Hero
       const sBox = document.getElementById('boxSkillEvalPane');
       if (sBox) sBox.style.display = set.skillEvalEnabled === false ? 'none' : 'block';
+
+      const hBox = document.getElementById('boxHeroPane');
+      if (hBox) hBox.style.display = set.heroLeaderboardEnabled === false ? 'none' : 'block';
 
       document.getElementById('setCheckin').checked = set.checkinEnabled !== false;
       document.getElementById('setCheckinStart').value = set.checkinStartTime || "07:00";
       document.getElementById('setCheckinEnd').value = set.checkinEndTime || "08:00";
       document.getElementById('setWork').checked = set.enabled !== false;
       document.getElementById('setSkillBox').checked = set.skillEvalEnabled !== false;
+      document.getElementById('setHeroBox').checked = set.heroLeaderboardEnabled !== false;
     }
 
     function renderStudentDropdown(list) {
@@ -557,73 +801,75 @@
       itemSel.innerHTML = SKILL_CATALOG.map(sk => `<option value="${sk.name}">${sk.name} (+${sk.exp} EXP)</option>`).join('');
     }
 
-    function onStudentChange() {
+    function onStudentSelectChange() {
       currentStudentId = document.getElementById('studentSelect').value;
       loadDashboard();
     }
 
     function setViewMode(mode) {
       viewMode = mode;
-      document.getElementById('btnViewMe').className = mode === 'personal' ? 'px-2 py-0.5 bg-indigo-600 text-white rounded font-bold' : 'px-2 py-0.5 bg-slate-100 text-slate-700 rounded font-medium';
-      document.getElementById('btnViewAll').className = mode === 'all' ? 'px-2 py-0.5 bg-indigo-600 text-white rounded font-bold' : 'px-2 py-0.5 bg-slate-100 text-slate-700 rounded font-medium';
+      document.getElementById('btnViewPersonal').className = mode === 'personal' ? 'px-2.5 py-1 rounded-lg font-bold bg-indigo-600 text-white shadow-xs' : 'px-2.5 py-1 rounded-lg font-semibold text-indigo-700 hover:bg-indigo-100';
+      document.getElementById('btnViewAll').className = mode === 'all' ? 'px-2.5 py-1 rounded-lg font-bold bg-indigo-600 text-white shadow-xs' : 'px-2.5 py-1 rounded-lg font-semibold text-indigo-700 hover:bg-indigo-100';
       loadDashboard();
     }
 
-    // เรนเดอร์ตารางประวัติเข้าเวร แก้ปัญหา undefined น. อย่างสมบูรณ์
+    // เรนเดอร์ตารางประวัติเข้าเวร (แก้ปัญหา undefined น. ถาวร 100%)
     function renderAttendanceTable(attList) {
-      const tbody = document.getElementById('attTableBody');
+      const tbody = document.getElementById('studentAttTableBody');
       if (attList.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="3" class="p-2 text-center text-slate-400">ยังไม่มีข้อมูล</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400 font-bold">ไม่มีข้อมูล</td></tr>`;
         return;
       }
       tbody.innerHTML = attList.map(a => {
         const timeClean = formatSafeTimeDisplay(a.time, a.logId);
         const dateClean = formatThaiDateDisplay(a.date);
         return `
-          <tr class="hover:bg-slate-50">
-            <td class="py-1 whitespace-nowrap text-slate-500 font-medium">${dateClean} <span class="text-indigo-600 font-bold ml-1">${timeClean}</span></td>
-            <td class="py-1 font-bold text-slate-800">${a.studentName || '-'}</td>
-            <td class="py-1 text-center"><span class="px-1.5 py-0.2 rounded text-[10px] font-bold ${a.status === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${a.status}</span></td>
+          <tr class="hover:bg-slate-50 transition">
+            <td class="py-2.5 whitespace-nowrap text-slate-500 font-medium">${dateClean} <span class="text-indigo-600 font-bold ml-1">${timeClean}</span></td>
+            <td class="py-2.5 font-bold text-slate-800">${a.studentName || '-'}</td>
+            <td class="py-2.5 whitespace-nowrap"><span class="px-2 py-0.5 rounded text-xs font-bold ${a.status === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${a.status}</span></td>
+            <td class="py-2.5 whitespace-nowrap text-center font-black">${a.deduct > 0 ? '-' + a.deduct : (a.bonus > 0 ? '+' + a.bonus : '-')}</td>
           </tr>
         `;
       }).join('');
     }
 
     function renderSkillLogTable(logs) {
-      const tbody = document.getElementById('skillLogBody');
+      const tbody = document.getElementById('studentSkillTableBody');
       if (logs.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="4" class="p-2 text-center text-slate-400">ยังไม่มีประเมิน</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="4" class="p-4 text-center text-slate-400">ยังไม่มีประเมิน</td></tr>`;
         return;
       }
       tbody.innerHTML = logs.map(k => `
-        <tr class="hover:bg-slate-50">
-          <td class="py-1 text-slate-500">${formatThaiDateDisplay(k.date)}</td>
-          <td class="py-1 font-bold text-slate-800 truncate max-w-[130px]">${k.skillName}</td>
-          <td class="py-1 text-center"><span class="px-1.5 py-0.2 rounded-full text-[9px] font-bold ${k.result === 'ผ่าน' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${k.result}</span></td>
-          <td class="py-1 text-center font-bold text-amber-600">+${k.exp}</td>
+        <tr class="hover:bg-slate-50 transition">
+          <td class="py-2.5 text-slate-500">${formatThaiDateDisplay(k.date)}</td>
+          <td class="py-2.5 font-bold text-slate-800 truncate max-w-[130px]">${k.skillName}</td>
+          <td class="py-2.5 text-center"><span class="px-2 py-0.5 rounded-full text-xs font-bold ${k.result === 'ผ่าน' ? 'badge-approved' : 'bg-rose-100 text-rose-800'}">${k.result}</span></td>
+          <td class="py-2.5 text-center font-bold text-amber-600">+${k.exp}</td>
         </tr>
       `).join('');
     }
 
+    // ตารางส่งงาน Care Plan (ล็อกรหัส PIN ถ้าดูงานเพื่อน)
     function renderWorkTable(works) {
-      const tbody = document.getElementById('workTableBody');
+      const tbody = document.getElementById('studentWorkTableBody');
       if (works.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="5" class="p-2 text-center text-slate-400">ไม่มีข้อมูลงาน</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="5" class="p-4 text-center text-slate-400">ไม่มีข้อมูลงาน</td></tr>`;
         return;
       }
       tbody.innerHTML = works.map(w => {
         const isMyWork = (w.studentId === currentStudentId) || isTeacher;
         const btnView = (isMyWork || !w.fileUrl)
-          ? (w.fileUrl ? `<a href="${w.fileUrl}" target="_blank" class="px-2 py-0.5 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded font-bold text-[10px]"><i class="fa-solid fa-folder-open mr-1"></i>ดูงาน</a>` : `<span class="text-slate-400 text-[10px]">-</span>`)
-          : `<button onclick="promptAccessPin('${w.studentId}', '${w.fileUrl}')" class="px-2 py-0.5 bg-slate-100 text-slate-600 rounded font-bold text-[10px]"><i class="fa-solid fa-lock mr-1"></i>ใส่ PIN เพื่อน</button>`;
+          ? (w.fileUrl ? `<a href="${w.fileUrl}" target="_blank" class="px-2.5 py-1 bg-indigo-50 border border-indigo-200 text-indigo-700 rounded-lg font-bold text-xs"><i class="fa-solid fa-folder-open mr-1"></i>ดูงาน</a>` : `<span class="text-slate-400 text-xs">-</span>`)
+          : `<button onclick="promptAccessPin('${w.studentId}', '${w.fileUrl}')" class="px-2.5 py-1 bg-slate-100 text-slate-600 rounded-lg font-bold text-xs"><i class="fa-solid fa-lock mr-1"></i>ใส่ PIN เพื่อน</button>`;
 
         return `
-          <tr class="hover:bg-slate-50">
-            <td class="p-1.5 font-bold text-slate-800">${w.studentName}</td>
-            <td class="p-1.5 text-slate-500 whitespace-nowrap">${w.submitDate || '-'}</td>
-            <td class="p-1.5 font-medium">${w.subject}</td>
-            <td class="p-1.5 text-center"><span class="px-1.5 py-0.2 rounded text-[10px] font-bold ${w.status === 'ผ่าน' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">${w.status}</span></td>
-            <td class="p-1.5 text-center whitespace-nowrap">${btnView}</td>
+          <tr class="hover:bg-slate-50 transition">
+            <td class="p-2.5 font-bold text-slate-800">${w.studentName}</td>
+            <td class="p-2.5 text-slate-500 whitespace-nowrap">${w.submitDate || '-'}</td>
+            <td class="p-2.5 font-medium">${w.subject}</td>
+            <td class="p-2.5 text-center whitespace-nowrap"><span class="px-2.5 py-0.5 rounded-full text-xs font-bold ${w.status === 'ผ่าน' ? 'badge-approved' : 'badge-pending'}">${w.status}</span></td>
+            <td class="p-2.5 text-center whitespace-nowrap">${btnView}</td>
           </tr>
         `;
       }).join('');
@@ -654,7 +900,7 @@
       });
     }
 
-    function promptStudentLogin() {
+    function promptStudentLoginModal() {
       Swal.fire({
         title: 'ล็อกอินนักศึกษา',
         input: 'password',
@@ -758,14 +1004,23 @@
       document.getElementById(id).classList.add('hidden');
     }
 
-    function switchView(view) {
+    function switchViewSection(view) {
       if (view === 'student') {
         isTeacher = false;
         document.getElementById('studentSection').classList.remove('hidden');
         document.getElementById('teacherSection').classList.add('hidden');
+        document.getElementById('librarySection').classList.add('hidden');
         document.getElementById('btnRoleStudent').classList.add('role-active');
         document.getElementById('btnRoleTeacher').classList.remove('role-active');
+        document.getElementById('btnNavLibrary').classList.remove('role-active');
         loadDashboard();
+      } else if (view === 'library') {
+        document.getElementById('studentSection').classList.add('hidden');
+        document.getElementById('teacherSection').classList.add('hidden');
+        document.getElementById('librarySection').classList.remove('hidden');
+        document.getElementById('btnNavLibrary').classList.add('role-active');
+        document.getElementById('btnRoleStudent').classList.remove('role-active');
+        document.getElementById('btnRoleTeacher').classList.remove('role-active');
       } else {
         Swal.fire({
           title: 'รหัสผ่านอาจารย์',
@@ -782,8 +1037,10 @@
             isTeacher = true;
             document.getElementById('studentSection').classList.add('hidden');
             document.getElementById('teacherSection').classList.remove('hidden');
+            document.getElementById('librarySection').classList.add('hidden');
             document.getElementById('btnRoleTeacher').classList.add('role-active');
             document.getElementById('btnRoleStudent').classList.remove('role-active');
+            document.getElementById('btnNavLibrary').classList.remove('role-active');
             loadTeacherPanel();
           }
         });
@@ -794,19 +1051,19 @@
       const tabs = ['att', 'skill', 'score', 'settings'];
       tabs.forEach(t => {
         document.getElementById('paneTeacher' + t.charAt(0).toUpperCase() + t.slice(1)).classList.add('hidden');
-        document.getElementById('tabBtn' + t.charAt(0).toUpperCase() + t.slice(1)).className = "px-2.5 py-1 bg-slate-100 text-slate-700 font-semibold rounded-lg";
+        document.getElementById('tabBtn' + t.charAt(0).toUpperCase() + t.slice(1)).className = "px-3.5 py-2 bg-slate-100 text-slate-700 font-semibold rounded-xl";
       });
       document.getElementById('paneTeacher' + tab.charAt(0).toUpperCase() + tab.slice(1)).classList.remove('hidden');
-      document.getElementById('tabBtn' + tab.charAt(0).toUpperCase() + tab.slice(1)).className = "px-2.5 py-1 bg-indigo-600 text-white font-bold rounded-lg";
+      document.getElementById('tabBtn' + tab.charAt(0).toUpperCase() + tab.slice(1)).className = "px-3.5 py-2 bg-indigo-600 text-white font-bold rounded-xl shadow-xs";
     }
 
     function renderTeacherAttTable() {
       const tbody = document.getElementById('teaAttBody');
       tbody.innerHTML = GROUP_5.map(s => `
-        <tr class="hover:bg-slate-50" id="tRow_${s.studentId}">
-          <td class="p-1.5 font-bold text-slate-900">${s.name}</td>
-          <td class="p-1.5 text-center">
-            <select id="tStat_${s.studentId}" class="border rounded p-1 font-bold text-xs">
+        <tr class="hover:bg-slate-50 transition" id="tRow_${s.studentId}">
+          <td class="p-3 font-bold text-slate-900">${s.name}</td>
+          <td class="p-3 text-center">
+            <select id="tStat_${s.studentId}" class="border rounded-xl p-1.5 font-bold text-xs bg-white">
               <option value="ตรงเวลา">ตรงเวลา</option>
               <option value="สาย">สาย</option>
               <option value="ลา">ลา</option>
@@ -814,8 +1071,8 @@
               <option value="ขาด">ขาด</option>
             </select>
           </td>
-          <td class="p-1.5">
-            <input type="text" id="tNote_${s.studentId}" placeholder="ระบุเหตุผล..." class="border rounded p-1 w-full text-xs">
+          <td class="p-3">
+            <input type="text" id="tNote_${s.studentId}" placeholder="ระบุเหตุผล..." class="border rounded-xl p-1.5 w-full text-xs bg-white">
           </td>
         </tr>
       `).join('');
@@ -859,27 +1116,27 @@
       const teaLogsBody = document.getElementById('teaSkillLogsBody');
       const compList = data.compList || [];
       teaLogsBody.innerHTML = compList.map(c => `
-        <tr class="hover:bg-slate-50">
-          <td class="p-1.5 text-slate-500">${formatThaiDateDisplay(c.date)}</td>
-          <td class="p-1.5 font-bold">${c.studentName}</td>
-          <td class="p-1.5">${c.skillName}</td>
-          <td class="p-1.5 text-center font-bold ${c.result === 'ผ่าน' ? 'text-emerald-600' : 'text-rose-600'}">${c.result}</td>
-          <td class="p-1.5 text-center">
-            <button onclick="deleteSkill('${c.skillId}')" class="px-2 py-0.5 bg-rose-50 border border-rose-200 text-rose-600 rounded text-[10px] font-bold">ลบ</button>
+        <tr class="hover:bg-slate-50 transition">
+          <td class="p-2.5 text-slate-500">${formatThaiDateDisplay(c.date)}</td>
+          <td class="p-2.5 font-bold">${c.studentName}</td>
+          <td class="p-2.5">${c.skillName}</td>
+          <td class="p-2.5 text-center font-bold ${c.result === 'ผ่าน' ? 'text-emerald-600' : 'text-rose-600'}">${c.result}</td>
+          <td class="p-2.5 text-center">
+            <button onclick="deleteSkill('${c.skillId}')" class="px-2.5 py-1 bg-rose-50 border border-rose-200 text-rose-600 rounded-lg text-xs font-bold hover:bg-rose-100">ลบ</button>
           </td>
         </tr>
       `).join('');
 
       const scoreBody = document.getElementById('teaScoreBody');
       scoreBody.innerHTML = allStudentsList.map(s => `
-        <tr class="hover:bg-slate-50">
-          <td class="p-1.5 font-mono text-indigo-700">${s.studentId}</td>
-          <td class="p-1.5 font-bold">${s.name}</td>
-          <td class="p-1.5">${s.group}</td>
-          <td class="p-1.5 text-center font-black text-indigo-900">${s.punctualityScore !== undefined ? s.punctualityScore : 100}</td>
-          <td class="p-1.5 text-center">
-            <input type="number" id="scInput_${s.studentId}" value="${s.punctualityScore !== undefined ? s.punctualityScore : 100}" min="0" max="100" class="w-14 border rounded p-0.5 text-center font-bold">
-            <button onclick="saveStudentScore('${s.studentId}')" class="px-2 py-0.5 bg-indigo-600 text-white rounded text-[10px] font-bold ml-1">บันทึก</button>
+        <tr class="hover:bg-slate-50 transition">
+          <td class="p-2.5 font-mono text-indigo-700 font-bold">${s.studentId}</td>
+          <td class="p-2.5 font-bold">${s.name}</td>
+          <td class="p-2.5">${s.group}</td>
+          <td class="p-2.5 text-center font-black text-indigo-900">${s.punctualityScore !== undefined ? s.punctualityScore : 100}</td>
+          <td class="p-2.5 text-center">
+            <input type="number" id="scInput_${s.studentId}" value="${s.punctualityScore !== undefined ? s.punctualityScore : 100}" min="0" max="100" class="w-16 border rounded-lg p-1 text-center font-bold">
+            <button onclick="saveStudentScore('${s.studentId}')" class="px-2.5 py-1 bg-indigo-600 text-white rounded-lg text-xs font-bold ml-1.5 shadow-xs">บันทึก</button>
           </td>
         </tr>
       `).join('');
@@ -944,7 +1201,8 @@
         checkinStartTime: document.getElementById('setCheckinStart').value,
         checkinEndTime: document.getElementById('setCheckinEnd').value,
         enabled: document.getElementById('setWork').checked,
-        skillEvalEnabled: document.getElementById('setSkillBox').checked
+        skillEvalEnabled: document.getElementById('setSkillBox').checked,
+        heroLeaderboardEnabled: document.getElementById('setHeroBox').checked
       };
       Swal.fire({ title: 'กำลังบันทึก...', didOpen: () => Swal.showLoading() });
       const res = await fetch(API_URL, {
