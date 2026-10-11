@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>BCN CONNECT - ประตูสู่ระบบและคลังข้อสอบ</title>
   
-  <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
-  <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
+  <link rel="apple-touch-icon" href="https://i.ibb.co/xqGmpNNM/Chat-GPT-Image-13-2569-10-45-41.png">
+  <link rel="icon" type="image/png" href="https://i.ibb.co/xqGmpNNM/Chat-GPT-Image-13-2569-10-45-41.png">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,74 +14,91 @@
 
   <style>
     * { font-family: 'Prompt', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { background: linear-gradient(180deg, #f0f4ff 0%, #eef2f6 40%, #fbfdff 100%); min-height: 100vh; font-size: 14px; }
+    body { 
+      background: linear-gradient(135deg, #eef2ff 0%, #f1f5f9 45%, #fdf4ff 100%); 
+      min-height: 100vh; 
+      font-size: 14px; 
+    }
+    
+    /* สไตล์กระจกแก้วพรีเมียม */
     .glass-card { 
-      background: rgba(255, 255, 255, 0.92); 
-      backdrop-filter: blur(16px); 
+      background: rgba(255, 255, 255, 0.90); 
+      backdrop-filter: blur(20px); 
+      -webkit-backdrop-filter: blur(20px);
       border: 1.5px solid rgba(255, 255, 255, 0.9); 
-      box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.08); 
+      box-shadow: 0 10px 30px -5px rgba(79, 70, 229, 0.08); 
     }
+    
+    /* ไอคอนสี่เหลี่ยมมนสไตล์ iOS */
     .squircle-card {
-      border-radius: 24px;
-      box-shadow: 0 6px 16px -2px rgba(0, 0, 0, 0.05);
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      border-radius: 28px;
+      box-shadow: 0 10px 25px -4px rgba(0, 0, 0, 0.06);
+      transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     }
-    .squircle-card:active { transform: scale(0.95); }
+    .squircle-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 30px -5px rgba(79, 70, 229, 0.12);
+    }
+    .squircle-card:active { transform: scale(0.96); }
+
     @keyframes floatHero {
       0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-5px); }
+      50% { transform: translateY(-6px); }
     }
     .hero-animate { animation: floatHero 2.5s ease-in-out infinite; }
   </style>
 </head>
-<body class="text-slate-800 flex flex-col justify-between min-h-screen select-none pb-24">
+<body class="text-slate-800 flex flex-col justify-between min-h-screen select-none pb-28">
 
-  <div class="w-full max-w-md mx-auto px-4 pt-3 space-y-3.5">
+  <!-- ปรับ Container ให้ขยายเต็มหน้าจอบนคอม (max-w-5xl) และเต็มขอบจอบนมือถือ -->
+  <div class="w-full max-w-5xl mx-auto px-3.5 sm:px-6 pt-3 sm:pt-6 space-y-4 sm:space-y-6">
     
-    <!-- โปรไฟล์ผู้ใช้งาน -->
-    <div class="glass-card rounded-[28px] p-4 flex flex-col gap-3 shadow-sm">
-      <div class="flex items-center space-x-3">
-        <div id="userAvatar" class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black text-lg shadow-md shrink-0">
+    <!-- 1. บัตรโปรไฟล์ด้านบน -->
+    <div class="glass-card rounded-[28px] p-4 sm:p-5 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 shadow-sm">
+      <div class="flex items-center space-x-3.5 w-full sm:w-auto">
+        <div id="userAvatar" class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black text-xl shadow-md shrink-0">
           BCN
         </div>
         <div class="min-w-0 flex-1">
-          <div class="flex items-center gap-1.5">
-            <span class="text-xs font-bold text-slate-500">สวัสดี,</span>
-            <span class="text-sm font-black text-slate-800 truncate" id="hubUserName">BCN CONNECTOR ทุกท่าน</span>
+          <div class="flex items-center gap-2">
+            <span class="text-xs sm:text-sm font-bold text-slate-500">สวัสดี,</span>
+            <span class="text-sm sm:text-base font-black text-slate-800 truncate" id="hubUserName">BCN CONNECTOR ทุกท่าน</span>
           </div>
           <div class="flex items-center gap-2 text-xs font-medium text-slate-500 mt-0.5">
-            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span id="hubUserYearTag" class="font-bold text-indigo-700">ทุกชั้นปี (ปี 1 - 4)</span>
+            <span class="inline-block w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span id="hubUserYearTag" class="font-bold text-indigo-700">พร้อมใช้งานระบบ (ทุกชั้นปี)</span>
           </div>
         </div>
       </div>
 
-      <div class="flex items-center justify-between pt-1 border-t border-slate-100">
-        <button id="btnHubAuth" onclick="toggleAuthModal()" class="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 active:scale-95 transition">
-          <i class="fa-solid fa-fingerprint text-xs"></i> <span id="btnHubAuthText">เข้าสู่ระบบ (PIN / อาจารย์)</span>
+      <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-3 pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-100">
+        <button id="btnHubAuth" onclick="toggleAuthModal()" class="px-4 py-2 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-sm flex items-center gap-2 active:scale-95 transition">
+          <i class="fa-solid fa-fingerprint text-sm"></i> <span id="btnHubAuthText">เข้าสู่ระบบ (PIN / อาจารย์)</span>
         </button>
-        <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[11px] font-black">
-          V2.0.0
+        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-black">
+          V2.1.0
         </span>
       </div>
     </div>
 
-    <!-- แถบสัตว์เลี้ยงฮีโร่พยาบาล -->
-    <div class="glass-card rounded-[28px] p-4 bg-gradient-to-br from-indigo-900/95 to-purple-900/95 text-white shadow-lg space-y-3 relative overflow-hidden">
+    <!-- 2. กล่องแสดงแถบหมวกพยาบาล & EXP -->
+    <div class="glass-card rounded-[28px] p-4 sm:p-5 bg-gradient-to-br from-indigo-900/95 via-indigo-950/95 to-purple-900/95 text-white shadow-xl space-y-3 relative overflow-hidden">
       <div class="flex justify-between items-center">
-        <div class="flex items-center gap-2.5">
-          <span class="text-3xl hero-animate" id="hubHeroEmoji">🐣</span>
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-3xl hero-animate shadow-inner" id="hubHeroEmoji">
+            🐣
+          </div>
           <div>
-            <div class="text-xs font-bold text-amber-300" id="hubHeroRankTitle">Rank: หมวกขาวล้วน (Lv.1)</div>
-            <div class="text-[11px] text-indigo-200" id="hubHeroNameText">น้องพยาบาลฝึกหัด (Pre-Clinic)</div>
+            <div class="text-xs sm:text-sm font-black text-amber-300" id="hubHeroRankTitle">Rank: หมวกขาวล้วน (Lv.1)</div>
+            <div class="text-[11px] sm:text-xs text-indigo-200" id="hubHeroNameText">น้องพยาบาลฝึกหัด (Pre-Clinic)</div>
           </div>
         </div>
         <div class="flex items-center gap-2 text-xs font-black">
-          <span class="px-2.5 py-1 bg-amber-400/20 text-amber-300 rounded-full border border-amber-400/40">🪙 <span id="hubCoinDisplay">0</span></span>
+          <span class="px-3 py-1.5 bg-amber-400/20 text-amber-300 rounded-full border border-amber-400/40">🪙 <span id="hubCoinDisplay">0</span></span>
         </div>
       </div>
       <div>
-        <div class="flex justify-between text-[10px] font-bold text-indigo-200 mb-1">
+        <div class="flex justify-between text-[11px] font-bold text-indigo-200 mb-1">
           <span>ความก้าวหน้าสู่แถบหมวกขั้นถัดไป</span>
           <span id="hubExpText">0 / 150 EXP</span>
         </div>
@@ -91,63 +108,63 @@
       </div>
     </div>
 
-    <!-- กริดไอคอน 3 คอลัมน์ (แยกเปิดไฟล์โดยตรง) -->
-    <div class="grid grid-cols-3 gap-3.5 pt-1">
+    <!-- 3. กริดไอคอน 3D ปรับ Responsive: มือถือ 3 คอลัมน์ / คอมพิวเตอร์ 4-5 คอลัมน์ (ขยายเต็มหน้าจอ) -->
+    <div class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-3.5 sm:gap-5 pt-1">
       
-      <!-- 1. ไปหน้าฝึกปฏิบัติบนวอร์ด (practicum.html) -->
-      <a href="practicum.html" class="squircle-card bg-white p-3 flex flex-col items-center text-center relative border border-slate-100 cursor-pointer">
-        <span class="absolute top-1.5 right-1.5 px-1.5 py-0.2 rounded bg-emerald-600 text-[8px] font-bold text-white">ปี 2-3-4</span>
-        <div class="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center text-3xl shadow-inner mb-1.5">
-          🩺
+      <!-- 1. ฝึกปฏิบัติบนวอร์ด (รูป 3D เครื่องมือแพทย์) -->
+      <a href="practicum.html" class="squircle-card bg-white p-3.5 sm:p-4 flex flex-col items-center text-center relative border border-slate-100 cursor-pointer">
+        <span class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-emerald-600 text-[9px] font-black text-white">ปี 2-3-4</span>
+        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center p-1 mb-2">
+          <img src="https://cdn-icons-png.flaticon.com/512/3004/3004458.png" alt="Practicum" class="w-full h-full object-contain drop-shadow-md">
         </div>
-        <span class="text-xs font-bold text-slate-800 truncate w-full">ฝึกปฏิบัติบนวอร์ด</span>
-        <span class="text-[9px] text-emerald-600 font-bold mt-0.5 flex items-center gap-1">
+        <span class="text-xs sm:text-sm font-bold text-slate-800 truncate w-full">ฝึกปฏิบัติบนวอร์ด</span>
+        <span class="text-[10px] text-emerald-600 font-bold mt-0.5 flex items-center gap-1">
           <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Care Plan/เวร
         </span>
       </a>
 
-      <!-- 2. ไปหน้าคลังข้อสอบ 8 วิชา (exam.html) -->
-      <a href="exam.html" class="squircle-card bg-white p-3 flex flex-col items-center text-center relative border border-slate-100 cursor-pointer">
-        <span class="absolute top-1.5 right-1.5 px-1.5 py-0.2 rounded bg-amber-500 text-[8px] font-bold text-white">8 วิชา</span>
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-100 to-orange-100 flex items-center justify-center text-3xl shadow-inner mb-1.5">
-          📝
+      <!-- 2. คลังข้อสอบสภาฯ (รูป 3D กล่องข้อสอบ/สมุด) -->
+      <a href="exam.html" class="squircle-card bg-white p-3.5 sm:p-4 flex flex-col items-center text-center relative border border-slate-100 cursor-pointer">
+        <span class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-amber-500 text-[9px] font-black text-white">8 วิชา</span>
+        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center p-1 mb-2">
+          <img src="https://cdn-icons-png.flaticon.com/512/2997/2997295.png" alt="Exam" class="w-full h-full object-contain drop-shadow-md">
         </div>
-        <span class="text-xs font-bold text-slate-800 truncate w-full">คลังข้อสอบสภาฯ</span>
-        <span class="text-[9px] text-amber-600 font-bold mt-0.5 flex items-center gap-1">
+        <span class="text-xs sm:text-sm font-bold text-slate-800 truncate w-full">คลังข้อสอบสภาฯ</span>
+        <span class="text-[10px] text-amber-600 font-bold mt-0.5 flex items-center gap-1">
           <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> ข้อสอบเสมือน
         </span>
       </a>
 
-      <!-- 3. เว็บไซต์วิทยาลัย -->
-      <a href="https://www.bcnchainat.ac.th" target="_blank" class="squircle-card bg-white p-3 flex flex-col items-center text-center relative border border-slate-100">
-        <div class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center text-3xl shadow-inner mb-1.5">
-          🌐
+      <!-- 3. เว็บไซต์วิทยาลัย (รูป 3D โลโก้สถาบัน/ลูกโลก) -->
+      <a href="https://www.bcnchainat.ac.th" target="_blank" class="squircle-card bg-white p-3.5 sm:p-4 flex flex-col items-center text-center relative border border-slate-100">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center p-1 mb-2">
+          <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" alt="College Web" class="w-full h-full object-contain drop-shadow-md">
         </div>
-        <span class="text-xs font-bold text-slate-800 truncate w-full">เว็บวิทยาลัย</span>
-        <span class="text-[9px] text-blue-600 font-bold mt-0.5 flex items-center gap-1">
+        <span class="text-xs sm:text-sm font-bold text-slate-800 truncate w-full">เว็บวิทยาลัย</span>
+        <span class="text-[10px] text-blue-600 font-bold mt-0.5 flex items-center gap-1">
           <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> EXT
         </span>
       </a>
 
-      <!-- 4. FONMIS -->
-      <a href="https://fonmis.bcnchainat.ac.th" target="_blank" class="squircle-card bg-white p-3 flex flex-col items-center text-center relative border border-slate-100">
-        <div class="w-16 h-16 rounded-2xl bg-teal-50 flex items-center justify-center text-3xl shadow-inner mb-1.5">
-          📊
+      <!-- 4. FONMIS (รูป 3D สถิติ Dashboard) -->
+      <a href="https://fonmis.bcnchainat.ac.th" target="_blank" class="squircle-card bg-white p-3.5 sm:p-4 flex flex-col items-center text-center relative border border-slate-100">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center p-1 mb-2">
+          <img src="https://cdn-icons-png.flaticon.com/512/1802/1802977.png" alt="FONMIS" class="w-full h-full object-contain drop-shadow-md">
         </div>
-        <span class="text-xs font-bold text-slate-800 truncate w-full">FONMIS</span>
-        <span class="text-[9px] text-teal-600 font-bold mt-0.5 flex items-center gap-1">
+        <span class="text-xs sm:text-sm font-bold text-slate-800 truncate w-full">FONMIS</span>
+        <span class="text-[10px] text-teal-600 font-bold mt-0.5 flex items-center gap-1">
           <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> EXT
         </span>
       </a>
 
-      <!-- 5. ไปหน้าเช็คชื่อเข้าเวรโดยตรง -->
-      <a href="practicum.html" class="squircle-card bg-white p-3 flex flex-col items-center text-center relative border border-slate-100 cursor-pointer">
-        <span class="absolute top-1.5 right-1.5 px-1.5 py-0.2 rounded bg-purple-700 text-[8px] font-bold text-white">AUTH</span>
-        <div class="w-16 h-16 rounded-2xl bg-purple-50 flex items-center justify-center text-3xl shadow-inner mb-1.5">
-          👆
+      <!-- 5. เช็คชื่อเข้าเวร/GPS (รูป 3D สแกนนิ้ว/นาฬิกา) -->
+      <a href="practicum.html" class="squircle-card bg-white p-3.5 sm:p-4 flex flex-col items-center text-center relative border border-slate-100 cursor-pointer">
+        <span class="absolute top-2 right-2 px-1.5 py-0.5 rounded bg-purple-700 text-[9px] font-black text-white">AUTH</span>
+        <div class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl flex items-center justify-center p-1 mb-2">
+          <img src="https://cdn-icons-png.flaticon.com/512/2889/2889676.png" alt="Attendance" class="w-full h-full object-contain drop-shadow-md">
         </div>
-        <span class="text-xs font-bold text-slate-800 truncate w-full">เข้าเวร/GPS</span>
-        <span class="text-[9px] text-purple-600 font-bold mt-0.5 flex items-center gap-1">
+        <span class="text-xs sm:text-sm font-bold text-slate-800 truncate w-full">เข้าเวร/GPS</span>
+        <span class="text-[10px] text-purple-600 font-bold mt-0.5 flex items-center gap-1">
           <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span> เรียลไทม์
         </span>
       </a>
@@ -156,7 +173,7 @@
 
   </div>
 
-  <!-- Bottom Navigation Bar -->
+  <!-- แถบเมนูด้านล่างสไตล์ iOS แคปซูลลอยตัว -->
   <nav class="fixed bottom-3 inset-x-0 mx-auto max-w-[360px] glass-card rounded-full px-5 py-2.5 flex justify-between items-center z-40 shadow-xl border border-white/80">
     <a href="index.html" class="flex flex-col items-center text-indigo-600 font-bold text-[10px]">
       <i class="fa-solid fa-house text-base mb-0.5"></i>
@@ -176,7 +193,7 @@
     </button>
   </nav>
 
-  <!-- Modal Login -->
+  <!-- Modal เข้าสู่ระบบ -->
   <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-[32px] max-w-xs w-full p-6 text-center space-y-4 shadow-2xl border border-white">
       <div class="w-14 h-14 mx-auto rounded-3xl bg-indigo-600 text-white flex items-center justify-center text-2xl shadow-lg shadow-indigo-500/30">
@@ -232,7 +249,7 @@
 
     function updateUI(stu) {
       document.getElementById('hubUserName').textContent = stu.name;
-      document.getElementById('hubUserYearTag').textContent = stu.group || "ปี 2";
+      document.getElementById('hubUserYearTag').textContent = "ชั้นปี: " + (stu.group || "ปี 2");
       document.getElementById('hubCoinDisplay').textContent = stu.coins || 0;
 
       const lv = stu.level || 1;
