@@ -3,10 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>BCN CONNECT - ประตูสู่ระบบและคลังข้อสอบ</title>
+  <title>BCN Arena - คลังข้อสอบ 8 วิชาสภาการพยาบาล</title>
   
-  <link rel="apple-touch-icon" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
-  <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -14,190 +12,88 @@
 
   <style>
     * { font-family: 'Prompt', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { background: linear-gradient(180deg, #f0f4ff 0%, #eef2f6 40%, #fbfdff 100%); min-height: 100vh; font-size: 14px; }
-    .glass-card { 
-      background: rgba(255, 255, 255, 0.92); 
-      backdrop-filter: blur(16px); 
-      border: 1.5px solid rgba(255, 255, 255, 0.9); 
-      box-shadow: 0 10px 25px -5px rgba(79, 70, 229, 0.08); 
-    }
-    .squircle-card {
-      border-radius: 24px;
-      box-shadow: 0 6px 16px -2px rgba(0, 0, 0, 0.05);
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-    .squircle-card:active { transform: scale(0.95); }
+    body { background: linear-gradient(180deg, #1e1b4b 0%, #312e81 40%, #0f172a 100%); min-height: 100vh; color: white; font-size: 14px; }
+    .glass-box { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.2); }
     @keyframes floatHero {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-5px); }
+      0%, 100% { transform: translateY(0px) scale(1); }
+      50% { transform: translateY(-8px) scale(1.02); }
     }
-    .hero-animate { animation: floatHero 2.5s ease-in-out infinite; }
+    .hero-float { animation: floatHero 2.5s ease-in-out infinite; }
   </style>
 </head>
-<body class="text-slate-800 flex flex-col justify-between min-h-screen select-none pb-24">
+<body class="flex justify-center items-start pb-24">
 
-  <div class="w-full max-w-md mx-auto px-4 pt-3 space-y-3.5">
+  <div class="w-full max-w-md p-4 space-y-4">
     
-    <!-- โปรไฟล์ผู้ใช้งาน -->
-    <div class="glass-card rounded-[28px] p-4 flex flex-col gap-3 shadow-sm">
-      <div class="flex items-center space-x-3">
-        <div id="userAvatar" class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black text-lg shadow-md shrink-0">
-          BCN
-        </div>
-        <div class="min-w-0 flex-1">
-          <div class="flex items-center gap-1.5">
-            <span class="text-xs font-bold text-slate-500">สวัสดี,</span>
-            <span class="text-sm font-black text-slate-800 truncate" id="hubUserName">BCN CONNECTOR ทุกท่าน</span>
-          </div>
-          <div class="flex items-center gap-2 text-xs font-medium text-slate-500 mt-0.5">
-            <span class="inline-block w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span id="hubUserYearTag" class="font-bold text-indigo-700">ทุกชั้นปี (ปี 1 - 4)</span>
-          </div>
-        </div>
+    <!-- Header -->
+    <div class="flex justify-between items-center bg-black/40 backdrop-blur-md p-3 rounded-2xl border border-white/10 shadow-lg">
+      <div class="flex items-center gap-2">
+        <a href="index.html" class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center text-xs mr-1 text-white">
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <span class="font-extrabold text-sm text-amber-300">NURSE HERO ROV</span>
       </div>
-
-      <div class="flex items-center justify-between pt-1 border-t border-slate-100">
-        <button id="btnHubAuth" onclick="toggleAuthModal()" class="px-3.5 py-1.5 rounded-xl bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold shadow-xs flex items-center gap-1.5 active:scale-95 transition">
-          <i class="fa-solid fa-fingerprint text-xs"></i> <span id="btnHubAuthText">เข้าสู่ระบบ (PIN / อาจารย์)</span>
-        </button>
-        <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 text-[11px] font-black">
-          V2.0.0
+      <div class="flex items-center gap-2 text-xs font-bold">
+        <span class="px-3 py-1 bg-amber-500/30 border border-amber-400 rounded-full text-amber-300">
+          🪙 <span id="coinDisplay">0</span>
         </span>
       </div>
     </div>
 
-    <!-- แถบสัตว์เลี้ยงฮีโร่พยาบาล -->
-    <div class="glass-card rounded-[28px] p-4 bg-gradient-to-br from-indigo-900/95 to-purple-900/95 text-white shadow-lg space-y-3 relative overflow-hidden">
-      <div class="flex justify-between items-center">
-        <div class="flex items-center gap-2.5">
-          <span class="text-3xl hero-animate" id="hubHeroEmoji">🐣</span>
-          <div>
-            <div class="text-xs font-bold text-amber-300" id="hubHeroRankTitle">Rank: หมวกขาวล้วน (Lv.1)</div>
-            <div class="text-[11px] text-indigo-200" id="hubHeroNameText">น้องพยาบาลฝึกหัด (Pre-Clinic)</div>
-          </div>
-        </div>
-        <div class="flex items-center gap-2 text-xs font-black">
-          <span class="px-2.5 py-1 bg-amber-400/20 text-amber-300 rounded-full border border-amber-400/40">🪙 <span id="hubCoinDisplay">0</span></span>
+    <!-- ลานโชว์ตัวละครฮีโร่ / แถบหมวกวิชาชีพ -->
+    <div class="glass-box rounded-3xl p-5 text-center relative overflow-hidden shadow-2xl">
+      <div class="inline-block px-3 py-1 bg-indigo-600/60 rounded-full text-xs font-black border border-indigo-400/50 mb-2">
+        <span id="rankBadgeText">Rank: หมวกขาวล้วน (Lv.1)</span>
+      </div>
+
+      <div class="w-28 h-28 mx-auto my-1 flex items-center justify-center hero-float">
+        <div id="heroEmoji" class="text-6xl filter drop-shadow-[0_10px_20px_rgba(99,102,241,0.5)]">
+          🐣
         </div>
       </div>
-      <div>
+
+      <h2 id="heroNameText" class="text-base font-black text-white">น้องพยาบาลฝึกหัด</h2>
+      <p class="text-xs text-indigo-200 mt-0.5">ตอบข้อสอบสะสม Coins เพื่ออัปเกรดแถบหมวกวิชาชีพ!</p>
+
+      <div class="mt-3 text-left">
         <div class="flex justify-between text-[10px] font-bold text-indigo-200 mb-1">
           <span>ความก้าวหน้าสู่แถบหมวกขั้นถัดไป</span>
-          <span id="hubExpText">0 / 150 EXP</span>
+          <span id="expTextDisplay">0 / 150 EXP</span>
         </div>
-        <div class="w-full bg-black/40 h-2.5 rounded-full overflow-hidden p-0.5 border border-white/20">
-          <div id="hubExpBar" class="bg-gradient-to-r from-amber-400 to-emerald-400 h-full rounded-full transition-all duration-500" style="width: 10%;"></div>
+        <div class="w-full bg-black/40 h-2.5 rounded-full overflow-hidden p-0.5 border border-white/10">
+          <div id="expBarFill" class="bg-gradient-to-r from-amber-400 to-emerald-400 h-full rounded-full transition-all duration-500" style="width: 10%;"></div>
         </div>
       </div>
-    </div>
 
-    <!-- กริดไอคอน 3 คอลัมน์ (แยกเปิดไฟล์โดยตรง) -->
-    <div class="grid grid-cols-3 gap-3.5 pt-1">
-      
-      <!-- 1. ไปหน้าฝึกปฏิบัติบนวอร์ด (practicum.html) -->
-      <a href="practicum.html" class="squircle-card bg-white p-3 flex flex-col items-center text-center relative border border-slate-100 cursor-pointer">
-        <span class="absolute top-1.5 right-1.5 px-1.5 py-0.2 rounded bg-emerald-600 text-[8px] font-bold text-white">ปี 2-3-4</span>
-        <div class="w-16 h-16 rounded-2xl bg-emerald-50 flex items-center justify-center text-3xl shadow-inner mb-1.5">
-          🩺
-        </div>
-        <span class="text-xs font-bold text-slate-800 truncate w-full">ฝึกปฏิบัติบนวอร์ด</span>
-        <span class="text-[9px] text-emerald-600 font-bold mt-0.5 flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Care Plan/เวร
-        </span>
-      </a>
-
-      <!-- 2. ไปหน้าคลังข้อสอบ 8 วิชา (exam.html) -->
-      <a href="exam.html" class="squircle-card bg-white p-3 flex flex-col items-center text-center relative border border-slate-100 cursor-pointer">
-        <span class="absolute top-1.5 right-1.5 px-1.5 py-0.2 rounded bg-amber-500 text-[8px] font-bold text-white">8 วิชา</span>
-        <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-100 to-orange-100 flex items-center justify-center text-3xl shadow-inner mb-1.5">
-          📝
-        </div>
-        <span class="text-xs font-bold text-slate-800 truncate w-full">คลังข้อสอบสภาฯ</span>
-        <span class="text-[9px] text-amber-600 font-bold mt-0.5 flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> ข้อสอบเสมือน
-        </span>
-      </a>
-
-      <!-- 3. เว็บไซต์วิทยาลัย -->
-      <a href="https://www.bcnchainat.ac.th" target="_blank" class="squircle-card bg-white p-3 flex flex-col items-center text-center relative border border-slate-100">
-        <div class="w-16 h-16 rounded-2xl bg-blue-50 flex items-center justify-center text-3xl shadow-inner mb-1.5">
-          🌐
-        </div>
-        <span class="text-xs font-bold text-slate-800 truncate w-full">เว็บวิทยาลัย</span>
-        <span class="text-[9px] text-blue-600 font-bold mt-0.5 flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> EXT
-        </span>
-      </a>
-
-      <!-- 4. FONMIS -->
-      <a href="https://fonmis.bcnchainat.ac.th" target="_blank" class="squircle-card bg-white p-3 flex flex-col items-center text-center relative border border-slate-100">
-        <div class="w-16 h-16 rounded-2xl bg-teal-50 flex items-center justify-center text-3xl shadow-inner mb-1.5">
-          📊
-        </div>
-        <span class="text-xs font-bold text-slate-800 truncate w-full">FONMIS</span>
-        <span class="text-[9px] text-teal-600 font-bold mt-0.5 flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> EXT
-        </span>
-      </a>
-
-      <!-- 5. ไปหน้าเช็คชื่อเข้าเวรโดยตรง -->
-      <a href="practicum.html" class="squircle-card bg-white p-3 flex flex-col items-center text-center relative border border-slate-100 cursor-pointer">
-        <span class="absolute top-1.5 right-1.5 px-1.5 py-0.2 rounded bg-purple-700 text-[8px] font-bold text-white">AUTH</span>
-        <div class="w-16 h-16 rounded-2xl bg-purple-50 flex items-center justify-center text-3xl shadow-inner mb-1.5">
-          👆
-        </div>
-        <span class="text-xs font-bold text-slate-800 truncate w-full">เข้าเวร/GPS</span>
-        <span class="text-[9px] text-purple-600 font-bold mt-0.5 flex items-center gap-1">
-          <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span> เรียลไทม์
-        </span>
-      </a>
-
-    </div>
-
-  </div>
-
-  <!-- Bottom Navigation Bar -->
-  <nav class="fixed bottom-3 inset-x-0 mx-auto max-w-[360px] glass-card rounded-full px-5 py-2.5 flex justify-between items-center z-40 shadow-xl border border-white/80">
-    <a href="index.html" class="flex flex-col items-center text-indigo-600 font-bold text-[10px]">
-      <i class="fa-solid fa-house text-base mb-0.5"></i>
-      <span>หน้าแรก</span>
-    </a>
-    <a href="exam.html" class="flex flex-col items-center text-slate-400 hover:text-slate-600 text-[10px]">
-      <i class="fa-solid fa-pencil text-base mb-0.5"></i>
-      <span>ทำข้อสอบ</span>
-    </a>
-    <a href="practicum.html" class="flex flex-col items-center text-slate-400 hover:text-slate-600 text-[10px]">
-      <i class="fa-solid fa-stethoscope text-base mb-0.5"></i>
-      <span>วอร์ดฝึก</span>
-    </a>
-    <button onclick="toggleAuthModal()" class="flex flex-col items-center text-slate-400 hover:text-slate-600 text-[10px]">
-      <i class="fa-solid fa-user-circle text-base mb-0.5"></i>
-      <span>บัญชี</span>
-    </button>
-  </nav>
-
-  <!-- Modal Login -->
-  <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-[32px] max-w-xs w-full p-6 text-center space-y-4 shadow-2xl border border-white">
-      <div class="w-14 h-14 mx-auto rounded-3xl bg-indigo-600 text-white flex items-center justify-center text-2xl shadow-lg shadow-indigo-500/30">
-        <i class="fa-solid fa-fingerprint"></i>
-      </div>
-      <div>
-        <h3 class="text-base font-bold text-slate-900">เข้าสู่ระบบ BCN Portal</h3>
-        <p class="text-xs text-slate-500 mt-1">กรอกรหัส PIN ประจำตัว หรือรหัสผ่านอาจารย์</p>
-      </div>
-
-      <div class="space-y-2 text-left">
-        <input type="password" id="loginPinInput" placeholder="กรอกรหัส PIN (เช่น 1039 หรือ 22122531)" class="w-full border rounded-xl p-2.5 text-xs font-bold text-center bg-slate-50 outline-none">
-        <button onclick="handlePinLogin()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs shadow-xs">
-          เข้าสู่ระบบ
+      <div class="grid grid-cols-2 gap-2 mt-4">
+        <button onclick="feedAction(30, 20)" class="py-2 px-3 bg-gradient-to-r from-rose-500 to-pink-600 rounded-xl font-bold text-xs shadow-md active:scale-95 transition">
+          🧪 ป้อนยา (-30🪙/+20 EXP)
+        </button>
+        <button onclick="feedAction(60, 50)" class="py-2 px-3 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl font-bold text-xs shadow-md active:scale-95 transition">
+          📜 อ่านตำรา (-60🪙/+50 EXP)
         </button>
       </div>
-
-      <button onclick="toggleAuthModal()" class="text-xs text-slate-400 hover:text-slate-600 font-semibold block w-full pt-1">
-        ยกเลิก
-      </button>
     </div>
+
+    <!-- ดันเจี้ยนข้อสอบ 8 วิชา -->
+    <div class="glass-box rounded-3xl p-4 space-y-3">
+      <div class="flex justify-between items-center border-b border-white/10 pb-2">
+        <h3 class="font-bold text-xs text-white">⚔️ ดันเจี้ยนข้อสอบ 8 วิชาสภาการพยาบาล</h3>
+        <span class="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-bold">+Coins & EXP</span>
+      </div>
+
+      <div class="flex gap-1 overflow-x-auto pb-1 text-xs">
+        <button onclick="loadQuestions('การพยาบาลผู้ใหญ่')" class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-bold whitespace-nowrap">ผู้ใหญ่</button>
+        <button onclick="loadQuestions('การพยาบาลมารดา ทารก และการผดุงครรภ์')" class="px-2.5 py-1 rounded-lg bg-white/10 text-slate-300 font-bold whitespace-nowrap">แม่และเด็ก</button>
+        <button onclick="loadQuestions('การพยาบาลเด็กและวัยรุ่น')" class="px-2.5 py-1 rounded-lg bg-white/10 text-slate-300 font-bold whitespace-nowrap">เด็ก</button>
+        <button onclick="loadQuestions('การพยาบาลอนามัยชุมชน')" class="px-2.5 py-1 rounded-lg bg-white/10 text-slate-300 font-bold whitespace-nowrap">ชุมชน</button>
+      </div>
+
+      <div id="quizBox" class="space-y-2.5">
+        <div class="p-4 text-center text-indigo-200 text-xs font-semibold">กำลังโหลดข้อสอบจากคลัง...</div>
+      </div>
+    </div>
+
   </div>
 
   <script>
@@ -210,72 +106,104 @@
       { lv: 4, name: "หมวกแถบดำวิชาชีพ", title: "ผู้พิชิตสภาการพยาบาล (Board Master)", icon: "🦸‍♀️", maxExp: 800 }
     ];
 
+    let currentStudentId = localStorage.getItem('current_student_id') || "STU-09";
+    let studentData = null;
+
     window.onload = function() {
-      const savedUser = localStorage.getItem('bcn_user_data');
-      if (savedUser) {
-        updateUI(JSON.parse(savedUser));
-      } else {
-        loadStudentData("STU-09");
-      }
+      loadStudentData();
+      loadQuestions('การพยาบาลผู้ใหญ่');
     };
 
-    async function loadStudentData(studentId) {
+    async function loadStudentData() {
       try {
-        const res = await fetch(`${API_URL}?action=getDashboard&studentId=${studentId}`);
+        const res = await fetch(`${API_URL}?action=getDashboard&studentId=${currentStudentId}`);
         const data = await res.json();
         if (data.studentInfo) {
-          localStorage.setItem('bcn_user_data', JSON.stringify(data.studentInfo));
+          studentData = data.studentInfo;
           updateUI(data.studentInfo);
         }
       } catch(e) {}
     }
 
     function updateUI(stu) {
-      document.getElementById('hubUserName').textContent = stu.name;
-      document.getElementById('hubUserYearTag').textContent = stu.group || "ปี 2";
-      document.getElementById('hubCoinDisplay').textContent = stu.coins || 0;
-
+      document.getElementById('coinDisplay').textContent = stu.coins || 0;
       const lv = stu.level || 1;
       const rank = CAP_RANKS[Math.min(lv - 1, CAP_RANKS.length - 1)];
-      document.getElementById('hubHeroRankTitle').textContent = `Rank: ${rank.name} (Lv.${lv})`;
-      document.getElementById('hubHeroNameText').textContent = rank.title;
-      document.getElementById('hubHeroEmoji').textContent = rank.icon;
-      document.getElementById('hubExpText').textContent = `${stu.exp || 0} / ${rank.maxExp} EXP`;
-      document.getElementById('hubExpBar').style.width = Math.min(100, Math.floor(((stu.exp || 0) / rank.maxExp) * 100)) + "%";
+      document.getElementById('rankBadgeText').textContent = `Rank: ${rank.name} (Lv.${lv})`;
+      document.getElementById('heroNameText').textContent = rank.title;
+      document.getElementById('heroEmoji').textContent = rank.icon;
+      document.getElementById('expTextDisplay').textContent = `${stu.exp || 0} / ${rank.maxExp} EXP`;
+      document.getElementById('expBarFill').style.width = Math.min(100, Math.floor(((stu.exp || 0) / rank.maxExp) * 100)) + "%";
     }
 
-    function toggleAuthModal() {
-      document.getElementById('loginModal').classList.toggle('hidden');
-    }
+    async function loadQuestions(sub) {
+      const container = document.getElementById('quizBox');
+      container.innerHTML = `<div class="p-4 text-center text-indigo-200 text-xs">กำลังโหลดข้อสอบ ${sub}...</div>`;
 
-    async function handlePinLogin() {
-      const pin = document.getElementById('loginPinInput').value.trim();
-      if (!pin) return;
-
-      if (pin === "22122531") {
-        sessionStorage.setItem('is_teacher', 'true');
-        window.location.href = "practicum.html";
-        return;
-      }
-
-      Swal.fire({ title: 'กำลังตรวจสอบ PIN...', didOpen: () => Swal.showLoading() });
       try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'loginByPinOnly', data: { pin: pin } })
-        });
-        const d = await res.json();
-        if (d.success) {
-          localStorage.setItem('bcn_user_data', JSON.stringify(d.student));
-          localStorage.setItem('current_student_id', d.student.studentId);
-          updateUI(d.student);
-          toggleAuthModal();
-          Swal.fire({ icon: 'success', title: `ยินดีต้อนรับ ${d.student.name}` });
-        } else {
-          Swal.fire({ icon: 'error', title: d.message });
+        const res = await fetch(`${API_URL}?action=getExamQuestions&subject=${encodeURIComponent(sub)}`);
+        const list = await res.json();
+        if (list.length === 0) {
+          container.innerHTML = `<div class="p-4 text-center text-indigo-200 text-xs">ยังไม่มีข้อสอบในหมวดนี้</div>`;
+          return;
         }
+
+        const q = list[0];
+        container.innerHTML = `
+          <div class="bg-white/10 p-3.5 rounded-2xl border border-white/10 space-y-2">
+            <div class="flex justify-between items-center text-[10px] font-bold text-amber-300">
+              <span>${q.subject}</span>
+              <span>+20 🪙 / +30 EXP</span>
+            </div>
+            <p class="text-xs text-white leading-relaxed font-semibold">${q.question}</p>
+            <div class="space-y-1.5 pt-1 text-xs">
+              <button onclick="checkAnswer('A', '${q.answer}', '${encodeURIComponent(q.explanation)}', '${encodeURIComponent(q.reference)}')" class="w-full text-left p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition">A. ${q.choiceA}</button>
+              <button onclick="checkAnswer('B', '${q.answer}', '${encodeURIComponent(q.explanation)}', '${encodeURIComponent(q.reference)}')" class="w-full text-left p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition">B. ${q.choiceB}</button>
+              <button onclick="checkAnswer('C', '${q.answer}', '${encodeURIComponent(q.explanation)}', '${encodeURIComponent(q.reference)}')" class="w-full text-left p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition">C. ${q.choiceC}</button>
+              <button onclick="checkAnswer('D', '${q.answer}', '${encodeURIComponent(q.explanation)}', '${encodeURIComponent(q.reference)}')" class="w-full text-left p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition">D. ${q.choiceD}</button>
+            </div>
+          </div>
+        `;
       } catch(e) {
-        Swal.fire({ icon: 'error', title: 'การเชื่อมต่อขัดข้อง' });
+        container.innerHTML = `<div class="p-4 text-center text-rose-400 text-xs">ไม่สามารถดึงข้อสอบได้</div>`;
+      }
+    }
+
+    async function checkAnswer(selected, correct, expEnc, refEnc) {
+      const exp = decodeURIComponent(expEnc);
+      const ref = decodeURIComponent(refEnc);
+
+      if (selected === correct) {
+        await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'submitExamResult', data: { studentId: currentStudentId, coins: 20, exp: 30 } })
+        });
+        loadStudentData();
+        Swal.fire({
+          icon: 'success',
+          title: 'ถูกต้อง! 🎉',
+          html: `<div class="text-left text-xs space-y-1 mt-2 text-slate-800"><p class="font-bold text-emerald-700 bg-emerald-50 p-2 rounded-lg">${exp}</p><p class="text-slate-500">อ้างอิง: ${ref}</p><div class="font-black text-amber-600 text-center pt-1">+20 Coins และ +30 EXP!</div></div>`
+        });
+      } else {
+        Swal.fire({
+          icon: 'error',
+          title: 'ยังไม่ถูกต้อง!',
+          html: `<div class="text-left text-xs space-y-1 mt-2 text-slate-800"><p class="font-bold text-rose-700 bg-rose-50 p-2 rounded-lg">เฉลยข้อ ${correct}</p><p>${exp}</p><p class="text-slate-500">อ้างอิง: ${ref}</p></div>`
+        });
+      }
+    }
+
+    async function feedAction(cost, addExp) {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'feedHeroPet', data: { studentId: currentStudentId, cost: cost, addExp: addExp } })
+      });
+      const d = await res.json();
+      if (d.success) {
+        Swal.fire({ icon: 'success', title: 'ป้อนพลังสำเร็จ!', text: `+${addExp} EXP สู่แถบหมวกขั้นถัดไป` });
+        loadStudentData();
+      } else {
+        Swal.fire({ icon: 'warning', title: d.message });
       }
     }
   </script>
