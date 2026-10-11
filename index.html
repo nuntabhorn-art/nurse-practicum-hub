@@ -11,9 +11,8 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
@@ -23,93 +22,117 @@
       -webkit-tap-highlight-color: transparent; 
     }
 
+    /* พื้นหลังพาสเทลออโรร่า */
     body {
-      background: radial-gradient(circle at 10% 20%, #dbeafe 0%, #ede9fe 40%, #fae8ff 75%, #fce7f3 100%);
+      background: radial-gradient(circle at 10% 20%, #cde5fc 0%, #ded7fc 38%, #f7d8fc 70%, #fde4f3 100%);
       min-height: 100vh;
       color: #1e293b;
+      overflow-x: hidden;
     }
 
-    /* กล่องข้อมูลบนสุด */
-    .top-user-card {
-      background: rgba(255, 255, 255, 0.92);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border-radius: 40px;
-      border: 2px solid rgba(255, 255, 255, 0.95);
-      box-shadow: 0 16px 36px -10px rgba(99, 102, 241, 0.12), inset 0 2px 3px rgba(255, 255, 255, 0.9);
+    /* แผงโปรไฟล์บนสุด */
+    .top-header-glass {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border-radius: 44px;
+      border: 2px solid rgba(255, 255, 255, 1);
+      box-shadow: 0 16px 36px -10px rgba(99, 102, 241, 0.12), inset 0 2px 4px rgba(255, 255, 255, 0.9);
     }
 
-    /* กล่องฮีโร่สีน้ำเงินเข้ม */
-    .hero-level-card {
-      background: linear-gradient(135deg, #231c62 0%, #1e1b4b 50%, #292468 100%);
-      border-radius: 40px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 20px 40px -8px rgba(30, 27, 75, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.25);
+    /* แผงฮีโร่ Rank สีน้ำเงินเข้มมันวาว สไตล์ Claymorphic */
+    .hero-rank-clay {
+      background: linear-gradient(135deg, #2b226e 0%, #1f1b4f 55%, #342d79 100%);
+      border-radius: 44px;
+      border: 2.5px solid rgba(255, 255, 255, 0.28);
+      box-shadow: 0 24px 48px -10px rgba(28, 24, 76, 0.55), inset 0 3px 6px rgba(255, 255, 255, 0.35);
     }
 
-    .exp-neon-track {
-      background: #141238;
-      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.6);
+    /* รางหลอดนีออนความก้าวหน้า */
+    .exp-track {
+      background: #110e35;
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.7);
     }
     .exp-neon-fill {
       background: linear-gradient(90deg, #00d2ff 0%, #00f2fe 50%, #4facfe 100%);
-      box-shadow: 0 0 16px #00f2fe;
+      box-shadow: 0 0 18px #00f2fe, 0 0 6px #00d2ff;
     }
 
-    /* กล่องไอคอนเมนู Squircle ขอบมนเงาเนียน */
-    .squircle-app-box {
-      border-radius: 36px;
+    /* การ์ดสี่เหลี่ยมมน 3D Squircle */
+    .squircle-card {
+      border-radius: 42px;
       background: #ffffff;
-      border: 2px solid rgba(255, 255, 255, 0.95);
-      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .squircle-app-box:hover {
+    .squircle-card:hover {
       transform: translateY(-8px);
     }
-    .squircle-app-box:active {
+    .squircle-card:active {
       transform: scale(0.96);
     }
 
-    .glow-red { box-shadow: 0 18px 32px -8px rgba(244, 63, 94, 0.22); }
-    .glow-orange { box-shadow: 0 18px 32px -8px rgba(249, 115, 22, 0.22); }
-    .glow-teal { box-shadow: 0 18px 32px -8px rgba(20, 184, 166, 0.22); }
-    .glow-blue { box-shadow: 0 18px 32px -8px rgba(59, 130, 246, 0.22); }
-    .glow-purple { box-shadow: 0 18px 32px -8px rgba(168, 85, 247, 0.22); }
+    /* แสงสะท้อนและขอบ Glow Border พาสเทลเฉพาะสี */
+    .glow-rose {
+      border: 2.5px solid #ffe4e6;
+      box-shadow: 0 22px 38px -8px rgba(244, 63, 94, 0.24), 0 0 0 1px rgba(244, 63, 94, 0.08);
+    }
+    .glow-amber {
+      border: 2.5px solid #ffedd5;
+      box-shadow: 0 22px 38px -8px rgba(249, 115, 22, 0.24), 0 0 0 1px rgba(249, 115, 22, 0.08);
+    }
+    .glow-teal {
+      border: 2.5px solid #ccfbf1;
+      box-shadow: 0 22px 38px -8px rgba(20, 184, 166, 0.24), 0 0 0 1px rgba(20, 184, 166, 0.08);
+    }
+    .glow-indigo {
+      border: 2.5px solid #e0e7ff;
+      box-shadow: 0 22px 38px -8px rgba(99, 102, 241, 0.24), 0 0 0 1px rgba(99, 102, 241, 0.08);
+    }
+    .glow-purple {
+      border: 2.5px solid #f3e8ff;
+      box-shadow: 0 22px 38px -8px rgba(168, 85, 247, 0.24), 0 0 0 1px rgba(168, 85, 247, 0.08);
+    }
 
-    /* แท่นจัดวางรูปภาพ ลบขอบเหลี่ยมคมทิ้ง ให้ขอบมนกลืนกับการ์ด */
-    .icon-wrapper {
-      border-radius: 28px;
-      overflow: hidden;
+    /* กลืนพื้นหลังขาวของรูปภาพให้อัตโนมัติ เนียนตา */
+    .blend-img {
+      mix-blend-mode: multiply;
+      filter: contrast(105%) brightness(102%);
+    }
+
+    /* แท่นจัดวางรูปภาพด้านใน */
+    .icon-box {
+      width: 100%;
+      height: 108px;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.04);
     }
 
-    .bottom-floating-bar {
-      background: rgba(255, 255, 255, 0.90);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
-      border: 2px solid rgba(255, 255, 255, 0.95);
-      box-shadow: 0 18px 38px -10px rgba(79, 70, 229, 0.16);
+    /* แถบล่างลอยตัวแคปซูล */
+    .bottom-bar {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border: 2px solid rgba(255, 255, 255, 0.98);
+      box-shadow: 0 20px 42px -10px rgba(79, 70, 229, 0.2);
     }
 
-    @keyframes softBob {
+    @keyframes floatChick {
       0%, 100% { transform: translateY(0px); }
       50% { transform: translateY(-4px); }
     }
-    .anim-bob { animation: softBob 2.5s ease-in-out infinite; }
+    .anim-chick { animation: floatChick 2.5s ease-in-out infinite; }
   </style>
 </head>
-<body class="flex flex-col justify-between items-center min-h-screen p-4 sm:p-6 md:p-8 select-none">
+<body class="flex flex-col justify-between items-center min-h-screen p-3 sm:p-6 md:p-8 select-none">
 
-  <!-- Dashboard Container -->
+  <!-- ================= Dashboard Container ================= -->
   <div class="w-full max-w-5xl mx-auto space-y-4 md:space-y-5">
 
     <!-- 1. แถบโปรไฟล์ผู้ใช้งานด้านบน -->
-    <div class="top-user-card p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-      <div class="flex items-center space-x-4 w-full sm:w-auto">
-        <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black text-xl shadow-md shrink-0">
+    <div class="top-header-glass p-3.5 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
+      <div class="flex items-center space-x-3 sm:space-x-4 w-full sm:w-auto">
+        <div class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black text-lg sm:text-xl shadow-md shrink-0">
           BCN
         </div>
         <div class="min-w-0 flex-1">
@@ -117,28 +140,28 @@
             สวัสดี, นศ.พย. ณัฐธิดา กลัดเงิน (นัดดี้)
           </div>
           <div class="flex items-center gap-1.5 text-xs text-slate-500 font-semibold mt-0.5">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
             <span id="dispUserYear">ชั้นปี: ปี 2 กลุ่ม 5</span>
           </div>
         </div>
       </div>
 
-      <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-3">
-        <button onclick="openLoginModal()" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 hover:opacity-95 text-white text-xs font-bold shadow-md shadow-sky-500/25 flex items-center gap-2 active:scale-95 transition">
-          <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
+      <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-2.5">
+        <button onclick="openLoginModal()" class="px-4 sm:px-5 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-sky-400 to-blue-600 hover:opacity-95 text-white text-xs font-bold shadow-md shadow-sky-500/25 flex items-center gap-2 active:scale-95 transition">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
           <span>เข้าสู่ระบบ (PIN / อาจารย์)</span>
         </button>
-        <span class="px-3.5 py-1.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200/80 text-xs font-black tracking-wide">
-          V2.4.0
+        <span class="px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200/80 text-xs font-black tracking-wide">
+          V2.1.0
         </span>
       </div>
     </div>
 
     <!-- 2. แถบเลเวลและแถบหมวกพยาบาล (Rank & EXP) -->
-    <div class="hero-level-card p-5 sm:p-6 text-white space-y-4 relative overflow-hidden">
+    <div class="hero-rank-clay p-4 sm:p-6 text-white space-y-3.5 sm:space-y-4 relative overflow-hidden">
       <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-3.5">
-          <div class="w-12 h-12 rounded-2xl bg-white/10 flex items-center justify-center text-3xl anim-bob shadow-inner">
+        <div class="flex items-center space-x-3 sm:space-x-3.5">
+          <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/10 flex items-center justify-center text-2xl sm:text-3xl anim-chick shadow-inner">
             🐣
           </div>
           <div>
@@ -151,9 +174,21 @@
           </div>
         </div>
 
-        <div class="flex items-center gap-2 bg-black/40 px-3.5 py-2 rounded-full border border-white/10">
-          <span class="w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center text-[10px] text-amber-950 font-black">🪙</span>
-          <i class="fa-solid fa-gear text-xs text-indigo-200"></i>
+        <!-- แคปซูลสวิตช์ 3D นูนเงา: เหรียญทอง + ฟันเฟืองสีรุ้งนีออน -->
+        <div class="flex items-center gap-2 bg-[#120f38] px-3 sm:px-3.5 py-1.5 rounded-full border border-white/20 shadow-inner">
+          <div class="w-5 h-5 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center text-[10px] text-amber-950 font-black shadow-md">
+            🪙
+          </div>
+          <svg class="w-5 h-5 cursor-pointer hover:rotate-90 transition-transform" viewBox="0 0 24 24">
+            <defs>
+              <linearGradient id="gearRainbow" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#22d3ee" />
+                <stop offset="50%" stop-color="#a855f7" />
+                <stop offset="100%" stop-color="#f43f5e" />
+              </linearGradient>
+            </defs>
+            <path fill="url(#gearRainbow)" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+          </svg>
         </div>
       </div>
 
@@ -162,24 +197,24 @@
           <span>ความก้าวหน้าสู่แถบหมวกขั้นถัดไป</span>
           <span id="expText" class="font-mono">0 / 150 EXP</span>
         </div>
-        <div class="w-full h-4 exp-neon-track rounded-full p-0.5 border border-white/15 overflow-hidden">
+        <div class="w-full h-3.5 sm:h-4 exp-track rounded-full p-0.5 border border-white/15 overflow-hidden">
           <div class="exp-neon-fill h-full rounded-full transition-all duration-700" style="width: 55%;"></div>
         </div>
       </div>
     </div>
 
-    <!-- 3. กริดไอคอนเมนู 5 ช่อง (ตรงตามชื่อไฟล์ใน GitHub เป๊ะ 100%) -->
+    <!-- 3. กริดไอคอนเมนู 5 ช่อง (เรียกไฟล์รูปภาพตามชื่อภาษาอังกฤษใหม่ตรงๆ 100%) -->
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 sm:gap-4 md:gap-5 pt-1">
 
-      <!-- ไอคอนที่ 1: ฝึกปฏิบัติบนวอร์ด -->
-      <div onclick="navigateTo('practicum.html')" class="squircle-app-box glow-red p-3 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px]">
-        <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-emerald-600 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
+      <!-- ไอคอนที่ 1: ฝึกปฏิบัติบนวอร์ด (icon-practicum.jpg) -->
+      <div onclick="navigateTo('practicum.html')" class="squircle-card glow-rose p-3.5 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[180px] sm:min-h-[195px]">
+        <span class="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 px-2 sm:px-2.5 py-0.5 rounded-full bg-emerald-600 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           ปี 2-3-4
         </span>
-        <div class="icon-wrapper w-24 h-24 sm:w-28 sm:h-28 my-auto">
-          <!-- ดึงไฟล์: เมนู ฝึกปฏิบัติบนวอร์ด.jpg -->
-          <img src="./%E0%B9%80%E0%B8%A1%E0%B8%99%E0%B8%B9%20%E0%B8%9D%E0%B8%B7%E0%B8%81%E0%B8%9B%E0%B8%8F%E0%B8%B4%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%9a%E0%B8%99%E0%B8%A7%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%94.jpg" 
-               alt="ฝึกปฏิบัติบนวอร์ด" class="w-full h-full object-cover">
+        <div class="icon-box">
+          <img src="icon-practicum.jpg" 
+               onerror="this.src='https://cdn-icons-png.flaticon.com/512/865/865969.png';"
+               alt="ฝึกปฏิบัติบนวอร์ด" class="w-20 h-20 sm:w-22 sm:h-22 object-contain blend-img drop-shadow-md">
         </div>
         <div class="w-full">
           <div class="text-xs sm:text-sm font-black text-slate-800 truncate">ฝึกปฏิบัติบนวอร์ด</div>
@@ -189,15 +224,15 @@
         </div>
       </div>
 
-      <!-- ไอคอนที่ 2: คลังข้อสอบสภาฯ (สลับใช้รูปข้อสอบ nv85) -->
-      <div onclick="navigateTo('exam.html')" class="squircle-app-box glow-orange p-3 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px]">
-        <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
+      <!-- ไอคอนที่ 2: คลังข้อสอบสภาฯ (icon-exam.jpg) -->
+      <div onclick="navigateTo('exam.html')" class="squircle-card glow-amber p-3.5 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[180px] sm:min-h-[195px]">
+        <span class="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 px-2 sm:px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           8 วิชา
         </span>
-        <div class="icon-wrapper w-24 h-24 sm:w-28 sm:h-28 my-auto">
-          <!-- ดึงไฟล์: Gemini_Generated_Image_nv85ennv85ennv85.jpg -->
-          <img src="./Gemini_Generated_Image_nv85ennv85ennv85.jpg" 
-               alt="คลังข้อสอบสภาฯ" class="w-full h-full object-cover">
+        <div class="icon-box">
+          <img src="icon-exam.jpg" 
+               onerror="this.src='https://cdn-icons-png.flaticon.com/512/2997/2997295.png';"
+               alt="คลังข้อสอบสภาฯ" class="w-20 h-20 sm:w-22 sm:h-22 object-contain blend-img drop-shadow-md">
         </div>
         <div class="w-full">
           <div class="text-xs sm:text-sm font-black text-slate-800 whitespace-nowrap">คลังข้อสอบสภาฯ</div>
@@ -207,46 +242,45 @@
         </div>
       </div>
 
-      <!-- ไอคอนที่ 3: เว็บวิทยาลัย (สลับใช้รูปตราวิทยาลัย in4c) -->
-      <a href="https://www.bcnchainat.ac.th" target="_blank" class="squircle-app-box glow-teal p-3 sm:p-4 flex flex-col items-center justify-between text-center relative min-h-[195px]">
-        <div class="icon-wrapper w-24 h-24 sm:w-28 sm:h-28 my-auto">
-          <!-- ดึงไฟล์: Gemini_Generated_Image_in4cq6in4cq6in4c.jpg -->
-          <img src="./Gemini_Generated_Image_in4cq6in4cq6in4c.jpg" 
-               alt="เว็บวิทยาลัย" class="w-full h-full object-cover">
+      <!-- ไอคอนที่ 3: เว็บวิทยาลัย (icon-web.jpg) -->
+      <a href="https://www.bcnchainat.ac.th" target="_blank" class="squircle-card glow-teal p-3.5 sm:p-5 flex flex-col items-center justify-between text-center relative min-h-[180px] sm:min-h-[195px]">
+        <div class="icon-box">
+          <img src="icon-web.jpg" 
+               onerror="this.src='https://cdn-icons-png.flaticon.com/512/1006/1006771.png';"
+               alt="เว็บวิทยาลัย" class="w-20 h-20 sm:w-22 sm:h-22 object-contain blend-img drop-shadow-md">
         </div>
         <div class="w-full">
           <div class="text-xs sm:text-sm font-black text-slate-800 truncate">เว็บวิทยาลัย</div>
-          <div class="text-[10px] text-blue-600 font-bold mt-0.5 flex items-center justify-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> EXT
-          </div>
-        </div>
-      </a>
-
-      <!-- ไอคอนที่ 4: FONMIS (ใช้รูป p8a8) -->
-      <a href="https://fonmis.bcnchainat.ac.th" target="_blank" class="squircle-app-box glow-blue p-3 sm:p-4 flex flex-col items-center justify-between text-center relative min-h-[195px]">
-        <div class="icon-wrapper w-24 h-24 sm:w-28 sm:h-28 my-auto">
-          <!-- ดึงไฟล์: Gemini_Generated_Image_p8a82xp8a82xp8a8.jpg -->
-          <img src="./Gemini_Generated_Image_p8a82xp8a82xp8a8.jpg" 
-               alt="FONMIS" class="w-full h-full object-cover">
-        </div>
-        <div class="w-full">
-          <div class="text-xs sm:text-sm font-black text-slate-800 truncate">FONMIS</div>
           <div class="text-[10px] text-teal-600 font-bold mt-0.5 flex items-center justify-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> EXT
           </div>
         </div>
       </a>
 
-      <!-- ไอคอนที่ 5: เข้าเวร/GPS (ตรงตามชื่อไฟล์ GPS AUTH).jpg บน GitHub) -->
-      <div onclick="navigateTo('practicum.html')" class="squircle-app-box glow-purple p-3 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px]">
-        <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-purple-700 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
+      <!-- ไอคอนที่ 4: FONMIS (icon-fonmis.jpg) -->
+      <a href="https://fonmis.bcnchainat.ac.th" target="_blank" class="squircle-card glow-indigo p-3.5 sm:p-5 flex flex-col items-center justify-between text-center relative min-h-[180px] sm:min-h-[195px]">
+        <div class="icon-box">
+          <img src="icon-fonmis.jpg" 
+               onerror="this.src='https://cdn-icons-png.flaticon.com/512/1802/1802977.png';"
+               alt="FONMIS" class="w-20 h-20 sm:w-22 sm:h-22 object-contain blend-img drop-shadow-md">
+        </div>
+        <div class="w-full">
+          <div class="text-xs sm:text-sm font-black text-slate-800 truncate">FONMIS</div>
+          <div class="text-[10px] text-indigo-600 font-bold mt-0.5 flex items-center justify-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span> EXT
+          </div>
+        </div>
+      </a>
+
+      <!-- ไอคอนที่ 5: เข้าเวร/GPS (icon-attendance.jpg) -->
+      <div onclick="navigateTo('practicum.html')" class="squircle-card glow-purple p-3.5 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[180px] sm:min-h-[195px] col-span-2 sm:col-span-1">
+        <span class="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 px-2 sm:px-2.5 py-0.5 rounded-full bg-purple-700 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           AUTH
         </span>
-        <div class="icon-wrapper w-24 h-24 sm:w-28 sm:h-28 my-auto">
-          <!-- ดึงไฟล์: GPS AUTH).jpg และเผื่อชื่อเดิม เข้าเวรGPS -->
-          <img src="./GPS%20AUTH).jpg" 
-               onerror="this.src='./%E0%B9%80%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B9%80%E0%B8%A7%E0%B8%A2GPS%20(%E0%B9%80%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%A5%E0%B9%84%E0%B8%97%E0%B8%A1%E0%B9%8C%20AUTH).jpg';"
-               alt="เข้าเวร/GPS" class="w-full h-full object-cover">
+        <div class="icon-box">
+          <img src="icon-attendance.jpg" 
+               onerror="this.src='https://cdn-icons-png.flaticon.com/512/3064/3064155.png';"
+               alt="เข้าเวร/GPS" class="w-20 h-20 sm:w-22 sm:h-22 object-contain blend-img drop-shadow-md">
         </div>
         <div class="w-full">
           <div class="text-xs sm:text-sm font-black text-slate-800 truncate">เข้าเวร/GPS</div>
@@ -260,33 +294,37 @@
 
   </div>
 
-  <!-- แถบเมนูล่างลอยตัว -->
-  <div class="fixed bottom-4 inset-x-0 mx-auto w-full max-w-[340px] px-2 z-40">
-    <nav class="bottom-floating-bar rounded-full px-5 py-2.5 flex justify-between items-center">
+  <!-- ================= 4. แถบเมนูลอยทรงแคปซูลด้านล่างสุด ================= -->
+  <div class="fixed bottom-3 sm:bottom-4 inset-x-0 mx-auto w-full max-w-[340px] px-2 z-40">
+    <nav class="bottom-bar rounded-full px-5 py-2 flex justify-between items-center shadow-xl">
+      <!-- 1. หน้าแรก -->
       <button onclick="window.location.reload()" class="flex flex-col items-center text-blue-600 font-bold text-[10px] group transition">
-        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mb-0.5 group-hover:scale-110 transition">
-          <i class="fa-solid fa-house text-sm"></i>
+        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mb-0.5 shadow-2xs group-hover:scale-110 transition">
+          <svg class="w-4 h-4 fill-blue-600" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         </div>
         <span>หน้าแรก</span>
       </button>
 
+      <!-- 2. คลังข้อสอบ -->
       <button onclick="navigateTo('exam.html')" class="flex flex-col items-center text-slate-400 hover:text-slate-700 font-medium text-[10px] group transition">
         <div class="w-8 h-8 rounded-full flex items-center justify-center mb-0.5 group-hover:bg-slate-100 transition">
-          <i class="fa-solid fa-pen-to-square text-sm"></i>
+          <svg class="w-4 h-4 fill-slate-500" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
         </div>
         <span>คลังข้อสอบ</span>
       </button>
 
+      <!-- 3. วอร์ดฝึก -->
       <button onclick="navigateTo('practicum.html')" class="flex flex-col items-center text-slate-400 hover:text-slate-700 font-medium text-[10px] group transition">
         <div class="w-8 h-8 rounded-full flex items-center justify-center mb-0.5 group-hover:bg-slate-100 transition">
-          <i class="fa-solid fa-stethoscope text-sm"></i>
+          <svg class="w-4 h-4 fill-slate-500" viewBox="0 0 24 24"><path d="M19 8c-1.66 0-3 1.34-3 3 0 .55.15 1.07.41 1.51L14.59 14.34C13.82 13.51 12.72 13 11.5 13H10v-3h1c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2s-2 .9-2 2v4c0 1.1.9 2 2 2h1v3H9.5c-1.22 0-2.32.51-3.09 1.34L4.59 12.51C4.85 12.07 5 11.55 5 11c0-1.66-1.34-3-3-3s-3 1.34-3 3 1.34 3 3 3c.55 0 1.07-.15 1.51-.41l1.82 1.82C6.15 16.03 7.74 17 9.5 17h5c1.76 0 3.35-.97 4.17-2.59l1.82-1.82c.44.26.96.41 1.51.41 1.66 0 3-1.34 3-3s-1.34-3-3-3z"/></svg>
         </div>
         <span>วอร์ดฝึก</span>
       </button>
 
+      <!-- 4. บัญชี -->
       <button onclick="openLoginModal()" class="flex flex-col items-center text-slate-400 hover:text-slate-700 font-medium text-[10px] group transition">
         <div class="w-8 h-8 rounded-full flex items-center justify-center mb-0.5 group-hover:bg-slate-100 transition">
-          <i class="fa-solid fa-user-circle text-sm"></i>
+          <svg class="w-4 h-4 fill-slate-500" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         </div>
         <span>บัญชี</span>
       </button>
@@ -297,7 +335,7 @@
   <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-[36px] max-w-xs w-full p-6 text-center space-y-4 shadow-2xl border border-white">
       <div class="w-14 h-14 mx-auto rounded-3xl bg-blue-600 text-white flex items-center justify-center text-2xl shadow-lg shadow-blue-500/30">
-        <i class="fa-solid fa-fingerprint"></i>
+        <svg class="w-7 h-7 fill-white" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
       </div>
       <div>
         <h3 class="text-base font-black text-slate-900">เข้าสู่ระบบ BCN CONNECT</h3>
