@@ -13,8 +13,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <!-- โหลด Font Awesome SVG + WebFonts เพื่อไม่ให้ไอคอนกลายเป็นสี่เหลี่ยมกลวง -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
@@ -24,14 +22,13 @@
       -webkit-tap-highlight-color: transparent; 
     }
 
-    /* พื้นหลังออโรร่าพาสเทล ละมุนตาตรงตามภาพ */
     body {
       background: radial-gradient(circle at 10% 20%, #dbeafe 0%, #ede9fe 40%, #fae8ff 75%, #fce7f3 100%);
       min-height: 100vh;
       color: #1e293b;
     }
 
-    /* กล่องข้อมูลบนสุด - นูนแสงสีขาวพร้อมขอบเงาฟุ้ง */
+    /* กล่องข้อมูลโปรไฟล์บนสุด */
     .top-user-card {
       background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(24px);
@@ -41,27 +38,27 @@
       box-shadow: 0 16px 36px -10px rgba(99, 102, 241, 0.12), inset 0 2px 3px rgba(255, 255, 255, 0.9);
     }
 
-    /* แถบฮีโร่สีน้ำเงินเข้มลึก สไตล์ 3D Claymorphic เงาวาว */
+    /* แถบฮีโร่ Claymorphism มิตินูนลึกผิวมันวาว */
     .hero-level-card {
-      background: linear-gradient(135deg, #251e66 0%, #1c184c 50%, #2b256d 100%);
-      border-radius: 42px;
-      border: 2px solid rgba(255, 255, 255, 0.22);
-      box-shadow: 0 24px 48px -10px rgba(28, 24, 76, 0.5), inset 0 2.5px 4px rgba(255, 255, 255, 0.35);
+      background: linear-gradient(135deg, #241c69 0%, #1c184c 50%, #2b256d 100%);
+      border-radius: 44px;
+      border: 2.5px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 22px 45px -10px rgba(24, 20, 68, 0.55), inset 0 3px 6px rgba(255, 255, 255, 0.35);
     }
 
     /* รางหลอดนีออนความก้าวหน้า */
     .exp-neon-track {
-      background: #121035;
-      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.65);
+      background: #110e33;
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.7);
     }
     .exp-neon-fill {
       background: linear-gradient(90deg, #00d2ff 0%, #00f2fe 50%, #4facfe 100%);
       box-shadow: 0 0 18px #00f2fe, 0 0 6px #00d2ff;
     }
 
-    /* การ์ดสี่เหลี่ยมมน Squircle App Box */
+    /* การ์ดสี่เหลี่ยมมน 3D Squircle ขอบมนพิเศษ */
     .squircle-app-box {
-      border-radius: 38px;
+      border-radius: 40px;
       background: #ffffff;
       transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
@@ -72,7 +69,7 @@
       transform: scale(0.96);
     }
 
-    /* เงาเรืองแสงสีพาสเทลเฉพาะการ์ดแต่ละใบตามภาพต้นฉบับ */
+    /* แสงสะท้อนและขอบ Glow Border พาสเทลตรงตามภาพต้นแบบ */
     .card-glow-1 {
       border: 2.5px solid #ffe4e6;
       box-shadow: 0 20px 35px -8px rgba(244, 63, 94, 0.22), 0 0 0 1px rgba(244, 63, 94, 0.08);
@@ -94,19 +91,22 @@
       box-shadow: 0 20px 35px -8px rgba(168, 85, 247, 0.22), 0 0 0 1px rgba(168, 85, 247, 0.08);
     }
 
-    /* 🔥 เทคนิคสำคัญ: ลบพื้นหลังสีขาวของรูปภาพออกอัตโนมัติ ให้เหลือเฉพาะตัว 3D เนียนสนิท */
-    .blend-transparent-img {
-      mix-blend-mode: multiply;
-      filter: contrast(105%) brightness(102%);
+    /* แท่นจัดวางรูปภาพ 3D ป้องกันรอยตัดขอบ */
+    .icon-stage {
+      width: 100%;
+      height: 100px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     /* แถบเมนูลอยล่างสุด */
     .bottom-floating-bar {
-      background: rgba(255, 255, 255, 0.94);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(28px);
       -webkit-backdrop-filter: blur(28px);
-      border: 2px solid rgba(255, 255, 255, 0.95);
-      box-shadow: 0 20px 42px -10px rgba(79, 70, 229, 0.18);
+      border: 2px solid rgba(255, 255, 255, 0.98);
+      box-shadow: 0 20px 42px -10px rgba(79, 70, 229, 0.2);
     }
 
     @keyframes softBob {
@@ -140,7 +140,8 @@
 
       <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-3">
         <button onclick="openLoginModal()" class="px-5 py-2.5 rounded-full bg-gradient-to-r from-sky-500 to-blue-600 hover:opacity-95 text-white text-xs font-bold shadow-md shadow-sky-500/25 flex items-center gap-2 active:scale-95 transition">
-          <i class="fa-solid fa-cloud-arrow-up text-sm"></i>
+          <!-- ไอคอน SVG ปลอดภัย ไม่ขึ้นสี่เหลี่ยมกลวง -->
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
           <span>เข้าสู่ระบบ (PIN / อาจารย์)</span>
         </button>
         <span class="px-3.5 py-1.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200/80 text-xs font-black tracking-wide">
@@ -166,10 +167,22 @@
           </div>
         </div>
 
-        <!-- ปุ่มไอคอนเหรียญและฟันเฟืองสีรุ้งครบสมบูรณ์ -->
-        <div class="flex items-center gap-2.5 bg-black/40 px-3.5 py-2 rounded-full border border-white/10 shadow-inner">
-          <span class="w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center text-[10px] text-amber-950 font-black shadow-xs">🪙</span>
-          <i class="fa-solid fa-gear text-sm text-cyan-300 hover:rotate-90 transition-transform cursor-pointer"></i>
+        <!-- แคปซูลสวิตช์ 3D นูนเงา: เหรียญทองคู่กับฟันเฟืองสีรุ้งนีออนตามต้นฉบับ -->
+        <div class="flex items-center gap-2 bg-[#120f38] px-3.5 py-1.5 rounded-full border border-white/20 shadow-inner">
+          <div class="w-5 h-5 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center text-[10px] text-amber-950 font-black shadow-md">
+            🪙
+          </div>
+          <!-- ไอคอนเฟืองสีรุ้ง SVG คมชัด -->
+          <svg class="w-5 h-5 cursor-pointer hover:rotate-90 transition-transform" viewBox="0 0 24 24">
+            <defs>
+              <linearGradient id="rainbowGear" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#22d3ee" />
+                <stop offset="50%" stop-color="#a855f7" />
+                <stop offset="100%" stop-color="#f43f5e" />
+              </linearGradient>
+            </defs>
+            <path fill="url(#rainbowGear)" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
+          </svg>
         </div>
       </div>
 
@@ -184,18 +197,27 @@
       </div>
     </div>
 
-    <!-- 3. กริดไอคอนเมนู 5 ช่อง (ลบขอบขาวเนียนสนิท ไร้รอยต่อ สีสันตามต้นฉบับ) -->
+    <!-- 3. กริดไอคอนเมนู 5 ช่อง (ขอบมน แสงสะท้อนพาสเทล และภาพตรงตามต้นแบบเป๊ะ) -->
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 md:gap-5 pt-1">
 
-      <!-- ไอคอนที่ 1: ฝึกปฏิบัติบนวอร์ด (หัวใจ EKG 3D) -->
+      <!-- ไอคอนที่ 1: ฝึกปฏิบัติบนวอร์ด (หัวใจ 3D คลื่นไฟฟ้าสีแดงเงาวาว) -->
       <div onclick="navigateTo('practicum.html')" class="squircle-app-box card-glow-1 p-4 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px]">
         <span class="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-emerald-600 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           ปี 2-3-4
         </span>
-        <div class="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-1 my-auto overflow-hidden">
-          <img src="./เมนู%20ฝึกปฏิบัติบนวอร์ด.jpg" 
-               onerror="this.src='./เมนู ฝึกปฏิบัติบนวอร์ด.jpg'; this.onerror=function(){this.src='https://cdn-icons-png.flaticon.com/512/865/865969.png';}"
-               alt="ฝึกปฏิบัติบนวอร์ด" class="w-full h-full object-contain blend-transparent-img drop-shadow-md">
+        <div class="icon-stage">
+          <!-- 3D Heart with Pulse EKG Render -->
+          <svg class="w-20 h-20 filter drop-shadow-[0_8px_16px_rgba(244,63,94,0.35)]" viewBox="0 0 100 100">
+            <defs>
+              <linearGradient id="heart3D" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#ff6b8b" />
+                <stop offset="50%" stop-color="#f43f5e" />
+                <stop offset="100%" stop-color="#be123c" />
+              </linearGradient>
+            </defs>
+            <path fill="url(#heart3D)" d="M50 85s-32-20-40-38c-8-18 6-32 20-30 8 1 15 7 20 14 5-7 12-13 20-14 14-2 28 12 20 30-8 18-40 38-40 38z"/>
+            <path fill="none" stroke="#ffffff" stroke-width="4.5" stroke-linecap="round" stroke-linejoin="round" d="M22 50h14l6-12 8 24 6-16 6 8h16" opacity="0.95"/>
+          </svg>
         </div>
         <div class="w-full">
           <div class="text-xs sm:text-sm font-black text-slate-800 truncate">ฝึกปฏิบัติบนวอร์ด</div>
@@ -205,14 +227,30 @@
         </div>
       </div>
 
-      <!-- ไอคอนที่ 2: คลังข้อสอบสภาฯ (ลูกบาสเกตบอล & คลิปบอร์ดข้อสอบ) -->
+      <!-- ไอคอนที่ 2: คลังข้อสอบสภาฯ (ลูกบาสเกตบอล 3D ส้มทองคู่กับคลิปบอร์ดข้อสอบ) -->
       <div onclick="navigateTo('exam.html')" class="squircle-app-box card-glow-2 p-4 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px]">
         <span class="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           8 วิชา
         </span>
-        <div class="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-1 my-auto overflow-hidden">
-          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Basketball.png" 
-               alt="คลังข้อสอบสภาฯ" class="w-full h-full object-contain drop-shadow-md">
+        <div class="icon-stage relative">
+          <!-- 3D Basketball with Exam Sheet -->
+          <svg class="w-20 h-20 filter drop-shadow-[0_8px_16px_rgba(249,115,22,0.35)]" viewBox="0 0 100 100">
+            <defs>
+              <linearGradient id="basket3D" x1="20%" y1="20%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fb923c" />
+                <stop offset="60%" stop-color="#ea580c" />
+                <stop offset="100%" stop-color="#9a3412" />
+              </linearGradient>
+            </defs>
+            <circle cx="44" cy="50" r="34" fill="url(#basket3D)" />
+            <path stroke="#431407" stroke-width="3" fill="none" d="M10 50h68 M44 16v68 M22 26c12 12 12 36 0 48 M66 26c-12 12-12 36 0 48" opacity="0.8"/>
+            <!-- การ์ดคลิปบอร์ด -->
+            <rect x="52" y="44" width="28" height="36" rx="6" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+            <rect x="58" y="40" width="16" height="6" rx="2" fill="#94a3b8"/>
+            <line x1="58" y1="54" x2="74" y2="54" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="58" y1="62" x2="74" y2="62" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round"/>
+            <line x1="58" y1="70" x2="68" y2="70" stroke="#f97316" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
         </div>
         <div class="w-full">
           <div class="text-xs sm:text-sm font-black text-slate-800 whitespace-nowrap">คลังข้อสอบสภาฯ</div>
@@ -222,11 +260,26 @@
         </div>
       </div>
 
-      <!-- ไอคอนที่ 3: เว็บวิทยาลัย (ลูกโลก 3D สีฟ้าคราม-ม่วง) -->
+      <!-- ไอคอนที่ 3: เว็บวิทยาลัย (ลูกโลกดิจิทัล 3D สีฟ้าคราม-ม่วง) -->
       <a href="https://www.bcnchainat.ac.th" target="_blank" class="squircle-app-box card-glow-3 p-4 sm:p-5 flex flex-col items-center justify-between text-center relative min-h-[195px]">
-        <div class="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-1 my-auto overflow-hidden">
-          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Globe%20with%20Meridians.png" 
-               alt="เว็บวิทยาลัย" class="w-full h-full object-contain drop-shadow-md">
+        <div class="icon-stage">
+          <!-- 3D Globe with Rings -->
+          <svg class="w-20 h-20 filter drop-shadow-[0_8px_16px_rgba(20,184,166,0.35)]" viewBox="0 0 100 100">
+            <defs>
+              <linearGradient id="globe3D" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#67e8f9" />
+                <stop offset="50%" stop-color="#06b6d4" />
+                <stop offset="100%" stop-color="#0284c7" />
+              </linearGradient>
+            </defs>
+            <circle cx="50" cy="50" r="34" fill="url(#globe3D)" />
+            <ellipse cx="50" cy="50" rx="34" ry="14" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.8"/>
+            <ellipse cx="50" cy="50" rx="14" ry="34" fill="none" stroke="#ffffff" stroke-width="3" opacity="0.8"/>
+            <line x1="16" y1="50" x2="84" y2="50" stroke="#ffffff" stroke-width="3" opacity="0.8"/>
+            <!-- จุดวงโคจรดิจิทัล -->
+            <circle cx="78" cy="40" r="4" fill="#a5f3fc" />
+            <circle cx="22" cy="60" r="4" fill="#a5f3fc" />
+          </svg>
         </div>
         <div class="w-full">
           <div class="text-xs sm:text-sm font-black text-slate-800 truncate">เว็บวิทยาลัย</div>
@@ -238,9 +291,27 @@
 
       <!-- ไอคอนที่ 4: FONMIS (มอนิเตอร์และ Dashboard สถิติ 3D) -->
       <a href="https://fonmis.bcnchainat.ac.th" target="_blank" class="squircle-app-box card-glow-4 p-4 sm:p-5 flex flex-col items-center justify-between text-center relative min-h-[195px]">
-        <div class="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-1 my-auto overflow-hidden">
-          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Bar%20Chart.png" 
-               alt="FONMIS" class="w-full h-full object-contain drop-shadow-md">
+        <div class="icon-stage">
+          <!-- 3D Monitor with Analytics Chart -->
+          <svg class="w-20 h-20 filter drop-shadow-[0_8px_16px_rgba(99,102,241,0.35)]" viewBox="0 0 100 100">
+            <defs>
+              <linearGradient id="mon3D" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#818cf8" />
+                <stop offset="100%" stop-color="#4f46e5" />
+              </linearGradient>
+            </defs>
+            <!-- จอภาพ -->
+            <rect x="18" y="22" width="64" height="46" rx="8" fill="url(#mon3D)"/>
+            <rect x="22" y="26" width="56" height="38" rx="5" fill="#1e1b4b"/>
+            <!-- กราฟแท่งในจอ -->
+            <rect x="28" y="46" width="6" height="14" rx="2" fill="#ec4899"/>
+            <rect x="38" y="38" width="6" height="22" rx="2" fill="#38bdf8"/>
+            <rect x="48" y="42" width="6" height="18" rx="2" fill="#a855f7"/>
+            <circle cx="64" cy="45" r="7" fill="#fbbf24"/>
+            <!-- ขาตั้งจอ -->
+            <path d="M46 68h8v12h-8z" fill="#cbd5e1"/>
+            <rect x="36" y="80" width="28" height="5" rx="2.5" fill="#94a3b8"/>
+          </svg>
         </div>
         <div class="w-full">
           <div class="text-xs sm:text-sm font-black text-slate-800 truncate">FONMIS</div>
@@ -255,10 +326,29 @@
         <span class="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-purple-700 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           AUTH
         </span>
-        <div class="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-1 my-auto overflow-hidden">
-          <!-- ใช้ภาพแม่กุญแจเงาวาว 3D สีม่วงตามภาพต้นแบบ -->
-          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Locked.png" 
-               alt="เข้าเวร/GPS" class="w-full h-full object-contain drop-shadow-md">
+        <div class="icon-stage">
+          <!-- 3D Glossy Lock Padlock -->
+          <svg class="w-20 h-20 filter drop-shadow-[0_8px_16px_rgba(168,85,247,0.35)]" viewBox="0 0 100 100">
+            <defs>
+              <linearGradient id="shackleGold" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#fde047" />
+                <stop offset="50%" stop-color="#eab308" />
+                <stop offset="100%" stop-color="#ca8a04" />
+              </linearGradient>
+              <linearGradient id="bodyPurple" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" stop-color="#c084fc" />
+                <stop offset="50%" stop-color="#9333ea" />
+                <stop offset="100%" stop-color="#6b21a8" />
+              </linearGradient>
+            </defs>
+            <!-- ห่วงคล้องทองคำ -->
+            <path d="M34 46V30c0-8.8 7.2-16 16-16s16 7.2 16 16v16" fill="none" stroke="url(#shackleGold)" stroke-width="8" stroke-linecap="round"/>
+            <!-- ตัวแม่กุญแจสีม่วงเงา -->
+            <rect x="24" y="44" width="52" height="42" rx="14" fill="url(#bodyPurple)"/>
+            <!-- รูกุญแจ -->
+            <circle cx="50" cy="62" r="5" fill="#1e1b4b"/>
+            <polygon points="48,64 52,64 54,74 46,74" fill="#1e1b4b"/>
+          </svg>
         </div>
         <div class="w-full">
           <div class="text-xs sm:text-sm font-black text-slate-800 truncate">เข้าเวร/GPS</div>
@@ -272,13 +362,13 @@
 
   </div>
 
-  <!-- ================= 4. แถบเมนูลอยทรงแคปซูลด้านล่างสุด (ไอคอนแสดงผลสมบูรณ์) ================= -->
+  <!-- ================= 4. แถบเมนูลอยทรงแคปซูลด้านล่างสุด (SVG แท้ ไม่หลุด ไม่กลวง) ================= -->
   <div class="fixed bottom-4 inset-x-0 mx-auto w-full max-w-[340px] px-2 z-40">
     <nav class="bottom-floating-bar rounded-full px-5 py-2 flex justify-between items-center shadow-xl">
       <!-- 1. หน้าแรก -->
       <button onclick="window.location.reload()" class="flex flex-col items-center text-blue-600 font-bold text-[10px] group transition">
         <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mb-0.5 shadow-2xs group-hover:scale-110 transition">
-          <i class="fa-solid fa-house text-sm"></i>
+          <svg class="w-4 h-4 fill-blue-600" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
         </div>
         <span>หน้าแรก</span>
       </button>
@@ -286,7 +376,7 @@
       <!-- 2. คลังข้อสอบ -->
       <button onclick="navigateTo('exam.html')" class="flex flex-col items-center text-slate-400 hover:text-slate-700 font-medium text-[10px] group transition">
         <div class="w-8 h-8 rounded-full flex items-center justify-center mb-0.5 group-hover:bg-slate-100 transition">
-          <i class="fa-solid fa-pencil text-sm"></i>
+          <svg class="w-4 h-4 fill-slate-500" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
         </div>
         <span>คลังข้อสอบ</span>
       </button>
@@ -294,7 +384,7 @@
       <!-- 3. วอร์ดฝึก -->
       <button onclick="navigateTo('practicum.html')" class="flex flex-col items-center text-slate-400 hover:text-slate-700 font-medium text-[10px] group transition">
         <div class="w-8 h-8 rounded-full flex items-center justify-center mb-0.5 group-hover:bg-slate-100 transition">
-          <i class="fa-solid fa-stethoscope text-sm"></i>
+          <svg class="w-4 h-4 fill-slate-500" viewBox="0 0 24 24"><path d="M19 8c-1.66 0-3 1.34-3 3 0 .55.15 1.07.41 1.51L14.59 14.34C13.82 13.51 12.72 13 11.5 13H10v-3h1c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2s-2 .9-2 2v4c0 1.1.9 2 2 2h1v3H9.5c-1.22 0-2.32.51-3.09 1.34L4.59 12.51C4.85 12.07 5 11.55 5 11c0-1.66-1.34-3-3-3s-3 1.34-3 3 1.34 3 3 3c.55 0 1.07-.15 1.51-.41l1.82 1.82C6.15 16.03 7.74 17 9.5 17h5c1.76 0 3.35-.97 4.17-2.59l1.82-1.82c.44.26.96.41 1.51.41 1.66 0 3-1.34 3-3s-1.34-3-3-3z"/></svg>
         </div>
         <span>วอร์ดฝึก</span>
       </button>
@@ -302,7 +392,7 @@
       <!-- 4. บัญชี -->
       <button onclick="openLoginModal()" class="flex flex-col items-center text-slate-400 hover:text-slate-700 font-medium text-[10px] group transition">
         <div class="w-8 h-8 rounded-full flex items-center justify-center mb-0.5 group-hover:bg-slate-100 transition">
-          <i class="fa-solid fa-user text-sm"></i>
+          <svg class="w-4 h-4 fill-slate-500" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
         </div>
         <span>บัญชี</span>
       </button>
@@ -313,7 +403,7 @@
   <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-[36px] max-w-xs w-full p-6 text-center space-y-4 shadow-2xl border border-white">
       <div class="w-14 h-14 mx-auto rounded-3xl bg-blue-600 text-white flex items-center justify-center text-2xl shadow-lg shadow-blue-500/30">
-        <i class="fa-solid fa-fingerprint"></i>
+        <svg class="w-7 h-7 fill-white" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
       </div>
       <div>
         <h3 class="text-base font-black text-slate-900">เข้าสู่ระบบ BCN CONNECT</h3>
