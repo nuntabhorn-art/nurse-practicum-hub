@@ -6,91 +6,132 @@
   <title>BCN Arena - คลังข้อสอบ 8 วิชาสภาการพยาบาล</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
-    * { font-family: 'Prompt', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-    body { background: linear-gradient(180deg, #1e1b4b 0%, #312e81 40%, #0f172a 100%); min-height: 100vh; color: white; font-size: 14px; }
-    .glass-box { background: rgba(255, 255, 255, 0.1); backdrop-filter: blur(16px); border: 1px solid rgba(255, 255, 255, 0.2); }
+    * { 
+      font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif !important; 
+      box-sizing: border-box; 
+      -webkit-tap-highlight-color: transparent; 
+    }
+    body { 
+      background: radial-gradient(circle at 50% 10%, #2e266f 0%, #1a1642 50%, #0d0b24 100%); 
+      min-height: 100vh; 
+      color: white; 
+      font-size: 14px; 
+    }
+    .glass-box { 
+      background: rgba(255, 255, 255, 0.08); 
+      backdrop-filter: blur(20px); 
+      -webkit-backdrop-filter: blur(20px);
+      border: 1.5px solid rgba(255, 255, 255, 0.18); 
+      box-shadow: 0 16px 36px -10px rgba(0, 0, 0, 0.5);
+    }
     @keyframes floatHero {
       0%, 100% { transform: translateY(0px) scale(1); }
       50% { transform: translateY(-8px) scale(1.02); }
     }
     .hero-float { animation: floatHero 2.5s ease-in-out infinite; }
+    
+    .subject-tab-active {
+      background: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%) !important;
+      color: #ffffff !important;
+      border-color: rgba(255, 255, 255, 0.4) !important;
+      box-shadow: 0 4px 12px rgba(6, 182, 212, 0.35);
+    }
+    .mobile-scroll::-webkit-scrollbar { height: 4px; }
+    .mobile-scroll::-webkit-scrollbar-thumb { background: rgba(255, 255, 255, 0.2); border-radius: 9999px; }
   </style>
 </head>
-<body class="flex justify-center items-start pb-24">
+<body class="flex justify-center items-start pb-24 select-none">
 
-  <div class="w-full max-w-md p-4 space-y-4">
+  <div class="w-full max-w-lg p-3 sm:p-5 space-y-4">
     
-    <!-- Header -->
-    <div class="flex justify-between items-center bg-black/40 backdrop-blur-md p-3 rounded-2xl border border-white/10 shadow-lg">
-      <div class="flex items-center gap-2">
-        <a href="index.html" class="w-7 h-7 rounded-lg bg-white/20 flex items-center justify-center text-xs mr-1 text-white">
-          <i class="fa-solid fa-arrow-left"></i>
+    <!-- ส่วนหัว Header ด้านบน -->
+    <div class="flex justify-between items-center bg-white/10 backdrop-blur-md p-3 rounded-2xl border border-white/15 shadow-lg">
+      <div class="flex items-center gap-2.5">
+        <a href="index.html" class="w-8 h-8 rounded-xl bg-white/15 hover:bg-white/25 flex items-center justify-center text-white transition active:scale-95">
+          <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
         </a>
-        <span class="font-extrabold text-sm text-amber-300">NURSE HERO ROV</span>
+        <div>
+          <span class="font-black text-sm text-amber-300 tracking-wide block leading-tight">NURSE HERO ARENA</span>
+          <span class="text-[10px] text-indigo-200">คลังข้อสอบ 8 วิชาสภาการพยาบาล</span>
+        </div>
       </div>
-      <div class="flex items-center gap-2 text-xs font-bold">
-        <span class="px-3 py-1 bg-amber-500/30 border border-amber-400 rounded-full text-amber-300">
-          🪙 <span id="coinDisplay">0</span>
+      <div class="flex items-center gap-2 text-xs font-black">
+        <span class="px-3 py-1 bg-amber-500/25 border border-amber-400/50 rounded-full text-amber-300 flex items-center gap-1.5 shadow-sm">
+          <span>🪙</span> <span id="coinDisplay">0</span>
         </span>
       </div>
     </div>
 
-    <!-- ลานโชว์ตัวละครฮีโร่ / แถบหมวกวิชาชีพ -->
-    <div class="glass-box rounded-3xl p-5 text-center relative overflow-hidden shadow-2xl">
-      <div class="inline-block px-3 py-1 bg-indigo-600/60 rounded-full text-xs font-black border border-indigo-400/50 mb-2">
+    <!-- บัตรตัวละครฮีโร่และระดับหมวกพยาบาล (Tamagotchi Leveling) -->
+    <div class="glass-box rounded-3xl p-5 text-center relative overflow-hidden">
+      <div class="inline-block px-3.5 py-1 bg-indigo-600/70 rounded-full text-xs font-black border border-indigo-400/50 mb-2 shadow-sm">
         <span id="rankBadgeText">Rank: หมวกขาวล้วน (Lv.1)</span>
       </div>
 
-      <div class="w-28 h-28 mx-auto my-1 flex items-center justify-center hero-float">
-        <div id="heroEmoji" class="text-6xl filter drop-shadow-[0_10px_20px_rgba(99,102,241,0.5)]">
+      <div class="w-24 h-24 mx-auto my-1 flex items-center justify-center hero-float">
+        <div id="heroEmoji" class="text-6xl filter drop-shadow-[0_12px_24px_rgba(99,102,241,0.6)]">
           🐣
         </div>
       </div>
 
       <h2 id="heroNameText" class="text-base font-black text-white">น้องพยาบาลฝึกหัด</h2>
-      <p class="text-xs text-indigo-200 mt-0.5">ตอบข้อสอบสะสม Coins เพื่ออัปเกรดแถบหมวกวิชาชีพ!</p>
+      <p class="text-xs text-indigo-200 mt-0.5">ตอบข้อสอบสะสม Coins เพื่ออัปเกรดแถบหมวกวิชาชีพ</p>
 
-      <div class="mt-3 text-left">
-        <div class="flex justify-between text-[10px] font-bold text-indigo-200 mb-1">
+      <!-- หลอดความก้าวหน้า EXP -->
+      <div class="mt-3.5 text-left">
+        <div class="flex justify-between text-[11px] font-bold text-indigo-200 mb-1">
           <span>ความก้าวหน้าสู่แถบหมวกขั้นถัดไป</span>
-          <span id="expTextDisplay">0 / 150 EXP</span>
+          <span id="expTextDisplay" class="font-mono">0 / 150 EXP</span>
         </div>
-        <div class="w-full bg-black/40 h-2.5 rounded-full overflow-hidden p-0.5 border border-white/10">
-          <div id="expBarFill" class="bg-gradient-to-r from-amber-400 to-emerald-400 h-full rounded-full transition-all duration-500" style="width: 10%;"></div>
+        <div class="w-full bg-black/50 h-3 rounded-full overflow-hidden p-0.5 border border-white/15">
+          <div id="expBarFill" class="bg-gradient-to-r from-cyan-400 via-teal-300 to-emerald-400 h-full rounded-full transition-all duration-500 shadow-sm" style="width: 15%;"></div>
         </div>
       </div>
 
-      <div class="grid grid-cols-2 gap-2 mt-4">
-        <button onclick="feedAction(30, 20)" class="py-2 px-3 bg-gradient-to-r from-rose-500 to-pink-600 rounded-xl font-bold text-xs shadow-md active:scale-95 transition">
-          🧪 ป้อนยา (-30🪙/+20 EXP)
+      <!-- ปุ่มฟื้นฟู/ป้อนอาหารตัวละคร -->
+      <div class="grid grid-cols-2 gap-2.5 mt-4">
+        <button onclick="feedAction(30, 20)" class="py-2.5 px-3 bg-gradient-to-r from-rose-500 to-pink-600 hover:opacity-95 rounded-2xl font-bold text-xs shadow-md active:scale-95 transition flex items-center justify-center gap-1.5">
+          <span>🧪</span> <span>ป้อนยา (-30🪙/+20 EXP)</span>
         </button>
-        <button onclick="feedAction(60, 50)" class="py-2 px-3 bg-gradient-to-r from-amber-500 to-orange-600 rounded-xl font-bold text-xs shadow-md active:scale-95 transition">
-          📜 อ่านตำรา (-60🪙/+50 EXP)
+        <button onclick="feedAction(60, 50)" class="py-2.5 px-3 bg-gradient-to-r from-amber-500 to-orange-600 hover:opacity-95 rounded-2xl font-bold text-xs shadow-md active:scale-95 transition flex items-center justify-center gap-1.5">
+          <span>📜</span> <span>อ่านตำรา (-60🪙/+50 EXP)</span>
         </button>
       </div>
     </div>
 
-    <!-- ดันเจี้ยนข้อสอบ 8 วิชา -->
-    <div class="glass-box rounded-3xl p-4 space-y-3">
-      <div class="flex justify-between items-center border-b border-white/10 pb-2">
-        <h3 class="font-bold text-xs text-white">⚔️ ดันเจี้ยนข้อสอบ 8 วิชาสภาการพยาบาล</h3>
-        <span class="text-[9px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 px-2 py-0.5 rounded-full font-bold">+Coins & EXP</span>
+    <!-- ดันเจี้ยนคลังข้อสอบ 8 วิชาสภาการพยาบาล -->
+    <div class="glass-box rounded-3xl p-4 sm:p-5 space-y-3.5">
+      <div class="flex justify-between items-center border-b border-white/10 pb-2.5">
+        <div>
+          <h3 class="font-black text-sm text-white flex items-center gap-1.5">
+            <span>⚔️ ดันเจี้ยนจำลองข้อสอบสภาฯ</span>
+          </h3>
+          <span class="text-[10px] text-amber-300 font-bold" id="currentSubjectLabel">การพยาบาลผู้ใหญ่</span>
+        </div>
+        <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 px-2.5 py-0.5 rounded-full font-bold">+20 🪙 / +30 EXP</span>
       </div>
 
-      <div class="flex gap-1 overflow-x-auto pb-1 text-xs">
-        <button onclick="loadQuestions('การพยาบาลผู้ใหญ่')" class="px-2.5 py-1 rounded-lg bg-indigo-600 text-white font-bold whitespace-nowrap">ผู้ใหญ่</button>
-        <button onclick="loadQuestions('การพยาบาลมารดา ทารก และการผดุงครรภ์')" class="px-2.5 py-1 rounded-lg bg-white/10 text-slate-300 font-bold whitespace-nowrap">แม่และเด็ก</button>
-        <button onclick="loadQuestions('การพยาบาลเด็กและวัยรุ่น')" class="px-2.5 py-1 rounded-lg bg-white/10 text-slate-300 font-bold whitespace-nowrap">เด็ก</button>
-        <button onclick="loadQuestions('การพยาบาลอนามัยชุมชน')" class="px-2.5 py-1 rounded-lg bg-white/10 text-slate-300 font-bold whitespace-nowrap">ชุมชน</button>
+      <!-- แถบเลื่อนเลือก 8 รายวิชาสภาการพยาบาลครบถ้วน -->
+      <div class="flex gap-1.5 overflow-x-auto pb-1.5 mobile-scroll text-xs">
+        <button onclick="selectSubject('การพยาบาลผู้ใหญ่', this)" class="sub-tab px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-slate-200 font-bold whitespace-nowrap subject-tab-active">ผู้ใหญ่</button>
+        <button onclick="selectSubject('การพยาบาลผู้สูงอายุ', this)" class="sub-tab px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-slate-200 font-bold whitespace-nowrap">ผู้สูงอายุ</button>
+        <button onclick="selectSubject('การพยาบาลมารดา ทารก และการผดุงครรภ์', this)" class="sub-tab px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-slate-200 font-bold whitespace-nowrap">แม่และเด็ก</button>
+        <button onclick="selectSubject('การพยาบาลเด็กและวัยรุ่น', this)" class="sub-tab px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-slate-200 font-bold whitespace-nowrap">เด็กและวัยรุ่น</button>
+        <button onclick="selectSubject('การพยาบาลสุขภาพจิตและจิตเวช', this)" class="sub-tab px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-slate-200 font-bold whitespace-nowrap">จิตเวช</button>
+        <button onclick="selectSubject('การพยาบาลอนามัยชุมชน', this)" class="sub-tab px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-slate-200 font-bold whitespace-nowrap">อนามัยชุมชน</button>
+        <button onclick="selectSubject('การรักษาพยาบาลขั้นต้น', this)" class="sub-tab px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-slate-200 font-bold whitespace-nowrap">รักษาขั้นต้น</button>
+        <button onclick="selectSubject('กฎหมาย จริยธรรม และวิชาชีพ', this)" class="sub-tab px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-slate-200 font-bold whitespace-nowrap">กฎหมาย/จริยธรรม</button>
       </div>
 
-      <div id="quizBox" class="space-y-2.5">
-        <div class="p-4 text-center text-indigo-200 text-xs font-semibold">กำลังโหลดข้อสอบจากคลัง...</div>
+      <!-- กล่องแสดงข้อสอบ -->
+      <div id="quizBox" class="space-y-3 pt-1">
+        <div class="p-6 text-center text-indigo-200 text-xs font-semibold">กำลังโหลดข้อสอบจากคลัง 8 วิชา...</div>
       </div>
     </div>
 
@@ -107,19 +148,26 @@
     ];
 
     let currentStudentId = localStorage.getItem('current_student_id') || "STU-09";
-    let studentData = null;
+    let activeSubject = "การพยาบาลผู้ใหญ่";
 
     window.onload = function() {
       loadStudentData();
-      loadQuestions('การพยาบาลผู้ใหญ่');
+      loadQuestions(activeSubject);
     };
+
+    function selectSubject(sub, btn) {
+      activeSubject = sub;
+      document.getElementById('currentSubjectLabel').textContent = sub;
+      document.querySelectorAll('.sub-tab').forEach(el => el.classList.remove('subject-tab-active'));
+      if (btn) btn.classList.add('subject-tab-active');
+      loadQuestions(sub);
+    }
 
     async function loadStudentData() {
       try {
         const res = await fetch(`${API_URL}?action=getDashboard&studentId=${currentStudentId}`);
         const data = await res.json();
         if (data.studentInfo) {
-          studentData = data.studentInfo;
           updateUI(data.studentInfo);
         }
       } catch(e) {}
@@ -138,34 +186,41 @@
 
     async function loadQuestions(sub) {
       const container = document.getElementById('quizBox');
-      container.innerHTML = `<div class="p-4 text-center text-indigo-200 text-xs">กำลังโหลดข้อสอบ ${sub}...</div>`;
+      container.innerHTML = `<div class="p-6 text-center text-indigo-200 text-xs">กำลังโหลดข้อสอบวิชา ${sub}...</div>`;
 
       try {
         const res = await fetch(`${API_URL}?action=getExamQuestions&subject=${encodeURIComponent(sub)}`);
         const list = await res.json();
-        if (list.length === 0) {
-          container.innerHTML = `<div class="p-4 text-center text-indigo-200 text-xs">ยังไม่มีข้อสอบในหมวดนี้</div>`;
+        if (!list || list.length === 0) {
+          container.innerHTML = `
+            <div class="p-6 text-center text-slate-300 text-xs bg-white/5 rounded-2xl border border-white/10 space-y-1">
+              <div class="text-xl">📚</div>
+              <div class="font-bold">ยังไม่มีข้อสอบในหมวด ${sub}</div>
+              <div class="text-[11px] text-slate-400">อาจารย์กำลังนำเข้าข้อสอบเพิ่มเติมลงในคลัง</div>
+            </div>
+          `;
           return;
         }
 
-        const q = list[0];
+        // สุ่มหยิบข้อสอบมาแสดง 1 ข้อ
+        const q = list[Math.floor(Math.random() * list.length)];
         container.innerHTML = `
-          <div class="bg-white/10 p-3.5 rounded-2xl border border-white/10 space-y-2">
+          <div class="bg-white/10 p-4 rounded-2xl border border-white/15 space-y-2.5">
             <div class="flex justify-between items-center text-[10px] font-bold text-amber-300">
-              <span>${q.subject}</span>
-              <span>+20 🪙 / +30 EXP</span>
+              <span class="bg-indigo-900/60 px-2 py-0.5 rounded-lg border border-indigo-400/30">${q.questionId || 'EXAM'}</span>
+              <span>เน้น: ${q.yearLevel || 'ทุกชั้นปี'}</span>
             </div>
-            <p class="text-xs text-white leading-relaxed font-semibold">${q.question}</p>
-            <div class="space-y-1.5 pt-1 text-xs">
-              <button onclick="checkAnswer('A', '${q.answer}', '${encodeURIComponent(q.explanation)}', '${encodeURIComponent(q.reference)}')" class="w-full text-left p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition">A. ${q.choiceA}</button>
-              <button onclick="checkAnswer('B', '${q.answer}', '${encodeURIComponent(q.explanation)}', '${encodeURIComponent(q.reference)}')" class="w-full text-left p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition">B. ${q.choiceB}</button>
-              <button onclick="checkAnswer('C', '${q.answer}', '${encodeURIComponent(q.explanation)}', '${encodeURIComponent(q.reference)}')" class="w-full text-left p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition">C. ${q.choiceC}</button>
-              <button onclick="checkAnswer('D', '${q.answer}', '${encodeURIComponent(q.explanation)}', '${encodeURIComponent(q.reference)}')" class="w-full text-left p-2.5 rounded-xl bg-white/10 hover:bg-white/20 transition">D. ${q.choiceD}</button>
+            <p class="text-xs sm:text-sm text-white leading-relaxed font-semibold">${q.question}</p>
+            <div class="space-y-2 pt-1 text-xs">
+              <button onclick="checkAnswer('A', '${q.answer}', '${encodeURIComponent(q.explanation)}', '${encodeURIComponent(q.reference || 'สภาการพยาบาล')}')" class="w-full text-left p-3 rounded-xl bg-white/10 hover:bg-white/20 active:scale-[0.98] transition border border-white/10">A. ${q.choiceA}</button>
+              <button onclick="checkAnswer('B', '${q.answer}', '${encodeURIComponent(q.explanation)}', '${encodeURIComponent(q.reference || 'สภาการพยาบาล')}')" class="w-full text-left p-3 rounded-xl bg-white/10 hover:bg-white/20 active:scale-[0.98] transition border border-white/10">B. ${q.choiceB}</button>
+              <button onclick="checkAnswer('C', '${q.answer}', '${encodeURIComponent(q.explanation)}', '${encodeURIComponent(q.reference || 'สภาการพยาบาล')}')" class="w-full text-left p-3 rounded-xl bg-white/10 hover:bg-white/20 active:scale-[0.98] transition border border-white/10">C. ${q.choiceC}</button>
+              <button onclick="checkAnswer('D', '${q.answer}', '${encodeURIComponent(q.explanation)}', '${encodeURIComponent(q.reference || 'สภาการพยาบาล')}')" class="w-full text-left p-3 rounded-xl bg-white/10 hover:bg-white/20 active:scale-[0.98] transition border border-white/10">D. ${q.choiceD}</button>
             </div>
           </div>
         `;
       } catch(e) {
-        container.innerHTML = `<div class="p-4 text-center text-rose-400 text-xs">ไม่สามารถดึงข้อสอบได้</div>`;
+        container.innerHTML = `<div class="p-6 text-center text-rose-400 text-xs">การเชื่อมต่อขัดข้อง กรุณาลองใหม่อีกครั้ง</div>`;
       }
     }
 
@@ -182,14 +237,28 @@
         Swal.fire({
           icon: 'success',
           title: 'ถูกต้อง! 🎉',
-          html: `<div class="text-left text-xs space-y-1 mt-2 text-slate-800"><p class="font-bold text-emerald-700 bg-emerald-50 p-2 rounded-lg">${exp}</p><p class="text-slate-500">อ้างอิง: ${ref}</p><div class="font-black text-amber-600 text-center pt-1">+20 Coins และ +30 EXP!</div></div>`
-        });
+          html: `
+            <div class="text-left text-xs space-y-1.5 mt-2 text-slate-800">
+              <p class="font-bold text-emerald-800 bg-emerald-50 p-2.5 rounded-xl border border-emerald-200">${exp}</p>
+              <p class="text-slate-500 font-semibold"><span class="text-indigo-600 font-bold">แหล่งอ้างอิง:</span> ${ref}</p>
+              <div class="font-black text-amber-600 text-center pt-1 text-sm">+20 Coins และ +30 EXP!</div>
+            </div>
+          `,
+          confirmButtonText: 'ข้อถัดไป'
+        }).then(() => loadQuestions(activeSubject));
       } else {
         Swal.fire({
           icon: 'error',
           title: 'ยังไม่ถูกต้อง!',
-          html: `<div class="text-left text-xs space-y-1 mt-2 text-slate-800"><p class="font-bold text-rose-700 bg-rose-50 p-2 rounded-lg">เฉลยข้อ ${correct}</p><p>${exp}</p><p class="text-slate-500">อ้างอิง: ${ref}</p></div>`
-        });
+          html: `
+            <div class="text-left text-xs space-y-1.5 mt-2 text-slate-800">
+              <p class="font-bold text-rose-800 bg-rose-50 p-2.5 rounded-xl border border-rose-200">เฉลยข้อ ${correct}</p>
+              <p class="text-slate-700 font-medium">${exp}</p>
+              <p class="text-slate-500 font-semibold"><span class="text-indigo-600 font-bold">แหล่งอ้างอิง:</span> ${ref}</p>
+            </div>
+          `,
+          confirmButtonText: 'ลองข้อถัดไป'
+        }).then(() => loadQuestions(activeSubject));
       }
     }
 
