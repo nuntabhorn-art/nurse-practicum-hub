@@ -118,7 +118,7 @@
           <span>เข้าสู่ระบบ (PIN / อาจารย์)</span>
         </button>
         <span class="px-3.5 py-1.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200/80 text-xs font-black tracking-wide">
-          V2.1.0
+          V2.2.0
         </span>
       </div>
     </div>
@@ -157,21 +157,20 @@
       </div>
     </div>
 
-    <!-- 3. กริดไอคอนเมนู 5 ช่อง (ดึงรูปตามชื่อไฟล์ใน GitHub) -->
+    <!-- 3. กริดไอคอนเมนู 5 ช่อง (ขยายขนาดรูปใหญ่ คมชัด สลับรูปตรงตำแหน่ง) -->
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 md:gap-5 pt-1">
 
       <!-- ไอคอนที่ 1: ฝึกปฏิบัติบนวอร์ด -->
-      <div onclick="navigateTo('practicum.html')" class="squircle-app-box glow-red p-4 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[175px]">
-        <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-emerald-600 text-white font-black text-[9px] tracking-wider shadow-xs">
+      <div onclick="navigateTo('practicum.html')" class="squircle-app-box glow-red p-3 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px]">
+        <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-emerald-600 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           ปี 2-3-4
         </span>
-        <div class="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center p-1 my-auto">
-          <!-- ดึงไฟล์ icon-practicum.jpg (หรือชื่อภาษาไทยสำรอง) -->
-          <img src="icon-practicum.jpg" 
-               onerror="this.src='เมนู ฝึกปฏิบัติบนวอร์ด.jpg'"
-               alt="ฝึกปฏิบัติบนวอร์ด" class="w-full h-full object-contain rounded-2xl filter drop-shadow-lg">
+        <div class="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-0 my-auto overflow-hidden rounded-2xl">
+          <img src="./เมนู ฝึกปฏิบัติบนวอร์ด.jpg" 
+               onerror="this.src='https://cdn-icons-png.flaticon.com/512/865/865969.png';"
+               alt="ฝึกปฏิบัติบนวอร์ด" class="w-full h-full object-cover rounded-2xl drop-shadow-md">
         </div>
-        <div>
+        <div class="mt-1">
           <div class="text-xs sm:text-sm font-black text-slate-800">ฝึกปฏิบัติบนวอร์ด</div>
           <div class="text-[10px] text-emerald-600 font-bold mt-0.5 flex items-center justify-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Care Plan/เวร
@@ -179,17 +178,17 @@
         </div>
       </div>
 
-      <!-- ไอคอนที่ 2: คลังข้อสอบสภาฯ -->
-      <div onclick="navigateTo('exam.html')" class="squircle-app-box glow-orange p-4 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[175px]">
-        <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-black text-[9px] tracking-wider shadow-xs">
+      <!-- ไอคอนที่ 2: คลังข้อสอบสภาฯ (สลับเอารูปข้อสอบ nv85 มาใส่ตรงนี้) -->
+      <div onclick="navigateTo('exam.html')" class="squircle-app-box glow-orange p-3 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px]">
+        <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           8 วิชา
         </span>
-        <div class="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center p-1 my-auto">
-          <img src="icon-exam.jpg" 
-               onerror="this.src='Gemini_Generated_Image_in4cq6in4cq6in4c.jpg'"
-               alt="คลังข้อสอบสภาฯ" class="w-full h-full object-contain rounded-2xl filter drop-shadow-lg">
+        <div class="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-0 my-auto overflow-hidden rounded-2xl">
+          <img src="./Gemini_Generated_Image_nv85ennv85ennv85.jpg" 
+               onerror="this.src='https://cdn-icons-png.flaticon.com/512/2997/2997295.png';"
+               alt="คลังข้อสอบสภาฯ" class="w-full h-full object-cover rounded-2xl drop-shadow-md">
         </div>
-        <div>
+        <div class="mt-1">
           <div class="text-xs sm:text-sm font-black text-slate-800">คลังข้อสอบสภาฯ</div>
           <div class="text-[10px] text-amber-600 font-bold mt-0.5 flex items-center justify-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> ข้อสอบเสมือน
@@ -197,14 +196,14 @@
         </div>
       </div>
 
-      <!-- ไอคอนที่ 3: เว็บวิทยาลัย -->
-      <a href="https://www.bcnchainat.ac.th" target="_blank" class="squircle-app-box glow-teal p-4 sm:p-5 flex flex-col items-center justify-between text-center relative min-h-[175px]">
-        <div class="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center p-1 my-auto">
-          <img src="icon-web.jpg" 
-               onerror="this.src='Gemini_Generated_Image_nv85ennv85ennv85.jpg'"
-               alt="เว็บวิทยาลัย" class="w-full h-full object-contain rounded-2xl filter drop-shadow-lg">
+      <!-- ไอคอนที่ 3: เว็บวิทยาลัย (สลับเอารูปตรา/หมวกวิทยาลัย in4c มาใส่ตรงนี้) -->
+      <a href="https://www.bcnchainat.ac.th" target="_blank" class="squircle-app-box glow-teal p-3 sm:p-4 flex flex-col items-center justify-between text-center relative min-h-[195px]">
+        <div class="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-0 my-auto overflow-hidden rounded-2xl">
+          <img src="./Gemini_Generated_Image_in4cq6in4cq6in4c.jpg" 
+               onerror="this.src='https://cdn-icons-png.flaticon.com/512/1006/1006771.png';"
+               alt="เว็บวิทยาลัย" class="w-full h-full object-cover rounded-2xl drop-shadow-md">
         </div>
-        <div>
+        <div class="mt-1">
           <div class="text-xs sm:text-sm font-black text-slate-800">เว็บวิทยาลัย</div>
           <div class="text-[10px] text-blue-600 font-bold mt-0.5 flex items-center justify-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> EXT
@@ -212,14 +211,14 @@
         </div>
       </a>
 
-      <!-- ไอคอนที่ 4: FONMIS -->
-      <a href="https://fonmis.bcnchainat.ac.th" target="_blank" class="squircle-app-box glow-blue p-4 sm:p-5 flex flex-col items-center justify-between text-center relative min-h-[175px]">
-        <div class="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center p-1 my-auto">
-          <img src="icon-fonmis.jpg" 
-               onerror="this.src='Gemini_Generated_Image_p8a82xp8a82xp8a8.jpg'"
-               alt="FONMIS" class="w-full h-full object-contain rounded-2xl filter drop-shadow-lg">
+      <!-- ไอคอนที่ 4: FONMIS (รูป p8a8) -->
+      <a href="https://fonmis.bcnchainat.ac.th" target="_blank" class="squircle-app-box glow-blue p-3 sm:p-4 flex flex-col items-center justify-between text-center relative min-h-[195px]">
+        <div class="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-0 my-auto overflow-hidden rounded-2xl">
+          <img src="./Gemini_Generated_Image_p8a82xp8a82xp8a8.jpg" 
+               onerror="this.src='https://cdn-icons-png.flaticon.com/512/1802/1802977.png';"
+               alt="FONMIS" class="w-full h-full object-cover rounded-2xl drop-shadow-md">
         </div>
-        <div>
+        <div class="mt-1">
           <div class="text-xs sm:text-sm font-black text-slate-800">FONMIS</div>
           <div class="text-[10px] text-teal-600 font-bold mt-0.5 flex items-center justify-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> EXT
@@ -227,17 +226,17 @@
         </div>
       </a>
 
-      <!-- ไอคอนที่ 5: เข้าเวร/GPS -->
-      <div onclick="navigateTo('practicum.html')" class="squircle-app-box glow-purple p-4 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[175px]">
-        <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-purple-700 text-white font-black text-[9px] tracking-wider shadow-xs">
+      <!-- ไอคอนที่ 5: เข้าเวร/GPS (แก้ลิงก์ให้อ่านไฟล์ภาษาไทยได้แน่นอน) -->
+      <div onclick="navigateTo('practicum.html')" class="squircle-app-box glow-purple p-3 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px]">
+        <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-purple-700 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           AUTH
         </span>
-        <div class="w-20 h-20 sm:w-24 sm:h-24 flex items-center justify-center p-1 my-auto">
-          <img src="icon-attendance.jpg" 
-               onerror="this.src='เข้าเวรGPS (เรียลไทม์ AUTH).jpg'"
-               alt="เข้าเวร/GPS" class="w-full h-full object-contain rounded-2xl filter drop-shadow-lg">
+        <div class="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-0 my-auto overflow-hidden rounded-2xl">
+          <img src="./เข้าเวรGPS (เรียลไทม์ AUTH).jpg" 
+               onerror="this.src='https://cdn-icons-png.flaticon.com/512/3064/3064155.png';"
+               alt="เข้าเวร/GPS" class="w-full h-full object-cover rounded-2xl drop-shadow-md">
         </div>
-        <div>
+        <div class="mt-1">
           <div class="text-xs sm:text-sm font-black text-slate-800">เข้าเวร/GPS</div>
           <div class="text-[10px] text-purple-600 font-bold mt-0.5 flex items-center justify-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span> เรียลไทม์
