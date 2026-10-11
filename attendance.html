@@ -1,486 +1,267 @@
 <!DOCTYPE html>
-<html lang="th" class="h-full">
+<html lang="th">
 <head>
-    <!-- ระบบบังคับเปิดด้วยเบราว์เซอร์หลัก ป้องกัน WebView ภายในแอป LINE/Facebook -->
-    <script>
-        (function() {
-            var ua = navigator.userAgent || navigator.vendor || window.opera;
-            var url = window.location.href;
-            var separator = url.indexOf('?') !== -1 ? '&' : '?';
-            if (url.indexOf('openExternalBrowser') > -1) return;
-            if (ua.indexOf("Line") > -1 || ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1 || ua.indexOf("Messenger") > -1 || (ua.indexOf("iPhone") > -1 && ua.indexOf("Safari") === -1)) {
-                window.location.href = url + separator + 'openExternalBrowser=1';
-            }
-        })();
-    </script>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>BCN CONNECT | ระบบสารสนเทศ วิทยาลัยพยาบาลบรมราชชนนี ชัยนาท</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <link rel="icon" type="image/png" href="https://i.ibb.co/xqGmpNNM/Chat-GPT-Image-13-2569-10-45-41.png">
-    <link rel="apple-touch-icon" href="https://i.ibb.co/xqGmpNNM/Chat-GPT-Image-13-2569-10-45-41.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>เข้าเวร GPS เรียลไทม์ - BCN CONNECT</title>
+  
+  <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#dbeafe">
 
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap');
-        * { font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif !important; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { background: radial-gradient(circle at 10% 18%, #cbe5fc 0%, #ded7fc 38%, #f7d8fc 72%, #fde4f3 100%); min-height: 100vh; overflow-x: hidden; }
-        .glass-panel { background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(24px); border: 1.5px solid rgba(255, 255, 255, 0.95); box-shadow: 0 16px 36px -10px rgba(99, 102, 241, 0.12); }
-        .squircle-card { border-radius: 36px; background: #ffffff; border: 2px solid rgba(255, 255, 255, 0.95); transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1); box-shadow: 0 12px 28px -6px rgba(0,0,0,0.06); }
-        .squircle-card:hover { transform: translateY(-6px); box-shadow: 0 20px 35px -8px rgba(79, 70, 229, 0.16); }
-        .squircle-card:active { transform: scale(0.96); }
-        .badge-auth { background: #7e22ce; color: #ffffff; font-size: 9px; font-weight: 900; padding: 2px 7px; border-radius: 999px; }
-        .badge-ext { background: #059669; color: #ffffff; font-size: 9px; font-weight: 900; padding: 2px 7px; border-radius: 999px; }
-        .clean-3d-img { width: 100%; height: 100%; object-fit: contain; mix-blend-mode: multiply; filter: contrast(112%) brightness(103%); transform: scale(1.15); }
-    </style>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+  <style>
+    * { 
+      font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif !important; 
+      box-sizing: border-box; 
+    }
+    body {
+      background: radial-gradient(circle at 10% 18%, #cbe5fc 0%, #ded7fc 38%, #f7d8fc 72%, #fde4f3 100%);
+      min-height: 100vh;
+      color: #1e293b;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.95);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
+      border-radius: 40px;
+      border: 2px solid rgba(255, 255, 255, 1);
+      box-shadow: 0 20px 45px -10px rgba(99, 102, 241, 0.16);
+    }
+  </style>
 </head>
-<body class="flex flex-col justify-between items-center min-h-screen p-3 sm:p-6 md:p-8 select-none pb-28">
+<body class="flex flex-col justify-between items-center min-h-screen p-3.5 sm:p-6 md:p-8 select-none pb-24">
 
-    <!-- ================= DASHBOARD CONTAINER ================= -->
-    <div class="w-full max-w-6xl mx-auto space-y-4 md:space-y-6">
-
-        <!-- 1. แถบโปรไฟล์ผู้ใช้งานด้านบน -->
-        <div class="glass-panel rounded-[40px] p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div class="flex items-center space-x-3.5 w-full sm:w-auto">
-                <div id="userAvatar" class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black text-xl shadow-md shrink-0">
-                    NT
-                </div>
-                <div class="min-w-0 flex-1">
-                    <div class="text-sm sm:text-base font-black text-slate-800 tracking-tight truncate flex items-center gap-2">
-                        <span>สวัสดี,</span> <span id="dispUserName">Nuntabhorn Thongtem</span>
-                    </div>
-                    <div class="flex items-center gap-2 text-xs text-slate-500 font-semibold mt-0.5">
-                        <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-                        <span id="dispUserStatus">พร้อมใช้งานระบบ</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-3">
-                <button id="btnAuthTrigger" onclick="handleAuthAction()" class="px-5 py-2.5 rounded-full bg-rose-50 border border-rose-200 text-rose-600 hover:bg-rose-100 text-xs font-bold shadow-xs flex items-center gap-2 transition active:scale-95">
-                    <i class="fas fa-arrow-right-from-bracket text-xs"></i>
-                    <span id="btnAuthText">ออกจากระบบ</span>
-                </button>
-                <span class="px-3.5 py-1.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200/80 text-xs font-black tracking-wide">
-                    V1.0.600.5
-                </span>
-            </div>
-        </div>
-
-        <!-- 2. กริดเมนูบริการหลัก -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3 sm:gap-4 pt-1">
-
-            <!-- เมนู 1: โปรไฟล์ -->
-            <div onclick="openProfileModal()" class="squircle-card p-3.5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[160px]">
-                <span class="absolute top-2.5 right-2.5 badge-auth">AUTH</span>
-                <div class="w-20 h-20 flex items-center justify-center my-auto">
-                    <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" alt="Profile" class="w-full h-full object-contain">
-                </div>
-                <div>
-                    <div class="text-xs font-black text-slate-800">โปรไฟล์</div>
-                    <div class="text-[10px] text-amber-600 font-bold mt-0.5">• AUTH</div>
-                </div>
-            </div>
-
-            <!-- เมนู 2: เข้าเวร GPS / ข้อมูลสแกนนิ้ว -->
-            <a href="attendance.html" class="squircle-card p-3.5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[160px]">
-                <span class="absolute top-2.5 right-2.5 badge-auth">AUTH</span>
-                <div class="w-20 h-20 flex items-center justify-center my-auto">
-                    <img src="icon-attendance.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2889/2889676.png';" alt="Attendance" class="clean-3d-img">
-                </div>
-                <div>
-                    <div class="text-xs font-black text-slate-800">เข้าเวร/GPS</div>
-                    <div class="text-[10px] text-amber-600 font-bold mt-0.5">• AUTH</div>
-                </div>
-            </a>
-
-            <!-- เมนู 3: ขอใช้ห้อง -->
-            <div onclick="Swal.fire('ขอใช้ห้อง', 'ระบบจองห้องบรรยายและห้องปฏิบัติการ', 'info')" class="squircle-card p-3.5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[160px]">
-                <span class="absolute top-2.5 right-2.5 badge-auth">AUTH</span>
-                <div class="w-20 h-20 flex items-center justify-center my-auto">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2602/2602414.png" alt="Room" class="w-full h-full object-contain">
-                </div>
-                <div>
-                    <div class="text-xs font-black text-slate-800">ขอใช้ห้อง</div>
-                    <div class="text-[10px] text-amber-600 font-bold mt-0.5">• อ.,จ.,นศ.,บุคคล1</div>
-                </div>
-            </div>
-
-            <!-- เมนู 4: แจ้งปัญหา -->
-            <div onclick="Swal.fire('แจ้งปัญหา', 'ระบบแจ้งซ่อมและแจ้งปัญหาอุปกรณ์คอมพิวเตอร์', 'info')" class="squircle-card p-3.5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[160px]">
-                <span class="absolute top-2.5 right-2.5 badge-auth">AUTH</span>
-                <div class="w-20 h-20 flex items-center justify-center my-auto">
-                    <img src="https://cdn-icons-png.flaticon.com/512/4201/4201973.png" alt="Issue" class="w-full h-full object-contain">
-                </div>
-                <div>
-                    <div class="text-xs font-black text-slate-800">แจ้งปัญหา</div>
-                    <div class="text-[10px] text-amber-600 font-bold mt-0.5">• AUTH</div>
-                </div>
-            </div>
-
-            <!-- เมนู 5: ขอใช้อุปกรณ์ -->
-            <div onclick="Swal.fire('ขอใช้อุปกรณ์', 'ระบบยืม-คืนอุปกรณ์โสตทัศนูปกรณ์และเครื่องมือ', 'info')" class="squircle-card p-3.5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[160px]">
-                <span class="absolute top-2.5 right-2.5 badge-auth">AUTH</span>
-                <div class="w-20 h-20 flex items-center justify-center my-auto">
-                    <img src="https://cdn-icons-png.flaticon.com/512/2897/2897785.png" alt="Equipment" class="w-full h-full object-contain">
-                </div>
-                <div>
-                    <div class="text-xs font-black text-slate-800">ขอใช้อุปกรณ์</div>
-                    <div class="text-[10px] text-amber-600 font-bold mt-0.5">• อ.,จ.,นศ.,บุคคล1</div>
-                </div>
-            </div>
-
-            <!-- เมนู 6: เว็บวิทยาลัย -->
-            <a href="https://www.bcnchainat.ac.th" target="_blank" class="squircle-card p-3.5 flex flex-col items-center justify-between text-center relative min-h-[160px]">
-                <span class="absolute top-2.5 right-2.5 badge-ext">EXT</span>
-                <div class="w-20 h-20 flex items-center justify-center my-auto">
-                    <img src="icon-web.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1006/1006771.png';" alt="Web" class="clean-3d-img">
-                </div>
-                <div>
-                    <div class="text-xs font-black text-slate-800">เว็บวิทยาลัย <i class="fas fa-external-link-alt text-[9px] text-slate-400"></i></div>
-                    <div class="text-[10px] text-emerald-600 font-bold mt-0.5">• EXT</div>
-                </div>
-            </a>
-
-            <!-- เมนู 7: FONMIS -->
-            <a href="https://fonmis.bcnchainat.ac.th" target="_blank" class="squircle-card p-3.5 flex flex-col items-center justify-between text-center relative min-h-[160px]">
-                <span class="absolute top-2.5 right-2.5 badge-ext">EXT</span>
-                <div class="w-20 h-20 flex items-center justify-center my-auto">
-                    <img src="icon-fonmis.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1802/1802977.png';" alt="FONMIS" class="clean-3d-img">
-                </div>
-                <div>
-                    <div class="text-xs font-black text-slate-800">FONMIS <i class="fas fa-external-link-alt text-[9px] text-slate-400"></i></div>
-                    <div class="text-[10px] text-emerald-600 font-bold mt-0.5">• EXT</div>
-                </div>
-            </a>
-
-        </div>
-
-        <!-- 3. กริดแถวที่สอง: แบนเนอร์, กิจกรรม, เกม, จัดการและอนุมัติ, และปุ่ม ADMIN -->
-        <div class="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3 sm:gap-4 pt-1">
-
-            <!-- แบนเนอร์ Low Carbon Behavior (กินพื้นที่ 2 คอลัมน์) -->
-            <div class="squircle-card p-3.5 flex flex-col justify-between relative cursor-pointer min-h-[160px] col-span-2 bg-gradient-to-r from-emerald-50 via-teal-50 to-green-100 border border-emerald-200">
-                <span class="absolute top-2.5 right-2.5 badge-auth">AUTH</span>
-                <div class="flex items-center justify-between h-full px-2">
-                    <div class="space-y-1">
-                        <span class="text-[10px] font-bold text-emerald-600 bg-white/80 px-2 py-0.5 rounded-full border border-emerald-300">LOW CARBON</span>
-                        <h4 class="text-sm font-black text-emerald-950 leading-tight">ร่วมสร้างโลกที่น่าอยู่<br><span class="text-xs font-semibold text-emerald-700">เพื่ออนาคตที่ยั่งยืน</span></h4>
-                    </div>
-                    <img src="https://cdn-icons-png.flaticon.com/512/3093/3093959.png" alt="Eco" class="w-20 h-20 object-contain drop-shadow-md">
-                </div>
-                <div class="text-[10px] text-emerald-800 font-bold">• Low Carbon Behavior</div>
-            </div>
-
-            <!-- ฝึกปฏิบัติบนวอร์ด (Care Plan) -->
-            <a href="practicum.html" class="squircle-card p-3.5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[160px]">
-                <span class="absolute top-2.5 right-2.5 badge-auth">AUTH</span>
-                <div class="w-20 h-20 flex items-center justify-center my-auto">
-                    <img src="icon-practicum.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/865/865969.png';" alt="Practicum" class="clean-3d-img">
-                </div>
-                <div>
-                    <div class="text-xs font-black text-slate-800">ฝึกบนวอร์ด</div>
-                    <div class="text-[10px] text-amber-600 font-bold mt-0.5">• Care Plan/เวร</div>
-                </div>
-            </a>
-
-            <!-- คลังข้อสอบสภาฯ 8 วิชา -->
-            <a href="exam.html" class="squircle-card p-3.5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[160px]">
-                <span class="absolute top-2.5 right-2.5 bg-amber-500 text-white font-black text-[9px] px-2 py-0.5 rounded-full">8 วิชา</span>
-                <div class="w-20 h-20 flex items-center justify-center my-auto">
-                    <img src="icon-exam.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2997/2997295.png';" alt="Exam" class="clean-3d-img">
-                </div>
-                <div>
-                    <div class="text-xs font-black text-slate-800">คลังข้อสอบ</div>
-                    <div class="text-[10px] text-amber-600 font-bold mt-0.5">• ข้อสอบเสมือน</div>
-                </div>
-            </a>
-
-            <!-- จัดการและอนุมัติ -->
-            <div onclick="Swal.fire('จัดการและอนุมัติ', 'ระบบตรวจสอบคำร้องและอนุมัติคำขอของหน่วยงาน', 'info')" class="squircle-card p-3.5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[160px]">
-                <span class="absolute top-2.5 right-2.5 bg-cyan-600 text-white font-black text-[9px] px-1.5 py-0.2 rounded-full">8</span>
-                <div class="w-20 h-20 flex items-center justify-center my-auto">
-                    <img src="https://cdn-icons-png.flaticon.com/512/942/942751.png" alt="Approval" class="w-full h-full object-contain">
-                </div>
-                <div>
-                    <div class="text-xs font-black text-slate-800">จัดการและอนุมัติ</div>
-                    <div class="text-[10px] text-cyan-600 font-bold mt-0.5">• ผู้มีอำนาจ</div>
-                </div>
-            </div>
-
-            <!-- 🔥 ปุ่มแผงควบคุม ADMIN (ถอดแบบตรงตามภาพต้นฉบับเป๊ะ) -->
-            <div id="adminCardButton" onclick="openAdminModal()" class="squircle-card p-3.5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[160px] bg-gradient-to-br from-indigo-50/80 to-purple-50/80 border-indigo-200">
-                <span class="absolute top-2.5 right-2.5 bg-indigo-600 text-white font-black text-[9px] px-2 py-0.5 rounded-full shadow-xs">15</span>
-                <div class="w-20 h-20 flex items-center justify-center my-auto">
-                    <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white flex items-center justify-center text-3xl shadow-lg shadow-indigo-500/30">
-                        <i class="fas fa-user-shield"></i>
-                    </div>
-                </div>
-                <div>
-                    <div class="text-xs font-black text-indigo-950">Admin</div>
-                    <div class="text-[10px] text-indigo-600 font-bold mt-0.5">• แผงควบคุมระบบ</div>
-                </div>
-            </div>
-
-        </div>
-
+  <div class="w-full max-w-md mx-auto space-y-4">
+    
+    <!-- แถบด้านบน: ปุ่มย้อนกลับ + หัวข้อ + ปุ่ม Admin ลับมุมขวา -->
+    <div class="flex items-center justify-between px-2">
+      <a href="index.html" class="w-10 h-10 rounded-2xl bg-white/90 hover:bg-white flex items-center justify-center text-slate-700 shadow-sm border border-white active:scale-95 transition">
+        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+      </a>
+      <h1 class="text-sm font-black text-slate-800">ระบบเข้าเวร GPS เรียลไทม์</h1>
+      
+      <!-- ปุ่มรูปเฟือง Admin มุมขวาบน (จะเปิด/ปิดแผงตั้งค่าได้เมื่อเป็น Admin) -->
+      <button onclick="toggleAdminPanel()" id="btnAdminIcon" class="w-9 h-9 rounded-full bg-white/60 hover:bg-white flex items-center justify-center text-slate-400 hover:text-indigo-600 transition shadow-xs">
+        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+      </button>
     </div>
 
-    <!-- ================= 4. แถบเมนูล่างลอยตัว (FLOATING BOTTOM BAR) ================= -->
-    <div class="fixed bottom-3.5 inset-x-0 mx-auto w-full max-w-sm px-2 z-40">
-        <nav class="glass-panel rounded-full px-5 py-2 flex justify-between items-center shadow-xl border border-white/95">
-            <button onclick="window.location.reload()" class="flex flex-col items-center text-blue-600 font-bold text-[10px] group transition">
-                <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mb-0.5 shadow-2xs group-hover:scale-110 transition">
-                    <i class="fas fa-home text-sm"></i>
-                </div>
-                <span>หน้าแรก</span>
-            </button>
-            <button onclick="requestPushNotification()" class="flex flex-col items-center text-slate-400 hover:text-slate-700 font-medium text-[10px] group transition">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center mb-0.5 group-hover:bg-slate-100 transition relative">
-                    <i class="fas fa-bell text-sm"></i>
-                    <span id="pushDot" class="w-2 h-2 rounded-full bg-rose-500 absolute top-1 right-1 animate-pulse hidden"></span>
-                </div>
-                <span>แจ้งเตือน</span>
-            </button>
-            <button onclick="Swal.fire('ประกาศวิทยาลัย', 'ไม่มีประกาศด่วนในขณะนี้', 'info')" class="flex flex-col items-center text-slate-400 hover:text-slate-700 font-medium text-[10px] group transition">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center mb-0.5 group-hover:bg-slate-100 transition">
-                    <i class="fas fa-bullhorn text-sm"></i>
-                </div>
-                <span>ประกาศ</span>
-            </button>
-            <a href="https://www.facebook.com/bcnchainat" target="_blank" class="flex flex-col items-center text-slate-400 hover:text-slate-700 font-medium text-[10px] group transition">
-                <div class="w-8 h-8 rounded-full flex items-center justify-center mb-0.5 group-hover:bg-slate-100 transition">
-                    <i class="fab fa-facebook text-sm"></i>
-                </div>
-                <span>ข่าวสาร</span>
-            </a>
-        </nav>
-    </div>
+    <!-- บัตรหน้าจอหลัก -->
+    <div class="glass-card p-6 text-center space-y-4">
+      <div class="w-20 h-20 mx-auto rounded-3xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-4xl shadow-inner">
+        📍
+      </div>
 
-    <!-- ================= 5. ADMIN CONSOLE MODAL (ถอดแบบหน้าต่าง ADMIN ตามภาพ) ================= -->
-    <div id="adminModalOverlay" class="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm hidden flex items-center justify-center p-3 sm:p-5">
-        <div class="bg-white rounded-[36px] w-full max-w-2xl p-6 sm:p-8 space-y-5 shadow-2xl border border-white max-h-[90vh] overflow-y-auto">
-            
-            <div class="flex items-center justify-between border-b pb-3">
-                <div class="flex items-center gap-3">
-                    <div class="w-10 h-10 rounded-2xl bg-rose-500 text-white flex items-center justify-center font-black text-lg shadow-md shadow-rose-500/25">
-                        @
-                    </div>
-                    <div>
-                        <h3 class="text-base font-black text-slate-900 leading-tight">Admin</h3>
-                        <p class="text-xs text-slate-400">เลือกเมนูย่อยที่ต้องการเข้าใช้งาน</p>
-                    </div>
-                </div>
-                <button onclick="closeAdminModal()" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 flex items-center justify-center text-slate-500 text-sm transition">
-                    <i class="fas fa-times"></i>
-                </button>
-            </div>
+      <div>
+        <div class="text-xs font-bold text-indigo-600" id="currentDateDisplay">กำลังโหลดวันที่...</div>
+        <div class="text-3xl font-black text-slate-900 mt-1 font-mono tracking-tight" id="clockDisplay">--:--:--</div>
+      </div>
 
-            <!-- กริดเมนูจัดการของ Admin (10 กล่องย่อยตามภาพต้นแบบ) -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3.5 pt-1">
-
-                <div onclick="Swal.fire('จัดการเกมพิมพ์คำ', 'แผงควบคุมระบบคลังคำศัพท์และข้อสอบ', 'info')" class="squircle-card p-3 flex flex-col items-center text-center cursor-pointer min-h-[135px]">
-                    <span class="badge-auth self-end text-[8px] mb-1">AUTH</span>
-                    <div class="w-12 h-12 rounded-xl bg-blue-100 text-blue-600 flex items-center justify-center text-xl my-auto">
-                        <i class="fas fa-gamepad"></i>
-                    </div>
-                    <div class="text-[11px] font-black text-slate-800">จัดการเกมพิมพ์คำ</div>
-                </div>
-
-                <div onclick="Swal.fire('Game Manager', 'ระบบตั้งค่าระดับคะแนนและ EXP ของผู้เล่น', 'info')" class="squircle-card p-3 flex flex-col items-center text-center cursor-pointer min-h-[135px]">
-                    <span class="badge-auth self-end text-[8px] mb-1">AUTH</span>
-                    <div class="w-12 h-12 rounded-xl bg-indigo-100 text-indigo-600 flex items-center justify-center text-xl my-auto">
-                        <i class="fas fa-dice"></i>
-                    </div>
-                    <div class="text-[11px] font-black text-slate-800">game manager</div>
-                </div>
-
-                <div onclick="Swal.fire('ข้อมูลพัสดุ', 'ระบบเบิกจ่ายและทะเบียนพัสดุวิทยาลัย', 'info')" class="squircle-card p-3 flex flex-col items-center text-center cursor-pointer min-h-[135px]">
-                    <span class="badge-auth self-end text-[8px] mb-1">AUTH</span>
-                    <div class="w-12 h-12 flex items-center justify-center my-auto">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2897/2897785.png" class="w-full h-full object-contain">
-                    </div>
-                    <div class="text-[11px] font-black text-slate-800">ข้อมูลพัสดุ</div>
-                </div>
-
-                <div onclick="Swal.fire('จัดการกิจกรรม', 'กำหนดปฏิทินและกิจกรรมนักศึกษา', 'info')" class="squircle-card p-3 flex flex-col items-center text-center cursor-pointer min-h-[135px]">
-                    <span class="badge-auth self-end text-[8px] mb-1">AUTH</span>
-                    <div class="w-12 h-12 flex items-center justify-center my-auto">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3652/3652191.png" class="w-full h-full object-contain">
-                    </div>
-                    <div class="text-[11px] font-black text-slate-800">จัดการกิจกรรม</div>
-                </div>
-
-                <div onclick="Swal.fire('จัดการประชาสัมพันธ์', 'โพสต์แบนเนอร์และข่าวประชาสัมพันธ์', 'info')" class="squircle-card p-3 flex flex-col items-center text-center cursor-pointer min-h-[135px]">
-                    <div class="w-12 h-12 flex items-center justify-center my-auto">
-                        <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" class="w-full h-full object-contain">
-                    </div>
-                    <div class="text-[11px] font-black text-slate-800">จัดการประชาสัมพันธ์</div>
-                </div>
-
-                <div onclick="Swal.fire('ข้อมูลครุภัณฑ์', 'ระบบตรวจนับและสแกน QR Code ครุภัณฑ์', 'info')" class="squircle-card p-3 flex flex-col items-center text-center cursor-pointer min-h-[135px]">
-                    <div class="w-12 h-12 flex items-center justify-center my-auto">
-                        <img src="https://cdn-icons-png.flaticon.com/512/2602/2602414.png" class="w-full h-full object-contain">
-                    </div>
-                    <div class="text-[11px] font-black text-slate-800">ข้อมูลครุภัณฑ์</div>
-                </div>
-
-                <div onclick="Swal.fire('จัดการบัญชีผู้ใช้', 'กำหนดสิทธิ์ Role และปลดล็อกบัญชี', 'info')" class="squircle-card p-3 flex flex-col items-center text-center cursor-pointer min-h-[135px]">
-                    <div class="w-12 h-12 flex items-center justify-center my-auto">
-                        <img src="https://cdn-icons-png.flaticon.com/512/3135/3135715.png" class="w-full h-full object-contain">
-                    </div>
-                    <div class="text-[11px] font-black text-slate-800">จัดการบัญชีผู้ใช้</div>
-                </div>
-
-                <!-- จัดการเมนู (ควบคุมเวลาและปิด-เปิดเมนู) -->
-                <div onclick="openMenuSettingsModal()" class="squircle-card p-3 flex flex-col items-center text-center cursor-pointer min-h-[135px] border-emerald-300 bg-emerald-50/50">
-                    <div class="w-12 h-12 flex items-center justify-center my-auto text-emerald-600 text-2xl">
-                        <i class="fas fa-sliders"></i>
-                    </div>
-                    <div class="text-[11px] font-black text-emerald-950">ตั้งค่าเปิด/ปิดเมนู</div>
-                </div>
-
-            </div>
+      <!-- กล่องสถานะพิกัด GPS -->
+      <div class="p-3 bg-slate-50 border border-slate-200/80 rounded-2xl text-left space-y-1 text-xs">
+        <div class="flex justify-between font-bold text-slate-700">
+          <span>พิกัด GPS จริง:</span>
+          <span id="gpsStatusText" class="text-amber-600 font-semibold">กำลังตรวจสอบ...</span>
         </div>
+        <div id="gpsCoordsText" class="font-mono text-[11px] text-slate-500 truncate">กำลังเชื่อมต่อดาวเทียม GPS...</div>
+      </div>
+
+      <button onclick="handleCheckIn()" id="btnCheckIn" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-95 text-white font-bold rounded-2xl text-sm shadow-md shadow-emerald-500/25 active:scale-95 transition">
+        บันทึกเข้าเวร (ลงชื่อพร้อมพิกัด)
+      </button>
+
+      <div class="pt-2 text-[11px] text-slate-400">
+        เข้าสู่ระบบในชื่อ: <span class="font-bold text-slate-700" id="currentUserDisplay">--</span>
+      </div>
     </div>
 
-    <!-- ================= 6. SCRIPT LOGIC (Firebase Auth + FCM + Navigation) ================= -->
-    <script>
-        const ADMIN_EMAIL = "nuntabhorn@bcnchainat.ac.th";
-        let currentUser = null;
+    <!-- แผงตั้งค่า Admin (ซ่อนอยู่ จะเปิดเมื่อกดไอคอนเฟืองและเป็น Admin) -->
+    <div id="adminPanel" class="glass-card p-5 space-y-3 hidden border-indigo-200">
+      <div class="flex items-center justify-between border-b pb-2">
+        <h3 class="text-xs font-black text-indigo-900">แผงควบคุมระบบเข้าเวร (เฉพาะ Admin)</h3>
+        <span class="text-[10px] bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded-full">ตั้งเวลา</span>
+      </div>
 
-        window.onload = function() {
-            checkUserSession();
-        };
+      <div class="space-y-2 text-xs">
+        <div class="flex items-center justify-between">
+          <label class="font-bold text-slate-700">เปิดรับการเช็คอิน</label>
+          <input type="checkbox" id="cfgEnabled" class="w-4 h-4 text-indigo-600 rounded">
+        </div>
+        <div class="grid grid-cols-2 gap-2 pt-1">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-600 mb-1">เวลาเริ่ม (น.)</label>
+            <input type="time" id="cfgStartTime" class="w-full border rounded-xl p-2 bg-white font-semibold">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-600 mb-1">เวลาสิ้นสุด (น.)</label>
+            <input type="time" id="cfgEndTime" class="w-full border rounded-xl p-2 bg-white font-semibold">
+          </div>
+        </div>
+        <button onclick="saveAdminSettings()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs mt-2 shadow-sm transition">
+          บันทึกการตั้งค่าเวลา
+        </button>
+      </div>
+    </div>
 
-        function checkUserSession() {
-            const savedSession = localStorage.getItem('bcn_user_session');
-            if (savedSession) {
-                currentUser = JSON.parse(savedSession);
-                document.getElementById('dispUserName').textContent = currentUser.name;
-                document.getElementById('userAvatar').textContent = currentUser.name.substring(0, 2).toUpperCase();
-                document.getElementById('btnAuthText').textContent = "ออกจากระบบ";
+  </div>
+
+  <script>
+    const API_URL = "https://script.google.com/macros/s/AKfycbygTRS3dp8WQkGKpiRxKbsDdDjfQUAeZnHwid6PTX3ABskdSbQdbEBch7dkia3UlaSJ/exec";
+    let currentUser = null;
+    let currentCoords = "";
+
+    window.onload = function() {
+      startClock();
+      checkAuthStatus();
+      fetchGpsLocation();
+    };
+
+    function startClock() {
+      setInterval(() => {
+        const now = new Date();
+        document.getElementById('clockDisplay').textContent = now.toTimeString().split(' ')[0];
+        document.getElementById('currentDateDisplay').textContent = now.toLocaleDateString('th-TH', { 
+          year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' 
+        });
+      }, 1000);
+    }
+
+    // ตรวจสอบสิทธิ์การเข้าใช้งานอีเมลวิทยาลัย
+    function checkAuthStatus() {
+      const saved = localStorage.getItem('bcn_user_session');
+      if (!saved) {
+        promptLogin();
+      } else {
+        currentUser = JSON.parse(saved);
+        document.getElementById('currentUserDisplay').textContent = currentUser.name;
+        if (currentUser.isAdmin) {
+          document.getElementById('btnAdminIcon').classList.remove('hidden');
+        }
+      }
+    }
+
+    function promptLogin() {
+      Swal.fire({
+        title: 'ยืนยันตัวตนวิทยาลัย',
+        text: 'กรุณากรอกอีเมล @bcnchainat.ac.th เพื่อเข้าใช้งานระบบ',
+        input: 'email',
+        inputPlaceholder: 'username@bcnchainat.ac.th',
+        allowOutsideClick: false,
+        confirmButtonText: 'เข้าสู่ระบบ',
+        preConfirm: (email) => {
+          if (!email || !email.endsWith('@bcnchainat.ac.th')) {
+            Swal.showValidationMessage('บุคคลทั่วไปไม่ได้รับสิทธิ์ กรุณาใช้อีเมล @bcnchainat.ac.th เท่านั้น');
+            return false;
+          }
+          return email;
+        }
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          Swal.fire({ title: 'กำลังตรวจสอบสิทธิ์...', didOpen: () => Swal.showLoading() });
+          try {
+            const res = await fetch(API_URL, {
+              method: 'POST',
+              body: JSON.stringify({ action: 'verifyGoogleEmail', data: { email: result.value } })
+            });
+            const d = await res.json();
+            if (d.success) {
+              currentUser = d;
+              localStorage.setItem('bcn_user_session', JSON.stringify(d));
+              document.getElementById('currentUserDisplay').textContent = d.name;
+              Swal.fire({ icon: 'success', title: 'ยืนยันตัวตนสำเร็จ', text: d.name });
             } else {
-                promptGoogleLogin();
+              Swal.fire({ icon: 'error', title: d.message }).then(() => promptLogin());
             }
+          } catch(e) {
+            Swal.fire({ icon: 'error', title: 'การเชื่อมต่อขัดข้อง' });
+          }
         }
+      });
+    }
 
-        // 1. ระบบยืนยันตัวตนอีเมลวิทยาลัย
-        function promptGoogleLogin() {
-            Swal.fire({
-                title: 'ยืนยันตัวตน BCN CONNECT',
-                text: 'กรุณากรอกอีเมล @bcnchainat.ac.th เพื่อเข้าใช้งาน',
-                input: 'email',
-                inputPlaceholder: 'user@bcnchainat.ac.th',
-                allowOutsideClick: false,
-                confirmButtonText: 'เข้าสู่ระบบด้วย Google',
-                confirmButtonColor: '#2563eb',
-                preConfirm: (email) => {
-                    if (!email || !email.toLowerCase().endsWith('@bcnchainat.ac.th')) {
-                        Swal.showValidationMessage('อนุญาตเฉพาะบุคลากรและนักศึกษา วพบ.ชัยนาท (@bcnchainat.ac.th)');
-                        return false;
-                    }
-                    return email.toLowerCase();
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    const email = result.value;
-                    const isAdmin = (email === ADMIN_EMAIL.toLowerCase());
-                    currentUser = {
-                        email: email,
-                        name: isAdmin ? "Nuntabhorn Thongtem" : email.split('@')[0],
-                        role: isAdmin ? "admin" : "student"
-                    };
-                    localStorage.setItem('bcn_user_session', JSON.stringify(currentUser));
-                    Swal.fire({ icon: 'success', title: 'ยินดีต้อนรับ', text: currentUser.name, timer: 1200, showConfirmButton: false })
-                        .then(() => window.location.reload());
-                }
-            });
-        }
+    // ดึงพิกัด GPS จริงจากอุปกรณ์
+    function fetchGpsLocation() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(
+          (pos) => {
+            currentCoords = `${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
+            document.getElementById('gpsStatusText').textContent = "พิกัดแม่นยำ (Active)";
+            document.getElementById('gpsStatusText').className = "text-emerald-600 font-bold";
+            document.getElementById('gpsCoordsText').textContent = currentCoords;
+          },
+          (err) => {
+            document.getElementById('gpsStatusText').textContent = "ไม่พบพิกัด";
+            document.getElementById('gpsCoordsText').textContent = "กรุณากดเปิดสิทธิ์เข้าถึงตำแหน่ง (GPS) บนอุปกรณ์";
+          },
+          { enableHighAccuracy: true, timeout: 10000 }
+        );
+      }
+    }
 
-        function handleAuthAction() {
-            if (currentUser) {
-                localStorage.removeItem('bcn_user_session');
-                Swal.fire({ icon: 'success', title: 'ออกจากระบบเรียบร้อย', timer: 1000, showConfirmButton: false })
-                    .then(() => window.location.reload());
-            } else {
-                promptGoogleLogin();
-            }
-        }
+    // กดปุ่มบันทึกเวลาเข้าเวร
+    async function handleCheckIn() {
+      if (!currentUser) return promptLogin();
+      if (!currentCoords) {
+        Swal.fire({ icon: 'warning', title: 'ยังไม่พบพิกัด GPS', text: 'กรุณาเปิดสิทธิ์ระบุตำแหน่งบนอุปกรณ์ก่อนลงชื่อ' });
+        return fetchGpsLocation();
+      }
 
-        // 2. ระบบขอสิทธิ์แจ้งเตือนบนมือถือ (Push Notification)
-        function requestPushNotification() {
-            if (!("Notification" in window)) {
-                Swal.fire('อุปกรณ์ไม่รองรับ', 'เบราว์เซอร์นี้ไม่รองรับระบบ Push Notification', 'warning');
-                return;
-            }
-            Notification.requestPermission().then((permission) => {
-                if (permission === "granted") {
-                    document.getElementById('pushDot').classList.remove('hidden');
-                    new Notification("BCN CONNECT", {
-                        body: "ระบบเปิดการแจ้งเตือนบนมือถือเรียบร้อยแล้ว",
-                        icon: "https://i.ibb.co/xqGmpNNM/Chat-GPT-Image-13-2569-10-45-41.png"
-                    });
-                    Swal.fire({ icon: 'success', title: 'เปิดการแจ้งเตือนสำเร็จ', timer: 1200, showConfirmButton: false });
-                } else {
-                    Swal.fire('การแจ้งเตือนถูกปฏิเสธ', 'กรุณากดอนุญาตการแจ้งเตือนในตั้งค่าเบราว์เซอร์', 'info');
-                }
-            });
-        }
+      Swal.fire({ title: 'กำลังบันทึกเวลา...', didOpen: () => Swal.showLoading() });
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({
+            action: 'recordGpsAttendance',
+            data: { email: currentUser.email, name: currentUser.name, coords: currentCoords }
+          })
+        });
+        const d = await res.json();
+        Swal.fire({ icon: d.success ? 'success' : 'error', title: d.message });
+      } catch(e) {
+        Swal.fire({ icon: 'error', title: 'การเชื่อมต่อขัดข้อง' });
+      }
+    }
 
-        // 3. ควบคุมหน้าต่าง Admin
-        function openAdminModal() {
-            if (!currentUser || currentUser.role !== 'admin') {
-                Swal.fire('จำกัดสิทธิ์', 'เฉพาะอาจารย์ผู้ดูแลระบบ (Admin) เท่านั้น', 'warning');
-                return;
-            }
-            document.getElementById('adminModalOverlay').classList.remove('hidden');
-        }
+    // ควบคุมแผง Admin
+    async function toggleAdminPanel() {
+      if (!currentUser || !currentUser.isAdmin) {
+        Swal.fire({ icon: 'info', title: 'เฉพาะผู้ดูแลระบบ', text: 'สงวนสิทธิ์เฉพาะอาจารย์ผู้ดูแลระบบเท่านั้น' });
+        return;
+      }
+      const panel = document.getElementById('adminPanel');
+      if (panel.classList.contains('hidden')) {
+        const res = await fetch(`${API_URL}?action=getSettings`);
+        const cfg = await res.json();
+        document.getElementById('cfgEnabled').checked = cfg.enabled;
+        document.getElementById('cfgStartTime').value = cfg.startTime;
+        document.getElementById('cfgEndTime').value = cfg.endTime;
+        panel.classList.remove('hidden');
+      } else {
+        panel.classList.add('hidden');
+      }
+    }
 
-        function closeAdminModal() {
-            document.getElementById('adminModalOverlay').classList.add('hidden');
-        }
-
-        function openMenuSettingsModal() {
-            closeAdminModal();
-            Swal.fire({
-                title: 'ตั้งค่าการเปิด/ปิดเมนู',
-                html: `
-                    <div class="text-left text-xs space-y-3 p-2">
-                        <label class="flex justify-between items-center p-2 rounded-xl bg-slate-50 border">
-                            <span>1. เข้าเวร/GPS เรียลไทม์</span>
-                            <input type="checkbox" checked class="w-4 h-4">
-                        </label>
-                        <label class="flex justify-between items-center p-2 rounded-xl bg-slate-50 border">
-                            <span>2. ฝึกปฏิบัติบนวอร์ด (Care Plan)</span>
-                            <input type="checkbox" checked class="w-4 h-4">
-                        </label>
-                        <label class="flex justify-between items-center p-2 rounded-xl bg-slate-50 border">
-                            <span>3. คลังข้อสอบสภาฯ 8 วิชา</span>
-                            <input type="checkbox" checked class="w-4 h-4">
-                        </label>
-                    </div>
-                `,
-                confirmButtonText: 'บันทึกการตั้งค่า'
-            });
-        }
-
-        function openProfileModal() {
-            if (!currentUser) return promptGoogleLogin();
-            Swal.fire({
-                title: 'ข้อมูลส่วนตัว',
-                html: `
-                    <div class="text-left text-xs space-y-2 p-2">
-                        <p><strong>ชื่อ-สกุล:</strong> ${currentUser.name}</p>
-                        <p><strong>อีเมล:</strong> ${currentUser.email}</p>
-                        <p><strong>ระดับสิทธิ์:</strong> <span class="text-indigo-600 font-bold">${currentUser.role.toUpperCase()}</span></p>
-                    </div>
-                `,
-                icon: 'info'
-            });
-        }
-    </script>
+    async function saveAdminSettings() {
+      const payload = {
+        enabled: document.getElementById('cfgEnabled').checked,
+        startTime: document.getElementById('cfgStartTime').value,
+        endTime: document.getElementById('cfgEndTime').value
+      };
+      Swal.fire({ title: 'กำลังบันทึก...', didOpen: () => Swal.showLoading() });
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        body: JSON.stringify({ action: 'updateCheckinSettings', data: payload })
+      });
+      const d = await res.json();
+      Swal.fire({ icon: 'success', title: d.message });
+      toggleAdminPanel();
+    }
+  </script>
 </body>
 </html>
