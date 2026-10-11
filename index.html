@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>BCN CONNECT</title>
+  <title>NURSENOTE - ระบบบันทึกและฝึกปฏิบัติการพยาบาล</title>
   
   <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
   <meta name="mobile-web-app-capable" content="yes">
@@ -131,18 +131,19 @@
   <!-- ================= Dashboard Container ================= -->
   <div class="w-full max-w-5xl mx-auto space-y-4 md:space-y-5">
 
-    <!-- 1. แถบโปรไฟล์ผู้ใช้งานด้านบน -->
+    <!-- 1. แถบโปรไฟล์ผู้ใช้งานด้านบน (โลโก้ NURSENOTE) -->
     <div class="top-header-glass p-4 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4 relative">
       
-      <!-- 🛡️ ปุ่ม Admin ลับมุมบน (แสดงเมื่อเข้าสู่ระบบด้วยสิทธิ์อาจารย์) -->
+      <!-- 🛡️ ปุ่ม Admin ลับมุมบน (แสดงเฉพาะเมื่ออาจารย์เข้าสู่ระบบ) -->
       <button onclick="openAdminSettingsModal()" id="btnAdminShield" title="แผงควบคุมระบบ (Admin)" 
               class="hidden absolute top-3 right-4 w-7 h-7 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition active:scale-95 shadow-xs">
         <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
       </button>
 
       <div class="flex items-center space-x-3.5 sm:space-x-4 w-full sm:w-auto">
-        <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black text-lg sm:text-xl shadow-md shrink-0">
-          BCN
+        <!-- โลโก้ดั้งเดิมของ NURSENOTE -->
+        <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black text-xs sm:text-sm tracking-tight shadow-md shrink-0 p-1 text-center leading-none">
+          NURSE<br>NOTE
         </div>
         <div class="min-w-0 flex-1">
           <div class="text-sm sm:text-base font-black text-slate-800 tracking-tight truncate" id="dispUserName">
@@ -150,7 +151,7 @@
           </div>
           <div class="flex items-center gap-1.5 text-xs text-slate-500 font-semibold mt-0.5">
             <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span id="dispUserYear">ชั้นปี: ปี 2 กลุ่ม 5</span>
+            <span id="dispUserYear">NURSENOTE • ชั้นปี: ปี 2 กลุ่ม 5</span>
           </div>
         </div>
       </div>
@@ -170,7 +171,7 @@
     <!-- 2. แถบเลเวลและแถบหมวกพยาบาล (Rank & EXP) -->
     <div class="hero-rank-clay p-4 sm:p-6 text-white space-y-3.5 sm:space-y-4 relative overflow-hidden">
       <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-3.5">
+        <div class="flex items-center space-x-3 sm:space-x-3.5">
           <div class="w-11 h-11 sm:w-12 sm:h-12 rounded-2xl bg-white/10 flex items-center justify-center text-2xl sm:text-3xl anim-chick shadow-inner">
             🐣
           </div>
@@ -212,7 +213,7 @@
       </div>
     </div>
 
-    <!-- 3. กริดไอคอนเมนู 5 ช่องเดิมของอาจารย์ -->
+    <!-- 3. กริดไอคอนเมนู 5 ช่องเดิมของ NURSENOTE (รูป icon-*.jpg ของอาจารย์)[cite: 21] -->
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 sm:gap-4 md:gap-5 pt-1">
 
       <!-- เมนู 1: ฝึกปฏิบัติบนวอร์ด (Care Plan/เวร) -->
@@ -231,7 +232,7 @@
         </div>
       </div>
 
-      <!-- เมนู 2: คลังข้อสอบสภาฯ (8 วิชา) -->
+      <!-- เมนู 2: คลังข้อสอบสภาฯ (8 วิชา)[cite: 19] -->
       <div id="card-menu-exam" onclick="navigateTo('exam.html')" class="squircle-card glow-amber p-3.5 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[190px] sm:min-h-[210px]">
         <span class="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 px-2 sm:px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           8 วิชา
@@ -247,7 +248,7 @@
         </div>
       </div>
 
-      <!-- เมนู 3: เว็บวิทยาลัย -->
+      <!-- เมนู 3: เว็บวิทยาลัย[cite: 19] -->
       <a id="card-menu-web" href="https://www.bcnchainat.ac.th" target="_blank" class="squircle-card glow-teal p-3.5 sm:p-5 flex flex-col items-center justify-between text-center relative min-h-[190px] sm:min-h-[210px]">
         <div class="icon-stage-large">
           <img src="icon-web.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1006/1006771.png';" alt="เว็บวิทยาลัย" class="clean-3d-img">
@@ -260,7 +261,7 @@
         </div>
       </a>
 
-      <!-- เมนู 4: FONMIS -->
+      <!-- เมนู 4: FONMIS[cite: 19] -->
       <a id="card-menu-fonmis" href="https://fonmis.bcnchainat.ac.th" target="_blank" class="squircle-card glow-indigo p-3.5 sm:p-5 flex flex-col items-center justify-between text-center relative min-h-[190px] sm:min-h-[210px]">
         <div class="icon-stage-large">
           <img src="icon-fonmis.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1802/1802977.png';" alt="FONMIS" class="clean-3d-img">
@@ -273,7 +274,7 @@
         </div>
       </a>
 
-      <!-- เมนู 5: เข้าเวร/GPS (เชื่อมไปยัง attendance.html) -->
+      <!-- เมนู 5: เข้าเวร/GPS (เชื่อมไปยัง attendance.html)[cite: 19] -->
       <div id="card-menu-gps" onclick="navigateTo('attendance.html')" class="squircle-card glow-purple p-3.5 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[190px] sm:min-h-[210px] col-span-2 sm:col-span-1">
         <span class="absolute top-2.5 right-2.5 sm:top-3 sm:right-3 px-2 sm:px-2.5 py-0.5 rounded-full bg-purple-700 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           AUTH
@@ -293,7 +294,7 @@
 
   </div>
 
-  <!-- ================= 4. แถบเมนูลอยล่างสุด ================= -->
+  <!-- ================= 4. แถบเมนูลอยล่างสุด[cite: 19] ================= -->
   <div class="fixed bottom-3 sm:bottom-4 inset-x-0 mx-auto w-full max-w-[340px] px-2 z-40">
     <nav class="bottom-bar rounded-full px-5 py-2 flex justify-between items-center shadow-xl">
       <button onclick="window.location.reload()" class="flex flex-col items-center text-blue-600 font-bold text-[10px] group transition">
@@ -333,7 +334,7 @@
         <svg class="w-7 h-7 fill-white" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
       </div>
       <div>
-        <h3 class="text-base font-black text-slate-900">เข้าสู่ระบบ BCN CONNECT</h3>
+        <h3 class="text-base font-black text-slate-900">เข้าสู่ระบบ NURSENOTE</h3>
         <p class="text-xs text-slate-500 mt-1">เฉพาะอีเมลวิทยาลัยพยาบาลบรมราชชนนี ชัยนาท</p>
       </div>
 
@@ -360,7 +361,7 @@
       <div class="flex items-center justify-between border-b pb-2">
         <div class="flex items-center gap-2">
           <span class="w-8 h-8 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center font-bold text-sm">🛡️</span>
-          <h3 class="text-sm font-black text-slate-900">แผงควบคุมระบบ (Admin)</h3>
+          <h3 class="text-sm font-black text-slate-900">แผงควบคุม NURSENOTE (Admin)</h3>
         </div>
         <button onclick="closeAdminSettingsModal()" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
       </div>
@@ -430,7 +431,7 @@
     }
 
     function checkLoginSession() {
-      const session = localStorage.getItem('bcn_user_session');
+      const session = localStorage.getItem('nursenote_user_session');
       if (session) {
         const user = JSON.parse(session);
         document.getElementById('dispUserName').textContent = `สวัสดี, ${user.name}`;
@@ -442,9 +443,9 @@
     }
 
     function handleAuthButtonClick() {
-      const session = localStorage.getItem('bcn_user_session');
+      const session = localStorage.getItem('nursenote_user_session');
       if (session) {
-        localStorage.removeItem('bcn_user_session');
+        localStorage.removeItem('nursenote_user_session');
         Swal.fire({ icon: 'success', title: 'ออกจากระบบเรียบร้อย', timer: 1000, showConfirmButton: false }).then(() => {
           window.location.reload();
         });
@@ -459,9 +460,9 @@
       // รหัสผ่านกรณีอาจารย์เข้าใช้งานฉุกเฉิน
       if (email === "22122531" || email === "admin") {
         const adminData = { email: ADMIN_EMAIL, name: "อาจารย์ นันตพร ทองเต็ม (ผู้ดูแลระบบ)", isAdmin: true };
-        localStorage.setItem('bcn_user_session', JSON.stringify(adminData));
+        localStorage.setItem('nursenote_user_session', JSON.stringify(adminData));
         closeLoginModal();
-        Swal.fire({ icon: 'success', title: 'เข้าสู่ระบบสิทธิ์ผู้ดูแลระบบสำเร็จ', timer: 1200, showConfirmButton: false })
+        Swal.fire({ icon: 'success', title: 'เข้าสู่ระบบ NURSENOTE สิทธิ์ผู้ดูแลระบบสำเร็จ', timer: 1200, showConfirmButton: false })
             .then(() => window.location.reload());
         return;
       }
@@ -476,7 +477,7 @@
         return;
       }
 
-      Swal.fire({ title: 'กำลังตรวจสอบสิทธิ์...', didOpen: () => Swal.showLoading() });
+      Swal.fire({ title: 'กำลังตรวจสอบสิทธิ์ในระบบ NURSENOTE...', didOpen: () => Swal.showLoading() });
       try {
         const res = await fetch(API_URL, {
           method: 'POST',
@@ -484,7 +485,7 @@
         });
         const d = await res.json();
         if (d.success) {
-          localStorage.setItem('bcn_user_session', JSON.stringify(d));
+          localStorage.setItem('nursenote_user_session', JSON.stringify(d));
           closeLoginModal();
           Swal.fire({ icon: 'success', title: 'ยืนยันตัวตนสำเร็จ', text: `ยินดีต้อนรับ ${d.name}`, timer: 1200, showConfirmButton: false })
               .then(() => window.location.reload());
@@ -493,7 +494,7 @@
         }
       } catch(e) {
         const fallbackUser = { email: email, name: email.split('@')[0], isAdmin: (email === ADMIN_EMAIL.toLowerCase()) };
-        localStorage.setItem('bcn_user_session', JSON.stringify(fallbackUser));
+        localStorage.setItem('nursenote_user_session', JSON.stringify(fallbackUser));
         closeLoginModal();
         Swal.fire({ icon: 'success', title: 'เข้าสู่ระบบสำเร็จ', timer: 1200, showConfirmButton: false })
             .then(() => window.location.reload());
