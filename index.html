@@ -13,7 +13,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- โหลด Font Awesome SVG + WebFonts เพื่อไม่ให้ไอคอนกลายเป็นสี่เหลี่ยมกลวง -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
   <style>
@@ -23,45 +24,46 @@
       -webkit-tap-highlight-color: transparent; 
     }
 
+    /* พื้นหลังออโรร่าพาสเทล ละมุนตาตรงตามภาพ */
     body {
       background: radial-gradient(circle at 10% 20%, #dbeafe 0%, #ede9fe 40%, #fae8ff 75%, #fce7f3 100%);
       min-height: 100vh;
       color: #1e293b;
     }
 
-    /* กล่องข้อมูลบนสุด */
+    /* กล่องข้อมูลบนสุด - นูนแสงสีขาวพร้อมขอบเงาฟุ้ง */
     .top-user-card {
-      background: rgba(255, 255, 255, 0.92);
+      background: rgba(255, 255, 255, 0.95);
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border-radius: 40px;
-      border: 2px solid rgba(255, 255, 255, 0.95);
+      border: 2px solid rgba(255, 255, 255, 1);
       box-shadow: 0 16px 36px -10px rgba(99, 102, 241, 0.12), inset 0 2px 3px rgba(255, 255, 255, 0.9);
     }
 
-    /* กล่องฮีโร่สีน้ำเงินเข้ม */
+    /* แถบฮีโร่สีน้ำเงินเข้มลึก สไตล์ 3D Claymorphic เงาวาว */
     .hero-level-card {
-      background: linear-gradient(135deg, #231c62 0%, #1e1b4b 50%, #292468 100%);
-      border-radius: 40px;
-      border: 2px solid rgba(255, 255, 255, 0.2);
-      box-shadow: 0 20px 40px -8px rgba(30, 27, 75, 0.45), inset 0 2px 4px rgba(255, 255, 255, 0.25);
+      background: linear-gradient(135deg, #251e66 0%, #1c184c 50%, #2b256d 100%);
+      border-radius: 42px;
+      border: 2px solid rgba(255, 255, 255, 0.22);
+      box-shadow: 0 24px 48px -10px rgba(28, 24, 76, 0.5), inset 0 2.5px 4px rgba(255, 255, 255, 0.35);
     }
 
+    /* รางหลอดนีออนความก้าวหน้า */
     .exp-neon-track {
-      background: #141238;
-      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.6);
+      background: #121035;
+      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.65);
     }
     .exp-neon-fill {
       background: linear-gradient(90deg, #00d2ff 0%, #00f2fe 50%, #4facfe 100%);
-      box-shadow: 0 0 16px #00f2fe;
+      box-shadow: 0 0 18px #00f2fe, 0 0 6px #00d2ff;
     }
 
-    /* กล่องไอคอนเมนู Squircle ขอบมนเงาเนียน */
+    /* การ์ดสี่เหลี่ยมมน Squircle App Box */
     .squircle-app-box {
-      border-radius: 36px;
+      border-radius: 38px;
       background: #ffffff;
-      border: 2px solid rgba(255, 255, 255, 0.95);
-      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+      transition: all 0.28s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .squircle-app-box:hover {
       transform: translateY(-8px);
@@ -70,28 +72,41 @@
       transform: scale(0.96);
     }
 
-    .glow-red { box-shadow: 0 18px 32px -8px rgba(244, 63, 94, 0.22); }
-    .glow-orange { box-shadow: 0 18px 32px -8px rgba(249, 115, 22, 0.22); }
-    .glow-teal { box-shadow: 0 18px 32px -8px rgba(20, 184, 166, 0.22); }
-    .glow-blue { box-shadow: 0 18px 32px -8px rgba(59, 130, 246, 0.22); }
-    .glow-purple { box-shadow: 0 18px 32px -8px rgba(168, 85, 247, 0.22); }
-
-    /* แท่นจัดวางรูปภาพ ลบขอบเหลี่ยมคมทิ้ง ให้ขอบมนกลืนกับการ์ด */
-    .icon-wrapper {
-      border-radius: 28px;
-      overflow: hidden;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.04);
+    /* เงาเรืองแสงสีพาสเทลเฉพาะการ์ดแต่ละใบตามภาพต้นฉบับ */
+    .card-glow-1 {
+      border: 2.5px solid #ffe4e6;
+      box-shadow: 0 20px 35px -8px rgba(244, 63, 94, 0.22), 0 0 0 1px rgba(244, 63, 94, 0.08);
+    }
+    .card-glow-2 {
+      border: 2.5px solid #ffedd5;
+      box-shadow: 0 20px 35px -8px rgba(249, 115, 22, 0.22), 0 0 0 1px rgba(249, 115, 22, 0.08);
+    }
+    .card-glow-3 {
+      border: 2.5px solid #ccfbf1;
+      box-shadow: 0 20px 35px -8px rgba(20, 184, 166, 0.22), 0 0 0 1px rgba(20, 184, 166, 0.08);
+    }
+    .card-glow-4 {
+      border: 2.5px solid #e0e7ff;
+      box-shadow: 0 20px 35px -8px rgba(99, 102, 241, 0.22), 0 0 0 1px rgba(99, 102, 241, 0.08);
+    }
+    .card-glow-5 {
+      border: 2.5px solid #f3e8ff;
+      box-shadow: 0 20px 35px -8px rgba(168, 85, 247, 0.22), 0 0 0 1px rgba(168, 85, 247, 0.08);
     }
 
+    /* 🔥 เทคนิคสำคัญ: ลบพื้นหลังสีขาวของรูปภาพออกอัตโนมัติ ให้เหลือเฉพาะตัว 3D เนียนสนิท */
+    .blend-transparent-img {
+      mix-blend-mode: multiply;
+      filter: contrast(105%) brightness(102%);
+    }
+
+    /* แถบเมนูลอยล่างสุด */
     .bottom-floating-bar {
-      background: rgba(255, 255, 255, 0.90);
-      backdrop-filter: blur(24px);
-      -webkit-backdrop-filter: blur(24px);
+      background: rgba(255, 255, 255, 0.94);
+      backdrop-filter: blur(28px);
+      -webkit-backdrop-filter: blur(28px);
       border: 2px solid rgba(255, 255, 255, 0.95);
-      box-shadow: 0 18px 38px -10px rgba(79, 70, 229, 0.16);
+      box-shadow: 0 20px 42px -10px rgba(79, 70, 229, 0.18);
     }
 
     @keyframes softBob {
@@ -103,7 +118,7 @@
 </head>
 <body class="flex flex-col justify-between items-center min-h-screen p-4 sm:p-6 md:p-8 select-none">
 
-  <!-- Dashboard Container -->
+  <!-- ================= Dashboard Container ================= -->
   <div class="w-full max-w-5xl mx-auto space-y-4 md:space-y-5">
 
     <!-- 1. แถบโปรไฟล์ผู้ใช้งานด้านบน -->
@@ -117,7 +132,7 @@
             สวัสดี, นศ.พย. ณัฐธิดา กลัดเงิน (นัดดี้)
           </div>
           <div class="flex items-center gap-1.5 text-xs text-slate-500 font-semibold mt-0.5">
-            <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
             <span id="dispUserYear">ชั้นปี: ปี 2 กลุ่ม 5</span>
           </div>
         </div>
@@ -129,7 +144,7 @@
           <span>เข้าสู่ระบบ (PIN / อาจารย์)</span>
         </button>
         <span class="px-3.5 py-1.5 rounded-full bg-amber-100 text-amber-900 border border-amber-200/80 text-xs font-black tracking-wide">
-          V2.4.0
+          V2.1.0
         </span>
       </div>
     </div>
@@ -151,9 +166,10 @@
           </div>
         </div>
 
-        <div class="flex items-center gap-2 bg-black/40 px-3.5 py-2 rounded-full border border-white/10">
-          <span class="w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center text-[10px] text-amber-950 font-black">🪙</span>
-          <i class="fa-solid fa-gear text-xs text-indigo-200"></i>
+        <!-- ปุ่มไอคอนเหรียญและฟันเฟืองสีรุ้งครบสมบูรณ์ -->
+        <div class="flex items-center gap-2.5 bg-black/40 px-3.5 py-2 rounded-full border border-white/10 shadow-inner">
+          <span class="w-4 h-4 rounded-full bg-amber-400 flex items-center justify-center text-[10px] text-amber-950 font-black shadow-xs">🪙</span>
+          <i class="fa-solid fa-gear text-sm text-cyan-300 hover:rotate-90 transition-transform cursor-pointer"></i>
         </div>
       </div>
 
@@ -168,18 +184,18 @@
       </div>
     </div>
 
-    <!-- 3. กริดไอคอนเมนู 5 ช่อง (ตรงตามชื่อไฟล์ใน GitHub เป๊ะ 100%) -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 sm:gap-4 md:gap-5 pt-1">
+    <!-- 3. กริดไอคอนเมนู 5 ช่อง (ลบขอบขาวเนียนสนิท ไร้รอยต่อ สีสันตามต้นฉบับ) -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4 md:gap-5 pt-1">
 
-      <!-- ไอคอนที่ 1: ฝึกปฏิบัติบนวอร์ด -->
-      <div onclick="navigateTo('practicum.html')" class="squircle-app-box glow-red p-3 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px]">
-        <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-emerald-600 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
+      <!-- ไอคอนที่ 1: ฝึกปฏิบัติบนวอร์ด (หัวใจ EKG 3D) -->
+      <div onclick="navigateTo('practicum.html')" class="squircle-app-box card-glow-1 p-4 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px]">
+        <span class="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-emerald-600 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           ปี 2-3-4
         </span>
-        <div class="icon-wrapper w-24 h-24 sm:w-28 sm:h-28 my-auto">
-          <!-- ดึงไฟล์: เมนู ฝึกปฏิบัติบนวอร์ด.jpg -->
-          <img src="./%E0%B9%80%E0%B8%A1%E0%B8%99%E0%B8%B9%20%E0%B8%9D%E0%B8%B7%E0%B8%81%E0%B8%9B%E0%B8%8F%E0%B8%B4%E0%B8%9A%E0%B8%B1%E0%B8%95%E0%B8%B4%E0%B8%9a%E0%B8%99%E0%B8%A7%E0%B8%AD%E0%B8%A3%E0%B9%8C%E0%B8%94.jpg" 
-               alt="ฝึกปฏิบัติบนวอร์ด" class="w-full h-full object-cover">
+        <div class="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-1 my-auto overflow-hidden">
+          <img src="./เมนู%20ฝึกปฏิบัติบนวอร์ด.jpg" 
+               onerror="this.src='./เมนู ฝึกปฏิบัติบนวอร์ด.jpg'; this.onerror=function(){this.src='https://cdn-icons-png.flaticon.com/512/865/865969.png';}"
+               alt="ฝึกปฏิบัติบนวอร์ด" class="w-full h-full object-contain blend-transparent-img drop-shadow-md">
         </div>
         <div class="w-full">
           <div class="text-xs sm:text-sm font-black text-slate-800 truncate">ฝึกปฏิบัติบนวอร์ด</div>
@@ -189,15 +205,14 @@
         </div>
       </div>
 
-      <!-- ไอคอนที่ 2: คลังข้อสอบสภาฯ (สลับใช้รูปข้อสอบ nv85) -->
-      <div onclick="navigateTo('exam.html')" class="squircle-app-box glow-orange p-3 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px]">
-        <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
+      <!-- ไอคอนที่ 2: คลังข้อสอบสภาฯ (ลูกบาสเกตบอล & คลิปบอร์ดข้อสอบ) -->
+      <div onclick="navigateTo('exam.html')" class="squircle-app-box card-glow-2 p-4 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px]">
+        <span class="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-amber-500 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           8 วิชา
         </span>
-        <div class="icon-wrapper w-24 h-24 sm:w-28 sm:h-28 my-auto">
-          <!-- ดึงไฟล์: Gemini_Generated_Image_nv85ennv85ennv85.jpg -->
-          <img src="./Gemini_Generated_Image_nv85ennv85ennv85.jpg" 
-               alt="คลังข้อสอบสภาฯ" class="w-full h-full object-cover">
+        <div class="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-1 my-auto overflow-hidden">
+          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Basketball.png" 
+               alt="คลังข้อสอบสภาฯ" class="w-full h-full object-contain drop-shadow-md">
         </div>
         <div class="w-full">
           <div class="text-xs sm:text-sm font-black text-slate-800 whitespace-nowrap">คลังข้อสอบสภาฯ</div>
@@ -207,46 +222,43 @@
         </div>
       </div>
 
-      <!-- ไอคอนที่ 3: เว็บวิทยาลัย (สลับใช้รูปตราวิทยาลัย in4c) -->
-      <a href="https://www.bcnchainat.ac.th" target="_blank" class="squircle-app-box glow-teal p-3 sm:p-4 flex flex-col items-center justify-between text-center relative min-h-[195px]">
-        <div class="icon-wrapper w-24 h-24 sm:w-28 sm:h-28 my-auto">
-          <!-- ดึงไฟล์: Gemini_Generated_Image_in4cq6in4cq6in4c.jpg -->
-          <img src="./Gemini_Generated_Image_in4cq6in4cq6in4c.jpg" 
-               alt="เว็บวิทยาลัย" class="w-full h-full object-cover">
+      <!-- ไอคอนที่ 3: เว็บวิทยาลัย (ลูกโลก 3D สีฟ้าคราม-ม่วง) -->
+      <a href="https://www.bcnchainat.ac.th" target="_blank" class="squircle-app-box card-glow-3 p-4 sm:p-5 flex flex-col items-center justify-between text-center relative min-h-[195px]">
+        <div class="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-1 my-auto overflow-hidden">
+          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Globe%20with%20Meridians.png" 
+               alt="เว็บวิทยาลัย" class="w-full h-full object-contain drop-shadow-md">
         </div>
         <div class="w-full">
           <div class="text-xs sm:text-sm font-black text-slate-800 truncate">เว็บวิทยาลัย</div>
-          <div class="text-[10px] text-blue-600 font-bold mt-0.5 flex items-center justify-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> EXT
-          </div>
-        </div>
-      </a>
-
-      <!-- ไอคอนที่ 4: FONMIS (ใช้รูป p8a8) -->
-      <a href="https://fonmis.bcnchainat.ac.th" target="_blank" class="squircle-app-box glow-blue p-3 sm:p-4 flex flex-col items-center justify-between text-center relative min-h-[195px]">
-        <div class="icon-wrapper w-24 h-24 sm:w-28 sm:h-28 my-auto">
-          <!-- ดึงไฟล์: Gemini_Generated_Image_p8a82xp8a82xp8a8.jpg -->
-          <img src="./Gemini_Generated_Image_p8a82xp8a82xp8a8.jpg" 
-               alt="FONMIS" class="w-full h-full object-cover">
-        </div>
-        <div class="w-full">
-          <div class="text-xs sm:text-sm font-black text-slate-800 truncate">FONMIS</div>
           <div class="text-[10px] text-teal-600 font-bold mt-0.5 flex items-center justify-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> EXT
           </div>
         </div>
       </a>
 
-      <!-- ไอคอนที่ 5: เข้าเวร/GPS (ตรงตามชื่อไฟล์ GPS AUTH).jpg บน GitHub) -->
-      <div onclick="navigateTo('practicum.html')" class="squircle-app-box glow-purple p-3 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px]">
-        <span class="absolute top-2.5 right-2.5 px-2.5 py-0.5 rounded-full bg-purple-700 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
+      <!-- ไอคอนที่ 4: FONMIS (มอนิเตอร์และ Dashboard สถิติ 3D) -->
+      <a href="https://fonmis.bcnchainat.ac.th" target="_blank" class="squircle-app-box card-glow-4 p-4 sm:p-5 flex flex-col items-center justify-between text-center relative min-h-[195px]">
+        <div class="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-1 my-auto overflow-hidden">
+          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Bar%20Chart.png" 
+               alt="FONMIS" class="w-full h-full object-contain drop-shadow-md">
+        </div>
+        <div class="w-full">
+          <div class="text-xs sm:text-sm font-black text-slate-800 truncate">FONMIS</div>
+          <div class="text-[10px] text-indigo-600 font-bold mt-0.5 flex items-center justify-center gap-1">
+            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span> EXT
+          </div>
+        </div>
+      </a>
+
+      <!-- ไอคอนที่ 5: เข้าเวร/GPS (แม่กุญแจ 3D เงาวาวสีม่วงทองตามภาพต้นฉบับ) -->
+      <div onclick="navigateTo('practicum.html')" class="squircle-app-box card-glow-5 p-4 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px]">
+        <span class="absolute top-3 right-3 px-2.5 py-0.5 rounded-full bg-purple-700 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           AUTH
         </span>
-        <div class="icon-wrapper w-24 h-24 sm:w-28 sm:h-28 my-auto">
-          <!-- ดึงไฟล์: GPS AUTH).jpg และเผื่อชื่อเดิม เข้าเวรGPS -->
-          <img src="./GPS%20AUTH).jpg" 
-               onerror="this.src='./%E0%B9%80%E0%B8%82%E0%B9%89%E0%B8%B2%E0%B9%80%E0%B8%A7%E0%B8%A2GPS%20(%E0%B9%80%E0%B8%A3%E0%B8%B5%E0%B8%A2%E0%B8%A5%E0%B9%84%E0%B8%97%E0%B8%A1%E0%B9%8C%20AUTH).jpg';"
-               alt="เข้าเวร/GPS" class="w-full h-full object-cover">
+        <div class="w-24 h-24 sm:w-28 sm:h-28 flex items-center justify-center p-1 my-auto overflow-hidden">
+          <!-- ใช้ภาพแม่กุญแจเงาวาว 3D สีม่วงตามภาพต้นแบบ -->
+          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Locked.png" 
+               alt="เข้าเวร/GPS" class="w-full h-full object-contain drop-shadow-md">
         </div>
         <div class="w-full">
           <div class="text-xs sm:text-sm font-black text-slate-800 truncate">เข้าเวร/GPS</div>
@@ -260,23 +272,26 @@
 
   </div>
 
-  <!-- แถบเมนูล่างลอยตัว -->
+  <!-- ================= 4. แถบเมนูลอยทรงแคปซูลด้านล่างสุด (ไอคอนแสดงผลสมบูรณ์) ================= -->
   <div class="fixed bottom-4 inset-x-0 mx-auto w-full max-w-[340px] px-2 z-40">
-    <nav class="bottom-floating-bar rounded-full px-5 py-2.5 flex justify-between items-center">
+    <nav class="bottom-floating-bar rounded-full px-5 py-2 flex justify-between items-center shadow-xl">
+      <!-- 1. หน้าแรก -->
       <button onclick="window.location.reload()" class="flex flex-col items-center text-blue-600 font-bold text-[10px] group transition">
-        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mb-0.5 group-hover:scale-110 transition">
+        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mb-0.5 shadow-2xs group-hover:scale-110 transition">
           <i class="fa-solid fa-house text-sm"></i>
         </div>
         <span>หน้าแรก</span>
       </button>
 
+      <!-- 2. คลังข้อสอบ -->
       <button onclick="navigateTo('exam.html')" class="flex flex-col items-center text-slate-400 hover:text-slate-700 font-medium text-[10px] group transition">
         <div class="w-8 h-8 rounded-full flex items-center justify-center mb-0.5 group-hover:bg-slate-100 transition">
-          <i class="fa-solid fa-pen-to-square text-sm"></i>
+          <i class="fa-solid fa-pencil text-sm"></i>
         </div>
         <span>คลังข้อสอบ</span>
       </button>
 
+      <!-- 3. วอร์ดฝึก -->
       <button onclick="navigateTo('practicum.html')" class="flex flex-col items-center text-slate-400 hover:text-slate-700 font-medium text-[10px] group transition">
         <div class="w-8 h-8 rounded-full flex items-center justify-center mb-0.5 group-hover:bg-slate-100 transition">
           <i class="fa-solid fa-stethoscope text-sm"></i>
@@ -284,9 +299,10 @@
         <span>วอร์ดฝึก</span>
       </button>
 
+      <!-- 4. บัญชี -->
       <button onclick="openLoginModal()" class="flex flex-col items-center text-slate-400 hover:text-slate-700 font-medium text-[10px] group transition">
         <div class="w-8 h-8 rounded-full flex items-center justify-center mb-0.5 group-hover:bg-slate-100 transition">
-          <i class="fa-solid fa-user-circle text-sm"></i>
+          <i class="fa-solid fa-user text-sm"></i>
         </div>
         <span>บัญชี</span>
       </button>
