@@ -15,7 +15,7 @@
   <!-- Tailwind CSS & Google Fonts & Font Awesome -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -27,7 +27,7 @@
       -webkit-tap-highlight-color: transparent; 
     }
 
-    /* พื้นหลังออโรร่าพาสเทล ไล่เฉดฟ้า ครามอ่อน ม่วงลาเวนเดอร์ ชมพูอ่อน ตรงตามภาพ */
+    /* พื้นหลังออโรร่าพาสเทล ไล่เฉดฟ้า ครามอ่อน ม่วงลาเวนเดอร์ ชมพูอ่อน */
     body {
       background: radial-gradient(circle at 10% 20%, #dbeafe 0%, #ede9fe 40%, #fae8ff 75%, #fce7f3 100%);
       min-height: 100vh;
@@ -159,17 +159,19 @@
       </div>
     </div>
 
-    <!-- 3. กริดไอคอนเมนู 5 ช่อง (Responsive: จอมือถือ 3-5 คอลัมน์ / จอคอมเรียงแถวตรงตามภาพ) -->
+    <!-- 3. กริดไอคอนเมนู 5 ช่อง (ภาพ 3D Glossy สมจริงตรงตามตัวอย่าง) -->
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 sm:gap-4 md:gap-5 pt-1">
 
-      <!-- ไอคอนที่ 1: ฝึกปฏิบัติบนวอร์ด (รูปหัวใจคลื่นไฟฟ้า EKG 3D) -->
+      <!-- ไอคอนที่ 1: ฝึกปฏิบัติบนวอร์ด (หัวใจ 3D เงาวาวพร้อมเส้นคลื่นไฟฟ้า) -->
       <div onclick="navigateTo('practicum.html')" class="app-squircle p-4 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[160px]">
         <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-emerald-600 text-white font-black text-[9px] tracking-wider shadow-xs">
           ปี 2-3-4
         </span>
         <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center p-1 my-auto">
-          <!-- รูป 3D หัวใจเต้น / Pulse Heart -->
-          <img src="https://cdn-icons-png.flaticon.com/512/865/865969.png" alt="Care Plan" class="w-full h-full object-contain drop-shadow-md">
+          <!-- 3D Red Glossy Heart with Pulse Wave -->
+          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Smilies/Heart%20with%20Ribbon.png" 
+               onerror="this.src='https://cdn-icons-png.flaticon.com/512/865/865969.png'"
+               alt="Care Plan" class="w-full h-full object-contain filter drop-shadow-lg">
         </div>
         <div>
           <div class="text-xs sm:text-sm font-bold text-slate-800">ฝึกปฏิบัติบนวอร์ด</div>
@@ -179,14 +181,19 @@
         </div>
       </div>
 
-      <!-- ไอคอนที่ 2: คลังข้อสอบสภาฯ (รูปลูกบาสเกตบอล + แผ่นข้อสอบ) -->
+      <!-- ไอคอนที่ 2: คลังข้อสอบสภาฯ (ลูกบาสเกตบอล 3D & กระดานคลิปบอร์ดข้อสอบ) -->
       <div onclick="navigateTo('exam.html')" class="app-squircle p-4 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[160px]">
         <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-amber-500 text-white font-black text-[9px] tracking-wider shadow-xs">
           8 วิชา
         </span>
-        <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center p-1 my-auto">
-          <!-- รูป 3D บาสเกตบอล & ข้อสอบ -->
-          <img src="https://cdn-icons-png.flaticon.com/512/2997/2997295.png" alt="Exam Bank" class="w-full h-full object-contain drop-shadow-md">
+        <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center p-1 my-auto relative">
+          <!-- 3D Basketball with Clipboard -->
+          <div class="relative w-full h-full flex items-center justify-center">
+            <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Activities/Basketball.png" 
+                 alt="Exam Basketball" class="w-14 h-14 sm:w-16 sm:h-16 object-contain filter drop-shadow-md">
+            <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Clipboard.png" 
+                 alt="Exam Sheet" class="w-8 h-8 sm:w-10 sm:h-10 object-contain absolute bottom-0 right-0 filter drop-shadow-lg">
+          </div>
         </div>
         <div>
           <div class="text-xs sm:text-sm font-bold text-slate-800">คลังข้อสอบสภาฯ</div>
@@ -196,11 +203,12 @@
         </div>
       </div>
 
-      <!-- ไอคอนที่ 3: เว็บวิทยาลัย (รูปลูกโลกดิจิทัลสีครามอ่อน 3D) -->
+      <!-- ไอคอนที่ 3: เว็บวิทยาลัย (ลูกโลก 3D โทนฟ้า-ม่วง มีโครงข่ายล้อมรอบ) -->
       <a href="https://www.bcnchainat.ac.th" target="_blank" class="app-squircle p-4 sm:p-5 flex flex-col items-center justify-between text-center relative min-h-[160px]">
         <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center p-1 my-auto">
-          <!-- รูป 3D ลูกโลกอินเทอร์เน็ต -->
-          <img src="https://cdn-icons-png.flaticon.com/512/1006/1006771.png" alt="Website" class="w-full h-full object-contain drop-shadow-md">
+          <!-- 3D Glossy Internet Globe with Meridians -->
+          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Travel%20and%20places/Globe%20with%20Meridians.png" 
+               alt="Website" class="w-full h-full object-contain filter drop-shadow-lg">
         </div>
         <div>
           <div class="text-xs sm:text-sm font-bold text-slate-800">เว็บวิทยาลัย</div>
@@ -210,11 +218,13 @@
         </div>
       </a>
 
-      <!-- ไอคอนที่ 4: FONMIS (รูปจอคอมพิวเตอร์และ Dashboard สถิติ 3D) -->
+      <!-- ไอคอนที่ 4: FONMIS (หน้าจอมอนิเตอร์ 3D แสดงแดชบอร์ดสถิติ) -->
       <a href="https://fonmis.bcnchainat.ac.th" target="_blank" class="app-squircle p-4 sm:p-5 flex flex-col items-center justify-between text-center relative min-h-[160px]">
         <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center p-1 my-auto">
-          <!-- รูป 3D จอ Monitor สถิติ -->
-          <img src="https://cdn-icons-png.flaticon.com/512/1802/1802977.png" alt="FONMIS" class="w-full h-full object-contain drop-shadow-md">
+          <!-- 3D Computer Display with Charts -->
+          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Bar%20Chart.png" 
+               onerror="this.src='https://cdn-icons-png.flaticon.com/512/1802/1802977.png'"
+               alt="FONMIS" class="w-full h-full object-contain filter drop-shadow-lg">
         </div>
         <div>
           <div class="text-xs sm:text-sm font-bold text-slate-800">FONMIS</div>
@@ -224,14 +234,15 @@
         </div>
       </a>
 
-      <!-- ไอคอนที่ 5: เข้าเวร/GPS (รูปแม่กุญแจม่วงล็อก AUTH 3D) -->
+      <!-- ไอคอนที่ 5: เข้าเวร/GPS (แม่กุญแจ 3D เงาวาวสีม่วงทอง AUTH) -->
       <div onclick="navigateTo('practicum.html')" class="app-squircle p-4 sm:p-5 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[160px]">
         <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-purple-700 text-white font-black text-[9px] tracking-wider shadow-xs">
           AUTH
         </span>
         <div class="w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center p-1 my-auto">
-          <!-- รูป 3D แม่กุญแจเงางาม -->
-          <img src="https://cdn-icons-png.flaticon.com/512/3064/3064155.png" alt="Attendance Lock" class="w-full h-full object-contain drop-shadow-md">
+          <!-- 3D Glossy Locked Padlock -->
+          <img src="https://raw.githubusercontent.com/Tarikul-Islam-Anik/Animated-Fluent-Emojis/master/Emojis/Objects/Locked.png" 
+               alt="Attendance Lock" class="w-full h-full object-contain filter drop-shadow-lg">
         </div>
         <div>
           <div class="text-xs sm:text-sm font-bold text-slate-800">เข้าเวร/GPS</div>
@@ -310,7 +321,6 @@
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbygTRS3dp8WQkGKpiRxKbsDdDjfQUAeZnHwid6PTX3ABskdSbQdbEBch7dkia3UlaSJ/exec";
 
-    // เปลี่ยนหน้าไปยังไฟล์ที่ต้องการ
     function navigateTo(pageUrl) {
       window.location.href = pageUrl;
     }
@@ -327,7 +337,6 @@
       const pin = document.getElementById('loginPinInput').value.trim();
       if (!pin) return;
 
-      // สิทธิ์อาจารย์
       if (pin === "22122531") {
         sessionStorage.setItem('is_teacher', 'true');
         closeLoginModal();
@@ -342,7 +351,6 @@
         return;
       }
 
-      // สิทธิ์นักศึกษา ตรวจสอบผ่าน Backend
       Swal.fire({ title: 'กำลังตรวจสอบข้อมูล...', didOpen: () => Swal.showLoading() });
       try {
         const res = await fetch(API_URL, {
