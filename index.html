@@ -54,8 +54,9 @@
       box-shadow: 0 0 16px #00f2fe;
     }
 
+    /* ตัวการ์ดสี่เหลี่ยมมน Squircle */
     .squircle-card {
-      border-radius: 36px;
+      border-radius: 38px;
       background: #ffffff;
       border: 2px solid rgba(255, 255, 255, 0.95);
       box-shadow: 0 16px 32px -8px rgba(99, 102, 241, 0.12);
@@ -64,28 +65,34 @@
     .squircle-card:hover { transform: translateY(-6px); }
     .squircle-card:active { transform: scale(0.96); }
 
+    /* แท่นจัดวางรูปภาพ: เพิ่มความสูงและจัดกลาง */
     .icon-stage-large {
       width: 100%;
-      height: 110px;
+      height: 125px;
       display: flex;
       align-items: center;
       justify-content: center;
       overflow: hidden;
-      border-radius: 28px 28px 12px 12px;
+      border-radius: 32px 32px 14px 14px;
       position: relative;
     }
-    @media (min-width: 640px) { .icon-stage-large { height: 125px; } }
+    @media (min-width: 640px) { 
+      .icon-stage-large { height: 140px; } 
+    }
 
+    /* 🔥 ลบพื้นหลังสีขาว-เทาออก 100% พร้อมขยายขนาดใหญ่ชิดขอบมน */
     .clean-3d-img {
       width: 100%;
       height: 100%;
       object-fit: contain;
       mix-blend-mode: multiply;
-      filter: contrast(116%) brightness(103%);
-      transform: scale(1.22);
+      filter: contrast(125%) brightness(105%) saturate(108%);
+      transform: scale(1.35);
       transition: transform 0.25s ease;
     }
-    .squircle-card:hover .clean-3d-img { transform: scale(1.28); }
+    .squircle-card:hover .clean-3d-img { 
+      transform: scale(1.42); 
+    }
 
     .bottom-bar {
       background: rgba(255, 255, 255, 0.95);
@@ -109,7 +116,7 @@
     <!-- 1. แถบโปรไฟล์ Nursenote ด้านบน -->
     <div class="top-header-glass p-3.5 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-3 relative">
       
-      <!-- 🛡️ ปุ่ม Admin ลับมุมบน (แสดงเฉพาะ nuntabhorn@bcnchainat.ac.th เท่านั้น) -->
+      <!-- 🛡️ ปุ่ม Admin ลับมุมบน (แสดงเฉพาะอาจารย์ นันตพร) -->
       <button onclick="openAdminSettingsModal()" id="btnAdminShield" title="แผงควบคุมระบบ (Admin)" 
               class="hidden absolute top-2.5 right-3 w-8 h-8 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition active:scale-95 shadow-xs">
         <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
@@ -186,17 +193,18 @@
       </div>
     </div>
 
-    <!-- 3. กริดไอคอนเมนู 5 ช่องเดิมของ NURSENOTE -->
+    <!-- 3. กริดไอคอนเมนู 5 ช่องเดิมของ NURSENOTE (ภาพขยายใหญ่ ตัดพื้นขาว ชิดขอบมน) -->
     <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 sm:gap-4 pt-1">
 
-      <div onclick="navigateTo('practicum.html')" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[185px]">
+      <!-- เมนู 1: ฝึกปฏิบัติบนวอร์ด -->
+      <div onclick="navigateTo('practicum.html')" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px] sm:min-h-[210px]">
         <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-emerald-600 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           ปี 2-3-4
         </span>
         <div class="icon-stage-large">
           <img src="icon-practicum.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/865/865969.png';" alt="ฝึกปฏิบัติบนวอร์ด" class="clean-3d-img">
         </div>
-        <div class="w-full mt-1">
+        <div class="w-full mt-2">
           <div class="text-xs sm:text-sm font-black text-slate-800 truncate">ฝึกปฏิบัติบนวอร์ด</div>
           <div class="text-[10px] text-emerald-600 font-bold mt-0.5 flex items-center justify-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Care Plan/เวร
@@ -204,14 +212,15 @@
         </div>
       </div>
 
-      <div onclick="navigateTo('exam.html')" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[185px]">
+      <!-- เมนู 2: คลังข้อสอบสภาฯ -->
+      <div onclick="navigateTo('exam.html')" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px] sm:min-h-[210px]">
         <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-amber-500 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           8 วิชา
         </span>
         <div class="icon-stage-large">
           <img src="icon-exam.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2997/2997295.png';" alt="คลังข้อสอบสภาฯ" class="clean-3d-img">
         </div>
-        <div class="w-full mt-1">
+        <div class="w-full mt-2">
           <div class="text-xs sm:text-sm font-black text-slate-800 whitespace-nowrap">คลังข้อสอบสภาฯ</div>
           <div class="text-[10px] text-amber-600 font-bold mt-0.5 flex items-center justify-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> ข้อสอบเสมือน
@@ -219,11 +228,12 @@
         </div>
       </div>
 
-      <a href="https://www.bcnchainat.ac.th" target="_blank" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative min-h-[185px]">
+      <!-- เมนู 3: เว็บวิทยาลัย -->
+      <a href="https://www.bcnchainat.ac.th" target="_blank" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative min-h-[195px] sm:min-h-[210px]">
         <div class="icon-stage-large">
           <img src="icon-web.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1006/1006771.png';" alt="เว็บวิทยาลัย" class="clean-3d-img">
         </div>
-        <div class="w-full mt-1">
+        <div class="w-full mt-2">
           <div class="text-xs sm:text-sm font-black text-slate-800 truncate">เว็บวิทยาลัย</div>
           <div class="text-[10px] text-teal-600 font-bold mt-0.5 flex items-center justify-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> EXT
@@ -231,11 +241,12 @@
         </div>
       </a>
 
-      <a href="https://fonmis.bcnchainat.ac.th" target="_blank" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative min-h-[185px]">
+      <!-- เมนู 4: FONMIS -->
+      <a href="https://fonmis.bcnchainat.ac.th" target="_blank" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative min-h-[195px] sm:min-h-[210px]">
         <div class="icon-stage-large">
           <img src="icon-fonmis.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1802/1802977.png';" alt="FONMIS" class="clean-3d-img">
         </div>
-        <div class="w-full mt-1">
+        <div class="w-full mt-2">
           <div class="text-xs sm:text-sm font-black text-slate-800 truncate">FONMIS</div>
           <div class="text-[10px] text-indigo-600 font-bold mt-0.5 flex items-center justify-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span> EXT
@@ -243,14 +254,15 @@
         </div>
       </a>
 
-      <div onclick="navigateTo('attendance.html')" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[185px] col-span-2 sm:col-span-1">
+      <!-- เมนู 5: เข้าเวร/GPS -->
+      <div onclick="navigateTo('attendance.html')" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px] sm:min-h-[210px] col-span-2 sm:col-span-1">
         <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-purple-700 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           AUTH
         </span>
         <div class="icon-stage-large">
           <img src="icon-attendance.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3064/3064155.png';" alt="เข้าเวร/GPS" class="clean-3d-img">
         </div>
-        <div class="w-full mt-1">
+        <div class="w-full mt-2">
           <div class="text-xs sm:text-sm font-black text-slate-800 truncate">เข้าเวร/GPS</div>
           <div class="text-[10px] text-purple-600 font-bold mt-0.5 flex items-center justify-center gap-1">
             <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span> เรียลไทม์
@@ -262,7 +274,7 @@
 
   </div>
 
-  <!-- แถบเมนูลอยล่างสุด -->
+  <!-- 4. แถบเมนูลอยล่างสุด -->
   <div class="fixed bottom-3 inset-x-0 mx-auto w-full max-w-[340px] px-2 z-40">
     <nav class="bottom-bar rounded-full px-5 py-2 flex justify-between items-center shadow-xl">
       <button onclick="window.location.reload()" class="flex flex-col items-center text-blue-600 font-bold text-[10px] group transition">
@@ -295,7 +307,7 @@
     </nav>
   </div>
 
-  <!-- ================= 5. MODAL เข้าสู่ระบบยืนยันตัวตนด้วย OTP อีเมลจริง (ปลอมไม่ได้ 100%) ================= -->
+  <!-- ================= 5. MODAL ระบบยืนยันตัวตน OTP ทางอีเมลวิทยาลัย ================= -->
   <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-[38px] max-w-sm w-full p-6 sm:p-7 text-center space-y-4 shadow-2xl border border-white">
       <div class="w-16 h-16 mx-auto rounded-3xl bg-blue-600 text-white flex items-center justify-center text-3xl shadow-lg shadow-blue-500/30">
@@ -368,7 +380,6 @@
       document.getElementById('inputOtpCode').value = "";
     }
 
-    // ขอรับรหัส OTP ไปที่กล่องข้อความจริง
     async function handleRequestOtp() {
       const email = document.getElementById('inputUserEmail').value.trim().toLowerCase();
       
@@ -411,7 +422,6 @@
       }
     }
 
-    // ยืนยันรหัส OTP
     async function handleVerifyOtp() {
       const otp = document.getElementById('inputOtpCode').value.trim();
       if (!otp || otp.length !== 6) {
@@ -494,6 +504,20 @@
       } else {
         openLoginModal();
       }
+    }
+
+    function openAdminSettingsModal() {
+      Swal.fire({
+        title: 'แผงควบคุม Nursenote (Admin)',
+        html: `
+          <div class="text-left text-xs space-y-2 p-2">
+            <p><strong>ผู้ดูแลระบบ:</strong> อาจารย์ นันตพร ทองเต็ม</p>
+            <p><strong>อีเมล:</strong> ${SOLE_ADMIN_EMAIL}</p>
+            <p class="text-slate-500 pt-1">• ระบบพร้อมใช้งานสำหรับบุคลากรและนักศึกษา วพบ.ชัยนาท</p>
+          </div>
+        `,
+        icon: 'info'
+      });
     }
   </script>
 </body>
