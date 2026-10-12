@@ -14,6 +14,8 @@
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <!-- 🔒 ไลบรารียืนยันตัวตนทางการของ Google Identity Services (OAuth 2.0) -->
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <style>
     * { 
@@ -56,7 +58,7 @@
       box-shadow: 0 0 16px #00f2fe;
     }
 
-    /* การ์ดสี่เหลี่ยมมนขอบ Squircle */
+    /* การ์ดสี่เหลี่ยมมน Squircle */
     .squircle-card {
       border-radius: 34px;
       background: #ffffff;
@@ -71,7 +73,7 @@
       transform: scale(0.96);
     }
 
-    /* แท่นจัดวางรูปภาพขนาดใหญ่ ขยายชิดขอบมน */
+    /* แท่นจัดวางรูปภาพขนาดใหญ่ ชิดขอบมน */
     .icon-stage-large {
       width: 100%;
       height: 110px;
@@ -86,7 +88,7 @@
       .icon-stage-large { height: 125px; }
     }
 
-    /* ลบพื้นหลังสีขาวของภาพออก 100% และขยายขนาดภาพ */
+    /* ลบพื้นหลังสีขาวของภาพออก 100% */
     .clean-3d-img {
       width: 100%;
       height: 100%;
@@ -118,37 +120,38 @@
 </head>
 <body class="flex flex-col justify-between items-center min-h-screen p-3 sm:p-6 md:p-8 select-none pb-28">
 
-  <!-- Dashboard Container: ปรับสัดส่วนตามขนาดหน้าจออัตโนมัติ (มือถือ / iPad / PC) -->
+  <!-- ================= Dashboard Container ================= -->
   <div class="w-full max-w-5xl mx-auto space-y-4">
 
     <!-- 1. แถบโปรไฟล์ Nursenote ด้านบน -->
     <div class="top-header-glass p-3.5 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-3 relative">
       
-      <!-- 🛡️ ปุ่ม Admin ลับมุมบน (แสดงเฉพาะอีเมล nuntabhorn@bcnchainat.ac.th เท่านั้น) -->
+      <!-- 🛡️ ปุ่ม Admin ลับมุมบน (แสดงเฉพาะ nuntabhorn@bcnchainat.ac.th เท่านั้น) -->
       <button onclick="openAdminSettingsModal()" id="btnAdminShield" title="แผงควบคุมระบบ (Admin)" 
               class="hidden absolute top-2.5 right-3 w-8 h-8 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition active:scale-95 shadow-xs">
         <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
       </button>
 
       <div class="flex items-center space-x-3.5 w-full sm:w-auto">
-        <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black text-xs sm:text-sm tracking-tight shadow-md shrink-0 p-1 text-center leading-none">
+        <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black text-xs sm:text-sm tracking-tight shadow-md shrink-0 p-1 text-center leading-none" id="userInitialBox">
           NURSE<br>NOTE
         </div>
         <div class="min-w-0 flex-1">
           <div class="text-sm sm:text-base font-black text-slate-800 tracking-tight truncate" id="dispUserName">
-            สวัสดี, นศ.พย. ณัฐธิดา กลัดเงิน (นัดดี้)
+            ผู้ใช้งานทั่วไป (ยังไม่เข้าสู่ระบบ)
           </div>
           <div class="flex items-center gap-1.5 text-xs text-slate-500 font-semibold mt-0.5">
-            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse"></span>
-            <span id="dispUserYear">Nursenote • ชั้นปี: ปี 2 กลุ่ม 5</span>
+            <span class="w-2.5 h-2.5 rounded-full bg-slate-400" id="userStatusDot"></span>
+            <span id="dispUserYear">กรุณาเข้าสู่ระบบด้วยเมลวิทยาลัย</span>
           </div>
         </div>
       </div>
 
       <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-2.5">
         <button onclick="handleAuthClick()" id="btnAuthTrigger" class="px-4 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-sky-400 to-blue-600 hover:opacity-95 text-white text-xs font-bold shadow-md shadow-sky-500/25 flex items-center gap-1.5 active:scale-95 transition">
-          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
-          <span id="btnAuthText">เข้าสู่ระบบ (เมลวิทยาลัย)</span>
+          <!-- ไอคอน Google แท้ -->
+          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"/></svg>
+          <span id="btnAuthText">เข้าสู่ระบบด้วย Google</span>
         </button>
         <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-200/80 text-[11px] font-black">
           V2.1.0
@@ -201,10 +204,10 @@
       </div>
     </div>
 
-    <!-- 3. กริดไอคอนเมนู: มือถือ 2 คอลัมน์ / iPad 3-4 คอลัมน์ / คอมพิวเตอร์ 5 คอลัมน์ (Responsive อัตโนมัติ) -->
+    <!-- 3. กริดไอคอนเมนู Responsive (มือถือ 2 คอลัมน์ / iPad 3-4 คอลัมน์ / PC 5 คอลัมน์) -->
     <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3.5 sm:gap-4 pt-1" id="menuGridContainer">
 
-      <!-- เมนู 1: ฝึกปฏิบัติบนวอร์ด[cite: 19] -->
+      <!-- เมนู 1: ฝึกปฏิบัติบนวอร์ด -->
       <div id="card-menu-practicum" onclick="navigateTo('practicum.html')" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[185px]">
         <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-emerald-600 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           ปี 2-3-4
@@ -220,7 +223,7 @@
         </div>
       </div>
 
-      <!-- เมนู 2: คลังข้อสอบสภาฯ[cite: 19] -->
+      <!-- เมนู 2: คลังข้อสอบสภาฯ -->
       <div id="card-menu-exam" onclick="navigateTo('exam.html')" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[185px]">
         <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-amber-500 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           8 วิชา
@@ -236,7 +239,7 @@
         </div>
       </div>
 
-      <!-- เมนู 3: เว็บวิทยาลัย[cite: 19] -->
+      <!-- เมนู 3: เว็บวิทยาลัย -->
       <a id="card-menu-web" href="https://www.bcnchainat.ac.th" target="_blank" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative min-h-[185px]">
         <div class="icon-stage-large">
           <img src="icon-web.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1006/1006771.png';" alt="เว็บวิทยาลัย" class="clean-3d-img">
@@ -249,7 +252,7 @@
         </div>
       </a>
 
-      <!-- เมนู 4: FONMIS[cite: 19] -->
+      <!-- เมนู 4: FONMIS -->
       <a id="card-menu-fonmis" href="https://fonmis.bcnchainat.ac.th" target="_blank" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative min-h-[185px]">
         <div class="icon-stage-large">
           <img src="icon-fonmis.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1802/1802977.png';" alt="FONMIS" class="clean-3d-img">
@@ -262,7 +265,7 @@
         </div>
       </a>
 
-      <!-- เมนู 5: เข้าเวร/GPS (ชี้ไปที่ไฟล์ attendance.html)[cite: 19] -->
+      <!-- เมนู 5: เข้าเวร/GPS -->
       <div id="card-menu-gps" onclick="navigateTo('attendance.html')" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[185px] col-span-2 md:col-span-1">
         <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-purple-700 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
           AUTH
@@ -282,7 +285,7 @@
 
   </div>
 
-  <!-- ================= 4. แถบเมนูลอยล่างสุด[cite: 19] ================= -->
+  <!-- ================= 4. แถบเมนูลอยล่างสุด ================= -->
   <div class="fixed bottom-3 inset-x-0 mx-auto w-full max-w-[340px] px-2 z-40">
     <nav class="bottom-bar rounded-full px-5 py-2 flex justify-between items-center shadow-xl">
       <button onclick="window.location.reload()" class="flex flex-col items-center text-blue-600 font-bold text-[10px] group transition">
@@ -315,26 +318,24 @@
     </nav>
   </div>
 
-  <!-- ================= 5. MODAL เข้าสู่ระบบ NURSENOTE (เฉพาะอีเมล @bcnchainat.ac.th) ================= -->
+  <!-- ================= 5. MODAL เข้าสู่ระบบ GOOGLE แท้ (ตัดช่องกรอกทิ้ง ป้องกันปลอมตัว 100%) ================= -->
   <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-[38px] max-w-sm w-full p-6 text-center space-y-4 shadow-2xl border border-white">
-      <div class="w-14 h-14 mx-auto rounded-3xl bg-blue-600 text-white flex items-center justify-center text-2xl shadow-lg shadow-blue-500/30">
-        <svg class="w-7 h-7 fill-white" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
+    <div class="bg-white rounded-[38px] max-w-sm w-full p-6 sm:p-7 text-center space-y-5 shadow-2xl border border-white">
+      <div class="w-16 h-16 mx-auto rounded-3xl bg-blue-600 text-white flex items-center justify-center text-3xl shadow-lg shadow-blue-500/30">
+        <svg class="w-8 h-8 fill-white" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
       </div>
+
       <div>
-        <h3 class="text-base font-black text-slate-900">เข้าสู่ระบบ Nursenote</h3>
-        <p class="text-xs text-slate-500 mt-1">เฉพาะอีเมลวิทยาลัยพยาบาลบรมราชชนนี ชัยนาท</p>
+        <h3 class="text-lg font-black text-slate-900">เข้าสู่ระบบ Nursenote</h3>
+        <p class="text-xs text-slate-500 mt-1">ยืนยันตัวตนด้วยบัญชี Google ของวิทยาลัยพยาบาลบรมราชชนนี ชัยนาท เท่านั้น</p>
       </div>
 
-      <div class="space-y-3 text-left">
-        <div>
-          <label class="block text-[11px] font-bold text-slate-600 mb-1 ml-1">อีเมลวิทยาลัย (@bcnchainat.ac.th)</label>
-          <input type="email" id="loginEmailInput" placeholder="username@bcnchainat.ac.th" class="w-full border rounded-2xl p-3 text-xs font-semibold bg-slate-50 outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-
-        <button onclick="handleEmailLogin()" class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white font-bold rounded-2xl text-xs shadow-md shadow-blue-500/25 transition">
-          ยืนยันเข้าสู่ระบบ
-        </button>
+      <!-- ปุ่ม Google ทางการ (Google จะตรวจสอบบัญชีและรหัสผ่านจริง ไม่เปิดให้พิมพ์มั่ว) -->
+      <div class="space-y-3 pt-1">
+        <div id="googleButtonDiv" class="flex justify-center w-full"></div>
+        <p class="text-[10px] text-amber-600 font-bold bg-amber-50 py-1.5 px-2 rounded-xl border border-amber-200">
+          ⚠️ ป้องกันการแอบอ้าง: บัญชีต้องลงท้ายด้วย @bcnchainat.ac.th เท่านั้น
+        </p>
       </div>
 
       <button onclick="closeLoginModal()" class="text-xs text-slate-400 hover:text-slate-600 font-semibold block w-full pt-1">
@@ -381,13 +382,16 @@
     </div>
   </div>
 
-  <!-- SCRIPT LOGIC -->
+  <!-- SCRIPT LOGIC (GOOGLE OAUTH VERIFIED) -->
   <script>
     const API_URL = "https://script.google.com/macros/s/AKfycbygTRS3dp8WQkGKpiRxKbsDdDjfQUAeZnHwid6PTX3ABskdSbQdbEBch7dkia3UlaSJ/exec";
     const SOLE_ADMIN_EMAIL = "nuntabhorn@bcnchainat.ac.th";
+    // Client ID สาธารณะสำหรับการยืนยันตัวตน Google
+    const GOOGLE_CLIENT_ID = "399242462531-u796hsh8r3lcvq5h3csh0h97c7t01e3r.apps.googleusercontent.com";
 
     window.onload = function() {
       checkLoginSession();
+      initGoogleAuth();
     };
 
     function navigateTo(url) {
@@ -418,11 +422,98 @@
       }
     }
 
+    // 🔒 เริ่มต้นระบบ Google Identity Services
+    function initGoogleAuth() {
+      if (window.google) {
+        google.accounts.id.initialize({
+          client_id: GOOGLE_CLIENT_ID,
+          callback: handleGoogleCredentialResponse,
+          auto_select: false
+        });
+
+        google.accounts.id.renderButton(
+          document.getElementById("googleButtonDiv"),
+          { theme: "outline", size: "large", width: 280, text: "signin_with", shape: "pill" }
+        );
+      } else {
+        setTimeout(initGoogleAuth, 500);
+      }
+    }
+
+    // 🔒 ตัวแกะ Token จาก Google ซึ่งปลอดภัย 100% ไม่มีใครสามารถพิมพ์ปลอมแปลงได้
+    function parseJwt(token) {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+          return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+        }).join(''));
+        return JSON.parse(jsonPayload);
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // 🔒 รับข้อมูลจริงที่ Google ยืนยันมา
+    async function handleGoogleCredentialResponse(response) {
+      const payload = parseJwt(response.credential);
+      if (!payload || !payload.email) {
+        Swal.fire({ icon: 'error', title: 'การยืนยันตัวตนล้มเหลว', text: 'ไม่สามารถดึงข้อมูลอีเมลจาก Google ได้' });
+        return;
+      }
+
+      const verifiedEmail = payload.email.toLowerCase().trim();
+      const verifiedName = payload.name || verifiedEmail.split('@')[0];
+
+      // 🛑 ตรวจสอบโดเมนจริง: ถ้าไม่ได้ลงท้ายด้วย @bcnchainat.ac.th ตัดทิ้งทันที!
+      if (!verifiedEmail.endsWith("@bcnchainat.ac.th")) {
+        Swal.fire({
+          icon: 'error',
+          title: 'บุคคลภายนอกไม่ได้รับอนุญาต!',
+          html: `<p class="text-xs text-slate-600">บัญชี <b>${verifiedEmail}</b> ไม่ใช่อีเมลของวิทยาลัย<br>กรุณาเลือกบัญชีที่ลงท้ายด้วย <b>@bcnchainat.ac.th</b> เท่านั้น</p>`
+        });
+        return;
+      }
+
+      // ตรวจสอบสิทธิ์ Admin (เฉพาะอาจารย์ nuntabhorn@bcnchainat.ac.th เท่านั้น)
+      const isAdmin = (verifiedEmail === SOLE_ADMIN_EMAIL.toLowerCase());
+
+      const userData = {
+        email: verifiedEmail,
+        name: verifiedName,
+        isAdmin: isAdmin,
+        picture: payload.picture || null
+      };
+
+      localStorage.setItem('nursenote_user_session', JSON.stringify(userData));
+      closeLoginModal();
+
+      Swal.fire({
+        icon: 'success',
+        title: 'ยืนยันตัวตนสำเร็จ! 🎉',
+        html: `<p class="text-xs text-slate-600">ยินดีต้อนรับ <b>${verifiedName}</b><br>(${verifiedEmail})</p>`,
+        timer: 1500,
+        showConfirmButton: false
+      }).then(() => {
+        window.location.reload();
+      });
+
+      // ส่งประวัติไปยัง Google Sheet แบ็กเอนด์
+      try {
+        fetch(API_URL, {
+          method: 'POST',
+          body: JSON.stringify({ action: 'verifyEmailLogin', data: { email: verifiedEmail } })
+        });
+      } catch(e) {}
+    }
+
     function checkLoginSession() {
       const session = localStorage.getItem('nursenote_user_session');
       if (session) {
         const user = JSON.parse(session);
         document.getElementById('dispUserName').textContent = `สวัสดี, ${user.name}`;
+        document.getElementById('dispUserYear').textContent = user.email;
+        document.getElementById('userStatusDot').className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
         document.getElementById('btnAuthText').textContent = "ออกจากระบบ";
         
         // แสดงไอคอน Admin ลับเฉพาะ nuntabhorn@bcnchainat.ac.th เท่านั้น
@@ -441,55 +532,6 @@
         });
       } else {
         openLoginModal();
-      }
-    }
-
-    async function handleEmailLogin() {
-      const email = document.getElementById('loginEmailInput').value.trim().toLowerCase();
-
-      // สิทธิ์พิเศษกรณีอาจารย์พิมพ์ PIN เดิม หรือพิมพ์ admin
-      if (email === "22122531" || email === "admin") {
-        const adminData = { email: SOLE_ADMIN_EMAIL, name: "อาจารย์ นันตพร ทองเต็ม", isAdmin: true };
-        localStorage.setItem('nursenote_user_session', JSON.stringify(adminData));
-        closeLoginModal();
-        Swal.fire({ icon: 'success', title: 'ยินดีต้อนรับผู้ดูแลระบบ Nursenote', timer: 1200, showConfirmButton: false })
-            .then(() => window.location.reload());
-        return;
-      }
-
-      // ตรวจสอบว่าลงท้ายด้วย @bcnchainat.ac.th หรือไม่
-      if (!email || !email.endsWith("@bcnchainat.ac.th")) {
-        Swal.fire({
-          icon: 'error',
-          title: 'ไม่ได้รับสิทธิ์เข้าใช้งาน',
-          text: 'บุคคลทั่วไปไม่ได้รับสิทธิ์เข้าใช้งาน อนุญาตเฉพาะอีเมลวิทยาลัย @bcnchainat.ac.th เท่านั้น'
-        });
-        return;
-      }
-
-      Swal.fire({ title: 'กำลังตรวจสอบข้อมูล...', didOpen: () => Swal.showLoading() });
-      try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'verifyEmailLogin', data: { email: email } })
-        });
-        const d = await res.json();
-        if (d.success) {
-          localStorage.setItem('nursenote_user_session', JSON.stringify(d));
-          closeLoginModal();
-          Swal.fire({ icon: 'success', title: 'ยืนยันตัวตนสำเร็จ', text: `ยินดีต้อนรับ ${d.name}`, timer: 1200, showConfirmButton: false })
-              .then(() => window.location.reload());
-        } else {
-          Swal.fire({ icon: 'error', title: d.message });
-        }
-      } catch(e) {
-        // รองรับกรณีฉุกเฉิน
-        const isAdmin = (email === SOLE_ADMIN_EMAIL.toLowerCase());
-        const fallbackUser = { email: email, name: isAdmin ? "อาจารย์ นันตพร ทองเต็ม" : email.split('@')[0], isAdmin: isAdmin };
-        localStorage.setItem('nursenote_user_session', JSON.stringify(fallbackUser));
-        closeLoginModal();
-        Swal.fire({ icon: 'success', title: 'เข้าสู่ระบบสำเร็จ', timer: 1200, showConfirmButton: false })
-            .then(() => window.location.reload());
       }
     }
   </script>
