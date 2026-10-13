@@ -44,7 +44,10 @@
     const e = c * d;
 
     const imgKind = isReaction ? 'reactions' : 'directions';
-    const bgUrl = `classroom-mascots/${id}/${imgKind}.webp`;
+    // ใช้ local path หากมี หรือดึงตรงจาก CDN เพื่อให้รูปขึ้น 100% แม้ไม่ได้อัปโฟลเดอร์ขึ้น GitHub
+    const bgUrl = window.HICLASS_USE_LOCAL 
+      ? `classroom-mascots/${id}/${imgKind}.webp`
+      : `https://myhiclass.com/classroom-mascots/${id}/${imgKind}.webp`;
 
     return {
       containerW: size,
