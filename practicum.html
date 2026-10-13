@@ -466,6 +466,10 @@
             <span class="text-base">⏱️</span>
             <span>สาย</span>
           </button>
+          <button onclick="quickAttendanceAction('ส่งงานช้า')" class="radial-btn bg-purple-500 hover:bg-purple-600" title="ส่งงานช้า">
+            <span class="text-base">⏳</span>
+            <span class="text-[9px]">ส่งช้า</span>
+          </button>
           <button onclick="quickAttendanceAction('ป่วย')" class="radial-btn bg-sky-500 hover:bg-sky-600" title="ลาป่วย">
             <span class="text-base">🌡️</span>
             <span>ป่วย</span>
@@ -657,18 +661,29 @@
       switchTab('teacher');
     }
 
-    // 2. เรนเดอร์การ์ดอวาตาร์ 3D Pixar พร้อมระบบ 3D Tilt เอียงตามเมาส์
+    // ฟังก์ชันเลือกรูปตามเพศ (ถ้ามีชื่อ นาย ให้ใช้ผู้ชาย, ถ้า นางสาว/นาง ให้ใช้ผู้หญิง)
+    function getStudentAvatarSrc(s) {
+      const name = (s.fullName || s.name || "").trim();
+      const isMale = name.startsWith("นาย") || s.gender === "male";
+      const defaultImg = isMale ? "avatars/nurse-male.png" : "avatars/nurse-female.png";
+      const customImg = `avatars/${s.studentId.toLowerCase()}.jpg`;
+      return { customImg, defaultImg, isMale };
+    }
+
+    // 2. เรนเดอร์การ์ดอวาตาร์ 3D Pixar พร้อมระบบหันหน้าตามเมาส์ (Mouse Face Tracking)
     function renderAvatarGrid() {
       const grid = document.getElementById('avatarGrid');
       grid.innerHTML = GROUP_5_DATA.map((s, idx) => {
+        const av = getStudentAvatarSrc(s);
         return `
           <div class="clay-card tilt-card p-4 flex flex-col items-center justify-between text-center relative group min-h-[220px]" 
-               onmousemove="handleTilt(event, this)" 
-               onmouseleave="resetTilt(this)"
+               onmousemove="handleTilt(event, this, '${s.studentId}')" 
+               onmouseenter="handleCardMouseEnter('${s.studentId}')"
+               onmouseleave="resetTilt(this, '${s.studentId}')"
                onclick="openRadialModal('${s.studentId}')">
             
             <!-- Badge เลขที่และคะแนนดาว Hero -->
-            <div class="tilt-card-inner w-full flex justify-between items-center text-[10px] font-black z-10">
+            <div class="tilt-card-inner w-full flex justify-between items-center text-[10px] font-black z-10 pointer-events-none">
               <span class="w-6 h-6 rounded-full bg-amber-400 text-amber-950 flex items-center justify-center shadow-xs">
                 ${idx + 1}
               </span>
@@ -677,18 +692,19 @@
               </span>
             </div>
 
-            <!-- อวาตาร์ 3D ทรงกลมลอยตัว (ใช้ไฟล์ภาพ 3D จริง) -->
-            <div class="tilt-card-inner w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-tr ${s.color} p-1 shadow-lg flex items-center justify-center my-1 group-hover:scale-108 transition-transform duration-300">
-              <div class="w-full h-full bg-white rounded-full overflow-hidden flex items-center justify-center border-2 border-white shadow-inner">
-                <img src="avatars/${s.studentId.toLowerCase()}.jpg" 
-                     onerror="this.src='https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${s.name}';" 
+            <!-- อวาตาร์ 3D ทรงกลมลอยตัว หันตามเมาส์ -->
+            <div class="tilt-card-inner w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-tr ${s.color} p-1 shadow-lg flex items-center justify-center my-1 group-hover:scale-110 transition-transform duration-300">
+              <div class="w-full h-full bg-white rounded-full overflow-hidden flex items-center justify-center border-2 border-white shadow-inner pointer-events-none">
+                <img id="avatarImg_${s.studentId}"
+                     src="${av.customImg}" 
+                     onerror="this.onerror=null; this.src='${av.defaultImg}';" 
                      alt="${s.name}" 
-                     class="w-full h-full object-cover anim-bobble">
+                     class="w-full h-full object-cover transition-transform duration-100 ease-out">
               </div>
             </div>
 
             <!-- ชื่อนักศึกษา -->
-            <div class="tilt-card-inner w-full mt-1">
+            <div class="tilt-card-inner w-full mt-1 pointer-events-none">
               <div class="text-xs sm:text-sm font-black text-slate-800 truncate">${s.name}</div>
               <div class="text-[10px] text-amber-800 font-bold mt-0.5 flex items-center justify-center gap-1">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -697,7 +713,7 @@
             </div>
 
             <!-- Badge สถานะเข้าเวรปัจจุบัน -->
-            <div class="tilt-card-inner mt-1">
+            <div class="tilt-card-inner mt-1 pointer-events-none">
               <span id="attBadge_${s.studentId}" class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
                 ✔️ มาเรียน
               </span>
@@ -708,18 +724,42 @@
       }).join('');
     }
 
-    // ฟังก์ชัน 3D Tilt เอียงตามพิกัดเมาส์ (Interactive Mouse Gyro)
-    function handleTilt(e, card) {
+    let hoverOpenTimer = null;
+
+    // ชี้เมาส์โดนการ์ดแล้วเปิด Popup ทันที (ไม่ต้องคลิก)
+    function handleCardMouseEnter(studentId) {
+      clearTimeout(hoverOpenTimer);
+      // หน่วงเวลาเล็กน้อย 300ms เพื่อป้องกันการเลื่อนเมาส์ผ่านเร็วๆ แล้วเด้งกวนใจ
+      hoverOpenTimer = setTimeout(() => {
+        openRadialModal(studentId);
+      }, 350);
+    }
+
+    // ฟังก์ชัน 3D Tilt เอียงการ์ดและให้หน้าตัวละครหันตามเมาส์ (Eye/Head Tracking)
+    function handleTilt(e, card, studentId) {
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left - rect.width / 2;
       const y = e.clientY - rect.top - rect.height / 2;
-      const rotateX = (-y / rect.height) * 22;
-      const rotateY = (x / rect.width) * 22;
-      card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
+      const rotateX = (-y / rect.height) * 20;
+      const rotateY = (x / rect.width) * 20;
+      card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.04, 1.04, 1.04)`;
+
+      // หันหน้าตัวการ์ตูนตามเมาส์
+      const img = document.getElementById(`avatarImg_${studentId}`);
+      if (img) {
+        const moveX = (x / rect.width) * 14;
+        const moveY = (y / rect.height) * 14;
+        img.style.transform = `scale(1.15) translate(${moveX}px, ${moveY}px)`;
+      }
     }
 
-    function resetTilt(card) {
+    function resetTilt(card, studentId) {
+      clearTimeout(hoverOpenTimer);
       card.style.transform = `perspective(800px) rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
+      const img = document.getElementById(`avatarImg_${studentId}`);
+      if (img) {
+        img.style.transform = `scale(1) translate(0px, 0px)`;
+      }
     }
 
     // 3. RADIAL ACTION MODAL (เมนูบอลลูนเด้งรอบตัวนักศึกษา)
@@ -727,10 +767,10 @@
       const s = GROUP_5_DATA.find(x => x.studentId === studentId);
       if (!s) return;
       selectedRadialStudent = s;
-
+      const av = getStudentAvatarSrc(s);
       document.getElementById('radialAvatarDisplay').innerHTML = `
-        <img src="avatars/${s.studentId.toLowerCase()}.jpg" 
-             onerror="this.src='https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${s.name}';" 
+        <img src="${av.customImg}" 
+             onerror="this.onerror=null; this.src='${av.defaultImg}';" 
              class="w-full h-full object-cover">
       `;
       document.getElementById('radialStudentId').textContent = s.studentId;
