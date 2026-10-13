@@ -44,10 +44,20 @@
     const e = c * d;
 
     const imgKind = isReaction ? 'reactions' : 'directions';
-    // ใช้ local path หากมี หรือดึงตรงจาก CDN เพื่อให้รูปขึ้น 100% แม้ไม่ได้อัปโฟลเดอร์ขึ้น GitHub
-    const bgUrl = window.HICLASS_USE_LOCAL 
-      ? `classroom-mascots/${id}/${imgKind}.webp`
-      : `https://myhiclass.com/classroom-mascots/${id}/${imgKind}.webp`;
+    
+    // หากเป็น B01 ให้รองรับรูป directions.jpg และ reactions.jpg ที่คุณครูอัปโหลดขึ้น GitHub/local โดยตรง
+    let bgUrl = '';
+    if (id === 'B01') {
+      // ตรวจสอบชนิดรูป หากมีไฟล์ในโฟลเดอร์ หรือ root ให้เรียกใช้ตามประเภท
+      bgUrl = isReaction 
+        ? 'reactions.jpg'
+        : 'classroom-mascots/B01/directions.jpg';
+    } else {
+      // สำหรับตัวละครอื่น ใช้ local path หรือดึงตรงจาก CDN
+      bgUrl = window.HICLASS_USE_LOCAL 
+        ? `classroom-mascots/${id}/${imgKind}.webp`
+        : `https://myhiclass.com/classroom-mascots/${id}/${imgKind}.webp`;
+    }
 
     return {
       containerW: size,
