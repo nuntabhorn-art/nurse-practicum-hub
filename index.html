@@ -14,6 +14,9 @@
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="supabase-client.js"></script>
   <script src="auth.js"></script>
 
   <style>
@@ -344,7 +347,8 @@
     const SOLE_ADMIN_EMAIL = "nuntabhorn@bcnchainat.ac.th";
     let pendingLoginEmail = "";
 
-    window.onload = function() {
+    window.onload = async function() {
+      await syncSupabaseSession();
       checkLoginSession();
       // ถูกส่งมาจากหน้าอื่นเพราะยังไม่ได้ล็อกอิน / เซสชันหมดอายุ
       if (new URLSearchParams(window.location.search).get('login') === '1' && !getSession()) {
@@ -395,11 +399,22 @@
       btn.innerText = "กำลังส่งรหัส OTP...";
 
       try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'requestOTP', data: { email: email } })
-        });
-        const d = await res.json();
+        let d;
+        if (window.NurseSupabase && NurseSupabase.enabled) {
+          const client = await NurseSupabase.init();
+          const result = await client.auth.signInWithOtp({
+            email: email,
+            options: { shouldCreateUser: true, emailRedirectTo: window.location.href.split('?')[0] }
+          });
+          if (result.error) throw result.error;
+          d = { success: true };
+        } else {
+          d = await fetchJson(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'requestOTP', data: { email: email } })
+          });
+        }
         if (d.success) {
           pendingLoginEmail = email;
           document.getElementById('stepEmailSection').classList.add('hidden');
@@ -407,7 +422,7 @@
           Swal.fire({
             icon: 'info',
             title: 'ส่งรหัส OTP แล้ว',
-            text: `กรุณาเปิดอีเมล ${email} เพื่อนำรหัส 6 หลักมายืนยัน`
+            text: `กรุณาเปิดอีเมล ${email} เพื่อกดลิงก์ยืนยันหรือใช้รหัสที่ได้รับ`
           });
         } else {
           Swal.fire({ icon: 'error', title: d.message });
@@ -433,19 +448,30 @@
       btn.innerText = "กำลังตรวจสอบ...";
 
       try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'verifyOTP', data: { email: pendingLoginEmail, otp: otp } })
-        });
-        const d = await res.json();
+        let d;
+        if (window.NurseSupabase && NurseSupabase.enabled) {
+          const client = await NurseSupabase.init();
+          const result = await client.auth.verifyOtp({ email: pendingLoginEmail, token: otp, type: 'email' });
+          if (result.error) throw result.error;
+          const session = result.data && result.data.session;
+          if (!session) throw new Error('ไม่พบ session จาก Supabase');
+          await syncSupabaseSession();
+          d = { success: true, token: session.access_token };
+        } else {
+          d = await fetchJson(API_URL, {
+            method: 'POST',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify({ action: 'verifyOTP', data: { email: pendingLoginEmail, otp: otp } })
+          });
+        }
         if (d.success && d.token) {
-          const userData = { email: d.email, name: d.name, isAdmin: d.isAdmin, token: d.token };
-          localStorage.setItem(SESSION_KEY, JSON.stringify(userData));
+          await syncSupabaseSession();
+          const userData = getSession();
           closeLoginModal();
           Swal.fire({
             icon: 'success',
             title: 'ยืนยันตัวตนสำเร็จ',
-            text: `ยินดีต้อนรับ ${d.name}`,
+            text: `ยินดีต้อนรับ ${userData.name}`,
             timer: 1500,
             showConfirmButton: false
           }).then(() => {
@@ -486,8 +512,7 @@
     async function handleAuthClick() {
       if (getSession()) {
         // ยกเลิก token ที่เซิร์ฟเวอร์ด้วย (ไม่รอผลถ้าเครือข่ายมีปัญหา)
-        try { await apiPost('logout', {}); } catch(e) {}
-        localStorage.removeItem(SESSION_KEY);
+        try { await signOutCurrentUser(); } catch(e) {}
         Swal.fire({ icon: 'success', title: 'ออกจากระบบเรียบร้อย', timer: 1000, showConfirmButton: false }).then(() => {
           window.location.href = 'index.html';
         });

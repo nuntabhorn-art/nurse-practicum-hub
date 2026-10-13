@@ -1,0 +1,2 @@
+# Supabase publishable/anon keys are intended for browser use. Never place
+# service_role or secret keys in frontend files.

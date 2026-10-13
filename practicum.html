@@ -12,6 +12,9 @@
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="supabase-client.js"></script>
   <script src="auth.js"></script>
 
   <style>
@@ -937,7 +940,8 @@
     // 5. โหลดข้อมูลแดชบอร์ด & รายการงาน
     async function loadDashboard() {
       try {
-        const data = await apiGet({ action: 'getDashboard', studentId: currentStudentId, viewMode: 'all' });
+        const supabaseData = await supabaseGetDashboard(currentStudentId, 'all');
+        const data = supabaseData || await apiGet({ action: 'getDashboard', studentId: currentStudentId, viewMode: 'all' });
         dashboardData = data;
         
         // อัปเดตคะแนนดาวในการ์ด
