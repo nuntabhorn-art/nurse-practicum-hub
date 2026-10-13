@@ -14,6 +14,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="auth.js"></script>
 
   <style>
     * { 
@@ -39,15 +40,14 @@
 
   <div class="w-full max-w-md mx-auto space-y-4">
     
-    <!-- แถบด้านบน: ปุ่มย้อนกลับ + หัวข้อ + ปุ่ม Admin ลับมุมขวา -->
+    <!-- แถบด้านบน: ปุ่มย้อนกลับ + หัวข้อ + ปุ่ม Admin (แสดงเฉพาะ Admin) -->
     <div class="flex items-center justify-between px-2">
       <a href="index.html" class="w-10 h-10 rounded-2xl bg-white/90 hover:bg-white flex items-center justify-center text-slate-700 shadow-sm border border-white active:scale-95 transition">
         <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
       </a>
       <h1 class="text-sm font-black text-slate-800">ระบบเข้าเวร GPS เรียลไทม์</h1>
       
-      <!-- ปุ่มรูปเฟือง Admin มุมขวาบน (จะเปิด/ปิดแผงตั้งค่าได้เมื่อเป็น Admin) -->
-      <button onclick="toggleAdminPanel()" id="btnAdminIcon" class="w-9 h-9 rounded-full bg-white/60 hover:bg-white flex items-center justify-center text-slate-400 hover:text-indigo-600 transition shadow-xs">
+      <button onclick="toggleAdminPanel()" id="btnAdminIcon" class="hidden w-9 h-9 rounded-full bg-white/60 hover:bg-white flex items-center justify-center text-slate-400 hover:text-indigo-600 transition shadow-xs">
         <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
       </button>
     </div>
@@ -112,13 +112,16 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbygTRS3dp8WQkGKpiRxKbsDdDjfQUAeZnHwid6PTX3ABskdSbQdbEBch7dkia3UlaSJ/exec";
     let currentUser = null;
     let currentCoords = "";
 
     window.onload = function() {
+      currentUser = requireLogin();
+      if (!currentUser) return;
+      document.getElementById('currentUserDisplay').textContent = currentUser.name;
+      // ปุ่มนี้แค่ซ่อน/แสดง UI — สิทธิ์จริงตรวจที่เซิร์ฟเวอร์
+      if (currentUser.isAdmin) document.getElementById('btnAdminIcon').classList.remove('hidden');
       startClock();
-      checkAuthStatus();
       fetchGpsLocation();
     };
 
@@ -130,59 +133,6 @@
           year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' 
         });
       }, 1000);
-    }
-
-    // ตรวจสอบสิทธิ์การเข้าใช้งานอีเมลวิทยาลัย
-    function checkAuthStatus() {
-      const saved = localStorage.getItem('bcn_user_session');
-      if (!saved) {
-        promptLogin();
-      } else {
-        currentUser = JSON.parse(saved);
-        document.getElementById('currentUserDisplay').textContent = currentUser.name;
-        if (currentUser.isAdmin) {
-          document.getElementById('btnAdminIcon').classList.remove('hidden');
-        }
-      }
-    }
-
-    function promptLogin() {
-      Swal.fire({
-        title: 'ยืนยันตัวตนวิทยาลัย',
-        text: 'กรุณากรอกอีเมล @bcnchainat.ac.th เพื่อเข้าใช้งานระบบ',
-        input: 'email',
-        inputPlaceholder: 'username@bcnchainat.ac.th',
-        allowOutsideClick: false,
-        confirmButtonText: 'เข้าสู่ระบบ',
-        preConfirm: (email) => {
-          if (!email || !email.endsWith('@bcnchainat.ac.th')) {
-            Swal.showValidationMessage('บุคคลทั่วไปไม่ได้รับสิทธิ์ กรุณาใช้อีเมล @bcnchainat.ac.th เท่านั้น');
-            return false;
-          }
-          return email;
-        }
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          Swal.fire({ title: 'กำลังตรวจสอบสิทธิ์...', didOpen: () => Swal.showLoading() });
-          try {
-            const res = await fetch(API_URL, {
-              method: 'POST',
-              body: JSON.stringify({ action: 'verifyGoogleEmail', data: { email: result.value } })
-            });
-            const d = await res.json();
-            if (d.success) {
-              currentUser = d;
-              localStorage.setItem('bcn_user_session', JSON.stringify(d));
-              document.getElementById('currentUserDisplay').textContent = d.name;
-              Swal.fire({ icon: 'success', title: 'ยืนยันตัวตนสำเร็จ', text: d.name });
-            } else {
-              Swal.fire({ icon: 'error', title: d.message }).then(() => promptLogin());
-            }
-          } catch(e) {
-            Swal.fire({ icon: 'error', title: 'การเชื่อมต่อขัดข้อง' });
-          }
-        }
-      });
     }
 
     // ดึงพิกัด GPS จริงจากอุปกรณ์
@@ -204,9 +154,8 @@
       }
     }
 
-    // กดปุ่มบันทึกเวลาเข้าเวร
+    // กดปุ่มบันทึกเวลาเข้าเวร (เซิร์ฟเวอร์ใช้อีเมลจาก token ไม่ใช่ค่าที่ส่งมา)
     async function handleCheckIn() {
-      if (!currentUser) return promptLogin();
       if (!currentCoords) {
         Swal.fire({ icon: 'warning', title: 'ยังไม่พบพิกัด GPS', text: 'กรุณาเปิดสิทธิ์ระบุตำแหน่งบนอุปกรณ์ก่อนลงชื่อ' });
         return fetchGpsLocation();
@@ -214,14 +163,8 @@
 
       Swal.fire({ title: 'กำลังบันทึกเวลา...', didOpen: () => Swal.showLoading() });
       try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({
-            action: 'recordGpsAttendance',
-            data: { email: currentUser.email, name: currentUser.name, coords: currentCoords }
-          })
-        });
-        const d = await res.json();
+        const d = await apiPost('recordGpsAttendance', { name: currentUser.name, coords: currentCoords });
+        if (d.authRequired) return;
         Swal.fire({ icon: d.success ? 'success' : 'error', title: d.message });
       } catch(e) {
         Swal.fire({ icon: 'error', title: 'การเชื่อมต่อขัดข้อง' });
@@ -230,14 +173,10 @@
 
     // ควบคุมแผง Admin
     async function toggleAdminPanel() {
-      if (!currentUser || !currentUser.isAdmin) {
-        Swal.fire({ icon: 'info', title: 'เฉพาะผู้ดูแลระบบ', text: 'สงวนสิทธิ์เฉพาะอาจารย์ผู้ดูแลระบบเท่านั้น' });
-        return;
-      }
+      if (!currentUser || !currentUser.isAdmin) return;
       const panel = document.getElementById('adminPanel');
       if (panel.classList.contains('hidden')) {
-        const res = await fetch(`${API_URL}?action=getSettings`);
-        const cfg = await res.json();
+        const cfg = await apiGet({ action: 'getSettings' });
         document.getElementById('cfgEnabled').checked = cfg.enabled;
         document.getElementById('cfgStartTime').value = cfg.startTime;
         document.getElementById('cfgEndTime').value = cfg.endTime;
@@ -254,13 +193,10 @@
         endTime: document.getElementById('cfgEndTime').value
       };
       Swal.fire({ title: 'กำลังบันทึก...', didOpen: () => Swal.showLoading() });
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'updateCheckinSettings', data: payload })
-      });
-      const d = await res.json();
-      Swal.fire({ icon: 'success', title: d.message });
-      toggleAdminPanel();
+      const d = await apiPost('updateCheckinSettings', payload);
+      if (d.authRequired) return;
+      Swal.fire({ icon: d.success ? 'success' : 'error', title: d.message });
+      if (d.success) toggleAdminPanel();
     }
   </script>
 </body>

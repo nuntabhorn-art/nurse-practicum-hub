@@ -12,6 +12,7 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="auth.js"></script>
 
   <style>
     * { font-family: 'Prompt', sans-serif; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -59,8 +60,9 @@
           <button id="btnRoleStudent" onclick="switchRole('student')" class="px-3 py-1 rounded-md transition-all duration-200 role-active">
             <i class="fa-solid fa-graduation-cap text-xs mr-1"></i> นศ.
           </button>
-          <button id="btnRoleTeacher" onclick="switchRole('teacher')" class="px-3 py-1 rounded-md transition-all duration-200 text-indigo-100 hover:text-white font-semibold">
-            <i class="fa-solid fa-lock text-xs mr-1"></i> อาจารย์
+          <!-- แสดงเฉพาะอาจารย์ผู้ดูแล (ตรวจสิทธิ์จริงที่เซิร์ฟเวอร์) -->
+          <button id="btnRoleTeacher" onclick="switchRole('teacher')" class="hidden px-3 py-1 rounded-md transition-all duration-200 text-indigo-100 hover:text-white font-semibold">
+            <i class="fa-solid fa-user-shield text-xs mr-1"></i> อาจารย์
           </button>
         </div>
       </div>
@@ -162,7 +164,7 @@
         </div>
       </div>
 
-      <!-- 3 ตารางข้อมูล (แก้ปัญหา undefined น. ถาวร) -->
+      <!-- 3 ตารางข้อมูล -->
       <div class="grid grid-cols-1 md:grid-cols-3 gap-3">
         <div class="glass-card p-3 rounded-xl space-y-1.5">
           <h3 class="font-bold text-xs text-slate-800 border-b pb-1.5"><i class="fa-solid fa-business-time text-indigo-500 mr-1"></i>ประวัติเข้าเวร</h3>
@@ -225,11 +227,11 @@
 
     </div>
 
-    <!-- มุมมองอาจารย์ -->
+    <!-- มุมมองอาจารย์ (เฉพาะ Admin) -->
     <div id="teacherView" class="hidden space-y-3">
       <div class="glass-card rounded-2xl p-2 flex justify-between items-center">
         <span class="text-xs font-bold text-indigo-950 px-2"><i class="fa-solid fa-user-shield mr-1 text-indigo-600"></i>แผงควบคุมอาจารย์นิเทศก์</span>
-        <button onclick="switchRole('student')" class="px-2.5 py-1 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-xs font-bold">ออกจากระบบอาจารย์</button>
+        <button onclick="switchRole('student')" class="px-2.5 py-1 bg-rose-50 border border-rose-200 text-rose-700 rounded-lg text-xs font-bold">กลับมุมมองนักศึกษา</button>
       </div>
 
       <div class="glass-card rounded-2xl p-3.5 space-y-2.5">
@@ -276,7 +278,7 @@
     </a>
   </nav>
 
-  <!-- Modal เช็คอิน (เลือกวันเวลาเรียลไทม์) -->
+  <!-- Modal เช็คอิน -->
   <div id="checkInModal" class="fixed inset-0 bg-slate-900/60 hidden z-50 flex items-center justify-center p-3">
     <div class="bg-white rounded-3xl max-w-xs w-full p-3.5 space-y-2.5 text-xs shadow-xl">
       <div class="flex justify-between items-center border-b pb-1">
@@ -301,7 +303,7 @@
     </div>
   </div>
 
-  <!-- Modal ส่งงาน Care Plan (มีวันเวลาเรียลไทม์) -->
+  <!-- Modal ส่งงาน Care Plan -->
   <div id="workModal" class="fixed inset-0 bg-slate-900/60 hidden z-50 flex items-center justify-center p-3">
     <div class="bg-white rounded-3xl max-w-sm w-full p-4 space-y-2.5 text-xs shadow-xl">
       <div class="flex justify-between items-center border-b pb-1">
@@ -320,8 +322,6 @@
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbygTRS3dp8WQkGKpiRxKbsDdDjfQUAeZnHwid6PTX3ABskdSbQdbEBch7dkia3UlaSJ/exec";
-
     const GROUP_5 = [
       { studentId: "STU-09", name: "นางสาวณิฐาภัทร จันทร์ทุ่ง (องเอิน)" },
       { studentId: "STU-10", name: "นางสาวณัฐพร ดอนแนไพร (ตะวัน)" },
@@ -335,16 +335,22 @@
 
     let currentStudentId = localStorage.getItem('current_student_id') || "STU-09";
     let currentViewMode = "personal";
+    let session = null;
+
+    function esc(s) {
+      return String(s === undefined || s === null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
 
     window.onload = function() {
+      session = requireLogin();
+      if (!session) return;
+      if (session.isAdmin) document.getElementById('btnRoleTeacher').classList.remove('hidden');
+
       initRealtimeClock();
       initRadarChart();
       loadDashboard();
       renderTeacherAttendanceTable();
-
-      if (sessionStorage.getItem('is_teacher') === 'true') {
-        switchRole('teacher');
-      }
     };
 
     function initRealtimeClock() {
@@ -390,8 +396,8 @@
 
     async function loadDashboard() {
       try {
-        const res = await fetch(`${API_URL}?action=getDashboard&studentId=${currentStudentId}&viewMode=${currentViewMode}`);
-        const data = await res.json();
+        const data = await apiGet({ action: 'getDashboard', studentId: currentStudentId, viewMode: currentViewMode });
+        if (data.authRequired) return;
         
         if (data.studentInfo) {
           document.getElementById('displayStudentWard').textContent = data.studentInfo.ward || "รพ.อุทัยธานี";
@@ -411,7 +417,7 @@
 
     function renderStudentDropdown(list) {
       const sel = document.getElementById('studentSelect');
-      sel.innerHTML = list.map(s => `<option value="${s.studentId}" ${s.studentId === currentStudentId ? 'selected' : ''}>${s.name} (${s.ward || 'รพ.อุทัยธานี'}) [${s.group || 'กลุ่ม 5'}]</option>`).join('');
+      sel.innerHTML = list.map(s => `<option value="${esc(s.studentId)}" ${s.studentId === currentStudentId ? 'selected' : ''}>${esc(s.name)} (${esc(s.ward || 'รพ.อุทัยธานี')}) [${esc(s.group || 'กลุ่ม 5')}]</option>`).join('');
     }
 
     function onStudentChange() {
@@ -433,8 +439,8 @@
       tbody.innerHTML = list.map(a => `
         <tr class="hover:bg-slate-50 transition">
           <td class="py-1.5 whitespace-nowrap text-slate-500 font-medium">${formatThaiDate(a.date)} <span class="text-indigo-600 font-bold ml-1">${formatSafeTimeDisplay(a.time, a.logId)}</span></td>
-          <td class="py-1.5 font-bold text-slate-800">${a.studentName}</td>
-          <td class="py-1.5 whitespace-nowrap text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${a.status === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${a.status}</span></td>
+          <td class="py-1.5 font-bold text-slate-800">${esc(a.studentName)}</td>
+          <td class="py-1.5 whitespace-nowrap text-center"><span class="px-2 py-0.5 rounded text-[10px] font-bold ${a.status === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800' : 'bg-rose-100 text-rose-800'}">${esc(a.status)}</span></td>
           <td class="py-1.5 whitespace-nowrap text-center font-black">${a.deduct > 0 ? '-' + a.deduct : (a.bonus > 0 ? '+' + a.bonus : '-')}</td>
         </tr>
       `).join('');
@@ -446,26 +452,31 @@
       tbody.innerHTML = list.map(k => `
         <tr class="hover:bg-slate-50 transition">
           <td class="py-1.5 text-slate-500 font-medium">${formatThaiDate(k.date)}</td>
-          <td class="py-1.5 font-bold text-slate-800 truncate max-w-[130px]">${k.skillName}</td>
-          <td class="py-1.5 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${k.result === 'ผ่าน' ? 'badge-approved' : 'bg-rose-100 text-rose-700'}">${k.result}</span></td>
-          <td class="py-1.5 text-center font-black text-amber-600">+${k.exp} EXP</td>
+          <td class="py-1.5 font-bold text-slate-800 truncate max-w-[130px]">${esc(k.skillName)}</td>
+          <td class="py-1.5 text-center"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${k.result === 'ผ่าน' ? 'badge-approved' : 'bg-rose-100 text-rose-700'}">${esc(k.result)}</span></td>
+          <td class="py-1.5 text-center font-black text-amber-600">+${esc(k.exp)} EXP</td>
         </tr>
       `).join('');
+    }
+
+    function safeUrl(u) {
+      return /^https?:\/\//i.test(String(u || '')) ? esc(u) : '';
     }
 
     function renderWorkTable(list) {
       const tbody = document.getElementById('workTableBody');
       if (list.length === 0) { tbody.innerHTML = '<tr><td colspan="6" class="p-3 text-center text-slate-400">ยังไม่มีประวัติส่งงาน</td></tr>'; return; }
       tbody.innerHTML = list.map(w => {
-        let fileLink = w.fileUrl ? `<a href="${w.fileUrl}" target="_blank" class="text-indigo-600 font-bold underline">ไฟล์งาน</a>` : '-';
+        const url = safeUrl(w.fileUrl);
+        let fileLink = url ? `<a href="${url}" target="_blank" rel="noopener" class="text-indigo-600 font-bold underline">ไฟล์งาน</a>` : '-';
         return `
           <tr class="hover:bg-slate-50 transition">
-            <td class="p-1.5 font-bold text-slate-800">${w.studentName || '-'}</td>
-            <td class="p-1.5 whitespace-nowrap text-slate-500">${w.submitDate || '-'}</td>
-            <td class="p-1.5 font-bold text-slate-800">${w.subject}</td>
+            <td class="p-1.5 font-bold text-slate-800">${esc(w.studentName || '-')}</td>
+            <td class="p-1.5 whitespace-nowrap text-slate-500">${esc(w.submitDate || '-')}</td>
+            <td class="p-1.5 font-bold text-slate-800">${esc(w.subject)}</td>
             <td class="p-1.5 whitespace-nowrap">${fileLink}</td>
-            <td class="p-1.5 text-center whitespace-nowrap"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${w.status === 'ผ่าน' ? 'badge-approved' : 'badge-pending'}">${w.status}</span></td>
-            <td class="p-1.5 text-center font-black whitespace-nowrap">${w.score || '-'}</td>
+            <td class="p-1.5 text-center whitespace-nowrap"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold ${w.status === 'ผ่าน' ? 'badge-approved' : 'badge-pending'}">${esc(w.status)}</span></td>
+            <td class="p-1.5 text-center font-black whitespace-nowrap">${esc(w.score || '-')}</td>
           </tr>
         `;
       }).join('');
@@ -507,12 +518,9 @@
       }));
 
       Swal.fire({ title: 'กำลังบันทึกการเช็คชื่อกลุ่ม 5...', didOpen: () => Swal.showLoading() });
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'batchRecordAttendance', data: { date: date, time: time, records: records } })
-      });
-      const d = await res.json();
-      Swal.fire({ icon: 'success', title: d.message });
+      const d = await apiPost('batchRecordAttendance', { date: date, time: time, records: records });
+      if (d.authRequired) return;
+      Swal.fire({ icon: d.success ? 'success' : 'error', title: d.message });
       loadDashboard();
     }
 
@@ -537,33 +545,14 @@
       });
     }
 
+    // สลับมุมมอง: อาจารย์ต้องเป็น Admin ตาม session เท่านั้น (เซิร์ฟเวอร์ตรวจซ้ำทุกการบันทึก)
     function switchRole(role) {
-      if (role === 'teacher') {
-        Swal.fire({
-          title: 'รหัสผ่านอาจารย์',
-          input: 'password',
-          showCancelButton: true,
-          confirmButtonText: 'เข้าสู่ระบบ',
-          preConfirm: (pin) => {
-            if (pin === "22122531") return true;
-            Swal.showValidationMessage('รหัสผ่านไม่ถูกต้อง');
-            return false;
-          }
-        }).then(r => {
-          if (r.isConfirmed) {
-            document.getElementById('studentView').classList.add('hidden');
-            document.getElementById('teacherView').classList.remove('hidden');
-            document.getElementById('btnRoleTeacher').classList.add('role-active');
-            document.getElementById('btnRoleStudent').classList.remove('role-active');
-          }
-        });
-      } else {
-        sessionStorage.removeItem('is_teacher');
-        document.getElementById('studentView').classList.remove('hidden');
-        document.getElementById('teacherView').classList.add('hidden');
-        document.getElementById('btnRoleStudent').classList.add('role-active');
-        document.getElementById('btnRoleTeacher').classList.remove('role-active');
-      }
+      if (role === 'teacher' && !(session && session.isAdmin)) return;
+      const isTeacher = role === 'teacher';
+      document.getElementById('studentView').classList.toggle('hidden', isTeacher);
+      document.getElementById('teacherView').classList.toggle('hidden', !isTeacher);
+      document.getElementById('btnRoleTeacher').classList.toggle('role-active', isTeacher);
+      document.getElementById('btnRoleStudent').classList.toggle('role-active', !isTeacher);
     }
 
     function openCheckInModal() {
@@ -580,23 +569,23 @@
       document.getElementById(id).classList.add('hidden');
     }
 
-    async function submitCheckIn() {
+    function selectedStudentName() {
       const sel = document.getElementById('studentSelect');
-      const studentName = sel.options[sel.selectedIndex].text.split(' (')[0];
+      return sel.options[sel.selectedIndex].text.split(' (')[0];
+    }
+
+    async function submitCheckIn() {
       const payload = {
         studentId: currentStudentId,
-        studentName: studentName,
+        studentName: selectedStudentName(),
         customDate: document.getElementById('cinDate').value,
         customTime: document.getElementById('cinTime').value,
         status: document.getElementById('cinStatus').value
       };
 
       Swal.fire({ title: 'กำลังเช็คอิน...', didOpen: () => Swal.showLoading() });
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'checkInAttendance', data: payload })
-      });
-      const d = await res.json();
+      const d = await apiPost('checkInAttendance', payload);
+      if (d.authRequired) return;
       closeModal('checkInModal');
       Swal.fire({ icon: d.success ? 'success' : 'error', title: d.message });
       loadDashboard();
@@ -611,24 +600,15 @@
 
       if (!subject) { Swal.fire({ icon: 'warning', title: 'กรุณากรอกหัวข้องาน' }); return; }
 
-      const sel = document.getElementById('studentSelect');
-      const studentName = sel.options[sel.selectedIndex].text.split(' (')[0];
-
       Swal.fire({ title: 'กำลังส่งงาน...', didOpen: () => Swal.showLoading() });
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify({
-          action: 'submitDailyWork',
-          data: {
-            studentId: currentStudentId, studentName: studentName,
-            subject: subject, content: content, externalLink: link,
-            customDate: customDate, customTime: customTime
-          }
-        })
+      const d = await apiPost('submitDailyWork', {
+        studentId: currentStudentId, studentName: selectedStudentName(),
+        subject: subject, content: content, externalLink: link,
+        customDate: customDate, customTime: customTime
       });
-      const d = await res.json();
+      if (d.authRequired) return;
       closeModal('workModal');
-      Swal.fire({ icon: 'success', title: d.message });
+      Swal.fire({ icon: d.success ? 'success' : 'error', title: d.message });
       loadDashboard();
     }
   </script>

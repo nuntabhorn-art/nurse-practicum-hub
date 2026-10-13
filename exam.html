@@ -10,6 +10,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="auth.js"></script>
 
   <style>
     * { 
@@ -117,7 +118,7 @@
         <span class="text-[10px] bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 px-2.5 py-0.5 rounded-full font-bold">+20 🪙 / +30 EXP</span>
       </div>
 
-      <!-- แถบเลื่อนเลือก 8 รายวิชาสภาการพยาบาลครบถ้วน -->
+      <!-- แถบเลื่อนเลือกรายวิชา -->
       <div class="flex gap-1.5 overflow-x-auto pb-1.5 mobile-scroll text-xs">
         <button onclick="selectSubject('การพยาบาลผู้ใหญ่', this)" class="sub-tab px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-slate-200 font-bold whitespace-nowrap subject-tab-active">ผู้ใหญ่</button>
         <button onclick="selectSubject('การพยาบาลผู้สูงอายุ', this)" class="sub-tab px-3 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/10 text-slate-200 font-bold whitespace-nowrap">ผู้สูงอายุ</button>
@@ -131,15 +132,13 @@
 
       <!-- กล่องแสดงข้อสอบ -->
       <div id="quizBox" class="space-y-3 pt-1">
-        <div class="p-6 text-center text-indigo-200 text-xs font-semibold">กำลังโหลดข้อสอบจากคลัง 8 วิชา...</div>
+        <div class="p-6 text-center text-indigo-200 text-xs font-semibold">กำลังโหลดข้อสอบจากคลัง...</div>
       </div>
     </div>
 
   </div>
 
   <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbygTRS3dp8WQkGKpiRxKbsDdDjfQUAeZnHwid6PTX3ABskdSbQdbEBch7dkia3UlaSJ/exec";
-
     const CAP_RANKS = [
       { lv: 1, name: "หมวกขาวล้วน", title: "น้องพยาบาลฝึกหัด (Pre-Clinic)", icon: "🐣", maxExp: 150 },
       { lv: 2, name: "แถบเฉียง 1 ขีด", title: "พยาบาลฝึกปฏิบัติวอร์ด (Junior Ward)", icon: "👩‍⚕️", maxExp: 300 },
@@ -150,7 +149,16 @@
     let currentStudentId = localStorage.getItem('current_student_id') || "STU-09";
     let activeSubject = "การพยาบาลผู้ใหญ่";
 
+    // เก็บคำถามปัจจุบันไว้ในหน่วยความจำ ไม่ฝังข้อมูลลงใน onclick (กันอักขระพิเศษทำให้ปุ่มพัง)
+    let currentQuestion = null;
+
+    function esc(s) {
+      return String(s === undefined || s === null ? '' : s)
+        .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+    }
+
     window.onload = function() {
+      if (!requireLogin()) return;
       loadStudentData();
       loadQuestions(activeSubject);
     };
@@ -165,11 +173,8 @@
 
     async function loadStudentData() {
       try {
-        const res = await fetch(`${API_URL}?action=getDashboard&studentId=${currentStudentId}`);
-        const data = await res.json();
-        if (data.studentInfo) {
-          updateUI(data.studentInfo);
-        }
+        const data = await apiGet({ action: 'getDashboard', studentId: currentStudentId });
+        if (data.studentInfo) updateUI(data.studentInfo);
       } catch(e) {}
     }
 
@@ -186,7 +191,7 @@
 
     async function loadQuestions(sub) {
       const container = document.getElementById('quizBox');
-      container.innerHTML = `<div class="p-6 text-center text-indigo-200 text-xs">กำลังโหลดข้อสอบวิชา ${sub}...</div>`;
+      container.innerHTML = `<div class="p-6 text-center text-indigo-200 text-xs">กำลังโหลดข้อสอบวิชา ${esc(sub)}...</div>`;
 
       try {
         const res = await fetch(`${API_URL}?action=getExamQuestions&subject=${encodeURIComponent(sub)}`);
@@ -195,7 +200,7 @@
           container.innerHTML = `
             <div class="p-6 text-center text-slate-300 text-xs bg-white/5 rounded-2xl border border-white/10 space-y-1">
               <div class="text-xl">📚</div>
-              <div class="font-bold">ยังไม่มีข้อสอบในหมวด ${sub}</div>
+              <div class="font-bold">ยังไม่มีข้อสอบในหมวด ${esc(sub)}</div>
               <div class="text-[11px] text-slate-400">อาจารย์กำลังนำเข้าข้อสอบเพิ่มเติมลงในคลัง</div>
             </div>
           `;
@@ -204,18 +209,17 @@
 
         // สุ่มหยิบข้อสอบมาแสดง 1 ข้อ
         const q = list[Math.floor(Math.random() * list.length)];
+        currentQuestion = q;
+        const btn = (k, text) => `<button onclick="checkAnswer('${k}')" class="w-full text-left p-3 rounded-xl bg-white/10 hover:bg-white/20 active:scale-[0.98] transition border border-white/10">${k}. ${esc(text)}</button>`;
         container.innerHTML = `
           <div class="bg-white/10 p-4 rounded-2xl border border-white/15 space-y-2.5">
             <div class="flex justify-between items-center text-[10px] font-bold text-amber-300">
-              <span class="bg-indigo-900/60 px-2 py-0.5 rounded-lg border border-indigo-400/30">${q.questionId || 'EXAM'}</span>
-              <span>เน้น: ${q.yearLevel || 'ทุกชั้นปี'}</span>
+              <span class="bg-indigo-900/60 px-2 py-0.5 rounded-lg border border-indigo-400/30">${esc(q.questionId || 'EXAM')}</span>
+              <span>เน้น: ${esc(q.yearLevel || 'ทุกชั้นปี')}</span>
             </div>
-            <p class="text-xs sm:text-sm text-white leading-relaxed font-semibold">${q.question}</p>
+            <p class="text-xs sm:text-sm text-white leading-relaxed font-semibold">${esc(q.question)}</p>
             <div class="space-y-2 pt-1 text-xs">
-              <button onclick="checkAnswer('A', '${q.answer}', '${encodeURIComponent(q.explanation)}', '${encodeURIComponent(q.reference || 'สภาการพยาบาล')}')" class="w-full text-left p-3 rounded-xl bg-white/10 hover:bg-white/20 active:scale-[0.98] transition border border-white/10">A. ${q.choiceA}</button>
-              <button onclick="checkAnswer('B', '${q.answer}', '${encodeURIComponent(q.explanation)}', '${encodeURIComponent(q.reference || 'สภาการพยาบาล')}')" class="w-full text-left p-3 rounded-xl bg-white/10 hover:bg-white/20 active:scale-[0.98] transition border border-white/10">B. ${q.choiceB}</button>
-              <button onclick="checkAnswer('C', '${q.answer}', '${encodeURIComponent(q.explanation)}', '${encodeURIComponent(q.reference || 'สภาการพยาบาล')}')" class="w-full text-left p-3 rounded-xl bg-white/10 hover:bg-white/20 active:scale-[0.98] transition border border-white/10">C. ${q.choiceC}</button>
-              <button onclick="checkAnswer('D', '${q.answer}', '${encodeURIComponent(q.explanation)}', '${encodeURIComponent(q.reference || 'สภาการพยาบาล')}')" class="w-full text-left p-3 rounded-xl bg-white/10 hover:bg-white/20 active:scale-[0.98] transition border border-white/10">D. ${q.choiceD}</button>
+              ${btn('A', q.choiceA)}${btn('B', q.choiceB)}${btn('C', q.choiceC)}${btn('D', q.choiceD)}
             </div>
           </div>
         `;
@@ -224,15 +228,14 @@
       }
     }
 
-    async function checkAnswer(selected, correct, expEnc, refEnc) {
-      const exp = decodeURIComponent(expEnc);
-      const ref = decodeURIComponent(refEnc);
+    async function checkAnswer(selected) {
+      const q = currentQuestion;
+      if (!q) return;
+      const exp = esc(q.explanation);
+      const ref = esc(q.reference || 'สภาการพยาบาล');
 
-      if (selected === correct) {
-        await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'submitExamResult', data: { studentId: currentStudentId, coins: 20, exp: 30 } })
-        });
+      if (selected === String(q.answer).trim()) {
+        await apiPost('submitExamResult', { studentId: currentStudentId, coins: 20, exp: 30 });
         loadStudentData();
         Swal.fire({
           icon: 'success',
@@ -252,7 +255,7 @@
           title: 'ยังไม่ถูกต้อง!',
           html: `
             <div class="text-left text-xs space-y-1.5 mt-2 text-slate-800">
-              <p class="font-bold text-rose-800 bg-rose-50 p-2.5 rounded-xl border border-rose-200">เฉลยข้อ ${correct}</p>
+              <p class="font-bold text-rose-800 bg-rose-50 p-2.5 rounded-xl border border-rose-200">เฉลยข้อ ${esc(q.answer)}</p>
               <p class="text-slate-700 font-medium">${exp}</p>
               <p class="text-slate-500 font-semibold"><span class="text-indigo-600 font-bold">แหล่งอ้างอิง:</span> ${ref}</p>
             </div>
@@ -263,11 +266,8 @@
     }
 
     async function feedAction(cost, addExp) {
-      const res = await fetch(API_URL, {
-        method: 'POST',
-        body: JSON.stringify({ action: 'feedHeroPet', data: { studentId: currentStudentId, cost: cost, addExp: addExp } })
-      });
-      const d = await res.json();
+      const d = await apiPost('feedHeroPet', { studentId: currentStudentId, cost: cost, addExp: addExp });
+      if (d.authRequired) return;
       if (d.success) {
         Swal.fire({ icon: 'success', title: 'ป้อนพลังสำเร็จ!', text: `+${addExp} EXP สู่แถบหมวกขั้นถัดไป` });
         loadStudentData();
