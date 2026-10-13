@@ -651,65 +651,113 @@
 
   </div>
 
-  <!-- ================= 2. RADIAL INTERACTIVE POPUP (เมนูบอลลูนเด้งรอบตัวนักศึกษา เหมือนรูปที่ 4) ================= -->
-  <div id="radialModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-    <div class="relative bg-white/95 rounded-[42px] max-w-sm w-full p-6 text-center space-y-4 shadow-2xl border-4 border-amber-300 anim-pop">
+  <!-- ================= 2. RADIAL INTERACTIVE POPUP (เมนูบอลลูนเด้งรอบตัวนักศึกษา ถอดแบบ HiClass รูปที่ 4 เป๊ะ 100%) ================= -->
+  <div id="radialModal" class="fixed inset-0 bg-black/60 backdrop-blur-xs hidden z-50 flex items-center justify-center p-3 select-none" onclick="closeRadialModal()">
+    <div class="relative w-[360px] h-[380px] sm:w-[420px] sm:h-[420px] flex items-center justify-center anim-pop" onclick="event.stopPropagation()">
       
       <!-- ปุ่มปิดมุมขวาบน -->
-      <button onclick="closeRadialModal()" class="absolute top-4 right-4 w-9 h-9 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center font-black">
+      <button onclick="closeRadialModal()" class="absolute -top-3 -right-2 w-10 h-10 rounded-full bg-white text-slate-600 hover:text-slate-900 flex items-center justify-center font-black shadow-xl border-2 border-slate-200 z-30 transition hover:scale-110 active:scale-90">
         ✕
       </button>
 
-      <!-- อวาตาร์และชื่อตรงกลาง -->
-      <div class="space-y-1">
-        <div id="radialAvatarDisplay" class="w-24 h-24 mx-auto rounded-full bg-amber-100 border-4 border-white shadow-xl flex items-center justify-center text-5xl overflow-hidden">
-          👩‍⚕️
+      <!-- วงกลมอวาตาร์ตรงกลาง (Center Circular Avatar Container เหมือนรูปที่ 4) -->
+      <div class="relative w-56 h-56 sm:w-64 sm:h-64 rounded-full bg-white p-3 shadow-2xl border-4 border-white flex flex-col items-center justify-center z-20 cursor-pointer overflow-hidden"
+           onmousemove="handleModalHeadTilt(event, this)"
+           onmouseleave="resetModalHeadTilt(this)">
+        
+        <!-- รูปอวาตาร์ 3D ขยับและหันศีรษะตามเมาส์ได้ -->
+        <div id="radialAvatarDisplay" class="w-full h-full rounded-full overflow-hidden flex items-center justify-center">
+          <!-- Inserted dynamically -->
         </div>
-        <div class="inline-block px-3 py-0.5 rounded-full bg-amber-400 text-amber-950 font-black text-xs" id="radialStudentId">
-          STU-09
-        </div>
-        <h3 class="text-base font-black text-slate-900" id="radialStudentName">นางสาวณิฐาภัทร จันทร์ทุ่ง</h3>
-        <p class="text-xs text-amber-800 font-semibold" id="radialStudentWard">วอร์ด: รพ.อุทัยธานี • แถบหมวกขาว</p>
-      </div>
 
-      <!-- บอลลูนตัวเลือกเช็คชื่อด่วน (มาเรียน, สาย, ลาป่วย, ลากิจ, ขาดเรียน) แบบรูปที่ 4 -->
-      <div>
-        <div class="text-[11px] font-black text-slate-400 mb-2 uppercase tracking-wider">เช็คชื่อเข้าฝึกปฏิบัติการ</div>
-        <div class="flex justify-center items-center gap-2.5 flex-wrap">
-          <button onclick="quickAttendanceAction('ตรงเวลา')" class="radial-btn bg-emerald-500 hover:bg-emerald-600" title="มาตรงเวลา">
-            <span class="text-base">✔️</span>
-            <span>มา</span>
-          </button>
-          <button onclick="quickAttendanceAction('สาย')" class="radial-btn bg-amber-500 hover:bg-amber-600" title="มาสาย">
-            <span class="text-base">⏱️</span>
-            <span>สาย</span>
-          </button>
-          <button onclick="quickAttendanceAction('ส่งงานช้า')" class="radial-btn bg-purple-500 hover:bg-purple-600" title="ส่งงานช้า">
-            <span class="text-base">⏳</span>
-            <span class="text-[9px]">ส่งช้า</span>
-          </button>
-          <button onclick="quickAttendanceAction('ป่วย')" class="radial-btn bg-sky-500 hover:bg-sky-600" title="ลาป่วย">
-            <span class="text-base">🌡️</span>
-            <span>ป่วย</span>
-          </button>
-          <button onclick="quickAttendanceAction('ลา')" class="radial-btn bg-orange-500 hover:bg-orange-600" title="ลากิจ">
-            <span class="text-base">📃</span>
-            <span>กิจ</span>
-          </button>
-          <button onclick="quickAttendanceAction('ขาด')" class="radial-btn bg-rose-500 hover:bg-rose-600" title="ขาดเรียน">
-            <span class="text-base">❌</span>
-            <span>ขาด</span>
-          </button>
+        <!-- ป้ายชื่อนักศึกษาตรงล่างของวงกลม (เหมือนในรูป 4: [ 4 ] ศุภกร) -->
+        <div class="absolute bottom-3 px-3.5 py-1 rounded-full bg-white shadow-md border border-slate-100 flex items-center gap-2 z-20 pointer-events-none">
+          <span id="radialStudentNumber" class="w-6 h-6 rounded-full bg-emerald-700 text-white font-black text-xs flex items-center justify-center shadow-xs">
+            4
+          </span>
+          <span id="radialStudentName" class="font-black text-sm text-slate-800">
+            ศุภกร
+          </span>
         </div>
       </div>
 
-      <!-- บอลลูนตัวเลือกให้คะแนนพิเศษ Hero Point / ประเมิน (รูปดาวและกระเป๋ายา) -->
-      <div class="pt-2 border-t border-slate-100 flex justify-center items-center gap-3">
-        <button onclick="awardHeroQuick(1)" class="px-4 py-2 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-400 text-amber-950 font-black text-xs shadow-md active:scale-95 transition flex items-center gap-1.5">
-          <span>⭐</span> <span>+1 Hero ความดี</span>
+      <!-- RADIAL ORBIT BUTTONS (รอบๆ วงกลมด้านซ้ายและล่าง ตามรูปที่ 4 เป๊ะๆ) -->
+      
+      <!-- 1. ขาดเรียน (สีชมพูบานเย็น ด้านซ้ายบน) -->
+      <div class="absolute z-20 flex flex-col items-center" style="top: 15px; left: 16px;">
+        <button onclick="quickAttendanceAction('ขาด')" class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-rose-500 hover:bg-rose-600 text-white flex items-center justify-center shadow-xl border-3 border-white text-xl font-black transition-transform hover:scale-115 active:scale-90" title="ขาดเรียน">
+          ✕
         </button>
-        <button onclick="awardHeroQuick(5)" class="px-4 py-2 rounded-2xl bg-gradient-to-r from-rose-500 to-pink-500 text-white font-black text-xs shadow-md active:scale-95 transition flex items-center gap-1.5">
-          <span>🌟</span> <span>+5 ดาวดีเด่น</span>
+        <span class="mt-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 font-bold text-[10px] sm:text-xs shadow-sm border border-slate-100 pointer-events-none">
+          ขาดเรียน
+        </span>
+      </div>
+
+      <!-- 2. ลากิจ (สีส้ม ด้านซ้ายกลาง) -->
+      <div class="absolute z-20 flex flex-col items-center" style="top: 105px; left: 0px;">
+        <button onclick="quickAttendanceAction('ลา')" class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center shadow-xl border-3 border-white text-lg font-black transition-transform hover:scale-115 active:scale-90" title="ลากิจ">
+          <i class="fa-solid fa-file-lines text-white"></i>
+        </button>
+        <span class="mt-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 font-bold text-[10px] sm:text-xs shadow-sm border border-slate-100 pointer-events-none">
+          ลากิจ
+        </span>
+      </div>
+
+      <!-- 3. ลาป่วย (สีฟ้า ด้านซ้ายล่าง) -->
+      <div class="absolute z-20 flex flex-col items-center" style="top: 195px; left: 8px;">
+        <button onclick="quickAttendanceAction('ป่วย')" class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-sky-400 hover:bg-sky-500 text-white flex items-center justify-center shadow-xl border-3 border-white text-lg font-black transition-transform hover:scale-115 active:scale-90" title="ลาป่วย">
+          <i class="fa-solid fa-temperature-three-quarters text-white"></i>
+        </button>
+        <span class="mt-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 font-bold text-[10px] sm:text-xs shadow-sm border border-slate-100 pointer-events-none">
+          ลาป่วย
+        </span>
+      </div>
+
+      <!-- 4. สาย (สีส้มเหลืองอำพัน ด้านล่างซ้าย) -->
+      <div class="absolute z-20 flex flex-col items-center" style="bottom: 25px; left: 45px;">
+        <button onclick="quickAttendanceAction('สาย')" class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-amber-400 hover:bg-amber-500 text-white flex items-center justify-center shadow-xl border-3 border-white text-lg font-black transition-transform hover:scale-115 active:scale-90" title="มาสาย">
+          <i class="fa-regular fa-clock text-white"></i>
+        </button>
+        <span class="mt-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 font-bold text-[10px] sm:text-xs shadow-sm border border-slate-100 pointer-events-none">
+          สาย
+        </span>
+      </div>
+
+      <!-- 5. ส่งงานช้า (สีม่วงสด ด้านล่างขวา) -->
+      <div class="absolute z-20 flex flex-col items-center" style="bottom: 25px; right: 85px;">
+        <button onclick="quickAttendanceAction('ส่งงานช้า')" class="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center shadow-xl border-3 border-white text-base font-black transition-transform hover:scale-115 active:scale-90" title="ส่งงานช้า">
+          <i class="fa-solid fa-hourglass-half text-white"></i>
+        </button>
+        <span class="mt-1 px-2 py-0.5 rounded-full bg-white text-slate-800 font-bold text-[10px] shadow-sm border border-slate-100 pointer-events-none">
+          ส่งงานช้า
+        </span>
+      </div>
+
+      <!-- 6. มาเรียน (สีเขียวมรกต ปุ่มใหญ่โดดเด่น ด้านขวาล่าง เหมือนรูปที่ 4 เป๊ะๆ) -->
+      <div class="absolute z-20 flex flex-col items-center" style="bottom: 15px; right: -5px;">
+        <button onclick="quickAttendanceAction('ตรงเวลา')" class="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-emerald-400 hover:bg-emerald-500 text-white flex items-center justify-center shadow-2xl border-4 border-white text-2xl font-black transition-transform hover:scale-115 active:scale-90" title="มาเรียน">
+          ✔
+        </button>
+        <span class="mt-1 px-3 py-0.5 rounded-full bg-white text-slate-800 font-black text-xs sm:text-sm shadow-sm border border-slate-100 pointer-events-none">
+          มาเรียน
+        </span>
+      </div>
+
+      <!-- 7. แถบ Action Pills ด้านล่างตรงกลาง (ดาว, ดื่มนม, แปรงฟัน, อาหารกลางวัน เหมือนรูปที่ 4) -->
+      <div class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 z-20 bg-white/95 px-4 py-2 rounded-full shadow-2xl border border-slate-100 flex items-center gap-2.5">
+        <!-- ปุ่มให้ดาว +1 / +3 -->
+        <button onclick="awardHeroQuick(1)" class="px-3.5 py-1.5 rounded-full bg-amber-400 hover:bg-amber-500 text-amber-950 font-black text-xs shadow-sm flex items-center gap-1.5 active:scale-95 transition">
+          ⭐ <span id="radialStarValue">3</span>
+        </button>
+        <!-- ปุ่มบันทึกกิจกรรมเสริม (นม, แปรงฟัน, อาหาร) -->
+        <button onclick="recordDailyHabit('นม')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-600 flex items-center justify-center text-sm shadow-2xs transition active:scale-90" title="ดื่มนม">
+          🥛
+        </button>
+        <button onclick="recordDailyHabit('แปรงฟัน')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-teal-100 text-slate-700 hover:text-teal-600 flex items-center justify-center text-sm shadow-2xs transition active:scale-90" title="แปรงฟัน">
+          🪥
+        </button>
+        <button onclick="recordDailyHabit('อาหาร')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-orange-600 flex items-center justify-center text-sm shadow-2xs transition active:scale-90" title="อาหารกลางวัน / เวรอาหาร">
+          🍴
         </button>
       </div>
 
@@ -916,26 +964,31 @@
       const name = (s.fullName || s.name || "").trim();
       const isMale = name.startsWith("นาย") || s.gender === "male";
       
-      // ลำดับไฟล์รูป 3D Pixar ของน้องผู้ชายและน้องผู้หญิง
+      let defaultImg = isMale ? "student_boy.png" : "student_girl.png";
+      if (window.HICLASS_AVATARS) {
+        if (isMale && window.HICLASS_AVATARS.boy) defaultImg = window.HICLASS_AVATARS.boy;
+        if (!isMale && window.HICLASS_AVATARS.girl) defaultImg = window.HICLASS_AVATARS.girl;
+      }
+
       const maleCandidates = [
+        "student_boy.png",
+        "img/student_boy.png",
+        "avatars/student_boy.png",
         "nurse_boy.png.jpg",
-        "nurse_boy.png",
-        "nurse_boy.jpg",
-        "nurse-male.png",
-        "avatars/nurse_boy.png"
+        "nurse_boy.png"
       ];
       const femaleCandidates = [
+        "student_girl.png",
+        "img/student_girl.png",
+        "avatars/student_girl.png",
         "nurse_girl.png.jpg",
-        "nurse_girl.png",
-        "nurse_girl.jpg",
-        "nurse-female.png",
-        "avatars/nurse_girl.png"
+        "nurse_girl.png"
       ];
 
       const candidates = isMale ? maleCandidates : femaleCandidates;
       return {
-        defaultImg: candidates[0],
-        fallbackList: candidates.slice(1),
+        defaultImg: defaultImg,
+        fallbackList: candidates,
         isMale
       };
     }
@@ -963,30 +1016,30 @@
       }, 3500);
     }
 
-    // 3. เรนเดอร์การ์ดอวาตาร์ 3D Pixar สวยงามตรงตามรูปต้นฉบับ + ศีรษะและสายตาหันตามเมาส์
+    // 3. เรนเดอร์การ์ดอวาตาร์ 3D Pixar สวยงามตรงตามรูปต้นฉบับ HiClass + ศีรษะและสายตาหันตามเมาส์
     function renderAvatarGrid() {
       const grid = document.getElementById('avatarGrid');
       grid.innerHTML = GROUP_5_DATA.map((s, idx) => {
         const av = getStudentAvatarSrc(s);
         const fbJson = JSON.stringify(av.fallbackList).replace(/"/g, '&quot;');
         return `
-          <div class="clay-card p-4 flex flex-col items-center justify-between text-center relative group min-h-[240px] cursor-pointer" 
+          <div class="clay-card p-3 sm:p-4 flex flex-col items-center justify-between text-center relative group min-h-[220px] sm:min-h-[240px] cursor-pointer hover:shadow-xl transition-all" 
                onmousemove="handleTiltAndHead(event, this, '${s.studentId}')" 
                onmouseleave="resetTiltAndHead(this, '${s.studentId}')"
                onclick="openRadialModal('${s.studentId}')">
             
-            <!-- Badge เลขที่และคะแนนดาว Hero -->
-            <div class="w-full flex justify-between items-center text-[10px] font-black z-10 pointer-events-none">
-              <span class="w-6 h-6 rounded-full bg-amber-400 text-amber-950 flex items-center justify-center shadow-xs">
+            <!-- Badge เลขที่และคะแนนดาว Hero (มุมบน) -->
+            <div class="w-full flex justify-between items-center text-[11px] font-black z-10 pointer-events-none">
+              <span class="w-6 h-6 rounded-full bg-emerald-600 text-white flex items-center justify-center shadow-xs">
                 ${idx + 1}
               </span>
-              <span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-1 shadow-2xs">
+              <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-1 shadow-2xs font-extrabold">
                 ⭐ <span id="starScore_${s.studentId}">10</span>
               </span>
             </div>
 
-            <!-- กล่องอวาตาร์ 3D Pixar รูปที่คุณครูส่งมา พร้อมเอฟเฟกต์หันหน้าและเอียงตามเมาส์ -->
-            <div class="relative w-28 h-32 sm:w-32 sm:h-36 my-1 flex items-center justify-center pointer-events-none">
+            <!-- กล่องอวาตาร์ 3D วงกลม พร้อมเอฟเฟกต์หันหน้าและเอียงตามเมาส์ -->
+            <div class="relative w-24 h-24 sm:w-28 sm:h-28 my-1 flex items-center justify-center rounded-full bg-slate-50 border-3 border-white shadow-inner overflow-hidden pointer-events-none">
               
               <!-- ป้ายอารมณ์ ยิ้ม/ร้องไห้ เด้งลอยมุมขวาบน -->
               <span id="moodBadge_${s.studentId}" class="hidden"></span>
@@ -995,16 +1048,15 @@
                    src="${av.defaultImg}" 
                    onerror="handleAvatarImgFallback(this, ${fbJson})" 
                    alt="${s.name}" 
-                   class="w-full h-full object-contain pointer-events-none select-none transition-transform duration-100 ease-out filter drop-shadow-md">
+                   class="w-full h-full object-cover rounded-full pointer-events-none select-none transition-transform duration-75 ease-out">
             </div>
 
-            <!-- ชื่อนักศึกษา -->
-            <div class="w-full mt-1 pointer-events-none">
-              <div class="text-xs sm:text-sm font-black text-slate-800 truncate">${s.name}</div>
-              <div class="text-[10px] text-amber-800 font-bold mt-0.5 flex items-center justify-center gap-1">
-                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-                <span>Lv.1 หมวกขาว</span>
-              </div>
+            <!-- ชื่อนักศึกษา (แบบ Pill สีขาว มีเลขที่วงกลมสีเขียวด้านหน้า เหมือนรูปที่ 4) -->
+            <div class="mt-1 px-3 py-1 rounded-full bg-white shadow-xs border border-slate-100 flex items-center gap-1.5 pointer-events-none max-w-[95%]">
+              <span class="w-4 h-4 rounded-full bg-emerald-700 text-white text-[9px] font-black flex items-center justify-center flex-shrink-0">
+                ${idx + 1}
+              </span>
+              <span class="text-xs sm:text-sm font-black text-slate-800 truncate">${s.name}</span>
             </div>
 
             <!-- Badge สถานะเข้าเวรปัจจุบัน -->
@@ -1035,10 +1087,10 @@
 
       const img = document.getElementById(`avatarImg_${studentId}`);
       if (img) {
-        const moveX = (x / rect.width) * 15;
+        const moveX = (x / rect.width) * 14;
         const moveY = (y / rect.height) * 12;
-        const tiltDeg = (x / rect.width) * 10;
-        img.style.transform = `scale(1.12) translate(${moveX}px, ${moveY}px) rotate(${tiltDeg}deg)`;
+        const tiltDeg = (x / rect.width) * 8;
+        img.style.transform = `scale(1.1) translate(${moveX}px, ${moveY}px) rotate(${tiltDeg}deg)`;
       }
     }
 
@@ -1049,30 +1101,76 @@
       }
     }
 
-    // 4. RADIAL POPUP ACTION (คลิกแล้วเด้งรอบตัวนักศึกษา)
+    // 4. RADIAL POPUP ACTION (คลิกแล้วเด้งรอบตัวนักศึกษา ถอดแบบ HiClass รูปที่ 4)
     function openRadialModal(studentId) {
       const s = GROUP_5_DATA.find(x => x.studentId === studentId);
       if (!s) return;
       selectedRadialStudent = s;
 
+      const idx = GROUP_5_DATA.findIndex(x => x.studentId === studentId);
+      const studentNum = idx >= 0 ? idx + 1 : 1;
+
       const av = getStudentAvatarSrc(s);
       const fbJson = JSON.stringify(av.fallbackList).replace(/"/g, '&quot;');
 
       document.getElementById('radialAvatarDisplay').innerHTML = `
-        <div class="relative w-24 h-24 mx-auto flex items-center justify-center">
-          <img src="${av.defaultImg}" 
-               onerror="handleAvatarImgFallback(this, ${fbJson})" 
-               class="w-full h-full object-contain filter drop-shadow-md">
-        </div>
+        <img id="modalAvatarImg" 
+             src="${av.defaultImg}" 
+             onerror="handleAvatarImgFallback(this, ${fbJson})" 
+             class="w-full h-full object-cover rounded-full select-none transition-transform duration-75">
       `;
-      document.getElementById('radialStudentId').textContent = s.studentId;
-      document.getElementById('radialStudentName').textContent = s.fullName;
-      document.getElementById('radialStudentWard').textContent = `วอร์ด: รพ.อุทัยธานี • เลเวล 1 หมวกขาว`;
+      const numEl = document.getElementById('radialStudentNumber');
+      if (numEl) numEl.textContent = studentNum;
+
+      const nameEl = document.getElementById('radialStudentName');
+      if (nameEl) nameEl.textContent = s.name || s.fullName.split(' ')[0];
+
+      const starEl = document.getElementById(`starScore_${s.studentId}`);
+      if (starEl && document.getElementById('radialStarValue')) {
+        document.getElementById('radialStarValue').textContent = starEl.textContent || '3';
+      }
+
       document.getElementById('radialModal').classList.remove('hidden');
     }
 
     function closeRadialModal() {
       document.getElementById('radialModal').classList.add('hidden');
+    }
+
+    function handleModalHeadTilt(e, card) {
+      const rect = card.getBoundingClientRect();
+      const x = e.clientX - rect.left - rect.width / 2;
+      const y = e.clientY - rect.top - rect.height / 2;
+      const img = document.getElementById('modalAvatarImg');
+      if (img) {
+        const moveX = (x / rect.width) * 16;
+        const moveY = (y / rect.height) * 14;
+        const rot = (x / rect.width) * 10;
+        img.style.transform = `scale(1.08) translate(${moveX}px, ${moveY}px) rotate(${rot}deg)`;
+      }
+    }
+
+    function resetModalHeadTilt(card) {
+      const img = document.getElementById('modalAvatarImg');
+      if (img) {
+        img.style.transform = 'scale(1) translate(0px, 0px) rotate(0deg)';
+      }
+    }
+
+    function recordDailyHabit(habit) {
+      if (!selectedRadialStudent) return;
+      closeRadialModal();
+      triggerStudentMood(selectedRadialStudent.studentId, 'smile');
+      confetti({ particleCount: 40, spread: 60, origin: { y: 0.7 } });
+      const titles = { 'นม': 'ดื่มนม 🥛', 'แปรงฟัน': 'แปรงฟัน 🪥', 'อาหาร': 'รับประทานอาหาร 🍴' };
+      Swal.fire({
+        icon: 'success',
+        title: `บันทึก: ${titles[habit] || habit}`,
+        text: `บันทึกกิจวัตรประจำวันของ ${selectedRadialStudent.name} สำเร็จ`,
+        timer: 1500,
+        showConfirmButton: false
+      });
+      awardHeroQuick(1);
     }
 
     // เช็คชื่อด่วน (มาเรียน, สาย, ลาป่วย, ลากิจ, ขาดเรียน, ส่งงานช้า)
