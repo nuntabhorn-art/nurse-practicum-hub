@@ -681,6 +681,13 @@
             ศุภกร
           </span>
         </div>
+
+        <!-- ปุ่มห้องแต่งตัว / เปลี่ยนชุด & ทรงผม (Wardrobe Button) -->
+        <button onclick="openWardrobeModal()" 
+                class="absolute top-2 right-2 w-9 h-9 rounded-full bg-amber-400 hover:bg-amber-500 text-amber-950 flex items-center justify-center shadow-lg border-2 border-white text-base font-black transition transform hover:scale-110 active:scale-95 z-30" 
+                title="เปลี่ยนชุด / ทรงผม">
+          👔
+        </button>
       </div>
 
       <!-- RADIAL ORBIT BUTTONS (รอบๆ วงกลมด้านซ้ายและล่าง ตามรูปที่ 4 เป๊ะๆ) -->
@@ -1443,6 +1450,102 @@
       Swal.fire({ icon: 'success', title: 'บันทึกเรียบร้อย', timer: 1200, showConfirmButton: false });
     }
 
+    // ================= ระบบห้องแต่งตัว / เปลี่ยนชุด & ทรงผม (WARDROBE SYSTEM) =================
+    let wardrobeTargetStudent = null;
+    let selectedWardrobeMascotId = 'G01';
+
+    function openWardrobeModal(studentId = null) {
+      const s = studentId ? GROUP_5_DATA.find(x => x.studentId === studentId) : selectedRadialStudent;
+      if (!s) return;
+      wardrobeTargetStudent = s;
+
+      const idx = GROUP_5_DATA.findIndex(x => x.studentId === s.studentId);
+      selectedWardrobeMascotId = s.mascotId || (window.HiClassMascots ? window.HiClassMascots.getStudentMascotId(s, idx) : 'G01');
+
+      document.getElementById('wardrobeStudentTitle').textContent = `${s.name} (${s.fullName.split(' ')[0]})`;
+      updateWardrobePreview(selectedWardrobeMascotId);
+
+      // เรนเดอร์ตัวเลือกชุด 20 สไตล์ (หญิง G01-G10, ชาย B01-B10)
+      const grid = document.getElementById('wardrobeGrid');
+      const allMascots = window.HICLASS_MASCOTS ? window.HICLASS_MASCOTS.mascots : {};
+      const keys = Object.keys(allMascots).filter(k => k.startsWith('G') || k.startsWith('B'));
+
+      grid.innerHTML = keys.map(k => {
+        const item = allMascots[k];
+        const isSelected = k === selectedWardrobeMascotId;
+        return `
+          <div onclick="selectWardrobeMascot('${k}')" 
+               class="p-1.5 rounded-2xl border-2 flex flex-col items-center cursor-pointer transition transform hover:scale-105 active:scale-95 ${isSelected ? 'border-amber-500 bg-amber-50 shadow-md' : 'border-slate-100 bg-white hover:border-amber-200'}">
+            <div class="w-14 h-14 rounded-full bg-slate-50 border border-slate-100 overflow-hidden flex items-center justify-center pointer-events-none">
+              ${window.HiClassMascots ? window.HiClassMascots.renderMascotHtml(k, 52, { className: 'pointer-events-none', trackMouse: false }) : ''}
+            </div>
+            <div class="text-[10px] font-black text-slate-700 truncate w-full text-center mt-1">${item.label || k}</div>
+          </div>
+        `;
+      }).join('');
+
+      document.getElementById('wardrobeModal').classList.remove('hidden');
+    }
+
+    function selectWardrobeMascot(mascotId) {
+      selectedWardrobeMascotId = mascotId;
+      updateWardrobePreview(mascotId);
+
+      // อัปเดตกรอบสีของตัวที่เลือกในกริด
+      const allItems = document.querySelectorAll('#wardrobeGrid > div');
+      allItems.forEach(div => {
+        if (div.getAttribute('onclick').includes(mascotId)) {
+          div.className = "p-1.5 rounded-2xl border-2 flex flex-col items-center cursor-pointer transition transform scale-105 border-amber-500 bg-amber-50 shadow-md";
+        } else {
+          div.className = "p-1.5 rounded-2xl border-2 flex flex-col items-center cursor-pointer transition transform hover:scale-105 border-slate-100 bg-white hover:border-amber-200";
+        }
+      });
+    }
+
+    function updateWardrobePreview(mascotId) {
+      const box = document.getElementById('wardrobePreviewBox');
+      if (box && window.HiClassMascots) {
+        box.innerHTML = window.HiClassMascots.renderMascotHtml(mascotId, 100, { className: 'pointer-events-none', trackMouse: true });
+      }
+      const label = document.getElementById('wardrobeCurrentLabel');
+      const item = window.HICLASS_MASCOTS?.mascots[mascotId];
+      if (label && item) {
+        label.textContent = `สไตล์: ${item.label || mascotId}`;
+      }
+    }
+
+    function confirmWardrobeChoice() {
+      if (!wardrobeTargetStudent) return;
+      const idx = GROUP_5_DATA.findIndex(x => x.studentId === wardrobeTargetStudent.studentId);
+      if (idx !== -1) {
+        GROUP_5_DATA[idx].mascotId = selectedWardrobeMascotId;
+        localStorage.setItem('nursenote_group5_students', JSON.stringify(GROUP_5_DATA));
+      }
+
+      closeWardrobeModal();
+
+      // ถ้าเปิด Radial Modal อยู่ ให้อัปเดตรูปตรงกลางทันที
+      if (selectedRadialStudent && selectedRadialStudent.studentId === wardrobeTargetStudent.studentId) {
+        openRadialModal(wardrobeTargetStudent.studentId);
+      }
+
+      // อัปเดตการ์ดทุกจุดในหน้าจอ
+      renderAvatarGrid();
+      renderStudentManagerTable();
+      confetti({ particleCount: 30, spread: 50, origin: { y: 0.6 } });
+      Swal.fire({
+        icon: 'success',
+        title: 'เปลี่ยนชุดเรียบร้อย! ✨',
+        text: `${wardrobeTargetStudent.name} ใส่ชุดใหม่แล้ว`,
+        timer: 1300,
+        showConfirmButton: false
+      });
+    }
+
+    function closeWardrobeModal() {
+      document.getElementById('wardrobeModal').classList.add('hidden');
+    }
+
     function editStudentAction(studentId) {
       openStudentModal(studentId);
     }
@@ -1922,6 +2025,48 @@
           บันทึกข้อมูล
         </button>
         <button onclick="closeStudentModal()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition">
+          ยกเลิก
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 5. MODAL ห้องแต่งตัวนักศึกษา (WARDROBE MODAL ให้เลือกเปลี่ยนชุด/ทรงผมเอง) ================= -->
+  <div id="wardrobeModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 select-none">
+    <div class="bg-white rounded-[36px] max-w-md w-full p-5 sm:p-6 space-y-4 shadow-2xl border-4 border-amber-200 anim-pop">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 class="text-base font-black text-slate-800 flex items-center gap-2">
+          <span>👔</span> <span>ห้องแต่งตัว & เปลี่ยนทรงผม</span>
+        </h3>
+        <button onclick="closeWardrobeModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold hover:bg-slate-200">✕</button>
+      </div>
+
+      <!-- พรีวิวชุดที่เลือกสดๆ พร้อมสายตามองตามเมาส์ -->
+      <div class="flex flex-col items-center justify-center p-3 rounded-3xl bg-gradient-to-b from-amber-50/70 to-orange-100/30 border border-amber-200">
+        <div id="wardrobePreviewBox" class="w-28 h-28 rounded-full bg-white border-3 border-white shadow-inner flex items-center justify-center overflow-hidden">
+          <!-- Live Preview -->
+        </div>
+        <div id="wardrobeStudentTitle" class="mt-2 text-xs font-black text-slate-800">
+          นักศึกษา
+        </div>
+        <div id="wardrobeCurrentLabel" class="text-[11px] text-amber-800 font-bold">
+          ชุดปัจจุบัน
+        </div>
+      </div>
+
+      <!-- แถบเลือกสไตล์ชุด (20 สไตล์ ทรงผม & ชุดไปรเวทเที่ยว / สไตล์ยอดนิยม) -->
+      <div>
+        <label class="block font-bold text-slate-700 mb-2 text-xs">เลือกชุดและทรงผมที่ชอบ (20 สไตล์):</label>
+        <div id="wardrobeGrid" class="grid grid-cols-4 gap-2 max-h-56 overflow-y-auto p-1">
+          <!-- Injected via JS -->
+        </div>
+      </div>
+
+      <div class="pt-2 flex gap-2">
+        <button onclick="confirmWardrobeChoice()" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black rounded-xl shadow-md transition text-xs">
+          ✨ ยืนยันใส่ชุดนี้
+        </button>
+        <button onclick="closeWardrobeModal()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition text-xs">
           ยกเลิก
         </button>
       </div>
