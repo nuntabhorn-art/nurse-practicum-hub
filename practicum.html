@@ -911,61 +911,68 @@
       switchTab('teacher');
     }
 
-    // 2. ฟังก์ชันตรวจสอบเพศและดึงที่อยู่ไฟล์ SVG แยกชิ้นส่วนศีรษะและลำตัว (พร้อม Inline Data URL fallback 100%)
-    function getStudentAvatarParts(s, mood = 'neutral') {
+    // 2. ฟังก์ชันตรวจสอบเพศและดึงรูป 3D Pixar ประจำตัวนักศึกษา (ใช้รูปต้นฉบับที่คุณครูส่งมา 100%)
+    function getStudentAvatarSrc(s) {
       const name = (s.fullName || s.name || "").trim();
       const isMale = name.startsWith("นาย") || s.gender === "male";
-      const prefix = isMale ? 'boy' : 'girl';
-      const bodyFileName = `${prefix}_body.svg`;
-      const headFileName = `${prefix}_head_${mood}.svg`;
+      
+      // ลำดับไฟล์รูป 3D Pixar ของน้องผู้ชายและน้องผู้หญิง
+      const maleCandidates = [
+        "nurse_boy.png.jpg",
+        "nurse_boy.png",
+        "nurse_boy.jpg",
+        "nurse-male.png",
+        "avatars/nurse_boy.png"
+      ];
+      const femaleCandidates = [
+        "nurse_girl.png.jpg",
+        "nurse_girl.png",
+        "nurse_girl.jpg",
+        "nurse-female.png",
+        "avatars/nurse_girl.png"
+      ];
 
-      const inlineMap = window.AVATAR_INLINE_SVGS || {};
-      const bodySrc = inlineMap[bodyFileName] || `assets/avatar/${bodyFileName}`;
-      const headSrc = inlineMap[headFileName] || `assets/avatar/${headFileName}`;
-
+      const candidates = isMale ? maleCandidates : femaleCandidates;
       return {
-        bodySrc,
-        headSrc,
-        isMale,
-        prefix
+        defaultImg: candidates[0],
+        fallbackList: candidates.slice(1),
+        isMale
       };
     }
 
-    // ฟังก์ชันเปลี่ยนอารมณ์ศีรษะนักศึกษา (ยิ้ม / ร้องไห้) เป็นเวลา 3 วินาที
+    // ฟังก์ชันเปลี่ยนอารมณ์นักศึกษา (ยิ้ม / ร้องไห้) แสดงป้ายอีโมจิ 3D บอลลูนลอยขึ้นมา
     function triggerStudentMood(studentId, mood) {
       studentMoods[studentId] = mood;
-      const s = GROUP_5_DATA.find(x => x.studentId === studentId);
-      if (s) {
-        const headImg = document.getElementById(`avatarHead_${studentId}`);
-        if (headImg) {
-          const parts = getStudentAvatarParts(s, mood);
-          headImg.src = parts.headSrc;
+      const moodBadge = document.getElementById(`moodBadge_${studentId}`);
+      if (moodBadge) {
+        if (mood === 'smile') {
+          moodBadge.innerHTML = '😄✨';
+          moodBadge.className = "absolute -top-2 -right-2 px-2 py-0.5 rounded-full bg-amber-400 text-white font-black text-xs shadow-md border-2 border-white anim-pop z-20";
+        } else if (mood === 'cry') {
+          moodBadge.innerHTML = '😢💧';
+          moodBadge.className = "absolute -top-2 -right-2 px-2 py-0.5 rounded-full bg-rose-500 text-white font-black text-xs shadow-md border-2 border-white anim-pop z-20";
         }
       }
 
       clearTimeout(moodTimers[studentId]);
       moodTimers[studentId] = setTimeout(() => {
         studentMoods[studentId] = 'neutral';
-        if (s) {
-          const headImg = document.getElementById(`avatarHead_${studentId}`);
-          if (headImg) {
-            const parts = getStudentAvatarParts(s, 'neutral');
-            headImg.src = parts.headSrc;
-          }
+        if (moodBadge) {
+          moodBadge.className = "hidden";
         }
       }, 3500);
     }
 
-    // 3. เรนเดอร์การ์ดอวาตาร์ 3D (ขยับเฉพาะศีรษะตามเมาส์ ลำตัวนิ่งสง่า)
+    // 3. เรนเดอร์การ์ดอวาตาร์ 3D Pixar สวยงามตรงตามรูปต้นฉบับ + ศีรษะและสายตาหันตามเมาส์
     function renderAvatarGrid() {
       const grid = document.getElementById('avatarGrid');
       grid.innerHTML = GROUP_5_DATA.map((s, idx) => {
-        const currentMood = studentMoods[s.studentId] || 'neutral';
-        const parts = getStudentAvatarParts(s, currentMood);
+        const av = getStudentAvatarSrc(s);
+        const fbJson = JSON.stringify(av.fallbackList).replace(/"/g, '&quot;');
         return `
-          <div class="clay-card p-4 flex flex-col items-center justify-between text-center relative group min-h-[230px] cursor-pointer" 
-               onmousemove="handleHeadTrack(event, this, '${s.studentId}')" 
-               onmouseleave="resetHeadTrack(this, '${s.studentId}')"
+          <div class="clay-card p-4 flex flex-col items-center justify-between text-center relative group min-h-[240px] cursor-pointer" 
+               onmousemove="handleTiltAndHead(event, this, '${s.studentId}')" 
+               onmouseleave="resetTiltAndHead(this, '${s.studentId}')"
                onclick="openRadialModal('${s.studentId}')">
             
             <!-- Badge เลขที่และคะแนนดาว Hero -->
@@ -978,23 +985,17 @@
               </span>
             </div>
 
-            <!-- กล่องอวาตาร์ 3D: ลำตัวนิ่งอยู่นิ่งด้านล่าง + ศีรษะขยับเอียงหันตามเมาส์ -->
-            <div class="relative w-24 h-24 sm:w-28 sm:h-28 my-1 flex items-center justify-center pointer-events-none overflow-visible">
+            <!-- กล่องอวาตาร์ 3D Pixar รูปที่คุณครูส่งมา พร้อมเอฟเฟกต์หันหน้าและเอียงตามเมาส์ -->
+            <div class="relative w-28 h-32 sm:w-32 sm:h-36 my-1 flex items-center justify-center pointer-events-none">
               
-              <!-- วงกลมพื้นหลังพาสเทล -->
-              <div class="absolute inset-0 rounded-full bg-gradient-to-tr ${s.color || 'from-amber-200 to-yellow-100'} opacity-85 shadow-inner -z-10"></div>
+              <!-- ป้ายอารมณ์ ยิ้ม/ร้องไห้ เด้งลอยมุมขวาบน -->
+              <span id="moodBadge_${s.studentId}" class="hidden"></span>
 
-              <!-- 1. ลำตัวชุดพยาบาล (อยู่นิ่ง ล่าง) -->
-              <img id="avatarBody_${s.studentId}" 
-                   src="${parts.bodySrc}" 
-                   alt="ชุดพยาบาล" 
-                   class="absolute bottom-0 w-20 h-16 sm:w-24 sm:h-20 object-contain z-0 pointer-events-none select-none">
-
-              <!-- 2. ศีรษะพยาบาล (ขยับหันตามเมาส์ พร้อมเปลี่ยนอารมณ์ ยิ้ม/ร้องไห้) -->
-              <img id="avatarHead_${s.studentId}" 
-                   src="${parts.headSrc}" 
+              <img id="avatarImg_${s.studentId}" 
+                   src="${av.defaultImg}" 
+                   onerror="handleAvatarImgFallback(this, ${fbJson})" 
                    alt="${s.name}" 
-                   class="absolute top-0 w-18 h-18 sm:w-22 sm:h-22 object-contain z-10 pointer-events-none select-none transition-transform duration-75 ease-out filter drop-shadow-sm">
+                   class="w-full h-full object-contain pointer-events-none select-none transition-transform duration-100 ease-out filter drop-shadow-md">
             </div>
 
             <!-- ชื่อนักศึกษา -->
@@ -1018,26 +1019,33 @@
       }).join('');
     }
 
-    // ฟังก์ชันขยับเฉพาะศีรษะ (Head & Eye Tracking ตามเมาส์ ลำตัวนิ่ง)
-    function handleHeadTrack(e, card, studentId) {
+    // ฟังก์ชันช่วยโหลดรูปสำรองอัตโนมัติ
+    function handleAvatarImgFallback(img, list) {
+      if (!img._fbIdx) img._fbIdx = 0;
+      if (list && img._fbIdx < list.length) {
+        img.src = list[img._fbIdx++];
+      }
+    }
+
+    // ฟังก์ชันขยับศีรษะและสายตาหันตามเมาส์อย่างนุ่มนวล (Parallax Head & Eye Tracking)
+    function handleTiltAndHead(e, card, studentId) {
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left - rect.width / 2;
       const y = e.clientY - rect.top - rect.height / 2;
 
-      const headImg = document.getElementById(`avatarHead_${studentId}`);
-      if (headImg) {
-        // ขยับศีรษะ x, y และเอียงมุม z ตามตำแหน่งเมาส์
-        const moveX = (x / rect.width) * 16;
+      const img = document.getElementById(`avatarImg_${studentId}`);
+      if (img) {
+        const moveX = (x / rect.width) * 15;
         const moveY = (y / rect.height) * 12;
-        const rotateDeg = (x / rect.width) * 15;
-        headImg.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rotateDeg}deg) scale(1.08)`;
+        const tiltDeg = (x / rect.width) * 10;
+        img.style.transform = `scale(1.12) translate(${moveX}px, ${moveY}px) rotate(${tiltDeg}deg)`;
       }
     }
 
-    function resetHeadTrack(card, studentId) {
-      const headImg = document.getElementById(`avatarHead_${studentId}`);
-      if (headImg) {
-        headImg.style.transform = 'translate(0px, 0px) rotate(0deg) scale(1)';
+    function resetTiltAndHead(card, studentId) {
+      const img = document.getElementById(`avatarImg_${studentId}`);
+      if (img) {
+        img.style.transform = 'scale(1) translate(0px, 0px) rotate(0deg)';
       }
     }
 
@@ -1047,13 +1055,14 @@
       if (!s) return;
       selectedRadialStudent = s;
 
-      const currentMood = studentMoods[s.studentId] || 'neutral';
-      const parts = getStudentAvatarParts(s, currentMood);
+      const av = getStudentAvatarSrc(s);
+      const fbJson = JSON.stringify(av.fallbackList).replace(/"/g, '&quot;');
 
       document.getElementById('radialAvatarDisplay').innerHTML = `
-        <div class="relative w-24 h-24 mx-auto flex items-center justify-center overflow-visible">
-          <img src="${parts.bodySrc}" class="absolute bottom-0 w-20 h-16 object-contain z-0">
-          <img src="${parts.headSrc}" class="absolute top-0 w-20 h-20 object-contain z-10">
+        <div class="relative w-24 h-24 mx-auto flex items-center justify-center">
+          <img src="${av.defaultImg}" 
+               onerror="handleAvatarImgFallback(this, ${fbJson})" 
+               class="w-full h-full object-contain filter drop-shadow-md">
         </div>
       `;
       document.getElementById('radialStudentId').textContent = s.studentId;
