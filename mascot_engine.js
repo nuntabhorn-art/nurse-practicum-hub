@@ -33,11 +33,10 @@
     const t = getMascotData(id);
     if (!t) return null;
 
-    const isReaction = reaction && REACTIONS.includes(reaction);
-    // หากเป็น B01 ที่ใช้ reactions.jpg ให้ดึงพิกัดจาก rea sheet เพื่อให้เฟรมตรงกัน
-    const R = (id === 'B01')
-      ? (isReaction ? t.rea[REACTIONS.indexOf(reaction)] : t.rea[dirIndex ?? 4])
-      : (isReaction ? t.rea[REACTIONS.indexOf(reaction)] : (t.dir[dirIndex] ?? t.dir[4]));
+    const isReaction = Boolean(reaction && REACTIONS.includes(reaction));
+    const R = isReaction
+      ? t.rea[REACTIONS.indexOf(reaction)]
+      : (t.dir[dirIndex] ?? t.dir[4]);
 
     const [atlasW, atlasH] = isReaction ? t.reaAtlas : t.dirAtlas;
     const [u, f, E, M, k, y, c] = R;
@@ -46,15 +45,21 @@
 
     const imgKind = isReaction ? 'reactions' : 'directions';
     
-    // หากเป็น B01 รองรับทั้งไฟล์ .png, .jpg, และ .webp
+    // กำหนด URL ของรูปตามสถานะที่แท้จริง (directions ต้องมาก่อนเป็นค่าเริ่มต้น)
     let bgUrl = '';
     if (id === 'B01') {
-      // ใช้ reactions.png เป็นอันดับแรก หากไม่มีให้ fallback ไป reactions.jpg อัตโนมัติ
-      bgUrl = (typeof window !== 'undefined' && window.B01_IMG_URL) 
-        ? window.B01_IMG_URL 
-        : 'reactions.png';
+      if (isReaction) {
+        // เมื่อมี Reaction เช่น ยิ้ม ดีใจ ร้องไห้
+        bgUrl = 'reactions.png';
+      } else {
+        // สถานะปกติ: ให้แสดง Directions เป็นหลัก
+        // หากมี directions.png/directions.jpg หรือ directions.webp ในระบบ
+        bgUrl = window.HICLASS_USE_LOCAL
+          ? `classroom-mascots/B01/directions.webp`
+          : `https://myhiclass.com/classroom-mascots/B01/directions.webp`;
+      }
     } else {
-      // สำหรับตัวละครอื่น ใช้ local path หรือดึงตรงจาก CDN เพื่อให้รูปขึ้น 100%
+      // สำหรับตัวละครอื่น
       bgUrl = window.HICLASS_USE_LOCAL 
         ? `classroom-mascots/${id}/${imgKind}.webp`
         : `https://myhiclass.com/classroom-mascots/${id}/${imgKind}.webp`;
@@ -127,7 +132,7 @@
            ${trackAttr}
            style="position: relative; width: ${s.containerW}px; height: ${s.containerH}px; overflow: hidden; pointer-events: none; display: inline-block; transform-origin: center bottom;">
         <div class="mascot-sprite" 
-             style="position: absolute; left: ${s.spriteLeft}px; top: ${s.spriteTop}px; width: ${s.spriteW}px; height: ${s.spriteH}px; background-image: url('${s.bgUrl}'), url('reactions.jpg'), url('reactions.png'); background-size: ${s.bgSize}; background-position: ${s.bgPos}; background-repeat: no-repeat;"></div>
+             style="position: absolute; left: ${s.spriteLeft}px; top: ${s.spriteTop}px; width: ${s.spriteW}px; height: ${s.spriteH}px; background-image: url('${s.bgUrl}'); background-size: ${s.bgSize}; background-position: ${s.bgPos}; background-repeat: no-repeat;"></div>
       </div>
     `;
   }
