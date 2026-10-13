@@ -17,6 +17,8 @@
   <script src="supabase-client.js"></script>
   <script src="auth.js"></script>
   <script src="avatar_inline_data.js"></script>
+  <script src="mascots_data.js"></script>
+  <script src="mascot_engine.js"></script>
 
   <style>
     * { 
@@ -685,7 +687,10 @@
       
       <!-- 1. ขาดเรียน (สีชมพูบานเย็น ด้านซ้ายบน) -->
       <div class="absolute z-20 flex flex-col items-center" style="top: 15px; left: 16px;">
-        <button onclick="quickAttendanceAction('ขาด')" class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-rose-500 hover:bg-rose-600 text-white flex items-center justify-center shadow-xl border-3 border-white text-xl font-black transition-transform hover:scale-115 active:scale-90" title="ขาดเรียน">
+        <button onclick="quickAttendanceAction('ขาด')" 
+                onmouseenter="focusRadialMascot(0)" 
+                onmouseleave="focusRadialMascot(null)" 
+                class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-rose-500 hover:bg-rose-600 text-white flex items-center justify-center shadow-xl border-3 border-white text-xl font-black transition-transform hover:scale-115 active:scale-90" title="ขาดเรียน">
           ✕
         </button>
         <span class="mt-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 font-bold text-[10px] sm:text-xs shadow-sm border border-slate-100 pointer-events-none">
@@ -695,7 +700,10 @@
 
       <!-- 2. ลากิจ (สีส้ม ด้านซ้ายกลาง) -->
       <div class="absolute z-20 flex flex-col items-center" style="top: 105px; left: 0px;">
-        <button onclick="quickAttendanceAction('ลา')" class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center shadow-xl border-3 border-white text-lg font-black transition-transform hover:scale-115 active:scale-90" title="ลากิจ">
+        <button onclick="quickAttendanceAction('ลา')" 
+                onmouseenter="focusRadialMascot(3)" 
+                onmouseleave="focusRadialMascot(null)" 
+                class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center shadow-xl border-3 border-white text-lg font-black transition-transform hover:scale-115 active:scale-90" title="ลากิจ">
           <i class="fa-solid fa-file-lines text-white"></i>
         </button>
         <span class="mt-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 font-bold text-[10px] sm:text-xs shadow-sm border border-slate-100 pointer-events-none">
@@ -705,7 +713,10 @@
 
       <!-- 3. ลาป่วย (สีฟ้า ด้านซ้ายล่าง) -->
       <div class="absolute z-20 flex flex-col items-center" style="top: 195px; left: 8px;">
-        <button onclick="quickAttendanceAction('ป่วย')" class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-sky-400 hover:bg-sky-500 text-white flex items-center justify-center shadow-xl border-3 border-white text-lg font-black transition-transform hover:scale-115 active:scale-90" title="ลาป่วย">
+        <button onclick="quickAttendanceAction('ป่วย')" 
+                onmouseenter="focusRadialMascot(6)" 
+                onmouseleave="focusRadialMascot(null)" 
+                class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-sky-400 hover:bg-sky-500 text-white flex items-center justify-center shadow-xl border-3 border-white text-lg font-black transition-transform hover:scale-115 active:scale-90" title="ลาป่วย">
           <i class="fa-solid fa-temperature-three-quarters text-white"></i>
         </button>
         <span class="mt-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 font-bold text-[10px] sm:text-xs shadow-sm border border-slate-100 pointer-events-none">
@@ -715,7 +726,10 @@
 
       <!-- 4. สาย (สีส้มเหลืองอำพัน ด้านล่างซ้าย) -->
       <div class="absolute z-20 flex flex-col items-center" style="bottom: 25px; left: 45px;">
-        <button onclick="quickAttendanceAction('สาย')" class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-amber-400 hover:bg-amber-500 text-white flex items-center justify-center shadow-xl border-3 border-white text-lg font-black transition-transform hover:scale-115 active:scale-90" title="มาสาย">
+        <button onclick="quickAttendanceAction('สาย')" 
+                onmouseenter="focusRadialMascot(7)" 
+                onmouseleave="focusRadialMascot(null)" 
+                class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-amber-400 hover:bg-amber-500 text-white flex items-center justify-center shadow-xl border-3 border-white text-lg font-black transition-transform hover:scale-115 active:scale-90" title="มาสาย">
           <i class="fa-regular fa-clock text-white"></i>
         </button>
         <span class="mt-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 font-bold text-[10px] sm:text-xs shadow-sm border border-slate-100 pointer-events-none">
@@ -725,7 +739,10 @@
 
       <!-- 5. ส่งงานช้า (สีม่วงสด ด้านล่างขวา) -->
       <div class="absolute z-20 flex flex-col items-center" style="bottom: 25px; right: 85px;">
-        <button onclick="quickAttendanceAction('ส่งงานช้า')" class="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center shadow-xl border-3 border-white text-base font-black transition-transform hover:scale-115 active:scale-90" title="ส่งงานช้า">
+        <button onclick="quickAttendanceAction('ส่งงานช้า')" 
+                onmouseenter="focusRadialMascot(8)" 
+                onmouseleave="focusRadialMascot(null)" 
+                class="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center shadow-xl border-3 border-white text-base font-black transition-transform hover:scale-115 active:scale-90" title="ส่งงานช้า">
           <i class="fa-solid fa-hourglass-half text-white"></i>
         </button>
         <span class="mt-1 px-2 py-0.5 rounded-full bg-white text-slate-800 font-bold text-[10px] shadow-sm border border-slate-100 pointer-events-none">
@@ -735,7 +752,10 @@
 
       <!-- 6. มาเรียน (สีเขียวมรกต ปุ่มใหญ่โดดเด่น ด้านขวาล่าง เหมือนรูปที่ 4 เป๊ะๆ) -->
       <div class="absolute z-20 flex flex-col items-center" style="bottom: 15px; right: -5px;">
-        <button onclick="quickAttendanceAction('ตรงเวลา')" class="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-emerald-400 hover:bg-emerald-500 text-white flex items-center justify-center shadow-2xl border-4 border-white text-2xl font-black transition-transform hover:scale-115 active:scale-90" title="มาเรียน">
+        <button onclick="quickAttendanceAction('ตรงเวลา')" 
+                onmouseenter="focusRadialMascot(5)" 
+                onmouseleave="focusRadialMascot(null)" 
+                class="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-emerald-400 hover:bg-emerald-500 text-white flex items-center justify-center shadow-2xl border-4 border-white text-2xl font-black transition-transform hover:scale-115 active:scale-90" title="มาเรียน">
           ✔
         </button>
         <span class="mt-1 px-3 py-0.5 rounded-full bg-white text-slate-800 font-black text-xs sm:text-sm shadow-sm border border-slate-100 pointer-events-none">
@@ -746,17 +766,29 @@
       <!-- 7. แถบ Action Pills ด้านล่างตรงกลาง (ดาว, ดื่มนม, แปรงฟัน, อาหารกลางวัน เหมือนรูปที่ 4) -->
       <div class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 z-20 bg-white/95 px-4 py-2 rounded-full shadow-2xl border border-slate-100 flex items-center gap-2.5">
         <!-- ปุ่มให้ดาว +1 / +3 -->
-        <button onclick="awardHeroQuick(1)" class="px-3.5 py-1.5 rounded-full bg-amber-400 hover:bg-amber-500 text-amber-950 font-black text-xs shadow-sm flex items-center gap-1.5 active:scale-95 transition">
+        <button onclick="awardHeroQuick(1)" 
+                onmouseenter="focusRadialMascot(7)" 
+                onmouseleave="focusRadialMascot(null)" 
+                class="px-3.5 py-1.5 rounded-full bg-amber-400 hover:bg-amber-500 text-amber-950 font-black text-xs shadow-sm flex items-center gap-1.5 active:scale-95 transition">
           ⭐ <span id="radialStarValue">3</span>
         </button>
         <!-- ปุ่มบันทึกกิจกรรมเสริม (นม, แปรงฟัน, อาหาร) -->
-        <button onclick="recordDailyHabit('นม')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-600 flex items-center justify-center text-sm shadow-2xs transition active:scale-90" title="ดื่มนม">
+        <button onclick="recordDailyHabit('นม')" 
+                onmouseenter="focusRadialMascot(7)" 
+                onmouseleave="focusRadialMascot(null)" 
+                class="w-8 h-8 rounded-full bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-600 flex items-center justify-center text-sm shadow-2xs transition active:scale-90" title="ดื่มนม">
           🥛
         </button>
-        <button onclick="recordDailyHabit('แปรงฟัน')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-teal-100 text-slate-700 hover:text-teal-600 flex items-center justify-center text-sm shadow-2xs transition active:scale-90" title="แปรงฟัน">
+        <button onclick="recordDailyHabit('แปรงฟัน')" 
+                onmouseenter="focusRadialMascot(7)" 
+                onmouseleave="focusRadialMascot(null)" 
+                class="w-8 h-8 rounded-full bg-slate-100 hover:bg-teal-100 text-slate-700 hover:text-teal-600 flex items-center justify-center text-sm shadow-2xs transition active:scale-90" title="แปรงฟัน">
           🪥
         </button>
-        <button onclick="recordDailyHabit('อาหาร')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-orange-600 flex items-center justify-center text-sm shadow-2xs transition active:scale-90" title="อาหารกลางวัน / เวรอาหาร">
+        <button onclick="recordDailyHabit('อาหาร')" 
+                onmouseenter="focusRadialMascot(7)" 
+                onmouseleave="focusRadialMascot(null)" 
+                class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-orange-600 flex items-center justify-center text-sm shadow-2xs transition active:scale-90" title="อาหารกลางวัน / เวรอาหาร">
           🍴
         </button>
       </div>
@@ -862,16 +894,16 @@
 
   <!-- JAVASCRIPT LOGIC (3D Pixar Tilt, Radial Menu, Random Teams, Teacher Grading) -->
   <script>
-    // รายชื่อนักศึกษาเริ่มต้น (สามารถเพิ่ม/แก้ไข/ลบ และเก็บใน localStorage + Supabase ได้)
+    // รายชื่อนักศึกษาเริ่มต้น (รองรับ HiClass Mascot G01-G10 และ B01-B10)
     const DEFAULT_STUDENTS = [
-      { studentId: "STU-09", name: "ณิฐาภัทร (องเอิน)", fullName: "นางสาวณิฐาภัทร จันทร์ทุ่ง (องเอิน)", gender: "female", color: "from-pink-400 to-rose-300" },
-      { studentId: "STU-10", name: "ณัฐพร (ตะวัน)", fullName: "นางสาวณัฐพร ดอนแนไพร (ตะวัน)", gender: "female", color: "from-amber-400 to-yellow-300" },
-      { studentId: "STU-11", name: "ณัฐธิดา (นัดดี้)", fullName: "นางสาวณัฐธิดา กลัดเงิน (นัดดี้)", gender: "female", color: "from-purple-400 to-pink-300" },
-      { studentId: "STU-12", name: "ณัฐธิดา (ใบตอง)", fullName: "นางสาวณัฐธิดา ถามูลเลศ (ใบตอง)", gender: "female", color: "from-emerald-400 to-teal-300" },
-      { studentId: "STU-13", name: "ณิชาภัทร (โฟน)", fullName: "นางสาวณิชาภัทร โพธิ์ศรีดี (โฟน)", gender: "female", color: "from-sky-400 to-blue-300" },
-      { studentId: "STU-14", name: "ณัฐรุจา (นัท)", fullName: "นางสาวณัฐรุจา อินจันทร์ (นัท)", gender: "female", color: "from-indigo-400 to-purple-300" },
-      { studentId: "STU-15", name: "ณัฐพิมล (ใบเตย)", fullName: "นางสาวณัฐพิมล กลิ่นขวัญ (ใบเตย)", gender: "female", color: "from-teal-400 to-emerald-300" },
-      { studentId: "STU-16", name: "ตรีสุคนธิ์ (หมิว)", fullName: "นางสาวตรีสุคนธิ์ ซาปิ (หมิว)", gender: "female", color: "from-rose-400 to-orange-300" }
+      { studentId: "STU-09", name: "ณิฐาภัทร (องเอิน)", fullName: "นางสาวณิฐาภัทร จันทร์ทุ่ง (องเอิน)", gender: "female", mascotId: "G01", color: "from-pink-400 to-rose-300" },
+      { studentId: "STU-10", name: "ณัฐพร (ตะวัน)", fullName: "นางสาวณัฐพร ดอนแนไพร (ตะวัน)", gender: "female", mascotId: "G02", color: "from-amber-400 to-yellow-300" },
+      { studentId: "STU-11", name: "ณัฐธิดา (นัดดี้)", fullName: "นางสาวณัฐธิดา กลัดเงิน (นัดดี้)", gender: "female", mascotId: "G03", color: "from-purple-400 to-pink-300" },
+      { studentId: "STU-12", name: "ณัฐธิดา (ใบตอง)", fullName: "นางสาวณัฐธิดา ถามูลเลศ (ใบตอง)", gender: "female", mascotId: "G04", color: "from-emerald-400 to-teal-300" },
+      { studentId: "STU-13", name: "ณิชาภัทร (โฟน)", fullName: "นางสาวณิชาภัทร โพธิ์ศรีดี (โฟน)", gender: "female", mascotId: "G05", color: "from-sky-400 to-blue-300" },
+      { studentId: "STU-14", name: "ณัฐรุจา (นัท)", fullName: "นางสาวณัฐรุจา อินจันทร์ (นัท)", gender: "female", mascotId: "G06", color: "from-indigo-400 to-purple-300" },
+      { studentId: "STU-15", name: "ณัฐพิมล (ใบเตย)", fullName: "นางสาวณัฐพิมล กลิ่นขวัญ (ใบเตย)", gender: "female", mascotId: "G07", color: "from-teal-400 to-emerald-300" },
+      { studentId: "STU-16", name: "ตรีสุคนธิ์ (หมิว)", fullName: "นางสาวตรีสุคนธิ์ ซาปิ (หมิว)", gender: "female", mascotId: "G08", color: "from-rose-400 to-orange-300" }
     ];
 
     let GROUP_5_DATA = [];
@@ -881,6 +913,14 @@
     } catch(e) {
       GROUP_5_DATA = [...DEFAULT_STUDENTS];
     }
+
+    // อัปเดต mascotId ให้อัตโนมัติหากยังไม่มี
+    GROUP_5_DATA.forEach((s, idx) => {
+      if (!s.mascotId) {
+        const isMale = s.gender === 'male' || (s.fullName && s.fullName.startsWith('นาย'));
+        s.mascotId = isMale ? `B${String((idx % 10) + 1).padStart(2, '0')}` : `G${String((idx % 10) + 1).padStart(2, '0')}`;
+      }
+    });
 
     // เก็บสถานะอารมณ์ของอวาตาร์แต่ละคน ('neutral', 'smile', 'cry')
     const studentMoods = {};
@@ -1016,16 +1056,14 @@
       }, 3500);
     }
 
-    // 3. เรนเดอร์การ์ดอวาตาร์ 3D Pixar สวยงามตรงตามรูปต้นฉบับ HiClass + ศีรษะและสายตาหันตามเมาส์
+    // 3. เรนเดอร์การ์ดอวาตาร์ HiClass Mascot คมชัดระดับโปร + สายตาและศีรษะหันตามเมาส์ 60fps
     function renderAvatarGrid() {
       const grid = document.getElementById('avatarGrid');
       grid.innerHTML = GROUP_5_DATA.map((s, idx) => {
-        const av = getStudentAvatarSrc(s);
-        const fbJson = JSON.stringify(av.fallbackList).replace(/"/g, '&quot;');
+        const mascotId = s.mascotId || (window.HiClassMascots ? window.HiClassMascots.getStudentMascotId(s, idx) : 'G01');
         return `
-          <div class="clay-card p-3 sm:p-4 flex flex-col items-center justify-between text-center relative group min-h-[220px] sm:min-h-[240px] cursor-pointer hover:shadow-xl transition-all" 
-               onmousemove="handleTiltAndHead(event, this, '${s.studentId}')" 
-               onmouseleave="resetTiltAndHead(this, '${s.studentId}')"
+          <div id="avatarCard_${s.studentId}" 
+               class="clay-card p-3 sm:p-4 flex flex-col items-center justify-between text-center relative group min-h-[220px] sm:min-h-[240px] cursor-pointer hover:shadow-xl transition-all" 
                onclick="openRadialModal('${s.studentId}')">
             
             <!-- Badge เลขที่และคะแนนดาว Hero (มุมบน) -->
@@ -1038,17 +1076,14 @@
               </span>
             </div>
 
-            <!-- กล่องอวาตาร์ 3D วงกลม พร้อมเอฟเฟกต์หันหน้าและเอียงตามเมาส์ -->
-            <div class="relative w-24 h-24 sm:w-28 sm:h-28 my-1 flex items-center justify-center rounded-full bg-slate-50 border-3 border-white shadow-inner overflow-hidden pointer-events-none">
-              
+            <!-- กล่องอวาตาร์ HiClass Mascot คมชัดพิเศษ พร้อมระบบตาและศีรษะมองตามเมาส์แบบเรียลไทม์ -->
+            <div class="relative w-24 h-24 sm:w-28 sm:h-28 my-1 flex items-center justify-center rounded-full bg-gradient-to-b from-amber-50 to-orange-100/50 border-3 border-white shadow-inner overflow-hidden pointer-events-none">
               <!-- ป้ายอารมณ์ ยิ้ม/ร้องไห้ เด้งลอยมุมขวาบน -->
               <span id="moodBadge_${s.studentId}" class="hidden"></span>
 
-              <img id="avatarImg_${s.studentId}" 
-                   src="${av.defaultImg}" 
-                   onerror="handleAvatarImgFallback(this, ${fbJson})" 
-                   alt="${s.name}" 
-                   class="w-full h-full object-cover rounded-full pointer-events-none select-none transition-transform duration-75 ease-out">
+              <div id="cardMascotBox_${s.studentId}">
+                ${window.HiClassMascots ? window.HiClassMascots.renderMascotHtml(mascotId, 105, { className: 'pointer-events-none' }) : ''}
+              </div>
             </div>
 
             <!-- ชื่อนักศึกษา (แบบ Pill สีขาว มีเลขที่วงกลมสีเขียวด้านหน้า เหมือนรูปที่ 4) -->
@@ -1071,37 +1106,19 @@
       }).join('');
     }
 
-    // ฟังก์ชันช่วยโหลดรูปสำรองอัตโนมัติ
-    function handleAvatarImgFallback(img, list) {
-      if (!img._fbIdx) img._fbIdx = 0;
-      if (list && img._fbIdx < list.length) {
-        img.src = list[img._fbIdx++];
+    // ฟังก์ชันหันสายตาอวาตาร์ตรงกลางตามปุ่มที่นำเมาส์ไปชี้ (Focus Eye on Button)
+    function focusRadialMascot(dirIndex) {
+      const container = document.querySelector('#radialAvatarDisplay .mascot-container');
+      if (!container || !window.HiClassMascots) return;
+      if (dirIndex !== null) {
+        container.setAttribute('data-mascot-track', 'false');
+        window.HiClassMascots.setMascotDirection(container, dirIndex);
+      } else {
+        container.setAttribute('data-mascot-track', 'true');
       }
     }
 
-    // ฟังก์ชันขยับศีรษะและสายตาหันตามเมาส์อย่างนุ่มนวล (Parallax Head & Eye Tracking)
-    function handleTiltAndHead(e, card, studentId) {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-
-      const img = document.getElementById(`avatarImg_${studentId}`);
-      if (img) {
-        const moveX = (x / rect.width) * 14;
-        const moveY = (y / rect.height) * 12;
-        const tiltDeg = (x / rect.width) * 8;
-        img.style.transform = `scale(1.1) translate(${moveX}px, ${moveY}px) rotate(${tiltDeg}deg)`;
-      }
-    }
-
-    function resetTiltAndHead(card, studentId) {
-      const img = document.getElementById(`avatarImg_${studentId}`);
-      if (img) {
-        img.style.transform = 'scale(1) translate(0px, 0px) rotate(0deg)';
-      }
-    }
-
-    // 4. RADIAL POPUP ACTION (คลิกแล้วเด้งรอบตัวนักศึกษา ถอดแบบ HiClass รูปที่ 4)
+    // 4. RADIAL POPUP ACTION (คลิกแล้วเด้งรอบตัวนักศึกษา ถอดแบบ HiClass 100%)
     function openRadialModal(studentId) {
       const s = GROUP_5_DATA.find(x => x.studentId === studentId);
       if (!s) return;
@@ -1109,16 +1126,17 @@
 
       const idx = GROUP_5_DATA.findIndex(x => x.studentId === studentId);
       const studentNum = idx >= 0 ? idx + 1 : 1;
+      const mascotId = s.mascotId || (window.HiClassMascots ? window.HiClassMascots.getStudentMascotId(s, idx) : 'G01');
 
-      const av = getStudentAvatarSrc(s);
-      const fbJson = JSON.stringify(av.fallbackList).replace(/"/g, '&quot;');
+      // แสดง HiClass Mascot คมชัดระดับโปรขนาด 215px พร้อมสายตามองตามเมาส์
+      const radialDisplay = document.getElementById('radialAvatarDisplay');
+      if (window.HiClassMascots) {
+        radialDisplay.innerHTML = window.HiClassMascots.renderMascotHtml(mascotId, 215, {
+          className: 'pointer-events-none select-none transition-transform duration-75',
+          trackMouse: true
+        });
+      }
 
-      document.getElementById('radialAvatarDisplay').innerHTML = `
-        <img id="modalAvatarImg" 
-             src="${av.defaultImg}" 
-             onerror="handleAvatarImgFallback(this, ${fbJson})" 
-             class="w-full h-full object-cover rounded-full select-none transition-transform duration-75">
-      `;
       const numEl = document.getElementById('radialStudentNumber');
       if (numEl) numEl.textContent = studentNum;
 
@@ -1127,7 +1145,7 @@
 
       const starEl = document.getElementById(`starScore_${s.studentId}`);
       if (starEl && document.getElementById('radialStarValue')) {
-        document.getElementById('radialStarValue').textContent = starEl.textContent || '3';
+        document.getElementById('radialStarValue').textContent = starEl.textContent || '10';
       }
 
       document.getElementById('radialModal').classList.remove('hidden');
@@ -1138,52 +1156,72 @@
     }
 
     function handleModalHeadTilt(e, card) {
-      const rect = card.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-      const img = document.getElementById('modalAvatarImg');
-      if (img) {
-        const moveX = (x / rect.width) * 16;
-        const moveY = (y / rect.height) * 14;
-        const rot = (x / rect.width) * 10;
-        img.style.transform = `scale(1.08) translate(${moveX}px, ${moveY}px) rotate(${rot}deg)`;
-      }
+      // เมื่อใช้ HiClass Eye Tracking แล้ว ระบบจะจัดการสายตาและไมโครทิลต์ให้อัตโนมัติ 60 FPS
     }
 
     function resetModalHeadTilt(card) {
-      const img = document.getElementById('modalAvatarImg');
-      if (img) {
-        img.style.transform = 'scale(1) translate(0px, 0px) rotate(0deg)';
-      }
+      // จัดการผ่าน HiClass Mascot Engine
     }
 
     function recordDailyHabit(habit) {
       if (!selectedRadialStudent) return;
-      closeRadialModal();
-      triggerStudentMood(selectedRadialStudent.studentId, 'smile');
-      confetti({ particleCount: 40, spread: 60, origin: { y: 0.7 } });
+      
+      // แสดง Reaction หัวใจหรือรอยยิ้ม
+      const modalMascot = document.querySelector('#radialAvatarDisplay .mascot-container');
+      if (modalMascot && window.HiClassMascots) {
+        window.HiClassMascots.triggerMascotReaction(modalMascot, 'heart', 1800);
+      }
+      const cardMascot = document.querySelector(`#avatarCard_${selectedRadialStudent.studentId} .mascot-container`);
+      if (cardMascot && window.HiClassMascots) {
+        window.HiClassMascots.triggerMascotReaction(cardMascot, 'heart', 2500);
+      }
+
+      confetti({ particleCount: 35, spread: 60, origin: { y: 0.7 } });
       const titles = { 'นม': 'ดื่มนม 🥛', 'แปรงฟัน': 'แปรงฟัน 🪥', 'อาหาร': 'รับประทานอาหาร 🍴' };
-      Swal.fire({
-        icon: 'success',
-        title: `บันทึก: ${titles[habit] || habit}`,
-        text: `บันทึกกิจวัตรประจำวันของ ${selectedRadialStudent.name} สำเร็จ`,
-        timer: 1500,
-        showConfirmButton: false
-      });
-      awardHeroQuick(1);
+      
+      setTimeout(() => {
+        closeRadialModal();
+        Swal.fire({
+          icon: 'success',
+          title: `บันทึก: ${titles[habit] || habit}`,
+          text: `บันทึกกิจวัตรประจำวันของ ${selectedRadialStudent.name} สำเร็จ`,
+          timer: 1500,
+          showConfirmButton: false
+        });
+        awardHeroQuick(1);
+      }, 500);
     }
 
     // เช็คชื่อด่วน (มาเรียน, สาย, ลาป่วย, ลากิจ, ขาดเรียน, ส่งงานช้า)
     async function quickAttendanceAction(status) {
       if (!selectedRadialStudent) return;
-      closeRadialModal();
 
-      // ตรวจสอบอารมณ์: ถ้า ขาด หรือ สาย หรือ ส่งงานช้า ให้ร้องไห้ 😢 ถ้า มาตรงเวลา ให้ยิ้ม 😊
-      if (status === 'ขาด' || status === 'สาย' || status === 'ส่งงานช้า') {
-        triggerStudentMood(selectedRadialStudent.studentId, 'cry');
-      } else if (status === 'ตรงเวลา') {
-        triggerStudentMood(selectedRadialStudent.studentId, 'smile');
+      const modalMascot = document.querySelector('#radialAvatarDisplay .mascot-container');
+      const cardMascot = document.querySelector(`#avatarCard_${selectedRadialStudent.studentId} .mascot-container`);
+
+      // ปฏิกิริยาสีหน้าและสายตาตามสถานะ (HiClass Mascot Reaction)
+      if (status === 'ตรงเวลา') {
+        if (modalMascot && window.HiClassMascots) window.HiClassMascots.triggerMascotReaction(modalMascot, 'delighted', 2000);
+        if (cardMascot && window.HiClassMascots) window.HiClassMascots.triggerMascotReaction(cardMascot, 'delighted', 3000);
+        confetti({ particleCount: 45, spread: 60, origin: { y: 0.6 } });
+      } else if (status === 'ขาด') {
+        if (modalMascot && window.HiClassMascots) window.HiClassMascots.triggerMascotReaction(modalMascot, 'dizzy', 2000);
+        if (cardMascot && window.HiClassMascots) window.HiClassMascots.triggerMascotReaction(cardMascot, 'dizzy', 3000);
+      } else if (status === 'สาย') {
+        if (modalMascot && window.HiClassMascots) window.HiClassMascots.triggerMascotReaction(modalMascot, 'sleepy', 2000);
+        if (cardMascot && window.HiClassMascots) window.HiClassMascots.triggerMascotReaction(cardMascot, 'sleepy', 3000);
+      } else if (status === 'ส่งงานช้า') {
+        if (modalMascot && window.HiClassMascots) window.HiClassMascots.triggerMascotReaction(modalMascot, 'surprised', 2000);
+        if (cardMascot && window.HiClassMascots) window.HiClassMascots.triggerMascotReaction(cardMascot, 'surprised', 3000);
+      } else {
+        if (modalMascot && window.HiClassMascots) window.HiClassMascots.triggerMascotReaction(modalMascot, 'sleepy', 2000);
+        if (cardMascot && window.HiClassMascots) window.HiClassMascots.triggerMascotReaction(cardMascot, 'sleepy', 3000);
       }
+
+      // แสดงอารมณ์ให้คุณครูเห็นแป๊บหนึ่งก่อนปิด Modal
+      setTimeout(() => {
+        closeRadialModal();
+      }, 450);
 
       Swal.fire({ title: 'กำลังบันทึก...', didOpen: () => Swal.showLoading(), timer: 600 });
       try {
@@ -1213,12 +1251,20 @@
       if (!selectedRadialStudent) return;
       closeRadialModal();
 
-      // ถ้าได้คะแนนบวก → ยิ้มแย้ม + พลุกระดาษ confetti
+      // ถ้าได้คะแนนบวก → ยิ้มแย้มตาเป็นดาว (Starstruck) + พลุกระดาษ confetti
       if (points > 0) {
         triggerStudentMood(selectedRadialStudent.studentId, 'smile');
+        const cardMascot = document.querySelector(`#avatarCard_${selectedRadialStudent.studentId} .mascot-container`);
+        if (cardMascot && window.HiClassMascots) {
+          window.HiClassMascots.triggerMascotReaction(cardMascot, 'starstruck', 3000);
+        }
         confetti({ particleCount: 70, spread: 80, origin: { y: 0.6 } });
       } else {
         triggerStudentMood(selectedRadialStudent.studentId, 'cry');
+        const cardMascot = document.querySelector(`#avatarCard_${selectedRadialStudent.studentId} .mascot-container`);
+        if (cardMascot && window.HiClassMascots) {
+          window.HiClassMascots.triggerMascotReaction(cardMascot, 'dizzy', 3000);
+        }
       }
 
       const d = await apiAwardHeroScore(selectedRadialStudent.studentId, points);
@@ -1271,11 +1317,19 @@
       if (!tbody) return;
       tbody.innerHTML = GROUP_5_DATA.map((s, idx) => {
         const isMale = (s.fullName || s.name || "").startsWith("นาย") || s.gender === 'male';
+        const mascotId = s.mascotId || (window.HiClassMascots ? window.HiClassMascots.getStudentMascotId(s, idx) : 'G01');
         return `
           <tr class="hover:bg-purple-50/50">
             <td class="p-2.5 text-center font-bold text-slate-500">${idx + 1}</td>
             <td class="p-2.5 font-mono font-bold text-indigo-700">${s.studentId}</td>
-            <td class="p-2.5 font-bold text-slate-800">${s.fullName}</td>
+            <td class="p-2.5 font-bold text-slate-800">
+              <div class="flex items-center gap-2">
+                <div class="w-8 h-8 rounded-full overflow-hidden bg-amber-50 border border-slate-200 flex items-center justify-center shrink-0">
+                  ${window.HiClassMascots ? window.HiClassMascots.renderMascotHtml(mascotId, 32, { className: 'pointer-events-none' }) : ''}
+                </div>
+                <span>${s.fullName}</span>
+              </div>
+            </td>
             <td class="p-2.5 text-center">
               <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${isMale ? 'bg-sky-100 text-sky-800' : 'bg-pink-100 text-pink-800'}">
                 ${isMale ? '👨🏻‍⚕️ ชาย' : '👩🏻‍⚕️ หญิง'}
@@ -1297,6 +1351,13 @@
       }).join('');
     }
 
+    function previewModalMascot(mascotId) {
+      const box = document.getElementById('modalMascotPreview');
+      if (box && window.HiClassMascots) {
+        box.innerHTML = window.HiClassMascots.renderMascotHtml(mascotId, 42, { className: 'pointer-events-none' });
+      }
+    }
+
     function openStudentModal(editId = null) {
       document.getElementById('editStudentOriginalId').value = editId || '';
       if (editId) {
@@ -1306,6 +1367,11 @@
           document.getElementById('modalStudentId').value = s.studentId;
           document.getElementById('modalStudentFullName').value = s.fullName;
           document.getElementById('modalStudentNickname').value = s.name;
+          const mascotSel = document.getElementById('modalStudentMascot');
+          if (mascotSel) {
+            mascotSel.value = s.mascotId || 'G01';
+            previewModalMascot(s.mascotId || 'G01');
+          }
         }
       } else {
         document.getElementById('studentModalTitle').innerHTML = '<i class="fa-solid fa-user-plus text-purple-600"></i> เพิ่มนักศึกษาใหม่';
@@ -1313,6 +1379,11 @@
         document.getElementById('modalStudentId').value = `STU-${nextNum}`;
         document.getElementById('modalStudentFullName').value = '';
         document.getElementById('modalStudentNickname').value = '';
+        const mascotSel = document.getElementById('modalStudentMascot');
+        if (mascotSel) {
+          mascotSel.value = 'G01';
+          previewModalMascot('G01');
+        }
       }
       document.getElementById('studentModal').classList.remove('hidden');
     }
@@ -1326,6 +1397,7 @@
       const studentId = document.getElementById('modalStudentId').value.trim().toUpperCase();
       const fullName = document.getElementById('modalStudentFullName').value.trim();
       const name = document.getElementById('modalStudentNickname').value.trim() || fullName.split(' ')[0];
+      const mascotId = document.getElementById('modalStudentMascot')?.value || 'G01';
 
       if (!studentId || !fullName) {
         Swal.fire({ icon: 'warning', title: 'กรุณากรอกข้อมูล', text: 'ต้องระบุรหัสนักศึกษาและชื่อ-นามสกุล' });
@@ -1340,7 +1412,14 @@
         // อัปเดตคนเดิม
         const idx = GROUP_5_DATA.findIndex(x => x.studentId === origId);
         if (idx !== -1) {
-          GROUP_5_DATA[idx] = { studentId, name, fullName, gender: isMale ? 'male' : 'female', color: GROUP_5_DATA[idx].color || randomColor };
+          GROUP_5_DATA[idx] = { 
+            studentId, 
+            name, 
+            fullName, 
+            gender: isMale ? 'male' : 'female', 
+            mascotId,
+            color: GROUP_5_DATA[idx].color || randomColor 
+          };
         }
       } else {
         // เพิ่มคนใหม่
@@ -1349,6 +1428,7 @@
           name,
           fullName,
           gender: isMale ? 'male' : 'female',
+          mascotId,
           color: randomColor
         });
       }
@@ -1509,17 +1589,20 @@
       const t1Box = document.getElementById('team1Members');
       const t2Box = document.getElementById('team2Members');
       
-      const renderMemberList = (members) => members.map(m => `
-        <div class="bg-white/90 p-2.5 rounded-2xl border-2 border-white shadow-sm flex flex-col items-center text-center space-y-1">
-          <div class="w-14 h-14 rounded-full overflow-hidden bg-amber-100 border-2 border-white shadow-sm flex items-center justify-center">
-            <img src="avatars/${m.studentId.toLowerCase()}.jpg" 
-                 onerror="this.src='https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${m.name}';" 
-                 class="w-full h-full object-cover">
+      const renderMemberList = (members) => members.map((m, mIdx) => {
+        const mascotId = m.mascotId || (window.HiClassMascots ? window.HiClassMascots.getStudentMascotId(m, mIdx) : 'G01');
+        return `
+          <div class="bg-white/95 p-2.5 rounded-2xl border-2 border-white shadow-sm flex flex-col items-center text-center space-y-1">
+            <div class="w-14 h-14 rounded-full overflow-hidden bg-amber-50 border-2 border-white shadow-inner flex items-center justify-center">
+              ${window.HiClassMascots ? window.HiClassMascots.renderMascotHtml(mascotId, 56, { className: 'pointer-events-none' }) : `
+                <img src="avatars/${m.studentId.toLowerCase()}.jpg" class="w-full h-full object-cover">
+              `}
+            </div>
+            <div class="text-[11px] font-black text-slate-800 truncate w-full">${m.name}</div>
+            <span class="text-[9px] bg-slate-100 px-1.5 py-0.5 rounded-full text-slate-500 font-bold">${m.studentId}</span>
           </div>
-          <div class="text-[11px] font-black text-slate-800 truncate w-full">${m.name}</div>
-          <span class="text-[9px] bg-slate-100 px-1.5 py-0.5 rounded-full text-slate-500 font-bold">${m.studentId}</span>
-        </div>
-      `).join('');
+        `;
+      }).join('');
 
       if (teams[0]) {
         t1Box.innerHTML = renderMemberList(teams[0].members);
@@ -1799,6 +1882,38 @@
         <div>
           <label class="block font-bold text-slate-700 mb-1">ชื่อเล่น (แสดงบนการ์ด)</label>
           <input type="text" id="modalStudentNickname" placeholder="พิมพ์ใจ (แพม)" class="w-full border rounded-xl p-2.5 bg-slate-50 font-bold outline-none focus:border-purple-500">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">เลือกตัวละคร HiClass Mascot (20 คาแรคเตอร์)</label>
+          <div class="flex items-center gap-2">
+            <select id="modalStudentMascot" onchange="previewModalMascot(this.value)" class="flex-1 border rounded-xl p-2.5 bg-slate-50 font-bold outline-none focus:border-purple-500 text-xs">
+              <optgroup label="นักเรียนหญิง (G01 - G10)">
+                <option value="G01">G01 — ผมบ๊อบกับสมุดสีคอรัล</option>
+                <option value="G02">G02 — ผมยาวกับสมุดวาดเขียน</option>
+                <option value="G03">G03 — เปียคู่กับไม้บรรทัด</option>
+                <option value="G04">G04 — ผมพิกซีคาร์ดิแกนทีล</option>
+                <option value="G05">G05 — หางม้าสูงแจ็กเก็ตยีนส์</option>
+                <option value="G06">G06 — บ็อบหน้าม้าชุดวอร์ม</option>
+                <option value="G07">G07 — ดังโงะคู่เสื้อคลุมเหลือง</option>
+                <option value="G08">G08 — ผมหยิกสั้นกับแว่นตา</option>
+                <option value="G09">G09 — ผมตรงยาวผ้าคาดผม</option>
+                <option value="G10">G10 — ลอนคลื่นเสื้อไหมพรมม่วง</option>
+              </optgroup>
+              <optgroup label="นักเรียนชาย (B01 - B10)">
+                <option value="B01">B01 — ผมรองทรงกับกระเป๋าเป้</option>
+                <option value="B02">B02 — ผมหยิกฮู้ดสีเขียว</option>
+                <option value="B03">B03 — ผมปัดข้างเสื้อกั๊กน้ำเงิน</option>
+                <option value="B04">B04 — ผมสั้นสปอร์ตกับแว่น</option>
+                <option value="B05">B05 — ผมชี้ฮู้ดสีส้มสดใส</option>
+                <option value="B06">B06 — หน้าม้าปัดเสื้อเชิ้ตลาย</option>
+                <option value="B07">B07 — ผมหยักศอกกับหูฟัง</option>
+                <option value="B08">B08 — ผมตั้งแจ็กเก็ตเบสบอล</option>
+                <option value="B09">B09 — ผมหนาสไตล์เกาหลี</option>
+                <option value="B10">B10 — ผมแสกกับจรวด</option>
+              </optgroup>
+            </select>
+            <div id="modalMascotPreview" class="w-11 h-11 rounded-full bg-amber-50 border border-slate-200 overflow-hidden flex items-center justify-center shrink-0"></div>
+          </div>
         </div>
       </div>
 
