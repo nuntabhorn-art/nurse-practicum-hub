@@ -677,10 +677,13 @@
               </span>
             </div>
 
-            <!-- อวาตาร์ 3D ทรงกลมลอยตัว -->
-            <div class="tilt-card-inner w-20 h-20 sm:w-22 sm:h-22 rounded-full bg-gradient-to-tr ${s.color} p-1 shadow-lg flex items-center justify-center my-1 group-hover:scale-105 transition-transform duration-300">
-              <div class="w-full h-full bg-white rounded-full flex items-center justify-center text-4xl sm:text-5xl anim-bobble">
-                ${s.avatar}
+            <!-- อวาตาร์ 3D ทรงกลมลอยตัว (ใช้ไฟล์ภาพ 3D จริง) -->
+            <div class="tilt-card-inner w-20 h-20 sm:w-24 sm:h-24 rounded-full bg-gradient-to-tr ${s.color} p-1 shadow-lg flex items-center justify-center my-1 group-hover:scale-108 transition-transform duration-300">
+              <div class="w-full h-full bg-white rounded-full overflow-hidden flex items-center justify-center border-2 border-white shadow-inner">
+                <img src="avatars/${s.studentId.toLowerCase()}.jpg" 
+                     onerror="this.src='https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${s.name}';" 
+                     alt="${s.name}" 
+                     class="w-full h-full object-cover anim-bobble">
               </div>
             </div>
 
@@ -725,7 +728,11 @@
       if (!s) return;
       selectedRadialStudent = s;
 
-      document.getElementById('radialAvatarDisplay').textContent = s.avatar;
+      document.getElementById('radialAvatarDisplay').innerHTML = `
+        <img src="avatars/${s.studentId.toLowerCase()}.jpg" 
+             onerror="this.src='https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${s.name}';" 
+             class="w-full h-full object-cover">
+      `;
       document.getElementById('radialStudentId').textContent = s.studentId;
       document.getElementById('radialStudentName').textContent = s.fullName;
       document.getElementById('radialStudentWard').textContent = `วอร์ด: รพ.อุทัยธานี • เลเวล 1 หมวกขาว`;
@@ -810,8 +817,10 @@
       
       const renderMemberList = (members) => members.map(m => `
         <div class="bg-white/90 p-2.5 rounded-2xl border-2 border-white shadow-sm flex flex-col items-center text-center space-y-1">
-          <div class="w-12 h-12 rounded-full bg-amber-100 flex items-center justify-center text-2xl shadow-inner">
-            ${m.avatar}
+          <div class="w-14 h-14 rounded-full overflow-hidden bg-amber-100 border-2 border-white shadow-sm flex items-center justify-center">
+            <img src="avatars/${m.studentId.toLowerCase()}.jpg" 
+                 onerror="this.src='https://api.dicebear.com/7.x/bottts-neutral/svg?seed=${m.name}';" 
+                 class="w-full h-full object-cover">
           </div>
           <div class="text-[11px] font-black text-slate-800 truncate w-full">${m.name}</div>
           <span class="text-[9px] bg-slate-100 px-1.5 py-0.5 rounded-full text-slate-500 font-bold">${m.studentId}</span>
