@@ -36,6 +36,23 @@
     }
 
     /* 3D Claymorphism Utility Classes */
+    .clay-icon-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 9999px;
+      background: linear-gradient(145deg, #ffffff 0%, #f1f5f9 100%);
+      box-shadow: 
+        0 4px 10px rgba(0, 0, 0, 0.12),
+        inset 0 2px 3px rgba(255, 255, 255, 0.9),
+        inset 0 -2px 3px rgba(0, 0, 0, 0.08);
+      border: 1.5px solid rgba(255, 255, 255, 0.85);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+      flex-shrink: 0;
+    }
+    .clay-icon-badge:hover {
+      transform: scale(1.12) rotate(3deg);
+    }
     .clay-card {
       background: #ffffff;
       border-radius: 36px;
@@ -133,8 +150,8 @@
     <!-- 1. แถบด้านบน Top Navbar สไตล์ HiClass -->
     <header class="flex flex-wrap items-center justify-between gap-3 bg-white/90 backdrop-blur-md px-5 py-3.5 rounded-[32px] border-2 border-white shadow-lg">
       <div class="flex items-center space-x-3">
-        <a href="index.html" class="w-10 h-10 rounded-2xl bg-amber-100 hover:bg-amber-200 text-amber-800 flex items-center justify-center text-lg active:scale-95 transition shadow-sm">
-          <i class="fa-solid fa-arrow-left"></i>
+        <a href="index.html" class="w-10 h-10 rounded-2xl bg-amber-100 hover:bg-amber-200 text-amber-800 flex items-center justify-center text-lg active:scale-95 transition shadow-sm clay-icon-badge" title="กลับหน้าแรก">
+          <span>◀️</span>
         </a>
         <div>
           <div class="flex items-center gap-2">
@@ -147,22 +164,22 @@
       </div>
 
       <!-- แถบสลับโหมดหลัก (สำหรับทุกคน และมีโหมดอาจารย์) -->
-      <div class="flex items-center bg-amber-100/80 p-1 rounded-2xl border border-amber-300 text-xs font-black">
-        <button onclick="switchTab('class')" id="tabBtnClass" class="px-3 py-1.5 rounded-xl bg-white text-amber-900 shadow-sm transition">
-          <i class="fa-solid fa-users mr-1 text-amber-500"></i> ห้องเรียน/วอร์ด
+      <div class="flex items-center bg-amber-100/80 p-1.5 rounded-2xl border border-amber-300 text-xs font-black gap-1">
+        <button onclick="switchTab('class')" id="tabBtnClass" class="px-3 py-1.5 rounded-xl bg-white text-amber-900 shadow-sm transition flex items-center gap-1.5">
+          <span class="clay-icon-badge w-6 h-6 text-xs bg-amber-50">🏥</span> <span>ห้องเรียน/วอร์ด</span>
         </button>
-        <button onclick="switchTab('report')" id="tabBtnReport" class="px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition">
-          <i class="fa-solid fa-chart-line mr-1 text-teal-600"></i> รายงานผล & สถานะ
+        <button onclick="switchTab('report')" id="tabBtnReport" class="px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition flex items-center gap-1.5">
+          <span class="clay-icon-badge w-6 h-6 text-xs bg-teal-50">📊</span> <span>รายงานผล & สถานะ</span>
         </button>
-        <button onclick="switchTab('teams')" id="tabBtnTeams" class="px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition">
-          <i class="fa-solid fa-bolt mr-1 text-rose-500"></i> สุ่มทีม VS
+        <button onclick="switchTab('teams')" id="tabBtnTeams" class="px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition flex items-center gap-1.5">
+          <span class="clay-icon-badge w-6 h-6 text-xs bg-rose-50">⚡</span> <span>สุ่มทีม VS</span>
         </button>
-        <button onclick="switchTab('works')" id="tabBtnWorks" class="px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition">
-          <i class="fa-solid fa-clipboard-check mr-1 text-indigo-500"></i> งาน Care Plan
+        <button onclick="switchTab('works')" id="tabBtnWorks" class="px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition flex items-center gap-1.5">
+          <span class="clay-icon-badge w-6 h-6 text-xs bg-indigo-50">📋</span> <span>งาน Care Plan</span>
         </button>
         <!-- ปุ่มสลับโหมดอาจารย์ -->
-        <button onclick="toggleTeacherMode()" id="btnTeacherToggle" class="px-3 py-1.5 rounded-xl text-purple-800 hover:text-purple-950 transition">
-          <i class="fa-solid fa-user-shield mr-1 text-purple-600"></i> แผงอาจารย์
+        <button onclick="toggleTeacherMode()" id="btnTeacherToggle" class="px-3 py-1.5 rounded-xl text-purple-800 hover:text-purple-950 transition flex items-center gap-1.5">
+          <span class="clay-icon-badge w-6 h-6 text-xs bg-purple-50">🛡️</span> <span>แผงอาจารย์</span>
         </button>
       </div>
     </header>
@@ -177,35 +194,35 @@
             <div class="text-[10px] font-black text-rose-800 uppercase tracking-wider">ตีกลับแก้ไข</div>
             <div class="text-lg font-black text-rose-600" id="statRevisionCount">0</div>
           </div>
-          <span class="text-xl">⚠️</span>
+          <span class="clay-icon-badge w-10 h-10 text-lg bg-rose-100/80 shadow-md">⚠️</span>
         </div>
         <div class="clay-card p-3 border-l-4 border-l-purple-500 bg-purple-50/50 flex items-center justify-between">
           <div>
             <div class="text-[10px] font-black text-purple-800 uppercase tracking-wider">ส่งงานช้า</div>
             <div class="text-lg font-black text-purple-600" id="statLateWorkCount">0</div>
           </div>
-          <span class="text-xl">⏳</span>
+          <span class="clay-icon-badge w-10 h-10 text-lg bg-purple-100/80 shadow-md">⏳</span>
         </div>
         <div class="clay-card p-3 border-l-4 border-l-amber-500 bg-amber-50/50 flex items-center justify-between">
           <div>
             <div class="text-[10px] font-black text-amber-800 uppercase tracking-wider">มาสาย / ลา</div>
             <div class="text-lg font-black text-amber-600" id="statLateAttCount">0</div>
           </div>
-          <span class="text-xl">⏱️</span>
+          <span class="clay-icon-badge w-10 h-10 text-lg bg-amber-100/80 shadow-md">⏱️</span>
         </div>
         <div class="clay-card p-3 border-l-4 border-l-emerald-500 bg-emerald-50/50 flex items-center justify-between">
           <div>
             <div class="text-[10px] font-black text-emerald-800 uppercase tracking-wider">งานผ่านแล้ว</div>
             <div class="text-lg font-black text-emerald-600" id="statPassedCount">0</div>
           </div>
-          <span class="text-xl">✅</span>
+          <span class="clay-icon-badge w-10 h-10 text-lg bg-emerald-100/80 shadow-md">✅</span>
         </div>
       </div>
       
       <!-- แถบสรุปสถิติด้านบนของห้องเรียน -->
       <div class="flex flex-wrap items-center justify-between gap-3 bg-white/75 p-4 rounded-[28px] border-2 border-white shadow-sm">
         <div class="flex items-center gap-3">
-          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-yellow-300 flex items-center justify-center text-2xl shadow-md text-amber-900">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-400 to-yellow-300 flex items-center justify-center text-2xl shadow-md text-amber-900 clay-icon-badge">
             🏥
           </div>
           <div>
@@ -215,11 +232,11 @@
         </div>
 
         <div class="flex items-center gap-2">
-          <span class="px-3 py-1.5 rounded-2xl bg-emerald-100 text-emerald-800 font-black text-xs border border-emerald-300">
-            <i class="fa-solid fa-user-check mr-1"></i> มาเรียน: <span id="statPresentCount">8</span>/8 คน
+          <span class="px-3 py-1.5 rounded-2xl bg-emerald-100 text-emerald-800 font-black text-xs border border-emerald-300 flex items-center gap-1.5">
+            <span class="clay-icon-badge w-5 h-5 text-[10px] bg-emerald-200">✔️</span> มาเรียน: <span id="statPresentCount">8</span>/8 คน
           </span>
-          <button onclick="triggerQuickCheckAll()" id="btnQuickCheckAll" class="hidden px-3 py-1.5 rounded-2xl bg-indigo-600 text-white font-black text-xs hover:bg-indigo-700 shadow-sm transition">
-            เช็คตรงเวลาทุกคน ✔️
+          <button onclick="triggerQuickCheckAll()" id="btnQuickCheckAll" class="hidden px-3.5 py-1.5 rounded-2xl bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-black text-xs hover:opacity-95 shadow-md transition flex items-center gap-1.5">
+            <span class="clay-icon-badge w-5 h-5 text-[10px] bg-white text-indigo-700">✔️</span> เช็คตรงเวลาทุกคน
           </button>
         </div>
       </div>
@@ -239,16 +256,16 @@
       <div class="clay-card p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3 bg-gradient-to-r from-teal-50 via-sky-50 to-white">
         <div>
           <h2 class="text-base font-black text-slate-800 flex items-center gap-2">
-            <i class="fa-solid fa-file-pdf text-rose-500 text-lg"></i> รายงานสถิติและผลการฝึกปฏิบัติการพยาบาล
+            <span class="clay-icon-badge w-8 h-8 rounded-xl bg-rose-100 border border-rose-300 text-sm">📑</span> รายงานสถิติและผลการฝึกปฏิบัติการพยาบาล
           </h2>
           <p class="text-xs text-slate-500 mt-0.5">สรุปงานส่ง, งานตีกลับแก้ไข, บันทึกขึ้นเวร (ตรงเวลา/สาย/ลา/ขาด/ส่งงานช้า)</p>
         </div>
         <div class="flex items-center gap-2">
           <button onclick="exportReportToPDF()" class="clay-pill-btn px-4 py-2.5 bg-gradient-to-r from-rose-500 to-pink-600 text-white font-black text-xs shadow-md flex items-center gap-1.5 active:scale-95 transition">
-            <i class="fa-solid fa-download"></i> ดาวน์โหลดรายงาน (PDF)
+            <span class="text-sm">📥</span> ดาวน์โหลดรายงาน (PDF)
           </button>
-          <button onclick="refreshReportData()" class="w-9 h-9 rounded-full bg-white text-slate-700 border border-slate-200 flex items-center justify-center hover:bg-slate-100 shadow-sm" title="รีเฟรชข้อมูล">
-            <i class="fa-solid fa-rotate"></i>
+          <button onclick="refreshReportData()" class="w-9 h-9 rounded-full bg-white text-slate-700 border border-slate-200 flex items-center justify-center hover:bg-slate-100 shadow-sm active:scale-95 transition" title="รีเฟรชข้อมูล">
+            <span class="text-sm">🔄</span>
           </button>
         </div>
       </div>
@@ -393,12 +410,12 @@
 
           <!-- ปุ่มบันทึกผลการแบ่งทีม -->
           <button onclick="saveTeamsToSheet()" id="btnSaveTeams" class="clay-pill-btn px-6 py-3 bg-slate-700 hover:bg-slate-800 text-white font-black text-xs sm:text-sm shadow-md flex items-center gap-2">
-            <i class="fa-solid fa-floppy-disk"></i> <span>บันทึก</span>
+            <span>💾</span> <span>บันทึก</span>
           </button>
 
           <!-- ปุ่มล้างทีม -->
-          <button onclick="resetTeams()" class="w-10 h-10 rounded-full bg-rose-100 hover:bg-rose-200 text-rose-600 flex items-center justify-center text-sm active:scale-95 transition" title="ล้างทีม">
-            <i class="fa-solid fa-trash-can"></i>
+          <button onclick="resetTeams()" class="w-10 h-10 rounded-full bg-rose-100 hover:bg-rose-200 text-rose-600 flex items-center justify-center text-sm active:scale-95 transition clay-icon-badge" title="ล้างทีม">
+            <span>🗑️</span>
           </button>
         </div>
 
@@ -412,12 +429,12 @@
       <div class="clay-card p-5 flex flex-wrap items-center justify-between gap-3">
         <div>
           <h2 class="text-base font-black text-slate-800 flex items-center gap-2">
-            <i class="fa-solid fa-file-medical text-indigo-600"></i> การส่งงานและประเมิน Daily Care Plan
+            <span class="clay-icon-badge w-8 h-8 rounded-xl bg-indigo-100 border border-indigo-300 text-sm">📋</span> การส่งงานและประเมิน Daily Care Plan
           </h2>
           <p class="text-xs text-slate-500 mt-0.5">ส่งงานทุกสิ้นสุดเวร (ภายใน 18:00 น.) เพื่อรับคะแนนสมรรถนะวิชาชีพ</p>
         </div>
         <button onclick="openSubmitWorkModal()" class="clay-pill-btn px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md flex items-center gap-2">
-          <i class="fa-solid fa-cloud-arrow-up"></i> + ส่ง Care Plan ประจำวัน
+          <span>📤</span> + ส่ง Care Plan ประจำวัน
         </button>
       </div>
 
@@ -427,7 +444,7 @@
         <div class="clay-card p-4 flex flex-col justify-between items-center space-y-3">
           <div class="w-full border-b pb-2">
             <h3 class="font-black text-xs text-slate-800 flex items-center gap-1.5">
-              <i class="fa-solid fa-chart-pie text-amber-500"></i> สมรรถนะ Care Plan 10 ด้าน
+              <span class="clay-icon-badge w-6 h-6 rounded-lg bg-amber-100 border border-amber-300 text-xs">📊</span> สมรรถนะ Care Plan 10 ด้าน
             </h3>
           </div>
           <div class="w-full flex items-center justify-center p-2">
@@ -442,7 +459,7 @@
         <div class="lg:col-span-2 clay-card p-4 space-y-3">
           <div class="flex justify-between items-center border-b pb-2">
             <h3 class="font-black text-xs text-slate-800 flex items-center gap-1.5">
-              <i class="fa-solid fa-list-check text-indigo-600"></i> ประวัติงานและผลการตรวจจากอาจารย์
+              <span class="clay-icon-badge w-6 h-6 rounded-lg bg-indigo-100 border border-indigo-300 text-xs">📝</span> ประวัติงานและผลการตรวจจากอาจารย์
             </h3>
             <span class="text-[10px] font-bold text-slate-400">อัปเดตเรียลไทม์</span>
           </div>
@@ -486,7 +503,7 @@
         </div>
         <div class="flex items-center gap-2">
           <button onclick="openStudentModal()" class="clay-pill-btn px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md flex items-center gap-1.5">
-            <i class="fa-solid fa-user-plus"></i> + เพิ่มนักศึกษา
+            <span>➕</span> + เพิ่มนักศึกษา
           </button>
           <button onclick="switchTab('class')" class="px-3.5 py-2 rounded-full bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold text-xs transition">
             กลับสู่ห้องเรียน
@@ -498,7 +515,7 @@
       <div class="clay-card p-4 sm:p-5 space-y-3 border-2 border-indigo-100">
         <div class="flex justify-between items-center border-b pb-2">
           <h3 class="text-xs sm:text-sm font-black text-slate-800 flex items-center gap-2">
-            <i class="fa-solid fa-sliders text-indigo-600"></i> สวิตช์เปิด/ปิดฟังก์ชันระบบ (Feature Flags)
+            <span class="clay-icon-badge w-7 h-7 rounded-lg bg-indigo-100 border border-indigo-300 text-xs">🎛️</span> สวิตช์เปิด/ปิดฟังก์ชันระบบ (Feature Flags)
           </h3>
           <span class="text-[10px] text-slate-400 font-bold">บันทึกอัตโนมัติ</span>
         </div>
@@ -548,7 +565,7 @@
         <div class="flex justify-between items-center border-b pb-2">
           <div>
             <h3 class="text-xs sm:text-sm font-black text-slate-800 flex items-center gap-2">
-              <i class="fa-solid fa-users-gear text-purple-600"></i> จัดการรายชื่อนักศึกษาในกลุ่มฝึกปฏิบัติ
+              <span class="clay-icon-badge w-7 h-7 rounded-lg bg-purple-100 border border-purple-300 text-xs">👥</span> จัดการรายชื่อนักศึกษาในกลุ่มฝึกปฏิบัติ
             </h3>
             <p class="text-[11px] text-slate-500">สามารถเพิ่ม, แก้ไขชื่อ, หรือลบนักศึกษา (ระบบจะเลือกอวาตาร์ ชาย/หญิง ตาม นาย/นางสาว อัตโนมัติ)</p>
           </div>
@@ -697,10 +714,10 @@
         <button onclick="quickAttendanceAction('ขาด')" 
                 onmouseenter="focusRadialMascot(0)" 
                 onmouseleave="focusRadialMascot(null)" 
-                class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-rose-500 hover:bg-rose-600 text-white flex items-center justify-center shadow-xl border-3 border-white text-xl font-black transition-transform hover:scale-115 active:scale-90" title="ขาดเรียน">
-          ✕
+                class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-rose-600 to-rose-400 hover:from-rose-500 hover:to-rose-300 text-white flex items-center justify-center shadow-2xl border-3 border-white text-2xl font-black transition-transform hover:scale-115 active:scale-90" title="ขาดเรียน">
+          ❌
         </button>
-        <span class="mt-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 font-bold text-[10px] sm:text-xs shadow-sm border border-slate-100 pointer-events-none">
+        <span class="mt-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 font-black text-[10px] sm:text-xs shadow-sm border border-slate-100 pointer-events-none">
           ขาดเรียน
         </span>
       </div>
@@ -710,10 +727,10 @@
         <button onclick="quickAttendanceAction('ลา')" 
                 onmouseenter="focusRadialMascot(3)" 
                 onmouseleave="focusRadialMascot(null)" 
-                class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-orange-500 hover:bg-orange-600 text-white flex items-center justify-center shadow-xl border-3 border-white text-lg font-black transition-transform hover:scale-115 active:scale-90" title="ลากิจ">
-          <i class="fa-solid fa-file-lines text-white"></i>
+                class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-orange-600 to-amber-400 hover:from-orange-500 hover:to-amber-300 text-white flex items-center justify-center shadow-2xl border-3 border-white text-2xl font-black transition-transform hover:scale-115 active:scale-90" title="ลากิจ">
+          📝
         </button>
-        <span class="mt-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 font-bold text-[10px] sm:text-xs shadow-sm border border-slate-100 pointer-events-none">
+        <span class="mt-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 font-black text-[10px] sm:text-xs shadow-sm border border-slate-100 pointer-events-none">
           ลากิจ
         </span>
       </div>
@@ -723,10 +740,10 @@
         <button onclick="quickAttendanceAction('ป่วย')" 
                 onmouseenter="focusRadialMascot(6)" 
                 onmouseleave="focusRadialMascot(null)" 
-                class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-sky-400 hover:bg-sky-500 text-white flex items-center justify-center shadow-xl border-3 border-white text-lg font-black transition-transform hover:scale-115 active:scale-90" title="ลาป่วย">
-          <i class="fa-solid fa-temperature-three-quarters text-white"></i>
+                class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-sky-600 to-cyan-400 hover:from-sky-500 hover:to-cyan-300 text-white flex items-center justify-center shadow-2xl border-3 border-white text-2xl font-black transition-transform hover:scale-115 active:scale-90" title="ลาป่วย">
+          🤒
         </button>
-        <span class="mt-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 font-bold text-[10px] sm:text-xs shadow-sm border border-slate-100 pointer-events-none">
+        <span class="mt-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 font-black text-[10px] sm:text-xs shadow-sm border border-slate-100 pointer-events-none">
           ลาป่วย
         </span>
       </div>
@@ -736,10 +753,10 @@
         <button onclick="quickAttendanceAction('สาย')" 
                 onmouseenter="focusRadialMascot(7)" 
                 onmouseleave="focusRadialMascot(null)" 
-                class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-amber-400 hover:bg-amber-500 text-white flex items-center justify-center shadow-xl border-3 border-white text-lg font-black transition-transform hover:scale-115 active:scale-90" title="มาสาย">
-          <i class="fa-regular fa-clock text-white"></i>
+                class="w-13 h-13 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 hover:from-amber-400 hover:to-yellow-200 text-amber-950 flex items-center justify-center shadow-2xl border-3 border-white text-2xl font-black transition-transform hover:scale-115 active:scale-90" title="มาสาย">
+          ⏰
         </button>
-        <span class="mt-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 font-bold text-[10px] sm:text-xs shadow-sm border border-slate-100 pointer-events-none">
+        <span class="mt-1 px-2.5 py-0.5 rounded-full bg-white text-slate-800 font-black text-[10px] sm:text-xs shadow-sm border border-slate-100 pointer-events-none">
           สาย
         </span>
       </div>
@@ -749,10 +766,10 @@
         <button onclick="quickAttendanceAction('ส่งงานช้า')" 
                 onmouseenter="focusRadialMascot(8)" 
                 onmouseleave="focusRadialMascot(null)" 
-                class="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-purple-500 hover:bg-purple-600 text-white flex items-center justify-center shadow-xl border-3 border-white text-base font-black transition-transform hover:scale-115 active:scale-90" title="ส่งงานช้า">
-          <i class="fa-solid fa-hourglass-half text-white"></i>
+                class="w-12 h-12 sm:w-13 sm:h-13 rounded-full bg-gradient-to-tr from-purple-600 to-pink-400 hover:from-purple-500 hover:to-pink-300 text-white flex items-center justify-center shadow-2xl border-3 border-white text-xl font-black transition-transform hover:scale-115 active:scale-90" title="ส่งงานช้า">
+          ⏳
         </button>
-        <span class="mt-1 px-2 py-0.5 rounded-full bg-white text-slate-800 font-bold text-[10px] shadow-sm border border-slate-100 pointer-events-none">
+        <span class="mt-1 px-2 py-0.5 rounded-full bg-white text-slate-800 font-black text-[10px] shadow-sm border border-slate-100 pointer-events-none">
           ส่งงานช้า
         </span>
       </div>
@@ -762,8 +779,8 @@
         <button onclick="quickAttendanceAction('ตรงเวลา')" 
                 onmouseenter="focusRadialMascot(5)" 
                 onmouseleave="focusRadialMascot(null)" 
-                class="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-emerald-400 hover:bg-emerald-500 text-white flex items-center justify-center shadow-2xl border-4 border-white text-2xl font-black transition-transform hover:scale-115 active:scale-90" title="มาเรียน">
-          ✔
+                class="w-16 h-16 sm:w-18 sm:h-18 rounded-full bg-gradient-to-tr from-emerald-500 to-teal-400 hover:from-emerald-400 hover:to-teal-300 text-white flex items-center justify-center shadow-2xl border-4 border-white text-3xl font-black transition-transform hover:scale-115 active:scale-90" title="มาเรียน">
+          ✅
         </button>
         <span class="mt-1 px-3 py-0.5 rounded-full bg-white text-slate-800 font-black text-xs sm:text-sm shadow-sm border border-slate-100 pointer-events-none">
           มาเรียน
@@ -808,7 +825,7 @@
     <div class="bg-white rounded-[36px] max-w-md w-full p-6 space-y-4 shadow-2xl border-4 border-indigo-200 anim-pop">
       <div class="flex justify-between items-center border-b pb-2">
         <h3 class="text-base font-black text-slate-800 flex items-center gap-1.5">
-          <i class="fa-solid fa-pen-to-square text-indigo-600"></i> ตรวจและประเมิน Daily Care Plan
+          <span class="clay-icon-badge w-8 h-8 rounded-xl bg-indigo-100 border border-indigo-300 text-sm">📝</span> ตรวจและประเมิน Daily Care Plan
         </h3>
         <button onclick="closeModal('gradeWorkModal')" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
       </div>
@@ -879,23 +896,23 @@
     </div>
   </div>
 
-  <!-- แถบเมนูลอยล่างสุด -->
-  <nav class="fixed bottom-3 inset-x-0 mx-auto max-w-[340px] bg-white/95 backdrop-blur-md rounded-full px-5 py-2.5 flex justify-between items-center z-40 shadow-xl border-2 border-white">
-    <a href="index.html" class="flex flex-col items-center text-slate-400 hover:text-slate-700 text-[10px]">
-      <i class="fa-solid fa-house text-base mb-0.5"></i>
+  <!-- แถบเมนูลอยล่างสุด 3D Claymorphic -->
+  <nav class="fixed bottom-3 inset-x-0 mx-auto max-w-[350px] bg-white/95 backdrop-blur-md rounded-full px-5 py-2 flex justify-between items-center z-40 shadow-2xl border-2 border-white">
+    <a href="index.html" class="flex flex-col items-center text-slate-500 hover:text-slate-800 text-[10px] font-bold group">
+      <span class="clay-icon-badge w-8 h-8 text-sm bg-slate-50 group-hover:scale-110 mb-0.5">🏠</span>
       <span>หน้าแรก</span>
     </a>
-    <a href="exam.html" class="flex flex-col items-center text-slate-400 hover:text-slate-700 text-[10px]">
-      <i class="fa-solid fa-pencil text-base mb-0.5"></i>
+    <a href="exam.html" class="flex flex-col items-center text-slate-500 hover:text-slate-800 text-[10px] font-bold group">
+      <span class="clay-icon-badge w-8 h-8 text-sm bg-indigo-50 group-hover:scale-110 mb-0.5">✏️</span>
       <span>คลังข้อสอบ</span>
     </a>
-    <a href="practicum.html" class="flex flex-col items-center text-amber-600 font-bold text-[10px]">
-      <i class="fa-solid fa-stethoscope text-base mb-0.5"></i>
+    <a href="practicum.html" class="flex flex-col items-center text-amber-900 font-black text-[10px] group">
+      <span class="clay-icon-badge w-8 h-8 text-sm bg-amber-100 shadow-md group-hover:scale-110 mb-0.5">🩺</span>
       <span>วอร์ดฝึก</span>
     </a>
-    <a href="attendance.html" class="flex flex-col items-center text-slate-400 hover:text-slate-700 text-[10px]">
-      <i class="fa-solid fa-camera text-base mb-0.5"></i>
-      <span>สแกนหน้า/GPS</span>
+    <a href="attendance.html" class="flex flex-col items-center text-slate-500 hover:text-slate-800 text-[10px] font-bold group">
+      <span class="clay-icon-badge w-8 h-8 text-sm bg-sky-50 group-hover:scale-110 mb-0.5">📷</span>
+      <span>สแกนGPS</span>
     </a>
   </nav>
 
@@ -1345,11 +1362,11 @@
             <td class="p-2.5 text-center font-black text-amber-700">⭐ 10</td>
             <td class="p-2.5 text-center">
               <div class="flex items-center justify-center gap-1.5">
-                <button onclick="editStudentAction('${s.studentId}')" class="px-2 py-1 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 font-bold" title="แก้ไข">
-                  <i class="fa-solid fa-pen-to-square"></i>
+                <button onclick="editStudentAction('${s.studentId}')" class="w-7 h-7 rounded-lg bg-indigo-50 hover:bg-indigo-100 flex items-center justify-center font-bold text-xs active:scale-95 transition" title="แก้ไข">
+                  <span>✏️</span>
                 </button>
-                <button onclick="deleteStudentAction('${s.studentId}')" class="px-2 py-1 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 font-bold" title="ลบ">
-                  <i class="fa-solid fa-trash-can"></i>
+                <button onclick="deleteStudentAction('${s.studentId}')" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 flex items-center justify-center font-bold text-xs active:scale-95 transition" title="ลบ">
+                  <span>🗑️</span>
                 </button>
               </div>
             </td>
@@ -1370,7 +1387,7 @@
       if (editId) {
         const s = GROUP_5_DATA.find(x => x.studentId === editId);
         if (s) {
-          document.getElementById('studentModalTitle').innerHTML = '<i class="fa-solid fa-user-pen text-purple-600"></i> แก้ไขข้อมูลนักศึกษา';
+          document.getElementById('studentModalTitle').innerHTML = '<span class="clay-icon-badge w-7 h-7 rounded-lg bg-purple-100 border border-purple-300 text-xs">✏️</span> แก้ไขข้อมูลนักศึกษา';
           document.getElementById('modalStudentId').value = s.studentId;
           document.getElementById('modalStudentFullName').value = s.fullName;
           document.getElementById('modalStudentNickname').value = s.name;
@@ -1381,7 +1398,7 @@
           }
         }
       } else {
-        document.getElementById('studentModalTitle').innerHTML = '<i class="fa-solid fa-user-plus text-purple-600"></i> เพิ่มนักศึกษาใหม่';
+        document.getElementById('studentModalTitle').innerHTML = '<span class="clay-icon-badge w-7 h-7 rounded-lg bg-purple-100 border border-purple-300 text-xs">➕</span> เพิ่มนักศึกษาใหม่';
         const nextNum = String(GROUP_5_DATA.length + 9).padStart(2, '0');
         document.getElementById('modalStudentId').value = `STU-${nextNum}`;
         document.getElementById('modalStudentFullName').value = '';
@@ -1965,7 +1982,7 @@
     <div class="bg-white rounded-[36px] max-w-sm w-full p-6 space-y-4 shadow-2xl border-4 border-purple-200 anim-pop">
       <div class="flex justify-between items-center border-b pb-2">
         <h3 class="text-base font-black text-slate-800 flex items-center gap-1.5" id="studentModalTitle">
-          <i class="fa-solid fa-user-pen text-purple-600"></i> เพิ่มนักศึกษาใหม่
+          <span class="clay-icon-badge w-7 h-7 rounded-lg bg-purple-100 border border-purple-300 text-xs">➕</span> เพิ่มนักศึกษาใหม่
         </h3>
         <button onclick="closeStudentModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold hover:bg-slate-200">✕</button>
       </div>
