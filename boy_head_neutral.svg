@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200" width="200" height="200">
+    <defs>
+      <linearGradient id="skinGrad_male_neutral" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#fed7aa"/>
+        <stop offset="100%" stop-color="#fdba74"/>
+      </linearGradient>
+      <filter id="headShadow_male_neutral" x="-20%" y="-20%" width="140%" height="140%">
+        <feDropShadow dx="0" dy="6" stdDeviation="5" flood-color="#0f172a" flood-opacity="0.18"/>
+      </filter>
+    </defs>
+    <!-- หูสองข้าง -->
+    <circle cx="48" cy="105" r="11" fill="#fed7aa"/>
+    <circle cx="152" cy="105" r="11" fill="#fed7aa"/>
+    <!-- โครงหน้า 3D กลมมนสไตล์ Pixar -->
+    <path d="M 52 95 C 52 50, 148 50, 148 95 C 148 135, 128 152, 100 152 C 72 152, 52 135, 52 95 Z" 
+          fill="url(#skinGrad_male_neutral)" filter="url(#headShadow_male_neutral)" stroke="#fbcfe8" stroke-width="1.5"/>
+    
+      <!-- ผมข้างหลัง -->
+      <path d="M 48 90 C 42 45, 158 45, 152 90 C 158 110, 150 125, 142 120 C 145 70, 55 70, 58 120 Z" fill="#292524"/>
+      <!-- ผมหน้าปัดข้าง -->
+      <path d="M 48 85 Q 70 50 110 50 Q 150 50 152 85 Q 125 65 95 72 Q 65 65 48 85 Z" fill="#3f3f46"/>
+      <path d="M 85 55 Q 115 65 130 80 Q 105 68 85 55 Z" fill="#52525b" opacity="0.6"/>
+    
+    <ellipse cx="62" cy="118" rx="8" ry="4" fill="#f43f5e" opacity="0.25"/>
+               <ellipse cx="138" cy="118" rx="8" ry="4" fill="#f43f5e" opacity="0.25"/>
+    
+      <!-- คิ้วอ่อนโยน -->
+      <path d="M 64 82 Q 76 78 88 83" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
+      <path d="M 136 82 Q 124 78 112 83" fill="none" stroke="#475569" stroke-width="3" stroke-linecap="round"/>
+      <!-- ตาซ้าย Pixar ตาโตแวววาว -->
+      <circle cx="76" cy="98" r="10" fill="#1e293b"/>
+      <circle cx="73" cy="95" r="4" fill="#ffffff"/>
+      <circle cx="79" cy="101" r="1.8" fill="#ffffff"/>
+      <!-- ตาขวา Pixar -->
+      <circle cx="124" cy="98" r="10" fill="#1e293b"/>
+      <circle cx="121" cy="95" r="4" fill="#ffffff"/>
+      <circle cx="127" cy="101" r="1.8" fill="#ffffff"/>
+      <!-- จมูกเล็กน่ารัก -->
+      <circle cx="100" cy="110" r="2.5" fill="#e2b192"/>
+      <!-- ปากอมยิ้ม -->
+      <path d="M 90 122 Q 100 130 110 122" fill="none" stroke="#1e293b" stroke-width="3.5" stroke-linecap="round"/>
+    
+    
+  </svg>
