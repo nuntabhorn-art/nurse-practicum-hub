@@ -51,3 +51,28 @@ async function apiGet(params) {
   handleAuthExpired(d);
   return d;
 }
+
+// Helper: ตรวจงาน Care Plan
+async function apiGradeWork(workId, studentId, status, score, feedback) {
+  return await apiPost('gradeWork', { workId, studentId, status, score, feedback });
+}
+
+// Helper: ประเมินหัตถการ
+async function apiEvaluateSkill(studentId, skillName, result, exp) {
+  return await apiPost('evaluateSkill', { studentId, skillName, result, exp });
+}
+
+// Helper: ให้คะแนนความดีคนไข้ Hero Score
+async function apiAwardHeroScore(studentId, points) {
+  return await apiPost('awardHeroScore', { studentId, points });
+}
+
+// Helper: บันทึกข้อมูลการจัดกลุ่ม
+async function apiSaveTeamGrouping(groupName, teams) {
+  return await apiPost('saveTeamGrouping', { groupName, teams });
+}
+
+// Helper: สแกนใบหน้าเข้าเวรพร้อมส่งภาพ Base64
+async function apiRecordFaceAttendance(imageBase64, coords, name) {
+  return await apiPost('recordFaceAttendance', { imageBase64, coords, name });
+}

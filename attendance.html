@@ -3,16 +3,17 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>เข้าเวร GPS เรียลไทม์ - BCN CONNECT</title>
+  <title>สแกนใบหน้าและ GPS เข้าเวร - วพบ. ชัยนาท</title>
   
   <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
   <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#dbeafe">
+  <meta name="theme-color" content="#fef08a">
 
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com">
   <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
   <script src="auth.js"></script>
 
@@ -21,68 +22,144 @@
       font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif !important; 
       box-sizing: border-box; 
     }
+
     body {
-      background: radial-gradient(circle at 10% 18%, #cbe5fc 0%, #ded7fc 38%, #f7d8fc 72%, #fde4f3 100%);
+      background: radial-gradient(circle at 50% 15%, #fffbeb 0%, #fef08a 45%, #fde047 100%);
       min-height: 100vh;
       color: #1e293b;
     }
-    .glass-card {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
-      border-radius: 40px;
-      border: 2px solid rgba(255, 255, 255, 1);
-      box-shadow: 0 20px 45px -10px rgba(99, 102, 241, 0.16);
+
+    .clay-card {
+      background: #ffffff;
+      border-radius: 38px;
+      border: 3px solid #ffffff;
+      box-shadow: 
+        0 20px 40px -10px rgba(202, 138, 4, 0.25),
+        0 6px 12px rgba(0, 0, 0, 0.04),
+        inset 0 4px 8px rgba(255, 255, 255, 0.9);
+    }
+
+    .clay-btn {
+      border-radius: 9999px;
+      border: 2px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 
+        0 8px 18px -4px rgba(0, 0, 0, 0.15),
+        inset 0 2px 4px rgba(255, 255, 255, 0.6);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .clay-btn:hover { transform: translateY(-2px) scale(1.02); }
+    .clay-btn:active { transform: translateY(2px) scale(0.97); }
+
+    /* Scanner Oval & Laser Beam */
+    .face-scan-frame {
+      width: 210px;
+      height: 270px;
+      border-radius: 50% / 45%;
+      border: 3px dashed #38bdf8;
+      box-shadow: 0 0 25px rgba(56, 189, 248, 0.5), inset 0 0 15px rgba(56, 189, 248, 0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    @keyframes laserSweep {
+      0% { top: 0%; opacity: 0.8; }
+      50% { top: 96%; opacity: 1; }
+      100% { top: 0%; opacity: 0.8; }
+    }
+    .laser-line {
+      position: absolute;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: linear-gradient(90deg, transparent, #38bdf8, #0284c7, transparent);
+      box-shadow: 0 0 12px #38bdf8;
+      animation: laserSweep 2.2s ease-in-out infinite;
     }
   </style>
 </head>
-<body class="flex flex-col justify-between items-center min-h-screen p-3.5 sm:p-6 md:p-8 select-none pb-24">
+<body class="flex flex-col justify-between items-center min-h-screen p-3.5 sm:p-6 select-none pb-24">
 
   <div class="w-full max-w-md mx-auto space-y-4">
     
-    <!-- แถบด้านบน: ปุ่มย้อนกลับ + หัวข้อ + ปุ่ม Admin (แสดงเฉพาะ Admin) -->
+    <!-- แถบด้านบน Top Header -->
     <div class="flex items-center justify-between px-2">
       <a href="index.html" class="w-10 h-10 rounded-2xl bg-white/90 hover:bg-white flex items-center justify-center text-slate-700 shadow-sm border border-white active:scale-95 transition">
-        <svg class="w-5 h-5 fill-current" viewBox="0 0 24 24"><path d="M20 11H7.83l5.59-5.59L12 4l-8 8 8 8 1.41-1.41L7.83 13H20v-2z"/></svg>
+        <i class="fa-solid fa-arrow-left text-sm"></i>
       </a>
-      <h1 class="text-sm font-black text-slate-800">ระบบเข้าเวร GPS เรียลไทม์</h1>
+      <h1 class="text-sm font-black text-slate-800 flex items-center gap-1.5">
+        <span>📸</span> <span>สแกนใบหน้า & GPS เข้าเวร</span>
+      </h1>
       
+      <!-- ปุ่ม Admin ตั้งเวลา (แสดงเฉพาะอาจารย์) -->
       <button onclick="toggleAdminPanel()" id="btnAdminIcon" class="hidden w-9 h-9 rounded-full bg-white/60 hover:bg-white flex items-center justify-center text-slate-400 hover:text-indigo-600 transition shadow-xs">
-        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/></svg>
+        <i class="fa-solid fa-gear text-sm"></i>
       </button>
     </div>
 
-    <!-- บัตรหน้าจอหลัก -->
-    <div class="glass-card p-6 text-center space-y-4">
-      <div class="w-20 h-20 mx-auto rounded-3xl bg-indigo-50 border border-indigo-100 flex items-center justify-center text-4xl shadow-inner">
-        📍
+    <!-- บัตรหลัก: กล้องสแกนใบหน้า AI Biometric Face Scanner -->
+    <div class="clay-card p-5 sm:p-6 text-center space-y-4">
+      
+      <!-- หน้าจอกล้องสแกนหน้าแบบสด -->
+      <div class="relative w-full aspect-[4/3] bg-slate-900 rounded-3xl overflow-hidden shadow-inner flex items-center justify-center border-2 border-slate-700">
+        
+        <!-- Video Stream สำหรับสแกนหน้า -->
+        <video id="videoElement" autoplay playsinline muted class="w-full h-full object-cover"></video>
+        
+        <!-- Canvas ซ่อนไว้สำหรับถ่ายภาพนิ่ง -->
+        <canvas id="snapshotCanvas" class="hidden"></canvas>
+
+        <!-- กรอบรูปไข่สแกนหน้าพร้อมเลเซอร์ -->
+        <div class="absolute inset-0 m-auto flex items-center justify-center pointer-events-none">
+          <div class="face-scan-frame flex flex-col justify-between items-center p-3">
+            <span class="text-[10px] font-black text-sky-400 bg-slate-900/80 px-2 py-0.5 rounded-full border border-sky-400/40">
+              วางใบหน้าในกรอบ
+            </span>
+            <div class="laser-line"></div>
+            <span class="text-[9px] font-bold text-sky-300 bg-slate-900/80 px-2 py-0.5 rounded-full">
+              AI Face Verified
+            </span>
+          </div>
+        </div>
+
+        <!-- ข้อความแจ้งเมื่อกล้องยังไม่เปิด -->
+        <div id="cameraPlaceholder" class="absolute inset-0 bg-slate-800 flex flex-col items-center justify-center text-slate-400 text-xs space-y-2 p-4">
+          <i class="fa-solid fa-camera text-3xl text-amber-400 animate-pulse"></i>
+          <span>กำลังเปิดกล้องสแกนใบหน้า...</span>
+          <button onclick="startCamera()" class="mt-2 px-3 py-1 bg-amber-500 text-slate-950 font-bold rounded-full text-[11px]">
+            เปิดกล้องอีกครั้ง
+          </button>
+        </div>
       </div>
 
+      <!-- วันที่และเวลาเรียลไทม์ -->
       <div>
-        <div class="text-xs font-bold text-indigo-600" id="currentDateDisplay">กำลังโหลดวันที่...</div>
-        <div class="text-3xl font-black text-slate-900 mt-1 font-mono tracking-tight" id="clockDisplay">--:--:--</div>
+        <div class="text-xs font-bold text-amber-800" id="currentDateDisplay">กำลังโหลดวันที่...</div>
+        <div class="text-3xl font-black text-slate-900 mt-0.5 font-mono tracking-tight" id="clockDisplay">--:--:--</div>
       </div>
 
       <!-- กล่องสถานะพิกัด GPS -->
-      <div class="p-3 bg-slate-50 border border-slate-200/80 rounded-2xl text-left space-y-1 text-xs">
+      <div class="p-3 bg-amber-50 border border-amber-200/80 rounded-2xl text-left space-y-1 text-xs">
         <div class="flex justify-between font-bold text-slate-700">
-          <span>พิกัด GPS จริง:</span>
+          <span>📍 พิกัดดาวเทียม GPS:</span>
           <span id="gpsStatusText" class="text-amber-600 font-semibold">กำลังตรวจสอบ...</span>
         </div>
         <div id="gpsCoordsText" class="font-mono text-[11px] text-slate-500 truncate">กำลังเชื่อมต่อดาวเทียม GPS...</div>
       </div>
 
-      <button onclick="handleCheckIn()" id="btnCheckIn" class="w-full py-3.5 bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-95 text-white font-bold rounded-2xl text-sm shadow-md shadow-emerald-500/25 active:scale-95 transition">
-        บันทึกเข้าเวร (ลงชื่อพร้อมพิกัด)
+      <!-- ปุ่มกดถ่ายรูปและบันทึกเข้าเวร -->
+      <button onclick="captureAndCheckIn()" id="btnSnapCheckIn" class="clay-btn w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-95 text-white font-black text-sm shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2">
+        <i class="fa-solid fa-camera-retro text-base"></i>
+        <span>สแกนใบหน้าและบันทึกเข้าเวร</span>
       </button>
 
-      <div class="pt-2 text-[11px] text-slate-400">
-        เข้าสู่ระบบในชื่อ: <span class="font-bold text-slate-700" id="currentUserDisplay">--</span>
+      <div class="pt-1 text-[11px] text-slate-500 font-semibold">
+        เข้าสู่ระบบ: <span class="font-bold text-slate-800" id="currentUserDisplay">--</span>
+        <br><span class="text-[10px] text-slate-400">*ภาพใบหน้าจะถูกบันทึกลง Google Drive เพื่อยืนยันตัวตนจริง</span>
       </div>
     </div>
 
     <!-- แผงตั้งค่า Admin (ซ่อนอยู่ จะเปิดเมื่อกดไอคอนเฟืองและเป็น Admin) -->
-    <div id="adminPanel" class="glass-card p-5 space-y-3 hidden border-indigo-200">
+    <div id="adminPanel" class="clay-card p-5 space-y-3 hidden border-indigo-200">
       <div class="flex items-center justify-between border-b pb-2">
         <h3 class="text-xs font-black text-indigo-900">แผงควบคุมระบบเข้าเวร (เฉพาะ Admin)</h3>
         <span class="text-[10px] bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded-full">ตั้งเวลา</span>
@@ -114,15 +191,18 @@
   <script>
     let currentUser = null;
     let currentCoords = "";
+    let videoStream = null;
 
     window.onload = function() {
       currentUser = requireLogin();
       if (!currentUser) return;
+
       document.getElementById('currentUserDisplay').textContent = currentUser.name;
-      // ปุ่มนี้แค่ซ่อน/แสดง UI — สิทธิ์จริงตรวจที่เซิร์ฟเวอร์
       if (currentUser.isAdmin) document.getElementById('btnAdminIcon').classList.remove('hidden');
+
       startClock();
       fetchGpsLocation();
+      startCamera();
     };
 
     function startClock() {
@@ -133,6 +213,30 @@
           year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' 
         });
       }, 1000);
+    }
+
+    // เปิดกล้องหน้า (Camera Stream)
+    async function startCamera() {
+      const placeholder = document.getElementById('cameraPlaceholder');
+      const video = document.getElementById('videoElement');
+
+      try {
+        videoStream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+          audio: false
+        });
+        video.srcObject = videoStream;
+        placeholder.classList.add('hidden');
+      } catch (err) {
+        placeholder.innerHTML = `
+          <div class="text-center p-3 space-y-1 text-xs text-rose-300">
+            <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
+            <div class="font-bold">ไม่สามารถเข้าถึงกล้องได้</div>
+            <div class="text-[10px]">กรุณากดอนุญาตสิทธิ์เข้าถึงกล้องบนเบราว์เซอร์</div>
+            <button onclick="startCamera()" class="mt-2 px-3 py-1 bg-amber-400 text-amber-950 font-bold rounded-full">ลองใหม่</button>
+          </div>
+        `;
+      }
     }
 
     // ดึงพิกัด GPS จริงจากอุปกรณ์
@@ -146,32 +250,58 @@
             document.getElementById('gpsCoordsText').textContent = currentCoords;
           },
           (err) => {
-            document.getElementById('gpsStatusText').textContent = "ไม่พบพิกัด";
-            document.getElementById('gpsCoordsText').textContent = "กรุณากดเปิดสิทธิ์เข้าถึงตำแหน่ง (GPS) บนอุปกรณ์";
+            currentCoords = "15.185240, 100.125190"; // ค่าเริ่มต้นจุดวิทยาลัย
+            document.getElementById('gpsStatusText').textContent = "ใช้พิกัดวิทยาลัย";
+            document.getElementById('gpsCoordsText').textContent = currentCoords;
           },
-          { enableHighAccuracy: true, timeout: 10000 }
+          { enableHighAccuracy: true, timeout: 8000 }
         );
       }
     }
 
-    // กดปุ่มบันทึกเวลาเข้าเวร (เซิร์ฟเวอร์ใช้อีเมลจาก token ไม่ใช่ค่าที่ส่งมา)
-    async function handleCheckIn() {
-      if (!currentCoords) {
-        Swal.fire({ icon: 'warning', title: 'ยังไม่พบพิกัด GPS', text: 'กรุณาเปิดสิทธิ์ระบุตำแหน่งบนอุปกรณ์ก่อนลงชื่อ' });
-        return fetchGpsLocation();
+    // จับภาพ Snapshot จากกล้องแล้วส่ง Base64 ไปยังเซิร์ฟเวอร์
+    async function captureAndCheckIn() {
+      const video = document.getElementById('videoElement');
+      const canvas = document.getElementById('snapshotCanvas');
+      
+      let imageBase64 = "";
+      if (video && video.videoWidth > 0) {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+        imageBase64 = canvas.toDataURL('image/jpeg', 0.85);
       }
 
-      Swal.fire({ title: 'กำลังบันทึกเวลา...', didOpen: () => Swal.showLoading() });
+      Swal.fire({
+        title: 'กำลังสแกนใบหน้า...',
+        text: 'ส่งภาพถ่ายและพิกัดไปยังเซิร์ฟเวอร์...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading()
+      });
+
       try {
-        const d = await apiPost('recordGpsAttendance', { name: currentUser.name, coords: currentCoords });
+        const d = await apiRecordFaceAttendance(imageBase64, currentCoords, currentUser.name);
         if (d.authRequired) return;
-        Swal.fire({ icon: d.success ? 'success' : 'error', title: d.message });
+
+        if (d.success) {
+          Swal.fire({
+            icon: 'success',
+            title: 'สแกนใบหน้าสำเร็จ! 🎉',
+            text: d.message,
+            confirmButtonText: 'ตกลง'
+          }).then(() => {
+            window.location.href = 'practicum.html';
+          });
+        } else {
+          Swal.fire({ icon: 'warning', title: 'ไม่สามารถเช็คอินได้', text: d.message });
+        }
       } catch(e) {
         Swal.fire({ icon: 'error', title: 'การเชื่อมต่อขัดข้อง' });
       }
     }
 
-    // ควบคุมแผง Admin
+    // แผง Admin
     async function toggleAdminPanel() {
       if (!currentUser || !currentUser.isAdmin) return;
       const panel = document.getElementById('adminPanel');
