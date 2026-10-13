@@ -16,6 +16,7 @@
   <script src="supabase-config.js"></script>
   <script src="supabase-client.js"></script>
   <script src="auth.js"></script>
+  <script src="avatar_inline_data.js"></script>
 
   <style>
     * { 
@@ -910,14 +911,21 @@
       switchTab('teacher');
     }
 
-    // 2. ฟังก์ชันตรวจสอบเพศและดึงที่อยู่ไฟล์ SVG แยกชิ้นส่วนศีรษะและลำตัว
+    // 2. ฟังก์ชันตรวจสอบเพศและดึงที่อยู่ไฟล์ SVG แยกชิ้นส่วนศีรษะและลำตัว (พร้อม Inline Data URL fallback 100%)
     function getStudentAvatarParts(s, mood = 'neutral') {
       const name = (s.fullName || s.name || "").trim();
       const isMale = name.startsWith("นาย") || s.gender === "male";
       const prefix = isMale ? 'boy' : 'girl';
+      const bodyFileName = `${prefix}_body.svg`;
+      const headFileName = `${prefix}_head_${mood}.svg`;
+
+      const inlineMap = window.AVATAR_INLINE_SVGS || {};
+      const bodySrc = inlineMap[bodyFileName] || `assets/avatar/${bodyFileName}`;
+      const headSrc = inlineMap[headFileName] || `assets/avatar/${headFileName}`;
+
       return {
-        bodySrc: `assets/avatar/${prefix}_body.svg`,
-        headSrc: `assets/avatar/${prefix}_head_${mood}.svg`,
+        bodySrc,
+        headSrc,
         isMale,
         prefix
       };

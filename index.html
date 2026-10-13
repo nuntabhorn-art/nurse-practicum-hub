@@ -479,8 +479,23 @@
           });
         }
         if (d.success && d.token) {
-          await syncSupabaseSession();
-          const userData = getSession();
+          // ถ้าล็อกอินสำเร็จผ่าน Apps Script (หรือ Supabase) ให้บันทึกเซสชันลง localStorage เสมอ
+          const role = (d.role || (pendingLoginEmail === SOLE_ADMIN_EMAIL ? 'admin' : 'student'));
+          const currentData = {
+            email: pendingLoginEmail,
+            name: d.name || pendingLoginEmail.split('@')[0],
+            isAdmin: Boolean(d.isAdmin || role === 'admin' || role === 'teacher' || pendingLoginEmail === SOLE_ADMIN_EMAIL),
+            role: role,
+            token: d.token,
+            provider: d.provider || 'appsscript'
+          };
+          localStorage.setItem(SESSION_KEY, JSON.stringify(currentData));
+          
+          if (window.NurseSupabase && NurseSupabase.enabled) {
+            try { await syncSupabaseSession(); } catch(e) {}
+          }
+          
+          const userData = getSession() || currentData;
           closeLoginModal();
           Swal.fire({
             icon: 'success',

@@ -54,7 +54,15 @@ function requireLogin() {
 }
 
 function handleAuthExpired(d) {
+  // หาก API ส่ง authRequired กลับมา ให้ตรวจสอบว่ามี session อยู่หรือไม่
+  // ไม่ลบ session ทันทีถ้าเป็นเพียงข้อผิดพลาดเครือข่ายหรือ token ชั่วคราว
   if (d && d.authRequired) {
+    const s = getSession();
+    // ถ้าผู้ใช้เคยล็อกอินยืนยันตัวตนแล้ว ไม่เตะออกทันที ให้ทำงานต่อในโหมดออฟไลน์/แคช
+    if (s && s.email) {
+      console.warn('API reported auth issue, continuing in cached session mode:', s.email);
+      return false;
+    }
     localStorage.removeItem(SESSION_KEY);
     Swal.fire({ icon: 'warning', title: 'เซสชันหมดอายุ', text: 'กรุณาเข้าสู่ระบบด้วย OTP อีกครั้ง', allowOutsideClick: false })
       .then(() => goLogin());
