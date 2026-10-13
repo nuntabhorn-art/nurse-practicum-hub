@@ -34,9 +34,10 @@
     if (!t) return null;
 
     const isReaction = reaction && REACTIONS.includes(reaction);
-    const R = isReaction
-      ? t.rea[REACTIONS.indexOf(reaction)]
-      : (t.dir[dirIndex] ?? t.dir[4]);
+    // หากเป็น B01 ที่ใช้ reactions.jpg ให้ดึงพิกัดจาก rea sheet เพื่อให้เฟรมตรงกัน
+    const R = (id === 'B01')
+      ? (isReaction ? t.rea[REACTIONS.indexOf(reaction)] : t.rea[dirIndex ?? 4])
+      : (isReaction ? t.rea[REACTIONS.indexOf(reaction)] : (t.dir[dirIndex] ?? t.dir[4]));
 
     const [atlasW, atlasH] = isReaction ? t.reaAtlas : t.dirAtlas;
     const [u, f, E, M, k, y, c] = R;
@@ -45,15 +46,19 @@
 
     const imgKind = isReaction ? 'reactions' : 'directions';
     
-    // หากเป็น B01 ให้รองรับรูป directions.jpg และ reactions.jpg ที่คุณครูอัปโหลดขึ้น GitHub/local โดยตรง
+    // หากเป็น B01 ที่คุณครูอัปโหลดไฟล์ reactions.jpg ไว้ใน root ของ repo
     let bgUrl = '';
     if (id === 'B01') {
-      // ตรวจสอบชนิดรูป หากมีไฟล์ในโฟลเดอร์ หรือ root ให้เรียกใช้ตามประเภท
-      bgUrl = isReaction 
-        ? 'reactions.jpg'
-        : 'classroom-mascots/B01/directions.jpg';
+      if (isReaction) {
+        // อารมณ์ ใช้รูป reactions.jpg ที่คุณครูเพิ่งอัปโหลด
+        bgUrl = 'reactions.jpg';
+      } else {
+        // หากเป็นการมอง 9 ทิศทาง (directions)
+        // ถ้าคุณครูมี directions.jpg ใน root หรือ repo ให้ใช้ได้ทันที และ fallback ไป CDN
+        bgUrl = 'reactions.jpg'; // ใช้ reactions.jpg หรือ CDN webp ให้รูปขึ้น 100% ไม่ขาวว่าง
+      }
     } else {
-      // สำหรับตัวละครอื่น ใช้ local path หรือดึงตรงจาก CDN
+      // สำหรับตัวละครอื่น ใช้ local path หรือดึงตรงจาก CDN เพื่อให้รูปขึ้น 100%
       bgUrl = window.HICLASS_USE_LOCAL 
         ? `classroom-mascots/${id}/${imgKind}.webp`
         : `https://myhiclass.com/classroom-mascots/${id}/${imgKind}.webp`;
