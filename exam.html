@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>BCN Arena - คลังข้อสอบ 8 วิชาสภาการพยาบาล</title>
+  <title>BCN Arena - คลังข้อสอบเสมือน 8 รายวิชา</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -14,6 +14,7 @@
   <script src="supabase-config.js"></script>
   <script src="supabase-client.js"></script>
   <script src="auth.js"></script>
+  <script src="exam_questions_data.js"></script>
 
   <style>
     * { 
@@ -66,7 +67,10 @@
         </div>
       </div>
       <div class="flex items-center gap-2 text-xs font-black">
-        <span class="px-3 py-1 bg-amber-500/25 border border-amber-400/50 rounded-full text-amber-300 flex items-center gap-1.5 shadow-sm">
+        <button onclick="openAddQuestionModal()" id="btnAddQuestionBtn" class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white rounded-xl text-xs font-bold transition flex items-center gap-1 shadow-xs">
+          <i class="fa-solid fa-plus"></i> เพิ่มข้อสอบ
+        </button>
+        <span class="px-3 py-1.5 bg-amber-500/25 border border-amber-400/50 rounded-xl text-amber-300 flex items-center gap-1.5 shadow-sm font-mono">
           <span>🪙</span> <span id="coinDisplay">0</span>
         </span>
       </div>
@@ -114,7 +118,7 @@
       <div class="flex justify-between items-center border-b border-white/10 pb-2.5">
         <div>
           <h3 class="font-black text-sm text-white flex items-center gap-1.5">
-            <span>⚔️ ดันเจี้ยนจำลองข้อสอบสภาฯ</span>
+            <span>⚔️ ดันเจี้ยนคลังข้อสอบเสมือน</span>
           </h3>
           <span class="text-[10px] text-amber-300 font-bold" id="currentSubjectLabel">การพยาบาลผู้ใหญ่</span>
         </div>
@@ -192,13 +196,87 @@
       document.getElementById('expBarFill').style.width = Math.min(100, Math.floor(((stu.exp || 0) / rank.maxExp) * 100)) + "%";
     }
 
+    
+    // ดึงข้อสอบจาก Local Storage + ฐานข้อมูลในเครื่อง
+    function getCombinedQuestions(sub) {
+      let custom = [];
+      try {
+        const saved = localStorage.getItem('nursenote_custom_questions');
+        if (saved) custom = JSON.parse(saved);
+      } catch(e) {}
+      const predefined = (typeof COMPREHENSIVE_NURSING_QUESTIONS !== 'undefined') ? COMPREHENSIVE_NURSING_QUESTIONS : [];
+      const combined = [...custom, ...predefined];
+      return combined.filter(q => q.subject === sub);
+    }
+
+    function openAddQuestionModal() {
+      document.getElementById('modalSubject').value = activeSubject;
+      document.getElementById('modalQuestionText').value = '';
+      document.getElementById('modalChoiceA').value = '';
+      document.getElementById('modalChoiceB').value = '';
+      document.getElementById('modalChoiceC').value = '';
+      document.getElementById('modalChoiceD').value = '';
+      document.getElementById('modalExplanation').value = '';
+      document.getElementById('modalReference').value = '';
+      document.getElementById('addQuestionModal').classList.remove('hidden');
+    }
+
+    function closeAddQuestionModal() {
+      document.getElementById('addQuestionModal').classList.add('hidden');
+    }
+
+    function saveQuestionFromModal() {
+      const subject = document.getElementById('modalSubject').value;
+      const question = document.getElementById('modalQuestionText').value.trim();
+      const choiceA = document.getElementById('modalChoiceA').value.trim();
+      const choiceB = document.getElementById('modalChoiceB').value.trim();
+      const choiceC = document.getElementById('modalChoiceC').value.trim();
+      const choiceD = document.getElementById('modalChoiceD').value.trim();
+      const answer = document.getElementById('modalAnswer').value;
+      const explanation = document.getElementById('modalExplanation').value.trim();
+      const reference = document.getElementById('modalReference').value.trim() || 'วิทยาลัยพยาบาลบรมราชชนนี ชัยนาท';
+
+      if (!question || !choiceA || !choiceB) {
+        Swal.fire({ icon: 'warning', title: 'กรุณากรอกข้อมูล', text: 'ต้องระบุโจทย์และตัวเลือกอย่างน้อย 2 ข้อ' });
+        return;
+      }
+
+      let custom = [];
+      try {
+        const saved = localStorage.getItem('nursenote_custom_questions');
+        if (saved) custom = JSON.parse(saved);
+      } catch(e) {}
+
+      custom.unshift({
+        questionId: 'CUSTOM-' + Date.now().toString().slice(-4),
+        subject,
+        question,
+        choiceA,
+        choiceB,
+        choiceC: choiceC || '-',
+        choiceD: choiceD || '-',
+        answer,
+        explanation: explanation || 'เฉลยตามหลักการพยาบาลวิชาชีพ',
+        reference
+      });
+
+      localStorage.setItem('nursenote_custom_questions', JSON.stringify(custom));
+      closeAddQuestionModal();
+      loadQuestions(subject);
+      Swal.fire({ icon: 'success', title: 'เพิ่มข้อสอบสำเร็จ!', timer: 1200, showConfirmButton: false });
+    }
+
     async function loadQuestions(sub) {
       const container = document.getElementById('quizBox');
       container.innerHTML = `<div class="p-6 text-center text-indigo-200 text-xs">กำลังโหลดข้อสอบวิชา ${esc(sub)}...</div>`;
 
       try {
-        const res = await fetch(`${API_URL}?action=getExamQuestions&subject=${encodeURIComponent(sub)}`);
-        const list = await res.json();
+        let list = getCombinedQuestions(sub);
+        try {
+          const res = await fetch(`${API_URL}?action=getExamQuestions&subject=${encodeURIComponent(sub)}`);
+          const apiList = await res.json();
+          if (Array.isArray(apiList) && apiList.length > 0) list = apiList;
+        } catch(e) {}
         if (!list || list.length === 0) {
           container.innerHTML = `
             <div class="p-6 text-center text-slate-300 text-xs bg-white/5 rounded-2xl border border-white/10 space-y-1">
@@ -279,5 +357,87 @@
       }
     }
   </script>
+
+  <!-- MODAL เพิ่มข้อสอบใหม่สำหรับอาจารย์ -->
+  <div id="addQuestionModal" class="fixed inset-0 bg-black/75 backdrop-blur-md hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-white/20 rounded-[32px] max-w-lg w-full p-6 space-y-4 shadow-2xl text-white max-h-[90vh] overflow-y-auto mobile-scroll">
+      <div class="flex justify-between items-center border-b border-white/10 pb-2.5">
+        <h3 class="text-base font-black text-amber-300 flex items-center gap-1.5">
+          <span>📝</span> <span>เพิ่มข้อสอบใหม่ในคลัง</span>
+        </h3>
+        <button onclick="closeAddQuestionModal()" class="w-8 h-8 rounded-full bg-white/10 text-slate-300 hover:bg-white/20">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-indigo-200 mb-1">เลือกรายวิชา</label>
+          <select id="modalSubject" class="w-full bg-slate-800 border border-white/15 rounded-xl p-2.5 text-white font-semibold outline-none">
+            <option value="การพยาบาลผู้ใหญ่">การพยาบาลผู้ใหญ่</option>
+            <option value="การพยาบาลผู้สูงอายุ">การพยาบาลผู้สูงอายุ</option>
+            <option value="การพยาบาลมารดา ทารก และการผดุงครรภ์">การพยาบาลมารดา ทารก และการผดุงครรภ์</option>
+            <option value="การพยาบาลเด็กและวัยรุ่น">การพยาบาลเด็กและวัยรุ่น</option>
+            <option value="การพยาบาลสุขภาพจิตและจิตเวช">การพยาบาลสุขภาพจิตและจิตเวช</option>
+            <option value="การพยาบาลอนามัยชุมชน">การพยาบาลอนามัยชุมชน</option>
+            <option value="การรักษาพยาบาลขั้นต้น">การรักษาพยาบาลขั้นต้น</option>
+            <option value="กฎหมาย จริยธรรม และวิชาชีพ">กฎหมาย จริยธรรม และวิชาชีพ</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-indigo-200 mb-1">โจทย์คำถาม / สถานการณ์ (Clinical Scenario)</label>
+          <textarea id="modalQuestionText" rows="3" placeholder="ระบุโจทย์คำถามทางการพยาบาล..." class="w-full bg-slate-800 border border-white/15 rounded-xl p-2.5 text-white font-medium outline-none focus:border-amber-400"></textarea>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+          <div>
+            <label class="block font-bold text-slate-300 mb-0.5">ตัวเลือก A</label>
+            <input type="text" id="modalChoiceA" placeholder="ตัวเลือก A" class="w-full bg-slate-800 border border-white/15 rounded-xl p-2 text-white">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-300 mb-0.5">ตัวเลือก B</label>
+            <input type="text" id="modalChoiceB" placeholder="ตัวเลือก B" class="w-full bg-slate-800 border border-white/15 rounded-xl p-2 text-white">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-300 mb-0.5">ตัวเลือก C</label>
+            <input type="text" id="modalChoiceC" placeholder="ตัวเลือก C" class="w-full bg-slate-800 border border-white/15 rounded-xl p-2 text-white">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-300 mb-0.5">ตัวเลือก D</label>
+            <input type="text" id="modalChoiceD" placeholder="ตัวเลือก D" class="w-full bg-slate-800 border border-white/15 rounded-xl p-2 text-white">
+          </div>
+        </div>
+
+        <div>
+          <label class="block font-bold text-emerald-300 mb-1">เฉลยข้อที่ถูกต้อง</label>
+          <select id="modalAnswer" class="w-full bg-slate-800 border border-emerald-400/50 rounded-xl p-2.5 text-emerald-300 font-bold outline-none">
+            <option value="A">ข้อ A</option>
+            <option value="B">ข้อ B</option>
+            <option value="C">ข้อ C</option>
+            <option value="D">ข้อ D</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block font-bold text-amber-300 mb-1">คำอธิบายเหตุผลอย่างละเอียด (Rationale)</label>
+          <textarea id="modalExplanation" rows="2.5" placeholder="อธิบายเหตุผลว่าทำไมข้อนี้ถูก และข้ออื่นผิด..." class="w-full bg-slate-800 border border-white/15 rounded-xl p-2.5 text-white font-medium outline-none"></textarea>
+        </div>
+
+        <div>
+          <label class="block font-bold text-cyan-300 mb-1">แหล่งอ้างอิงทางวิชาการ (References / Guidelines)</label>
+          <input type="text" id="modalReference" placeholder="เช่น ตำราการพยาบาลผู้ใหญ่ เล่ม 2 หรือแนวทางสมาคม..." class="w-full bg-slate-800 border border-white/15 rounded-xl p-2.5 text-white font-medium outline-none">
+        </div>
+      </div>
+
+      <div class="pt-2 flex gap-2">
+        <button onclick="saveQuestionFromModal()" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-yellow-500 text-slate-950 font-black rounded-xl shadow-md transition">
+          บันทึกเข้าคลังข้อสอบ
+        </button>
+        <button onclick="closeAddQuestionModal()" class="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white font-bold rounded-xl transition">
+          ยกเลิก
+        </button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>

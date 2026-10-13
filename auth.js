@@ -153,7 +153,7 @@ async function supabaseGetDashboard(studentCode, viewMode) {
     const name = profile.full_name || profile.email.split('@')[0];
     const mapProfile = row => row.profiles || {};
     const workStatus = { submitted: 'รอตรวจ', reviewing: 'กำลังตรวจ', passed: 'ผ่าน', needs_revision: 'ต้องแก้ไข' };
-    const attendanceStatus = { on_time: 'ตรงเวลา', late: 'สาย', sick: 'ป่วย', personal_leave: 'ลา', absent: 'ขาด' };
+    const attendanceStatus = { on_time: 'ตรงเวลา', late: 'สาย', late_submission: 'ส่งงานช้า', sick: 'ป่วย', personal_leave: 'ลา', absent: 'ขาด' };
     const works = (worksResult.data || []).map(w => ({
       workId: w.id,
       studentId: mapProfile(w).student_code || w.student_id,

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>คลังความรู้พยาบาล (Nursing Knowledge Hub) - วพบ. ชัยนาท</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="supabase-config.js"></script>
+  <script src="supabase-client.js"></script>
+  <script src="auth.js"></script>
+
+  <style>
+    * { 
+      font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif !important; 
+      box-sizing: border-box; 
+      -webkit-tap-highlight-color: transparent; 
+    }
+    body { 
+      background: radial-gradient(circle at 50% 15%, #ecfeff 0%, #cffafe 50%, #a5f3fc 100%); 
+      min-height: 100vh; 
+      color: #0f172a; 
+      font-size: 14px; 
+    }
+    .clay-card {
+      background: #ffffff;
+      border-radius: 32px;
+      border: 3px solid #ffffff;
+      box-shadow: 0 16px 32px -8px rgba(6, 182, 212, 0.25), 0 4px 8px rgba(0,0,0,0.03);
+      transition: all 0.25s ease;
+    }
+    .clay-pill {
+      border-radius: 9999px;
+      border: 2px solid rgba(255, 255, 255, 0.85);
+      box-shadow: 0 6px 14px -3px rgba(0, 0, 0, 0.12);
+      transition: all 0.2s ease;
+    }
+    .cat-btn-active {
+      background: linear-gradient(135deg, #0891b2 0%, #0284c7 100%) !important;
+      color: #ffffff !important;
+      border-color: #ffffff !important;
+      box-shadow: 0 4px 12px rgba(8, 145, 178, 0.35);
+    }
+    .custom-scroll::-webkit-scrollbar { height: 4px; width: 4px; }
+    .custom-scroll::-webkit-scrollbar-thumb { background: #06b6d4; border-radius: 9999px; }
+  </style>
+</head>
+<body class="flex flex-col justify-between min-h-screen select-none pb-24 p-3 sm:p-5 md:p-6">
+
+  <div class="max-w-5xl mx-auto w-full space-y-4">
+    
+    <!-- ส่วนหัว Top Header -->
+    <header class="flex flex-wrap items-center justify-between gap-3 bg-white/90 backdrop-blur-md px-5 py-3.5 rounded-[32px] border-2 border-white shadow-lg">
+      <div class="flex items-center space-x-3">
+        <a href="index.html" class="w-10 h-10 rounded-2xl bg-cyan-100 hover:bg-cyan-200 text-cyan-800 flex items-center justify-center text-lg active:scale-95 transition shadow-sm">
+          <i class="fa-solid fa-arrow-left"></i>
+        </a>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xl">📚</span>
+            <h1 class="text-base sm:text-lg font-black text-slate-800 tracking-tight leading-none">คลังความรู้พยาบาล</h1>
+            <span class="px-2.5 py-0.5 rounded-full bg-cyan-500 text-white font-black text-[11px] shadow-xs">Knowledge Hub</span>
+          </div>
+          <p class="text-xs text-cyan-800 font-semibold mt-0.5">รวมเอกสาร แนวทางปฏิบัติ รูปภาพอินโฟกราฟิก และลิงก์ระบบสำคัญ</p>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="openAddItemModal()" id="btnAddItemBtn" class="clay-pill px-4 py-2 bg-gradient-to-r from-teal-500 to-cyan-600 text-white font-black text-xs shadow-md flex items-center gap-1.5 active:scale-95 transition">
+          <i class="fa-solid fa-plus"></i> เพิ่มเนื้อหาความรู้
+        </button>
+      </div>
+    </header>
+
+    <!-- กล่องค้นหาและแถบหมวดหมู่ -->
+    <div class="clay-card p-4 space-y-3">
+      <div class="flex flex-col sm:flex-row items-center gap-3">
+        
+        <!-- ช่องค้นหา -->
+        <div class="relative w-full sm:flex-1">
+          <i class="fa-solid fa-magnifying-glass absolute left-3.5 top-1/2 -translate-y-1/2 text-cyan-600"></i>
+          <input type="text" id="searchInput" oninput="renderKnowledgeGrid()" placeholder="ค้นหาชื่อเรื่อง, เอกสาร, หรือหัตถการ..." class="w-full pl-10 pr-4 py-2.5 rounded-2xl bg-cyan-50/50 border border-cyan-200 text-xs font-semibold outline-none focus:border-cyan-500 focus:bg-white transition">
+        </div>
+
+        <!-- แถบหมวดหมู่ -->
+        <div class="flex gap-1.5 overflow-x-auto w-full sm:w-auto custom-scroll pb-1 sm:pb-0 text-xs">
+          <button onclick="selectCategory('ทั้งหมด', this)" class="cat-btn cat-btn-active px-3 py-1.5 rounded-xl bg-white border border-slate-200 font-bold whitespace-nowrap">ทั้งหมด</button>
+          <button onclick="selectCategory('เอกสาร/คู่มือ', this)" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 font-bold whitespace-nowrap">📄 เอกสาร/PDF</button>
+          <button onclick="selectCategory('อินโฟกราฟิก', this)" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 font-bold whitespace-nowrap">🖼️ อินโฟกราฟิก</button>
+          <button onclick="selectCategory('หัตถการ', this)" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 font-bold whitespace-nowrap">🩺 หัตถการ</button>
+          <button onclick="selectCategory('ลิงก์ระบบ', this)" class="cat-btn px-3 py-1.5 rounded-xl bg-white border border-slate-200 font-bold whitespace-nowrap">🔗 ลิงก์ระบบ</button>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- กริดแสดงการ์ดความรู้ (Knowledge Cards) -->
+    <div id="knowledgeGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <!-- Rendered by JS -->
+    </div>
+
+  </div>
+
+  <!-- MODAL เพิ่มเนื้อหาความรู้ใหม่ (สำหรับอาจารย์) -->
+  <div id="addModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-[36px] max-w-md w-full p-6 space-y-4 shadow-2xl border-4 border-cyan-200">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 class="text-base font-black text-slate-800 flex items-center gap-1.5">
+          <i class="fa-solid fa-folder-plus text-cyan-600"></i> เพิ่มเนื้อหาความรู้ใหม่
+        </h3>
+        <button onclick="closeAddItemModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold hover:bg-slate-200">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">หัวข้อเรื่อง</label>
+          <input type="text" id="itemTitle" placeholder="เช่น คู่มือการบริหารยา High Alert Drugs" class="w-full border rounded-xl p-2.5 bg-slate-50 font-semibold outline-none focus:border-cyan-500">
+        </div>
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">ประเภทเนื้อหา</label>
+            <select id="itemType" class="w-full border rounded-xl p-2.5 bg-slate-50 font-semibold outline-none focus:border-cyan-500">
+              <option value="document">📄 เอกสาร/คู่มือ</option>
+              <option value="image">🖼️ รูปภาพ/อินโฟ</option>
+              <option value="link">🔗 ลิงก์ระบบ</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">หมวดหมู่</label>
+            <select id="itemCategory" class="w-full border rounded-xl p-2.5 bg-slate-50 font-semibold outline-none focus:border-cyan-500">
+              <option value="เอกสาร/คู่มือ">เอกสาร/คู่มือ</option>
+              <option value="อินโฟกราฟิก">อินโฟกราฟิก</option>
+              <option value="หัตถการ">หัตถการ</option>
+              <option value="ลิงก์ระบบ">ลิงก์ระบบ</option>
+            </select>
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">ลิงก์ URL หรือลิงก์ไฟล์ Google Drive / PDF</label>
+          <input type="text" id="itemUrl" placeholder="https://..." class="w-full border rounded-xl p-2.5 bg-slate-50 font-semibold outline-none focus:border-cyan-500">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">รายละเอียดสังเขป</label>
+          <textarea id="itemDesc" rows="3" placeholder="อธิบายสาระสำคัญสั้นๆ..." class="w-full border rounded-xl p-2.5 bg-slate-50 font-semibold outline-none focus:border-cyan-500"></textarea>
+        </div>
+      </div>
+
+      <div class="pt-2 flex gap-2">
+        <button onclick="saveKnowledgeItem()" class="w-full py-2.5 bg-cyan-600 hover:bg-cyan-700 text-white font-black rounded-xl shadow-md transition">
+          บันทึกเข้าคลังความรู้
+        </button>
+        <button onclick="closeAddItemModal()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition">
+          ยกเลิก
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    const DEFAULT_KNOWLEDGE = [
+      {
+        id: "k-1",
+        title: "ระบบสารสนเทศวิทยาลัย (FONMIS)",
+        type: "link",
+        category: "ลิงก์ระบบ",
+        url: "https://fonmis.bcnchainat.ac.th",
+        desc: "ระบบบริหารจัดการข้อมูลการศึกษา และการฝึกปฏิบัติการพยาบาล วพบ. ชัยนาท",
+        badge: "ระบบหลัก",
+        icon: "fa-solid fa-graduation-cap"
+      },
+      {
+        id: "k-2",
+        title: "เว็บไซต์ทางการ วพบ. ชัยนาท",
+        type: "link",
+        category: "ลิงก์ระบบ",
+        url: "https://www.bcnchainat.ac.th",
+        desc: "ข่าวสาร ประกาศวิชาการ และกิจกรรมนักศึกษาพยาบาล",
+        badge: "เว็บไซต์",
+        icon: "fa-solid fa-globe"
+      },
+      {
+        id: "k-3",
+        title: "แนวทางการบริหารยาความเสี่ยงสูง (High Alert Drugs)",
+        type: "document",
+        category: "เอกสาร/คู่มือ",
+        url: "https://www.bcnchainat.ac.th",
+        desc: "หลัก 8 Rights ในการบริหารยาสำคัญ เช่น Insulin, KCl, Heparin และการเฝ้าระวังอาการข้างเคียง",
+        badge: "PDF คู่มือ",
+        icon: "fa-solid fa-file-medical"
+      },
+      {
+        id: "k-4",
+        title: "อินโฟกราฟิก: ขั้นตอนการใส่สายสวนปัสสาวะ (Foley's)",
+        type: "image",
+        category: "อินโฟกราฟิก",
+        url: "https://www.bcnchainat.ac.th",
+        desc: "เทคนิค Sterile Technique ป้องกัน CAUTI ในผู้ป่วยบนหอผู้ป่วย",
+        badge: "Infographic",
+        icon: "fa-solid fa-image"
+      },
+      {
+        id: "k-5",
+        title: "คู่มือการเขียน Daily Nursing Care Plan",
+        type: "document",
+        category: "เอกสาร/คู่มือ",
+        url: "https://www.bcnchainat.ac.th",
+        desc: "โครงสร้างการตั้งข้อวินิจฉัยทางการพยาบาล กิจกรรม และการประเมินผลตาม NANDA-I",
+        badge: "Care Plan",
+        icon: "fa-solid fa-book-medical"
+      },
+      {
+        id: "k-6",
+        title: "เกณฑ์การประเมินหัตถการวิชาชีพพยาบาล 8 ด้าน",
+        type: "document",
+        category: "หัตถการ",
+        url: "https://www.bcnchainat.ac.th",
+        desc: "เกณฑ์การผ่านและขั้นตอนการสังเกตการณ์หัตถการโดยอาจารย์นิเทศก์",
+        badge: "เกณฑ์ประเมิน",
+        icon: "fa-solid fa-stethoscope"
+      }
+    ];
+
+    let knowledgeItems = [];
+    try {
+      const saved = localStorage.getItem('nursenote_knowledge_items');
+      knowledgeItems = saved ? JSON.parse(saved) : [...DEFAULT_KNOWLEDGE];
+    } catch(e) {
+      knowledgeItems = [...DEFAULT_KNOWLEDGE];
+    }
+
+    let activeCategory = 'ทั้งหมด';
+
+    window.onload = function() {
+      requireLogin();
+      renderKnowledgeGrid();
+    };
+
+    function selectCategory(cat, btn) {
+      activeCategory = cat;
+      document.querySelectorAll('.cat-btn').forEach(el => el.classList.remove('cat-btn-active'));
+      if (btn) btn.classList.add('cat-btn-active');
+      renderKnowledgeGrid();
+    }
+
+    function renderKnowledgeGrid() {
+      const q = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+      const grid = document.getElementById('knowledgeGrid');
+
+      const filtered = knowledgeItems.filter(item => {
+        const matchCat = activeCategory === 'ทั้งหมด' || item.category === activeCategory;
+        const matchQuery = !q || item.title.toLowerCase().includes(q) || (item.desc || '').toLowerCase().includes(q);
+        return matchCat && matchQuery;
+      });
+
+      if (filtered.length === 0) {
+        grid.innerHTML = \`
+          <div class="col-span-full p-8 text-center bg-white rounded-3xl border border-slate-200 space-y-2">
+            <div class="text-3xl">🔍</div>
+            <div class="font-bold text-slate-700">ไม่พบข้อมูลที่ตรงกับคำค้นหา</div>
+            <div class="text-xs text-slate-400">ลองค้นหาด้วยคำอื่น หรือเลือกหมวดหมู่อื่น</div>
+          </div>
+        \`;
+        return;
+      }
+
+      grid.innerHTML = filtered.map(item => {
+        const isDoc = item.type === 'document';
+        const isImg = item.type === 'image';
+        const iconColor = isDoc ? 'bg-rose-100 text-rose-600' : isImg ? 'bg-amber-100 text-amber-600' : 'bg-cyan-100 text-cyan-600';
+
+        return \`
+          <div class="clay-card p-4 sm:p-5 flex flex-col justify-between space-y-3 hover:-translate-y-1 transition duration-200 group">
+            
+            <div class="space-y-2.5">
+              <div class="flex justify-between items-start">
+                <div class="w-10 h-10 rounded-2xl \${iconColor} flex items-center justify-center text-lg shadow-xs">
+                  <i class="\${item.icon || 'fa-solid fa-file'}"></i>
+                </div>
+                <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-slate-100 text-slate-600 border border-slate-200">
+                  \${item.badge || item.category}
+                </span>
+              </div>
+
+              <div>
+                <h3 class="text-sm font-black text-slate-800 leading-snug group-hover:text-cyan-700 transition">\${item.title}</h3>
+                <p class="text-xs text-slate-500 mt-1 line-clamp-3 font-semibold leading-relaxed">\${item.desc || '-'}</p>
+              </div>
+            </div>
+
+            <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+              <span class="text-[10px] font-bold text-cyan-700 flex items-center gap-1">
+                <i class="fa-solid fa-tag"></i> \${item.category}
+              </span>
+              <a href="\${item.url}" target="_blank" rel="noopener" class="px-3 py-1.5 rounded-xl bg-cyan-600 hover:bg-cyan-700 text-white font-black text-xs shadow-xs flex items-center gap-1 active:scale-95 transition">
+                <span>เปิดดู</span> <i class="fa-solid fa-arrow-up-right-from-square text-[10px]"></i>
+              </a>
+            </div>
+
+          </div>
+        \`;
+      }).join('');
+    }
+
+    function openAddItemModal() {
+      document.getElementById('itemTitle').value = '';
+      document.getElementById('itemUrl').value = '';
+      document.getElementById('itemDesc').value = '';
+      document.getElementById('addModal').classList.remove('hidden');
+    }
+
+    function closeAddItemModal() {
+      document.getElementById('addModal').classList.add('hidden');
+    }
+
+    function saveKnowledgeItem() {
+      const title = document.getElementById('itemTitle').value.trim();
+      const type = document.getElementById('itemType').value;
+      const category = document.getElementById('itemCategory').value;
+      const url = document.getElementById('itemUrl').value.trim();
+      const desc = document.getElementById('itemDesc').value.trim();
+
+      if (!title || !url) {
+        Swal.fire({ icon: 'warning', title: 'กรุณากรอกข้อมูล', text: 'ต้องระบุหัวข้อเรื่องและลิงก์ URL' });
+        return;
+      }
+
+      const iconMap = {
+        document: 'fa-solid fa-file-pdf',
+        image: 'fa-solid fa-image',
+        link: 'fa-solid fa-link'
+      };
+
+      knowledgeItems.unshift({
+        id: 'k-' + Date.now(),
+        title,
+        type,
+        category,
+        url,
+        desc,
+        badge: category,
+        icon: iconMap[type] || 'fa-solid fa-file'
+      });
+
+      localStorage.setItem('nursenote_knowledge_items', JSON.stringify(knowledgeItems));
+      closeAddItemModal();
+      renderKnowledgeGrid();
+
+      Swal.fire({ icon: 'success', title: 'เพิ่มเข้าคลังความรู้แล้ว!', timer: 1200, showConfirmButton: false });
+    }
+  </script>
+</body>
+</html>

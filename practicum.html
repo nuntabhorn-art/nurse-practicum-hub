@@ -120,6 +120,7 @@
     .custom-scroll::-webkit-scrollbar { width: 6px; height: 6px; }
     .custom-scroll::-webkit-scrollbar-thumb { background: #f59e0b; border-radius: 9999px; }
   </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 </head>
 <body class="flex flex-col justify-between min-h-screen select-none pb-24 p-3 sm:p-5 md:p-6">
 
@@ -144,24 +145,59 @@
 
       <!-- แถบสลับโหมดหลัก (สำหรับทุกคน และมีโหมดอาจารย์) -->
       <div class="flex items-center bg-amber-100/80 p-1 rounded-2xl border border-amber-300 text-xs font-black">
-        <button onclick="switchTab('class')" id="tabBtnClass" class="px-3.5 py-1.5 rounded-xl bg-white text-amber-900 shadow-sm transition">
-          <i class="fa-solid fa-users mr-1.5 text-amber-500"></i> ห้องเรียน/วอร์ด
+        <button onclick="switchTab('class')" id="tabBtnClass" class="px-3 py-1.5 rounded-xl bg-white text-amber-900 shadow-sm transition">
+          <i class="fa-solid fa-users mr-1 text-amber-500"></i> ห้องเรียน/วอร์ด
         </button>
-        <button onclick="switchTab('teams')" id="tabBtnTeams" class="px-3.5 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition">
-          <i class="fa-solid fa-bolt mr-1.5 text-rose-500"></i> สุ่มแบ่งทีม VS
+        <button onclick="switchTab('report')" id="tabBtnReport" class="px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition">
+          <i class="fa-solid fa-chart-line mr-1 text-teal-600"></i> รายงานผล & สถานะ
         </button>
-        <button onclick="switchTab('works')" id="tabBtnWorks" class="px-3.5 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition">
-          <i class="fa-solid fa-clipboard-check mr-1.5 text-indigo-500"></i> งาน Care Plan
+        <button onclick="switchTab('teams')" id="tabBtnTeams" class="px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition">
+          <i class="fa-solid fa-bolt mr-1 text-rose-500"></i> สุ่มทีม VS
         </button>
-        <!-- ปุ่มสลับโหมดอาจารย์ (แสดงเมื่อเป็น Admin) -->
-        <button onclick="toggleTeacherMode()" id="btnTeacherToggle" class="hidden px-3.5 py-1.5 rounded-xl text-purple-800 hover:text-purple-950 transition">
-          <i class="fa-solid fa-user-shield mr-1.5 text-purple-600"></i> แผงอาจารย์
+        <button onclick="switchTab('works')" id="tabBtnWorks" class="px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition">
+          <i class="fa-solid fa-clipboard-check mr-1 text-indigo-500"></i> งาน Care Plan
+        </button>
+        <!-- ปุ่มสลับโหมดอาจารย์ -->
+        <button onclick="toggleTeacherMode()" id="btnTeacherToggle" class="px-3 py-1.5 rounded-xl text-purple-800 hover:text-purple-950 transition">
+          <i class="fa-solid fa-user-shield mr-1 text-purple-600"></i> แผงอาจารย์
         </button>
       </div>
     </header>
 
     <!-- ================= TAB 1: มุมมองห้องเรียน/วอร์ด (3D Pixar Avatar Cards แบบรูปที่ 4) ================= -->
     <section id="tabClassSection" class="space-y-4">
+      
+      <!-- 📢 แถบสรุปด่วน: สถานะงานตีกลับแก้ไข / ขาด-ลา-มาสาย-ส่งช้า (เห็นทันทีที่เปิดหน้าแรก) -->
+      <div id="quickAlertBanner" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <div class="clay-card p-3 border-l-4 border-l-rose-500 bg-rose-50/50 flex items-center justify-between">
+          <div>
+            <div class="text-[10px] font-black text-rose-800 uppercase tracking-wider">ตีกลับแก้ไข</div>
+            <div class="text-lg font-black text-rose-600" id="statRevisionCount">0</div>
+          </div>
+          <span class="text-xl">⚠️</span>
+        </div>
+        <div class="clay-card p-3 border-l-4 border-l-purple-500 bg-purple-50/50 flex items-center justify-between">
+          <div>
+            <div class="text-[10px] font-black text-purple-800 uppercase tracking-wider">ส่งงานช้า</div>
+            <div class="text-lg font-black text-purple-600" id="statLateWorkCount">0</div>
+          </div>
+          <span class="text-xl">⏳</span>
+        </div>
+        <div class="clay-card p-3 border-l-4 border-l-amber-500 bg-amber-50/50 flex items-center justify-between">
+          <div>
+            <div class="text-[10px] font-black text-amber-800 uppercase tracking-wider">มาสาย / ลา</div>
+            <div class="text-lg font-black text-amber-600" id="statLateAttCount">0</div>
+          </div>
+          <span class="text-xl">⏱️</span>
+        </div>
+        <div class="clay-card p-3 border-l-4 border-l-emerald-500 bg-emerald-50/50 flex items-center justify-between">
+          <div>
+            <div class="text-[10px] font-black text-emerald-800 uppercase tracking-wider">งานผ่านแล้ว</div>
+            <div class="text-lg font-black text-emerald-600" id="statPassedCount">0</div>
+          </div>
+          <span class="text-xl">✅</span>
+        </div>
+      </div>
       
       <!-- แถบสรุปสถิติด้านบนของห้องเรียน -->
       <div class="flex flex-wrap items-center justify-between gap-3 bg-white/75 p-4 rounded-[28px] border-2 border-white shadow-sm">
@@ -192,6 +228,97 @@
     </section>
 
     <!-- ================= TAB 2: สุ่มแบ่งทีม / จัดกลุ่มทำงานกลุ่ม (Team Battle VS แบบรูปที่ 5) ================= -->
+    
+    <!-- ================= TAB REPORT: รายงานการส่งงาน ตรวจงานตีกลับ สถิติขึ้นเวร และพิมพ์ PDF ================= -->
+    <section id="tabReportSection" class="space-y-4 hidden anim-pop">
+      
+      <!-- ส่วนควบคุมการพิมพ์ PDF และกรองข้อมูล -->
+      <div class="clay-card p-4 sm:p-5 flex flex-wrap items-center justify-between gap-3 bg-gradient-to-r from-teal-50 via-sky-50 to-white">
+        <div>
+          <h2 class="text-base font-black text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-file-pdf text-rose-500 text-lg"></i> รายงานสถิติและผลการฝึกปฏิบัติการพยาบาล
+          </h2>
+          <p class="text-xs text-slate-500 mt-0.5">สรุปงานส่ง, งานตีกลับแก้ไข, บันทึกขึ้นเวร (ตรงเวลา/สาย/ลา/ขาด/ส่งงานช้า)</p>
+        </div>
+        <div class="flex items-center gap-2">
+          <button onclick="exportReportToPDF()" class="clay-pill-btn px-4 py-2.5 bg-gradient-to-r from-rose-500 to-pink-600 text-white font-black text-xs shadow-md flex items-center gap-1.5 active:scale-95 transition">
+            <i class="fa-solid fa-download"></i> ดาวน์โหลดรายงาน (PDF)
+          </button>
+          <button onclick="refreshReportData()" class="w-9 h-9 rounded-full bg-white text-slate-700 border border-slate-200 flex items-center justify-center hover:bg-slate-100 shadow-sm" title="รีเฟรชข้อมูล">
+            <i class="fa-solid fa-rotate"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- พื้นที่เนื้อหารายงานที่จะแปลงเป็น PDF -->
+      <div id="printableReportArea" class="space-y-4 bg-white p-4 sm:p-6 rounded-[32px] border border-slate-200 shadow-sm">
+        
+        <!-- หัวเอกสารรายงาน -->
+        <div class="border-b border-slate-200 pb-4 text-center space-y-1">
+          <div class="text-xs font-bold text-amber-700 tracking-wider">วิทยาลัยพยาบาลบรมราชชนนี ชัยนาท (BCPN)</div>
+          <h1 class="text-base sm:text-lg font-black text-slate-900">ใบบันทึกผลและสถิติพฤติกรรมการฝึกปฏิบัติการพยาบาล (Ward Performance Report)</h1>
+          <div class="text-xs text-slate-500 font-semibold" id="reportHeaderDate">ประจำกลุ่มที่ 5 • วิชาการพยาบาลผู้ใหญ่และผู้สูงอายุ</div>
+        </div>
+
+        <!-- การ์ดตัวเลขสรุป 4 มิติ -->
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 text-center">
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200">
+            <div class="text-[11px] font-bold text-slate-500">นักศึกษาทั้งหมด</div>
+            <div class="text-lg font-black text-slate-800" id="rptTotalStudents">8 คน</div>
+          </div>
+          <div class="p-3 bg-emerald-50 rounded-2xl border border-emerald-200">
+            <div class="text-[11px] font-bold text-emerald-700">ตรวจผ่านแล้ว</div>
+            <div class="text-lg font-black text-emerald-800" id="rptPassedWorks">0 งาน</div>
+          </div>
+          <div class="p-3 bg-rose-50 rounded-2xl border border-rose-200">
+            <div class="text-[11px] font-bold text-rose-700">ส่งกลับแก้ไข</div>
+            <div class="text-lg font-black text-rose-800" id="rptRevisionWorks">0 งาน</div>
+          </div>
+          <div class="p-3 bg-purple-50 rounded-2xl border border-purple-200">
+            <div class="text-[11px] font-bold text-purple-700">ส่งช้า / สาย / ลา</div>
+            <div class="text-lg font-black text-purple-800" id="rptAbnormalAtt">0 ครั้ง</div>
+          </div>
+        </div>
+
+        <!-- 1. ตารางคะแนนรวมและสถานะนักศึกษาทุกคน -->
+        <div class="space-y-2">
+          <h3 class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+            <span>📋 บัญชีรายชื่อและคะแนนสะสม</span>
+          </h3>
+          <div class="overflow-x-auto custom-scroll">
+            <table class="w-full text-xs text-left border-collapse">
+              <thead>
+                <tr class="bg-amber-100/70 text-amber-950 font-black border-b border-amber-300">
+                  <th class="p-2 text-center w-12">ลำดับ</th>
+                  <th class="p-2">รหัส</th>
+                  <th class="p-2">ชื่อ-นามสกุล</th>
+                  <th class="p-2 text-center">สถานะเวร</th>
+                  <th class="p-2 text-center">งาน Care Plan</th>
+                  <th class="p-2 text-center">ดาว Hero ⭐</th>
+                  <th class="p-2 text-center">คะแนนรวม</th>
+                </tr>
+              </thead>
+              <tbody id="rptStudentsTableBody" class="divide-y divide-slate-100">
+                <!-- Rendered by JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- 2. ประวัติการตรวจงานที่ต้องแก้ไข (Needs Revision) -->
+        <div class="space-y-2 pt-2">
+          <h3 class="text-xs font-black text-rose-700 flex items-center gap-1.5">
+            <span>⚠️ รายการงานที่อาจารย์สั่งแก้ไข (Feedback & Revisions)</span>
+          </h3>
+          <div id="rptRevisionList" class="space-y-2 text-xs">
+            <div class="p-3 text-center text-slate-400 bg-slate-50 rounded-2xl">ไม่มีงานที่ค้างการแก้ไขในขณะนี้ 🎉</div>
+          </div>
+        </div>
+
+      </div>
+
+    </section>
+
     <section id="tabTeamsSection" class="space-y-4 hidden anim-pop">
       
       <!-- กล่องสังเวียนแบ่งทีม -->
@@ -351,12 +478,99 @@
           </div>
           <div>
             <div class="text-sm font-black text-purple-950">แผงควบคุมอาจารย์นิเทศก์ (Teacher Control Hub)</div>
-            <div class="text-xs text-purple-800 font-semibold">อาจารย์ นันตพร ทองเต็ม • ควบคุมการตรวจงาน ประเมินหัตถการ และให้คะแนน</div>
+            <div class="text-xs text-purple-800 font-semibold">ควบคุมการเปิด-ปิดระบบ, ตรวจงาน, ประเมินหัตถการ และจัดการรายชื่อนักศึกษา</div>
           </div>
         </div>
-        <button onclick="switchTab('class')" class="px-3.5 py-1.5 rounded-full bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold text-xs transition">
-          กลับสู่ห้องเรียน
-        </button>
+        <div class="flex items-center gap-2">
+          <button onclick="openStudentModal()" class="clay-pill-btn px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-md flex items-center gap-1.5">
+            <i class="fa-solid fa-user-plus"></i> + เพิ่มนักศึกษา
+          </button>
+          <button onclick="switchTab('class')" class="px-3.5 py-2 rounded-full bg-purple-100 hover:bg-purple-200 text-purple-900 font-bold text-xs transition">
+            กลับสู่ห้องเรียน
+          </button>
+        </div>
+      </div>
+
+      <!-- 🎛️ สวิตช์ควบคุมการเปิด/ปิดฟังก์ชันของระบบ (System Feature Switches) -->
+      <div class="clay-card p-4 sm:p-5 space-y-3 border-2 border-indigo-100">
+        <div class="flex justify-between items-center border-b pb-2">
+          <h3 class="text-xs sm:text-sm font-black text-slate-800 flex items-center gap-2">
+            <i class="fa-solid fa-sliders text-indigo-600"></i> สวิตช์เปิด/ปิดฟังก์ชันระบบ (Feature Flags)
+          </h3>
+          <span class="text-[10px] text-slate-400 font-bold">บันทึกอัตโนมัติ</span>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          
+          <!-- สวิตช์ 1: การส่งงาน Care Plan -->
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between">
+            <div>
+              <div class="font-bold text-slate-800">ระบบส่งงาน Care Plan</div>
+              <div class="text-[10px] text-slate-500" id="statusWorkSubmitLabel">เปิดรับส่งงานปกติ</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="switchWorkSubmit" onchange="toggleFeatureSetting('work_submission', this.checked)" class="sr-only peer" checked>
+              <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+            </label>
+          </div>
+
+          <!-- สวิตช์ 2: การตรวจงานและให้คะแนน -->
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between">
+            <div>
+              <div class="font-bold text-slate-800">ตรวจงาน & ให้คะแนน</div>
+              <div class="text-[10px] text-slate-500" id="statusGradingLabel">เปิดใช้งานปกติ</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="switchGrading" onchange="toggleFeatureSetting('grading', this.checked)" class="sr-only peer" checked>
+              <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+            </label>
+          </div>
+
+          <!-- สวิตช์ 3: การเช็คชื่อเข้าเวร -->
+          <div class="p-3 bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-between">
+            <div>
+              <div class="font-bold text-slate-800">ระบบเช็คชื่อขึ้นเวร</div>
+              <div class="text-[10px] text-slate-500" id="statusAttendanceLabel">เปิดเช็คชื่อปกติ</div>
+            </div>
+            <label class="relative inline-flex items-center cursor-pointer">
+              <input type="checkbox" id="switchAttendance" onchange="toggleFeatureSetting('attendance', this.checked)" class="sr-only peer" checked>
+              <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+            </label>
+          </div>
+
+        </div>
+      </div>
+
+      <!-- 👥 แผงจัดการรายชื่อนักศึกษา (เพิ่ม / แก้ไข / ลบ) -->
+      <div class="clay-card p-4 sm:p-5 space-y-3 border-2 border-purple-100">
+        <div class="flex justify-between items-center border-b pb-2">
+          <div>
+            <h3 class="text-xs sm:text-sm font-black text-slate-800 flex items-center gap-2">
+              <i class="fa-solid fa-users-gear text-purple-600"></i> จัดการรายชื่อนักศึกษาในกลุ่มฝึกปฏิบัติ
+            </h3>
+            <p class="text-[11px] text-slate-500">สามารถเพิ่ม, แก้ไขชื่อ, หรือลบนักศึกษา (ระบบจะเลือกอวาตาร์ ชาย/หญิง ตาม นาย/นางสาว อัตโนมัติ)</p>
+          </div>
+          <button onclick="openStudentModal()" class="px-3 py-1.5 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs shadow-xs">
+            + เพิ่มรายชื่อ
+          </button>
+        </div>
+
+        <div class="overflow-x-auto custom-scroll">
+          <table class="w-full text-xs text-left min-w-[550px]">
+            <thead>
+              <tr class="bg-purple-50 text-purple-950 font-black border-b border-purple-200">
+                <th class="p-2.5 text-center w-12">ลำดับ</th>
+                <th class="p-2.5">รหัสนักศึกษา</th>
+                <th class="p-2.5">ชื่อ-นามสกุล</th>
+                <th class="p-2.5 text-center">เพศ/รูป</th>
+                <th class="p-2.5 text-center">คะแนนสะสม</th>
+                <th class="p-2.5 text-center w-28">จัดการ</th>
+              </tr>
+            </thead>
+            <tbody id="studentManagerTableBody" class="divide-y divide-slate-100">
+              <!-- Rendered by JS -->
+            </tbody>
+          </table>
+        </div>
       </div>
 
       <!-- แผงตรวจ Care Plan ทุกชิ้นของนักศึกษา -->
@@ -599,17 +813,29 @@
 
   <!-- JAVASCRIPT LOGIC (3D Pixar Tilt, Radial Menu, Random Teams, Teacher Grading) -->
   <script>
-    // รายชื่อนักศึกษากลุ่ม 5 (พร้อมอวาตาร์ 3D Pixar น่ารัก)
-    const GROUP_5_DATA = [
-      { studentId: "STU-09", name: "ณิฐาภัทร (องเอิน)", fullName: "นางสาวณิฐาภัทร จันทร์ทุ่ง (องเอิน)", gender: "female", avatar: "👩🏻‍⚕️", color: "from-pink-400 to-rose-300" },
-      { studentId: "STU-10", name: "ณัฐพร (ตะวัน)", fullName: "นางสาวณัฐพร ดอนแนไพร (ตะวัน)", gender: "female", avatar: "👩🏼‍⚕️", color: "from-amber-400 to-yellow-300" },
-      { studentId: "STU-11", name: "ณัฐธิดา (นัดดี้)", fullName: "นางสาวณัฐธิดา กลัดเงิน (นัดดี้)", gender: "female", avatar: "👩🏽‍⚕️", color: "from-purple-400 to-pink-300" },
-      { studentId: "STU-12", name: "ณัฐธิดา (ใบตอง)", fullName: "นางสาวณัฐธิดา ถามูลเลศ (ใบตอง)", gender: "female", avatar: "👩🏻‍⚕️", color: "from-emerald-400 to-teal-300" },
-      { studentId: "STU-13", name: "ณิชาภัทร (โฟน)", fullName: "นางสาวณิชาภัทร โพธิ์ศรีดี (โฟน)", gender: "female", avatar: "👩🏼‍⚕️", color: "from-sky-400 to-blue-300" },
-      { studentId: "STU-14", name: "ณัฐรุจา (นัท)", fullName: "นางสาวณัฐรุจา อินจันทร์ (นัท)", gender: "female", avatar: "👩🏽‍⚕️", color: "from-indigo-400 to-purple-300" },
-      { studentId: "STU-15", name: "ณัฐพิมล (ใบเตย)", fullName: "นางสาวณัฐพิมล กลิ่นขวัญ (ใบเตย)", gender: "female", avatar: "👩🏻‍⚕️", color: "from-teal-400 to-emerald-300" },
-      { studentId: "STU-16", name: "ตรีสุคนธิ์ (หมิว)", fullName: "นางสาวตรีสุคนธิ์ ซาปิ (หมิว)", gender: "female", avatar: "👩🏼‍⚕️", color: "from-rose-400 to-orange-300" }
+    // รายชื่อนักศึกษาเริ่มต้น (สามารถเพิ่ม/แก้ไข/ลบ และเก็บใน localStorage + Supabase ได้)
+    const DEFAULT_STUDENTS = [
+      { studentId: "STU-09", name: "ณิฐาภัทร (องเอิน)", fullName: "นางสาวณิฐาภัทร จันทร์ทุ่ง (องเอิน)", gender: "female", color: "from-pink-400 to-rose-300" },
+      { studentId: "STU-10", name: "ณัฐพร (ตะวัน)", fullName: "นางสาวณัฐพร ดอนแนไพร (ตะวัน)", gender: "female", color: "from-amber-400 to-yellow-300" },
+      { studentId: "STU-11", name: "ณัฐธิดา (นัดดี้)", fullName: "นางสาวณัฐธิดา กลัดเงิน (นัดดี้)", gender: "female", color: "from-purple-400 to-pink-300" },
+      { studentId: "STU-12", name: "ณัฐธิดา (ใบตอง)", fullName: "นางสาวณัฐธิดา ถามูลเลศ (ใบตอง)", gender: "female", color: "from-emerald-400 to-teal-300" },
+      { studentId: "STU-13", name: "ณิชาภัทร (โฟน)", fullName: "นางสาวณิชาภัทร โพธิ์ศรีดี (โฟน)", gender: "female", color: "from-sky-400 to-blue-300" },
+      { studentId: "STU-14", name: "ณัฐรุจา (นัท)", fullName: "นางสาวณัฐรุจา อินจันทร์ (นัท)", gender: "female", color: "from-indigo-400 to-purple-300" },
+      { studentId: "STU-15", name: "ณัฐพิมล (ใบเตย)", fullName: "นางสาวณัฐพิมล กลิ่นขวัญ (ใบเตย)", gender: "female", color: "from-teal-400 to-emerald-300" },
+      { studentId: "STU-16", name: "ตรีสุคนธิ์ (หมิว)", fullName: "นางสาวตรีสุคนธิ์ ซาปิ (หมิว)", gender: "female", color: "from-rose-400 to-orange-300" }
     ];
+
+    let GROUP_5_DATA = [];
+    try {
+      const savedStudents = localStorage.getItem('nursenote_group5_students');
+      GROUP_5_DATA = savedStudents ? JSON.parse(savedStudents) : [...DEFAULT_STUDENTS];
+    } catch(e) {
+      GROUP_5_DATA = [...DEFAULT_STUDENTS];
+    }
+
+    // เก็บสถานะอารมณ์ของอวาตาร์แต่ละคน ('neutral', 'smile', 'cry')
+    const studentMoods = {};
+    const moodTimers = {};
 
     let currentSession = null;
     let currentStudentId = localStorage.getItem('current_student_id') || "STU-09";
@@ -617,6 +843,17 @@
     let selectedRadialStudent = null;
     let teamCount = 2;
     let currentShuffledTeams = [];
+
+    // สถานะสวิตช์ฟังก์ชันระบบ
+    let systemFeatures = {
+      work_submission: true,
+      grading: true,
+      attendance: true
+    };
+    try {
+      const savedFeatures = localStorage.getItem('nursenote_features');
+      if (savedFeatures) systemFeatures = Object.assign(systemFeatures, JSON.parse(savedFeatures));
+    } catch(e) {}
 
     window.onload = function() {
       currentSession = requireLogin();
@@ -627,36 +864,45 @@
         document.getElementById('btnQuickCheckAll').classList.remove('hidden');
       }
 
+      applyFeatureSwitchesUI();
       renderAvatarGrid();
       initRadarChart();
       loadDashboard();
       initTeamMembersDropdown();
+      renderStudentManagerTable();
+      updateReportDashboard();
     };
 
     // 1. สลับหน้าแท็บหลัก
     function switchTab(tabId) {
       document.getElementById('tabClassSection').classList.add('hidden');
+      document.getElementById('tabReportSection').classList.add('hidden');
       document.getElementById('tabTeamsSection').classList.add('hidden');
       document.getElementById('tabWorksSection').classList.add('hidden');
       document.getElementById('tabTeacherSection').classList.add('hidden');
 
-      document.querySelectorAll('#tabBtnClass, #tabBtnTeams, #tabBtnWorks, #btnTeacherToggle').forEach(el => {
-        el.className = "px-3.5 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition";
+      document.querySelectorAll('#tabBtnClass, #tabBtnReport, #tabBtnTeams, #tabBtnWorks, #btnTeacherToggle').forEach(el => {
+        el.className = "px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition";
       });
 
       if (tabId === 'class') {
         document.getElementById('tabClassSection').classList.remove('hidden');
-        document.getElementById('tabBtnClass').className = "px-3.5 py-1.5 rounded-xl bg-white text-amber-900 shadow-sm font-black transition";
+        document.getElementById('tabBtnClass').className = "px-3 py-1.5 rounded-xl bg-white text-amber-900 shadow-sm font-black transition";
+      } else if (tabId === 'report') {
+        document.getElementById('tabReportSection').classList.remove('hidden');
+        document.getElementById('tabBtnReport').className = "px-3 py-1.5 rounded-xl bg-white text-teal-900 shadow-sm font-black transition";
+        updateReportDashboard();
       } else if (tabId === 'teams') {
         document.getElementById('tabTeamsSection').classList.remove('hidden');
-        document.getElementById('tabBtnTeams').className = "px-3.5 py-1.5 rounded-xl bg-white text-rose-900 shadow-sm font-black transition";
+        document.getElementById('tabBtnTeams').className = "px-3 py-1.5 rounded-xl bg-white text-rose-900 shadow-sm font-black transition";
         if (currentShuffledTeams.length === 0) shuffleTeamsAction();
       } else if (tabId === 'works') {
         document.getElementById('tabWorksSection').classList.remove('hidden');
-        document.getElementById('tabBtnWorks').className = "px-3.5 py-1.5 rounded-xl bg-white text-indigo-900 shadow-sm font-black transition";
+        document.getElementById('tabBtnWorks').className = "px-3 py-1.5 rounded-xl bg-white text-indigo-900 shadow-sm font-black transition";
       } else if (tabId === 'teacher') {
         document.getElementById('tabTeacherSection').classList.remove('hidden');
-        document.getElementById('btnTeacherToggle').className = "px-3.5 py-1.5 rounded-xl bg-purple-600 text-white shadow-sm font-black transition";
+        document.getElementById('btnTeacherToggle').className = "px-3 py-1.5 rounded-xl bg-purple-600 text-white shadow-sm font-black transition";
+        renderStudentManagerTable();
       }
     }
 
@@ -664,63 +910,58 @@
       switchTab('teacher');
     }
 
-    // ฟังก์ชันเลือกรูปตามเพศ (ถ้ามีชื่อ นาย ให้ใช้ผู้ชาย, ถ้า นางสาว/นาง ให้ใช้ผู้หญิง)
-    function getStudentAvatarSrc(s) {
+    // 2. ฟังก์ชันตรวจสอบเพศและดึงที่อยู่ไฟล์ SVG แยกชิ้นส่วนศีรษะและลำตัว
+    function getStudentAvatarParts(s, mood = 'neutral') {
       const name = (s.fullName || s.name || "").trim();
       const isMale = name.startsWith("นาย") || s.gender === "male";
-      
-      // ลำดับไฟล์ผู้ชาย / ผู้หญิง ที่อาจมีในระบบ
-      const maleCandidates = [
-        "avatars/nurse_boy.png",
-        "avatars/nurse_boy.png.jpg",
-        "nurse_boy.png",
-        "nurse_boy.png.jpg",
-        "avatars/nurse-male.png",
-        "nurse-male.png"
-      ];
-      const femaleCandidates = [
-        "avatars/nurse_girl.png",
-        "avatars/nurse_girl.png.jpg",
-        "nurse_girl.png",
-        "nurse_girl.png.jpg",
-        "avatars/nurse-female.png",
-        "nurse-female.png"
-      ];
-
-      const candidates = isMale ? maleCandidates : femaleCandidates;
-      const defaultImg = candidates[0];
-      const fallbackList = candidates.slice(1);
-      const customImg = `avatars/${s.studentId.toLowerCase()}.jpg`;
-      return { customImg, defaultImg, fallbackList, isMale };
+      const prefix = isMale ? 'boy' : 'girl';
+      return {
+        bodySrc: `assets/avatar/${prefix}_body.svg`,
+        headSrc: `assets/avatar/${prefix}_head_${mood}.svg`,
+        isMale,
+        prefix
+      };
     }
 
-    // ฟังก์ชันช่วยโหลดรูปภาพแบบลองค้นหาตามลำดับอัตโนมัติ (Fallback Chain)
-    function handleAvatarImgError(imgEl, fallbackList) {
-      if (!imgEl._fbIdx) imgEl._fbIdx = 0;
-      if (fallbackList && imgEl._fbIdx < fallbackList.length) {
-        const nextSrc = fallbackList[imgEl._fbIdx++];
-        imgEl.src = nextSrc;
-      } else {
-        imgEl.onerror = null;
-        imgEl.src = 'https://api.dicebear.com/7.x/bottts-neutral/svg?seed=' + encodeURIComponent(imgEl.alt || 'student');
+    // ฟังก์ชันเปลี่ยนอารมณ์ศีรษะนักศึกษา (ยิ้ม / ร้องไห้) เป็นเวลา 3 วินาที
+    function triggerStudentMood(studentId, mood) {
+      studentMoods[studentId] = mood;
+      const s = GROUP_5_DATA.find(x => x.studentId === studentId);
+      if (s) {
+        const headImg = document.getElementById(`avatarHead_${studentId}`);
+        if (headImg) {
+          const parts = getStudentAvatarParts(s, mood);
+          headImg.src = parts.headSrc;
+        }
       }
+
+      clearTimeout(moodTimers[studentId]);
+      moodTimers[studentId] = setTimeout(() => {
+        studentMoods[studentId] = 'neutral';
+        if (s) {
+          const headImg = document.getElementById(`avatarHead_${studentId}`);
+          if (headImg) {
+            const parts = getStudentAvatarParts(s, 'neutral');
+            headImg.src = parts.headSrc;
+          }
+        }
+      }, 3500);
     }
 
-    // 2. เรนเดอร์การ์ดอวาตาร์ 3D Pixar พร้อมระบบหันหน้าตามเมาส์ (Mouse Face Tracking)
+    // 3. เรนเดอร์การ์ดอวาตาร์ 3D (ขยับเฉพาะศีรษะตามเมาส์ ลำตัวนิ่งสง่า)
     function renderAvatarGrid() {
       const grid = document.getElementById('avatarGrid');
       grid.innerHTML = GROUP_5_DATA.map((s, idx) => {
-        const av = getStudentAvatarSrc(s);
-        const fbJson = JSON.stringify(av.fallbackList).replace(/"/g, '&quot;');
+        const currentMood = studentMoods[s.studentId] || 'neutral';
+        const parts = getStudentAvatarParts(s, currentMood);
         return `
-          <div class="clay-card tilt-card p-4 flex flex-col items-center justify-between text-center relative group min-h-[220px]" 
-               onmousemove="handleTilt(event, this, '${s.studentId}')" 
-               onmouseenter="handleCardMouseEnter('${s.studentId}')"
-               onmouseleave="resetTilt(this, '${s.studentId}')"
+          <div class="clay-card p-4 flex flex-col items-center justify-between text-center relative group min-h-[230px] cursor-pointer" 
+               onmousemove="handleHeadTrack(event, this, '${s.studentId}')" 
+               onmouseleave="resetHeadTrack(this, '${s.studentId}')"
                onclick="openRadialModal('${s.studentId}')">
             
             <!-- Badge เลขที่และคะแนนดาว Hero -->
-            <div class="tilt-card-inner w-full flex justify-between items-center text-[10px] font-black z-10 pointer-events-none">
+            <div class="w-full flex justify-between items-center text-[10px] font-black z-10 pointer-events-none">
               <span class="w-6 h-6 rounded-full bg-amber-400 text-amber-950 flex items-center justify-center shadow-xs">
                 ${idx + 1}
               </span>
@@ -729,19 +970,27 @@
               </span>
             </div>
 
-            <!-- อวาตาร์ 3D ทรงกลมลอยตัว หันตามเมาส์ (Face/Eye Tracking) -->
-            <div class="tilt-card-inner w-22 h-22 sm:w-26 sm:h-26 rounded-full bg-gradient-to-tr ${s.color} p-1 shadow-lg flex items-center justify-center my-1 group-hover:scale-110 transition-transform duration-300">
-              <div class="w-full h-full bg-white rounded-full overflow-hidden flex items-center justify-center border-2 border-white shadow-inner pointer-events-none relative">
-                <img id="avatarImg_${s.studentId}"
-                     src="${av.defaultImg}" 
-                     onerror="handleAvatarImgError(this, ${fbJson})" 
-                     alt="${s.name}" 
-                     class="w-full h-full object-contain pointer-events-none transition-transform duration-75 ease-out select-none">
-              </div>
+            <!-- กล่องอวาตาร์ 3D: ลำตัวนิ่งอยู่นิ่งด้านล่าง + ศีรษะขยับเอียงหันตามเมาส์ -->
+            <div class="relative w-24 h-24 sm:w-28 sm:h-28 my-1 flex items-center justify-center pointer-events-none overflow-visible">
+              
+              <!-- วงกลมพื้นหลังพาสเทล -->
+              <div class="absolute inset-0 rounded-full bg-gradient-to-tr ${s.color || 'from-amber-200 to-yellow-100'} opacity-85 shadow-inner -z-10"></div>
+
+              <!-- 1. ลำตัวชุดพยาบาล (อยู่นิ่ง ล่าง) -->
+              <img id="avatarBody_${s.studentId}" 
+                   src="${parts.bodySrc}" 
+                   alt="ชุดพยาบาล" 
+                   class="absolute bottom-0 w-20 h-16 sm:w-24 sm:h-20 object-contain z-0 pointer-events-none select-none">
+
+              <!-- 2. ศีรษะพยาบาล (ขยับหันตามเมาส์ พร้อมเปลี่ยนอารมณ์ ยิ้ม/ร้องไห้) -->
+              <img id="avatarHead_${s.studentId}" 
+                   src="${parts.headSrc}" 
+                   alt="${s.name}" 
+                   class="absolute top-0 w-18 h-18 sm:w-22 sm:h-22 object-contain z-10 pointer-events-none select-none transition-transform duration-75 ease-out filter drop-shadow-sm">
             </div>
 
             <!-- ชื่อนักศึกษา -->
-            <div class="tilt-card-inner w-full mt-1 pointer-events-none">
+            <div class="w-full mt-1 pointer-events-none">
               <div class="text-xs sm:text-sm font-black text-slate-800 truncate">${s.name}</div>
               <div class="text-[10px] text-amber-800 font-bold mt-0.5 flex items-center justify-center gap-1">
                 <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
@@ -750,7 +999,7 @@
             </div>
 
             <!-- Badge สถานะเข้าเวรปัจจุบัน -->
-            <div class="tilt-card-inner mt-1 pointer-events-none">
+            <div class="mt-1 pointer-events-none">
               <span id="attBadge_${s.studentId}" class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
                 ✔️ มาเรียน
               </span>
@@ -761,57 +1010,43 @@
       }).join('');
     }
 
-    let hoverOpenTimer = null;
-
-    // ชี้เมาส์โดนการ์ดแล้วเปิด Popup ทันที (ไม่ต้องคลิก)
-    function handleCardMouseEnter(studentId) {
-      clearTimeout(hoverOpenTimer);
-      // หน่วงเวลาเล็กน้อย 300ms เพื่อป้องกันการเลื่อนเมาส์ผ่านเร็วๆ แล้วเด้งกวนใจ
-      hoverOpenTimer = setTimeout(() => {
-        openRadialModal(studentId);
-      }, 350);
-    }
-
-    // ฟังก์ชัน 3D Tilt เอียงการ์ดและให้หน้าตัวละครหันตามเมาส์ (Eye/Head Tracking เหมือน TikTok)
-    function handleTilt(e, card, studentId) {
+    // ฟังก์ชันขยับเฉพาะศีรษะ (Head & Eye Tracking ตามเมาส์ ลำตัวนิ่ง)
+    function handleHeadTrack(e, card, studentId) {
       const rect = card.getBoundingClientRect();
       const x = e.clientX - rect.left - rect.width / 2;
       const y = e.clientY - rect.top - rect.height / 2;
-      const rotateX = (-y / rect.height) * 22;
-      const rotateY = (x / rect.width) * 22;
-      const rotateZ = (x / rect.width) * 3;
-      card.style.transform = `perspective(800px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg) scale3d(1.05, 1.05, 1.05)`;
 
-      // หันหน้าตัวการ์ตูนตามเมาส์ (Dynamic Head & Eye Tracking)
-      const img = document.getElementById(`avatarImg_${studentId}`);
-      if (img) {
-        const moveX = (x / rect.width) * 22;
-        const moveY = (y / rect.height) * 18;
-        const tiltDeg = (x / rect.width) * 12;
-        img.style.transform = `scale(1.22) translate(${moveX}px, ${moveY}px) rotate(${tiltDeg}deg)`;
+      const headImg = document.getElementById(`avatarHead_${studentId}`);
+      if (headImg) {
+        // ขยับศีรษะ x, y และเอียงมุม z ตามตำแหน่งเมาส์
+        const moveX = (x / rect.width) * 16;
+        const moveY = (y / rect.height) * 12;
+        const rotateDeg = (x / rect.width) * 15;
+        headImg.style.transform = `translate(${moveX}px, ${moveY}px) rotate(${rotateDeg}deg) scale(1.08)`;
       }
     }
 
-    function resetTilt(card, studentId) {
-      clearTimeout(hoverOpenTimer);
-      card.style.transform = `perspective(800px) rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale3d(1, 1, 1)`;
-      const img = document.getElementById(`avatarImg_${studentId}`);
-      if (img) {
-        img.style.transform = `scale(1) translate(0px, 0px) rotate(0deg)`;
+    function resetHeadTrack(card, studentId) {
+      const headImg = document.getElementById(`avatarHead_${studentId}`);
+      if (headImg) {
+        headImg.style.transform = 'translate(0px, 0px) rotate(0deg) scale(1)';
       }
     }
 
-    // 3. RADIAL ACTION MODAL (เมนูบอลลูนเด้งรอบตัวนักศึกษา)
+    // 4. RADIAL POPUP ACTION (คลิกแล้วเด้งรอบตัวนักศึกษา)
     function openRadialModal(studentId) {
       const s = GROUP_5_DATA.find(x => x.studentId === studentId);
       if (!s) return;
       selectedRadialStudent = s;
-      const av = getStudentAvatarSrc(s);
-      const fbJson = JSON.stringify(av.fallbackList).replace(/"/g, '&quot;');
+
+      const currentMood = studentMoods[s.studentId] || 'neutral';
+      const parts = getStudentAvatarParts(s, currentMood);
+
       document.getElementById('radialAvatarDisplay').innerHTML = `
-        <img src="${av.defaultImg}" 
-             onerror="handleAvatarImgError(this, ${fbJson})" 
-             class="w-full h-full object-contain p-1">
+        <div class="relative w-24 h-24 mx-auto flex items-center justify-center overflow-visible">
+          <img src="${parts.bodySrc}" class="absolute bottom-0 w-20 h-16 object-contain z-0">
+          <img src="${parts.headSrc}" class="absolute top-0 w-20 h-20 object-contain z-10">
+        </div>
       `;
       document.getElementById('radialStudentId').textContent = s.studentId;
       document.getElementById('radialStudentName').textContent = s.fullName;
@@ -823,12 +1058,19 @@
       document.getElementById('radialModal').classList.add('hidden');
     }
 
-    // บอลลูนเช็คชื่อด่วน
+    // เช็คชื่อด่วน (มาเรียน, สาย, ลาป่วย, ลากิจ, ขาดเรียน, ส่งงานช้า)
     async function quickAttendanceAction(status) {
       if (!selectedRadialStudent) return;
       closeRadialModal();
 
-      Swal.fire({ title: 'กำลังบันทึก...', didOpen: () => Swal.showLoading(), timer: 800 });
+      // ตรวจสอบอารมณ์: ถ้า ขาด หรือ สาย หรือ ส่งงานช้า ให้ร้องไห้ 😢 ถ้า มาตรงเวลา ให้ยิ้ม 😊
+      if (status === 'ขาด' || status === 'สาย' || status === 'ส่งงานช้า') {
+        triggerStudentMood(selectedRadialStudent.studentId, 'cry');
+      } else if (status === 'ตรงเวลา') {
+        triggerStudentMood(selectedRadialStudent.studentId, 'smile');
+      }
+
+      Swal.fire({ title: 'กำลังบันทึก...', didOpen: () => Swal.showLoading(), timer: 600 });
       try {
         const d = await apiPost('checkInAttendance', {
           studentId: selectedRadialStudent.studentId,
@@ -843,27 +1085,284 @@
           badge.className = `px-2.5 py-0.5 rounded-full text-[10px] font-black ${
             status === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' :
             status === 'สาย' ? 'bg-amber-100 text-amber-800 border border-amber-300' :
+            status === 'ส่งงานช้า' ? 'bg-purple-100 text-purple-800 border border-purple-300' :
             'bg-rose-100 text-rose-800 border border-rose-300'
           }`;
         }
+        updateReportDashboard();
       } catch(e) {}
     }
 
-    // ให้คะแนนความดี Hero Score ด่วน
+    // ให้คะแนนความดี Hero Point ด่วน
     async function awardHeroQuick(points) {
       if (!selectedRadialStudent) return;
       closeRadialModal();
 
-      confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
+      // ถ้าได้คะแนนบวก → ยิ้มแย้ม + พลุกระดาษ confetti
+      if (points > 0) {
+        triggerStudentMood(selectedRadialStudent.studentId, 'smile');
+        confetti({ particleCount: 70, spread: 80, origin: { y: 0.6 } });
+      } else {
+        triggerStudentMood(selectedRadialStudent.studentId, 'cry');
+      }
+
       const d = await apiAwardHeroScore(selectedRadialStudent.studentId, points);
       Swal.fire({
-        icon: 'success',
-        title: `+${points} ดาวความดี! ⭐`,
-        text: `มอบให้ ${selectedRadialStudent.name} เรียบร้อยแล้ว`,
+        icon: points > 0 ? 'success' : 'warning',
+        title: points > 0 ? `+${points} ดาวความดี! ⭐` : `${points} คะแนน`,
+        text: `บันทึกคะแนนให้ ${selectedRadialStudent.name} เรียบร้อยแล้ว`,
         timer: 1500,
         showConfirmButton: false
       });
-      loadDashboard();
+
+      // อัปเดตตัวเลขดาวบนการ์ด
+      const starEl = document.getElementById(`starScore_${selectedRadialStudent.studentId}`);
+      if (starEl) {
+        starEl.textContent = Math.max(0, parseInt(starEl.textContent || '10') + points);
+      }
+      updateReportDashboard();
+    }
+
+    // 5. สวิตช์เปิด/ปิดฟังก์ชันระบบ (Feature Flags)
+    function applyFeatureSwitchesUI() {
+      const swWork = document.getElementById('switchWorkSubmit');
+      const swGrading = document.getElementById('switchGrading');
+      const swAtt = document.getElementById('switchAttendance');
+      if (swWork) swWork.checked = systemFeatures.work_submission;
+      if (swGrading) swGrading.checked = systemFeatures.grading;
+      if (swAtt) swAtt.checked = systemFeatures.attendance;
+
+      document.getElementById('statusWorkSubmitLabel').textContent = systemFeatures.work_submission ? 'เปิดรับส่งงานปกติ' : '🔴 ปิดรับส่งงานชั่วคราว';
+      document.getElementById('statusGradingLabel').textContent = systemFeatures.grading ? 'เปิดใช้งานปกติ' : '🔴 ปิดการตรวจชั่วคราว';
+      document.getElementById('statusAttendanceLabel').textContent = systemFeatures.attendance ? 'เปิดเช็คชื่อปกติ' : '🔴 ปิดเช็คชื่อชั่วคราว';
+    }
+
+    function toggleFeatureSetting(key, enabled) {
+      systemFeatures[key] = enabled;
+      localStorage.setItem('nursenote_features', JSON.stringify(systemFeatures));
+      applyFeatureSwitchesUI();
+      Swal.fire({
+        icon: 'info',
+        title: 'อัปเดตสวิตช์ระบบแล้ว',
+        text: `ฟังก์ชัน ${key} ถูกตั้งเป็น: ${enabled ? 'เปิดใช้งาน' : 'ปิดการใช้งาน'}`,
+        timer: 1200,
+        showConfirmButton: false
+      });
+    }
+
+    // 6. ระบบจัดการรายชื่อนักศึกษา (เพิ่ม / แก้ไข / ลบ)
+    function renderStudentManagerTable() {
+      const tbody = document.getElementById('studentManagerTableBody');
+      if (!tbody) return;
+      tbody.innerHTML = GROUP_5_DATA.map((s, idx) => {
+        const isMale = (s.fullName || s.name || "").startsWith("นาย") || s.gender === 'male';
+        return `
+          <tr class="hover:bg-purple-50/50">
+            <td class="p-2.5 text-center font-bold text-slate-500">${idx + 1}</td>
+            <td class="p-2.5 font-mono font-bold text-indigo-700">${s.studentId}</td>
+            <td class="p-2.5 font-bold text-slate-800">${s.fullName}</td>
+            <td class="p-2.5 text-center">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${isMale ? 'bg-sky-100 text-sky-800' : 'bg-pink-100 text-pink-800'}">
+                ${isMale ? '👨🏻‍⚕️ ชาย' : '👩🏻‍⚕️ หญิง'}
+              </span>
+            </td>
+            <td class="p-2.5 text-center font-black text-amber-700">⭐ 10</td>
+            <td class="p-2.5 text-center">
+              <div class="flex items-center justify-center gap-1.5">
+                <button onclick="editStudentAction('${s.studentId}')" class="px-2 py-1 rounded-lg bg-indigo-50 text-indigo-600 hover:bg-indigo-100 font-bold" title="แก้ไข">
+                  <i class="fa-solid fa-pen-to-square"></i>
+                </button>
+                <button onclick="deleteStudentAction('${s.studentId}')" class="px-2 py-1 rounded-lg bg-rose-50 text-rose-600 hover:bg-rose-100 font-bold" title="ลบ">
+                  <i class="fa-solid fa-trash-can"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function openStudentModal(editId = null) {
+      document.getElementById('editStudentOriginalId').value = editId || '';
+      if (editId) {
+        const s = GROUP_5_DATA.find(x => x.studentId === editId);
+        if (s) {
+          document.getElementById('studentModalTitle').innerHTML = '<i class="fa-solid fa-user-pen text-purple-600"></i> แก้ไขข้อมูลนักศึกษา';
+          document.getElementById('modalStudentId').value = s.studentId;
+          document.getElementById('modalStudentFullName').value = s.fullName;
+          document.getElementById('modalStudentNickname').value = s.name;
+        }
+      } else {
+        document.getElementById('studentModalTitle').innerHTML = '<i class="fa-solid fa-user-plus text-purple-600"></i> เพิ่มนักศึกษาใหม่';
+        const nextNum = String(GROUP_5_DATA.length + 9).padStart(2, '0');
+        document.getElementById('modalStudentId').value = `STU-${nextNum}`;
+        document.getElementById('modalStudentFullName').value = '';
+        document.getElementById('modalStudentNickname').value = '';
+      }
+      document.getElementById('studentModal').classList.remove('hidden');
+    }
+
+    function closeStudentModal() {
+      document.getElementById('studentModal').classList.add('hidden');
+    }
+
+    function saveStudentFromModal() {
+      const origId = document.getElementById('editStudentOriginalId').value.trim();
+      const studentId = document.getElementById('modalStudentId').value.trim().toUpperCase();
+      const fullName = document.getElementById('modalStudentFullName').value.trim();
+      const name = document.getElementById('modalStudentNickname').value.trim() || fullName.split(' ')[0];
+
+      if (!studentId || !fullName) {
+        Swal.fire({ icon: 'warning', title: 'กรุณากรอกข้อมูล', text: 'ต้องระบุรหัสนักศึกษาและชื่อ-นามสกุล' });
+        return;
+      }
+
+      const isMale = fullName.startsWith('นาย');
+      const colors = ['from-pink-400 to-rose-300', 'from-amber-400 to-yellow-300', 'from-purple-400 to-pink-300', 'from-emerald-400 to-teal-300', 'from-sky-400 to-blue-300', 'from-indigo-400 to-purple-300'];
+      const randomColor = colors[Math.floor(Math.random() * colors.length)];
+
+      if (origId) {
+        // อัปเดตคนเดิม
+        const idx = GROUP_5_DATA.findIndex(x => x.studentId === origId);
+        if (idx !== -1) {
+          GROUP_5_DATA[idx] = { studentId, name, fullName, gender: isMale ? 'male' : 'female', color: GROUP_5_DATA[idx].color || randomColor };
+        }
+      } else {
+        // เพิ่มคนใหม่
+        GROUP_5_DATA.push({
+          studentId,
+          name,
+          fullName,
+          gender: isMale ? 'male' : 'female',
+          color: randomColor
+        });
+      }
+
+      localStorage.setItem('nursenote_group5_students', JSON.stringify(GROUP_5_DATA));
+      closeStudentModal();
+      renderAvatarGrid();
+      renderStudentManagerTable();
+      initTeamMembersDropdown();
+      updateReportDashboard();
+
+      Swal.fire({ icon: 'success', title: 'บันทึกเรียบร้อย', timer: 1200, showConfirmButton: false });
+    }
+
+    function editStudentAction(studentId) {
+      openStudentModal(studentId);
+    }
+
+    function deleteStudentAction(studentId) {
+      const s = GROUP_5_DATA.find(x => x.studentId === studentId);
+      if (!s) return;
+      Swal.fire({
+        icon: 'warning',
+        title: 'ยืนยันการลบ?',
+        text: `ต้องการลบรายชื่อ ${s.fullName} หรือไม่?`,
+        showCancelButton: true,
+        confirmButtonColor: '#e11d48',
+        confirmButtonText: 'ลบรายชื่อ',
+        cancelButtonText: 'ยกเลิก'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          GROUP_5_DATA = GROUP_5_DATA.filter(x => x.studentId !== studentId);
+          localStorage.setItem('nursenote_group5_students', JSON.stringify(GROUP_5_DATA));
+          renderAvatarGrid();
+          renderStudentManagerTable();
+          initTeamMembersDropdown();
+          updateReportDashboard();
+          Swal.fire({ icon: 'success', title: 'ลบรายชื่อแล้ว', timer: 1200, showConfirmButton: false });
+        }
+      });
+    }
+
+    // 7. หน้ารายงานสรุปผล และพิมพ์ PDF (Ward Performance Report)
+    function updateReportDashboard() {
+      const dateStr = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
+      const hdr = document.getElementById('reportHeaderDate');
+      if (hdr) hdr.textContent = `ประจำวันที่ ${dateStr} • วิชาการพยาบาลผู้ใหญ่และผู้สูงอายุ (วพบ. ชัยนาท)`;
+
+      const totStu = document.getElementById('rptTotalStudents');
+      if (totStu) totStu.textContent = `${GROUP_5_DATA.length} คน`;
+
+      // ตารางนักศึกษาในหน้ารายงาน
+      const tbody = document.getElementById('rptStudentsTableBody');
+      if (tbody) {
+        tbody.innerHTML = GROUP_5_DATA.map((s, idx) => {
+          const badgeEl = document.getElementById(`attBadge_${s.studentId}`);
+          const statusText = badgeEl ? badgeEl.textContent.trim() : '✔️ มาเรียน';
+          return `
+            <tr class="hover:bg-amber-50/40">
+              <td class="p-2 text-center font-bold text-slate-500">${idx + 1}</td>
+              <td class="p-2 font-mono font-bold text-indigo-700">${s.studentId}</td>
+              <td class="p-2 font-bold text-slate-800">${s.fullName}</td>
+              <td class="p-2 text-center font-bold text-slate-700">${statusText}</td>
+              <td class="p-2 text-center text-emerald-700 font-black">ผ่านแล้ว</td>
+              <td class="p-2 text-center font-black text-amber-600">⭐ 10</td>
+              <td class="p-2 text-center font-black text-slate-900">92 / 100</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      // นับตัวเลขสถิติภาพรวม
+      let passedCount = 0;
+      let revisionCount = 0;
+      let lateAttCount = 0;
+      let lateWorkCount = 0;
+
+      GROUP_5_DATA.forEach(s => {
+        const badgeEl = document.getElementById(`attBadge_${s.studentId}`);
+        if (badgeEl) {
+          const txt = badgeEl.textContent.trim();
+          if (txt.includes('สาย')) lateAttCount++;
+          if (txt.includes('ลา') || txt.includes('ป่วย')) lateAttCount++;
+          if (txt.includes('ส่งช้า') || txt.includes('ส่งงานช้า')) lateWorkCount++;
+          if (txt.includes('มาเรียน') || txt.includes('ตรงเวลา')) passedCount++;
+        }
+      });
+
+      const stRev = document.getElementById('statRevisionCount');
+      if (stRev) stRev.textContent = revisionCount;
+      const stLateW = document.getElementById('statLateWorkCount');
+      if (stLateW) stLateW.textContent = lateWorkCount;
+      const stLateA = document.getElementById('statLateAttCount');
+      if (stLateA) stLateAttCount = lateAttCount;
+      const stPass = document.getElementById('statPassedCount');
+      if (stPass) stPass.textContent = GROUP_5_DATA.length;
+
+      const rptP = document.getElementById('rptPassedWorks');
+      if (rptP) rptP.textContent = `${GROUP_5_DATA.length} งาน`;
+      const rptR = document.getElementById('rptRevisionWorks');
+      if (rptR) rptR.textContent = `${revisionCount} งาน`;
+      const rptA = document.getElementById('rptAbnormalAtt');
+      if (rptA) rptA.textContent = `${lateAttCount + lateWorkCount} ครั้ง`;
+    }
+
+    function refreshReportData() {
+      updateReportDashboard();
+      Swal.fire({ icon: 'success', title: 'รีเฟรชข้อมูลแล้ว', timer: 800, showConfirmButton: false });
+    }
+
+    function exportReportToPDF() {
+      const element = document.getElementById('printableReportArea');
+      if (!element) return;
+      Swal.fire({ title: 'กำลังสร้างไฟล์ PDF...', didOpen: () => Swal.showLoading() });
+
+      const opt = {
+        margin: [10, 10, 10, 10],
+        filename: `Nursenote_Ward_Report_${new Date().toISOString().slice(0,10)}.pdf`,
+        image: { type: 'jpeg', quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' }
+      };
+
+      html2pdf().set(opt).from(element).save().then(() => {
+        Swal.fire({ icon: 'success', title: 'ดาวน์โหลด PDF สำเร็จแล้ว!', timer: 1500, showConfirmButton: false });
+      }).catch(err => {
+        window.print();
+        Swal.close();
+      });
     }
 
     // 4. ระบบสุ่มแบ่งทีม / จัดกลุ่ม (TEAM BATTLE VS แบบรูปที่ 5)
@@ -1159,5 +1658,45 @@
       });
     }
   </script>
+
+  <!-- ================= 4. MODAL เพิ่ม / แก้ไขรายชื่อนักศึกษา ================= -->
+  <div id="studentModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-[36px] max-w-sm w-full p-6 space-y-4 shadow-2xl border-4 border-purple-200 anim-pop">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 class="text-base font-black text-slate-800 flex items-center gap-1.5" id="studentModalTitle">
+          <i class="fa-solid fa-user-pen text-purple-600"></i> เพิ่มนักศึกษาใหม่
+        </h3>
+        <button onclick="closeStudentModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold hover:bg-slate-200">✕</button>
+      </div>
+
+      <input type="hidden" id="editStudentOriginalId" value="">
+
+      <div class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">รหัสนักศึกษา (เช่น STU-17)</label>
+          <input type="text" id="modalStudentId" placeholder="STU-17" class="w-full border rounded-xl p-2.5 bg-slate-50 font-bold outline-none focus:border-purple-500">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">คำนำหน้าและชื่อ-นามสกุล (เช่น นายกิตติศักดิ์ หรือ นางสาวพิมพ์ใจ)</label>
+          <input type="text" id="modalStudentFullName" placeholder="นางสาวพิมพ์ใจ สุขสวัสดิ์ (แพม)" class="w-full border rounded-xl p-2.5 bg-slate-50 font-bold outline-none focus:border-purple-500">
+          <p class="text-[10px] text-slate-400 mt-1">* หากขึ้นต้นด้วย "นาย" ระบบจะใช้รูปอวาตาร์ผู้ชาย หาก "นางสาว/นาง" จะใช้รูปผู้หญิง</p>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">ชื่อเล่น (แสดงบนการ์ด)</label>
+          <input type="text" id="modalStudentNickname" placeholder="พิมพ์ใจ (แพม)" class="w-full border rounded-xl p-2.5 bg-slate-50 font-bold outline-none focus:border-purple-500">
+        </div>
+      </div>
+
+      <div class="pt-2 flex gap-2">
+        <button onclick="saveStudentFromModal()" class="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-black rounded-xl shadow-md transition">
+          บันทึกข้อมูล
+        </button>
+        <button onclick="closeStudentModal()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition">
+          ยกเลิก
+        </button>
+      </div>
+    </div>
+  </div>
+
 </body>
 </html>
