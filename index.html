@@ -401,13 +401,23 @@
       try {
         let d;
         if (window.NurseSupabase && NurseSupabase.enabled) {
-          const client = await NurseSupabase.init();
-          const result = await client.auth.signInWithOtp({
-            email: email,
-            options: { shouldCreateUser: true, emailRedirectTo: window.location.href.split('?')[0] }
-          });
-          if (result.error) throw result.error;
-          d = { success: true };
+          try {
+            const client = await NurseSupabase.init();
+            const result = await client.auth.signInWithOtp({
+              email: email,
+              options: { shouldCreateUser: true, emailRedirectTo: window.location.href.split('?')[0] }
+            });
+            if (result.error) throw result.error;
+            d = { success: true };
+          } catch (supabaseError) {
+            // Keep the existing login available while Supabase email settings are being completed.
+            d = await fetchJson(API_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({ action: 'requestOTP', data: { email: email } })
+            });
+            if (!d.success) throw new Error(supabaseError.message || d.message);
+          }
         } else {
           d = await fetchJson(API_URL, {
             method: 'POST',
@@ -428,7 +438,7 @@
           Swal.fire({ icon: 'error', title: d.message });
         }
       } catch(e) {
-        Swal.fire({ icon: 'error', title: 'การเชื่อมต่อขัดข้อง ไม่สามารถส่งอีเมลได้' });
+        Swal.fire({ icon: 'error', title: 'ส่ง OTP ไม่สำเร็จ', text: e.message || 'กรุณาลองใหม่อีกครั้ง' });
       } finally {
         btn.disabled = false;
         btn.innerText = "ส่งรหัส OTP ไปยังอีเมล";
@@ -450,13 +460,22 @@
       try {
         let d;
         if (window.NurseSupabase && NurseSupabase.enabled) {
-          const client = await NurseSupabase.init();
-          const result = await client.auth.verifyOtp({ email: pendingLoginEmail, token: otp, type: 'email' });
-          if (result.error) throw result.error;
-          const session = result.data && result.data.session;
-          if (!session) throw new Error('ไม่พบ session จาก Supabase');
-          await syncSupabaseSession();
-          d = { success: true, token: session.access_token };
+          try {
+            const client = await NurseSupabase.init();
+            const result = await client.auth.verifyOtp({ email: pendingLoginEmail, token: otp, type: 'email' });
+            if (result.error) throw result.error;
+            const session = result.data && result.data.session;
+            if (!session) throw new Error('ไม่พบ session จาก Supabase');
+            await syncSupabaseSession();
+            d = { success: true, token: session.access_token };
+          } catch (supabaseError) {
+            d = await fetchJson(API_URL, {
+              method: 'POST',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: JSON.stringify({ action: 'verifyOTP', data: { email: pendingLoginEmail, otp: otp } })
+            });
+            if (!d.success) throw new Error(supabaseError.message || d.message);
+          }
         } else {
           d = await fetchJson(API_URL, {
             method: 'POST',
@@ -481,7 +500,7 @@
           Swal.fire({ icon: 'error', title: d.message || 'ยืนยันไม่สำเร็จ' });
         }
       } catch(e) {
-        Swal.fire({ icon: 'error', title: 'การตรวจสอบล้มเหลว' });
+        Swal.fire({ icon: 'error', title: 'ยืนยัน OTP ไม่สำเร็จ', text: e.message || 'กรุณาลองใหม่อีกครั้ง' });
       } finally {
         btn.disabled = false;
         btn.innerText = "ยืนยันรหัส OTP เพื่อเข้าใช้งาน";
