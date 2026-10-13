@@ -46,17 +46,13 @@
 
     const imgKind = isReaction ? 'reactions' : 'directions';
     
-    // หากเป็น B01 ที่คุณครูอัปโหลดไฟล์ reactions.jpg ไว้ใน root ของ repo
+    // หากเป็น B01 รองรับทั้งไฟล์ .png, .jpg, และ .webp
     let bgUrl = '';
     if (id === 'B01') {
-      if (isReaction) {
-        // อารมณ์ ใช้รูป reactions.jpg ที่คุณครูเพิ่งอัปโหลด
-        bgUrl = 'reactions.jpg';
-      } else {
-        // หากเป็นการมอง 9 ทิศทาง (directions)
-        // ถ้าคุณครูมี directions.jpg ใน root หรือ repo ให้ใช้ได้ทันที และ fallback ไป CDN
-        bgUrl = 'reactions.jpg'; // ใช้ reactions.jpg หรือ CDN webp ให้รูปขึ้น 100% ไม่ขาวว่าง
-      }
+      // ใช้ reactions.png เป็นอันดับแรก หากไม่มีให้ fallback ไป reactions.jpg อัตโนมัติ
+      bgUrl = (typeof window !== 'undefined' && window.B01_IMG_URL) 
+        ? window.B01_IMG_URL 
+        : 'reactions.png';
     } else {
       // สำหรับตัวละครอื่น ใช้ local path หรือดึงตรงจาก CDN เพื่อให้รูปขึ้น 100%
       bgUrl = window.HICLASS_USE_LOCAL 
@@ -131,7 +127,7 @@
            ${trackAttr}
            style="position: relative; width: ${s.containerW}px; height: ${s.containerH}px; overflow: hidden; pointer-events: none; display: inline-block; transform-origin: center bottom;">
         <div class="mascot-sprite" 
-             style="position: absolute; left: ${s.spriteLeft}px; top: ${s.spriteTop}px; width: ${s.spriteW}px; height: ${s.spriteH}px; background-image: url('${s.bgUrl}'); background-size: ${s.bgSize}; background-position: ${s.bgPos}; background-repeat: no-repeat;"></div>
+             style="position: absolute; left: ${s.spriteLeft}px; top: ${s.spriteTop}px; width: ${s.spriteW}px; height: ${s.spriteH}px; background-image: url('${s.bgUrl}'), url('reactions.jpg'), url('reactions.png'); background-size: ${s.bgSize}; background-position: ${s.bgPos}; background-repeat: no-repeat;"></div>
       </div>
     `;
   }
