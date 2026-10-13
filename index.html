@@ -1,524 +1,237 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-  <title>Nursenote</title>
-  
-  <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/d/1jXMKdfbvsGFMhH2jQq0prKrGASVwnHhq">
-  <meta name="mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#dbeafe">
-
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com">
-  <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
-  <style>
-    * { 
-      font-family: 'Prompt', -apple-system, BlinkMacSystemFont, sans-serif !important; 
-      box-sizing: border-box; 
-      -webkit-tap-highlight-color: transparent; 
-    }
-
-    body {
-      background: radial-gradient(circle at 10% 18%, #cbe5fc 0%, #ded7fc 38%, #f7d8fc 72%, #fde4f3 100%);
-      min-height: 100vh;
-      color: #1e293b;
-      overflow-x: hidden;
-    }
-
-    .top-header-glass {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
-      border-radius: 40px;
-      border: 2px solid rgba(255, 255, 255, 1);
-      box-shadow: 0 16px 36px -10px rgba(99, 102, 241, 0.12);
-    }
-
-    .hero-rank-clay {
-      background: linear-gradient(135deg, #2b226e 0%, #1f1b4f 55%, #342d79 100%);
-      border-radius: 40px;
-      border: 2px solid rgba(255, 255, 255, 0.28);
-      box-shadow: 0 24px 48px -10px rgba(28, 24, 76, 0.55);
-    }
-
-    .exp-track {
-      background: #110e35;
-      box-shadow: inset 0 3px 6px rgba(0, 0, 0, 0.7);
-    }
-    .exp-neon-fill {
-      background: linear-gradient(90deg, #00d2ff 0%, #00f2fe 50%, #4facfe 100%);
-      box-shadow: 0 0 16px #00f2fe;
-    }
-
-    /* ตัวการ์ดสี่เหลี่ยมมน Squircle */
-    .squircle-card {
-      border-radius: 38px;
-      background: #ffffff;
-      border: 2px solid rgba(255, 255, 255, 0.95);
-      box-shadow: 0 16px 32px -8px rgba(99, 102, 241, 0.12);
-      transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
-    }
-    .squircle-card:hover { transform: translateY(-6px); }
-    .squircle-card:active { transform: scale(0.96); }
-
-    /* แท่นจัดวางรูปภาพ: เพิ่มความสูงและจัดกลาง */
-    .icon-stage-large {
-      width: 100%;
-      height: 125px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      overflow: hidden;
-      border-radius: 32px 32px 14px 14px;
-      position: relative;
-    }
-    @media (min-width: 640px) { 
-      .icon-stage-large { height: 140px; } 
-    }
-
-    /* 🔥 ลบพื้นหลังสีขาว-เทาออก 100% พร้อมขยายขนาดใหญ่ชิดขอบมน */
-    .clean-3d-img {
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      mix-blend-mode: multiply;
-      filter: contrast(125%) brightness(105%) saturate(108%);
-      transform: scale(1.35);
-      transition: transform 0.25s ease;
-    }
-    .squircle-card:hover .clean-3d-img { 
-      transform: scale(1.42); 
-    }
-
-    .bottom-bar {
-      background: rgba(255, 255, 255, 0.95);
-      backdrop-filter: blur(28px);
-      -webkit-backdrop-filter: blur(28px);
-      border: 2px solid rgba(255, 255, 255, 0.98);
-      box-shadow: 0 20px 42px -10px rgba(79, 70, 229, 0.22);
-    }
-
-    @keyframes floatChick {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-3px); }
-    }
-    .anim-chick { animation: floatChick 2.5s ease-in-out infinite; }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>เข้าเวร | Nursenote</title>
+<meta name="theme-color" content="#dbeafe">
+<script src="https://cdn.tailwindcss.com"></script>
+<link href="https://fonts.googleapis.com/css2?family=Prompt:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/dist/face-api.js"></script>
+<style>
+*{font-family:'Prompt',sans-serif!important;-webkit-tap-highlight-color:transparent}
+body{background:radial-gradient(circle at 10% 18%,#cbe5fc 0%,#ded7fc 38%,#f7d8fc 72%,#fde4f3 100%);min-height:100vh;color:#1e293b}
+.card{background:#fff;border-radius:32px;box-shadow:0 16px 32px -8px rgba(99,102,241,.14)}
+.cam{position:relative;aspect-ratio:3/4;max-height:62vh;margin:auto;border-radius:36px;overflow:hidden;background:#110e35}
+.cam video{width:100%;height:100%;object-fit:cover;transform:scaleX(-1)}
+.oval{position:absolute;inset:12% 17%;border:4px dashed rgba(255,255,255,.75);border-radius:50%;transition:.3s}
+.oval.ok{border:4px solid #34d399;box-shadow:0 0 28px #34d399}
+.oval.bad{border-color:#f87171}
+.pulse{animation:p 1.2s infinite}@keyframes p{50%{opacity:.45}}
+@media(prefers-reduced-motion:reduce){.pulse{animation:none}}
+</style>
 </head>
-<body class="flex flex-col justify-between items-center min-h-screen p-3.5 sm:p-6 md:p-8 select-none pb-28">
+<body class="p-3.5 sm:p-6 pb-10">
+<div class="max-w-md mx-auto space-y-3.5">
 
-  <div class="w-full max-w-5xl mx-auto space-y-4">
-
-    <!-- 1. แถบโปรไฟล์ Nursenote ด้านบน -->
-    <div class="top-header-glass p-3.5 sm:p-5 flex flex-col sm:flex-row items-center justify-between gap-3 relative">
-      
-      <!-- 🛡️ ปุ่ม Admin ลับมุมบน (แสดงเฉพาะอาจารย์ นันตพร) -->
-      <button onclick="openAdminSettingsModal()" id="btnAdminShield" title="แผงควบคุมระบบ (Admin)" 
-              class="hidden absolute top-2.5 right-3 w-8 h-8 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-600 hover:bg-indigo-600 hover:text-white flex items-center justify-center transition active:scale-95 shadow-xs">
-        <svg class="w-4 h-4 fill-current" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
-      </button>
-
-      <div class="flex items-center space-x-3.5 w-full sm:w-auto">
-        <div class="w-13 h-13 sm:w-14 sm:h-14 rounded-2xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white flex items-center justify-center font-black text-xs sm:text-sm tracking-tight shadow-md shrink-0 p-1 text-center leading-none" id="userInitialBox">
-          NURSE<br>NOTE
-        </div>
-        <div class="min-w-0 flex-1">
-          <div class="text-sm sm:text-base font-black text-slate-800 tracking-tight truncate" id="dispUserName">
-            ผู้ใช้งานทั่วไป (ยังไม่เข้าสู่ระบบ)
-          </div>
-          <div class="flex items-center gap-1.5 text-xs text-slate-500 font-semibold mt-0.5">
-            <span class="w-2.5 h-2.5 rounded-full bg-slate-400" id="userStatusDot"></span>
-            <span id="dispUserYear">Nursenote • กรุณาเข้าสู่ระบบด้วยเมลวิทยาลัย</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="flex items-center justify-between sm:justify-end w-full sm:w-auto gap-2.5">
-        <button onclick="handleAuthClick()" id="btnAuthTrigger" class="px-4 py-2 sm:py-2.5 rounded-full bg-gradient-to-r from-sky-400 to-blue-600 hover:opacity-95 text-white text-xs font-bold shadow-md shadow-sky-500/25 flex items-center gap-1.5 active:scale-95 transition">
-          <svg class="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24"><path d="M19.35 10.04C18.67 6.59 15.64 4 12 4 9.11 4 6.6 5.64 5.35 8.04 2.34 8.36 0 10.91 0 14c0 3.31 2.69 6 6 6h13c2.76 0 5-2.24 5-5 0-2.64-2.05-4.78-4.65-4.96zM14 13v4h-4v-4H7l5-5 5 5h-3z"/></svg>
-          <span id="btnAuthText">เข้าสู่ระบบ (เมลวิทยาลัย)</span>
-        </button>
-        <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-900 border border-amber-200/80 text-[11px] font-black">
-          V2.1.0
-        </span>
-      </div>
-    </div>
-
-    <!-- 2. แถบเลเวลและแถบหมวกพยาบาล (Rank & EXP) -->
-    <div class="hero-rank-clay p-4 text-white space-y-3 relative overflow-hidden">
-      <div class="flex items-center justify-between">
-        <div class="flex items-center space-x-3">
-          <div class="w-11 h-11 rounded-2xl bg-white/10 flex items-center justify-center text-2xl anim-chick shadow-inner">
-            🐣
-          </div>
-          <div>
-            <div class="text-xs sm:text-sm font-black text-amber-300 tracking-wide">
-              Rank : หมวกขาวล้วน (Lv.1)
-            </div>
-            <div class="text-[11px] sm:text-xs text-indigo-200 font-medium">
-              น้องพยาบาลฝึกหัด (Pre-Clinic)
-            </div>
-          </div>
-        </div>
-
-        <div class="flex items-center gap-2 bg-[#120f38] px-3.5 py-1.5 rounded-full border border-white/20 shadow-inner">
-          <div class="w-4 h-4 rounded-full bg-gradient-to-tr from-amber-500 to-yellow-300 flex items-center justify-center text-[9px] text-amber-950 font-black">
-            🪙
-          </div>
-          <svg class="w-4 h-4 cursor-pointer hover:rotate-90 transition-transform" viewBox="0 0 24 24">
-            <defs>
-              <linearGradient id="gearRainbow" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stop-color="#22d3ee" />
-                <stop offset="50%" stop-color="#a855f7" />
-                <stop offset="100%" stop-color="#f43f5e" />
-              </linearGradient>
-            </defs>
-            <path fill="url(#gearRainbow)" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.09.63-.09.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
-          </svg>
-        </div>
-      </div>
-
-      <div class="space-y-1">
-        <div class="flex justify-between items-center text-[10px] font-bold text-indigo-200">
-          <span>ความก้าวหน้าสู่แถบหมวกขั้นถัดไป</span>
-          <span id="expText" class="font-mono">0 / 150 EXP</span>
-        </div>
-        <div class="w-full h-3 exp-track rounded-full p-0.5 border border-white/15 overflow-hidden">
-          <div class="exp-neon-fill h-full rounded-full transition-all duration-700" style="width: 55%;"></div>
-        </div>
-      </div>
-    </div>
-
-    <!-- 3. กริดไอคอนเมนู 5 ช่องเดิมของ NURSENOTE (ภาพขยายใหญ่ ตัดพื้นขาว ชิดขอบมน) -->
-    <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3.5 sm:gap-4 pt-1">
-
-      <!-- เมนู 1: ฝึกปฏิบัติบนวอร์ด -->
-      <div onclick="navigateTo('practicum.html')" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px] sm:min-h-[210px]">
-        <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-emerald-600 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
-          ปี 2-3-4
-        </span>
-        <div class="icon-stage-large">
-          <img src="icon-practicum.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/865/865969.png';" alt="ฝึกปฏิบัติบนวอร์ด" class="clean-3d-img">
-        </div>
-        <div class="w-full mt-2">
-          <div class="text-xs sm:text-sm font-black text-slate-800 truncate">ฝึกปฏิบัติบนวอร์ด</div>
-          <div class="text-[10px] text-emerald-600 font-bold mt-0.5 flex items-center justify-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-emerald-500"></span> Care Plan/เวร
-          </div>
-        </div>
-      </div>
-
-      <!-- เมนู 2: คลังข้อสอบสภาฯ -->
-      <div onclick="navigateTo('exam.html')" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px] sm:min-h-[210px]">
-        <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-amber-500 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
-          8 วิชา
-        </span>
-        <div class="icon-stage-large">
-          <img src="icon-exam.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/2997/2997295.png';" alt="คลังข้อสอบสภาฯ" class="clean-3d-img">
-        </div>
-        <div class="w-full mt-2">
-          <div class="text-xs sm:text-sm font-black text-slate-800 whitespace-nowrap">คลังข้อสอบสภาฯ</div>
-          <div class="text-[10px] text-amber-600 font-bold mt-0.5 flex items-center justify-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-amber-500"></span> ข้อสอบเสมือน
-          </div>
-        </div>
-      </div>
-
-      <!-- เมนู 3: เว็บวิทยาลัย -->
-      <a href="https://www.bcnchainat.ac.th" target="_blank" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative min-h-[195px] sm:min-h-[210px]">
-        <div class="icon-stage-large">
-          <img src="icon-web.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1006/1006771.png';" alt="เว็บวิทยาลัย" class="clean-3d-img">
-        </div>
-        <div class="w-full mt-2">
-          <div class="text-xs sm:text-sm font-black text-slate-800 truncate">เว็บวิทยาลัย</div>
-          <div class="text-[10px] text-teal-600 font-bold mt-0.5 flex items-center justify-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-teal-500"></span> EXT
-          </div>
-        </div>
-      </a>
-
-      <!-- เมนู 4: FONMIS -->
-      <a href="https://fonmis.bcnchainat.ac.th" target="_blank" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative min-h-[195px] sm:min-h-[210px]">
-        <div class="icon-stage-large">
-          <img src="icon-fonmis.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/1802/1802977.png';" alt="FONMIS" class="clean-3d-img">
-        </div>
-        <div class="w-full mt-2">
-          <div class="text-xs sm:text-sm font-black text-slate-800 truncate">FONMIS</div>
-          <div class="text-[10px] text-indigo-600 font-bold mt-0.5 flex items-center justify-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-indigo-500"></span> EXT
-          </div>
-        </div>
-      </a>
-
-      <!-- เมนู 5: เข้าเวร/GPS -->
-      <div onclick="navigateTo('attendance.html')" class="squircle-card p-3.5 sm:p-4 flex flex-col items-center justify-between text-center relative cursor-pointer min-h-[195px] sm:min-h-[210px] col-span-2 sm:col-span-1">
-        <span class="absolute top-2.5 right-2.5 px-2 py-0.5 rounded-full bg-purple-700 text-white font-black text-[9px] tracking-wider shadow-xs z-10">
-          AUTH
-        </span>
-        <div class="icon-stage-large">
-          <img src="icon-attendance.jpg" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3064/3064155.png';" alt="เข้าเวร/GPS" class="clean-3d-img">
-        </div>
-        <div class="w-full mt-2">
-          <div class="text-xs sm:text-sm font-black text-slate-800 truncate">เข้าเวร/GPS</div>
-          <div class="text-[10px] text-purple-600 font-bold mt-0.5 flex items-center justify-center gap-1">
-            <span class="w-1.5 h-1.5 rounded-full bg-purple-500"></span> เรียลไทม์
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-  </div>
-
-  <!-- 4. แถบเมนูลอยล่างสุด -->
-  <div class="fixed bottom-3 inset-x-0 mx-auto w-full max-w-[340px] px-2 z-40">
-    <nav class="bottom-bar rounded-full px-5 py-2 flex justify-between items-center shadow-xl">
-      <button onclick="window.location.reload()" class="flex flex-col items-center text-blue-600 font-bold text-[10px] group transition">
-        <div class="w-8 h-8 rounded-full bg-blue-100 flex items-center justify-center mb-0.5 shadow-2xs group-hover:scale-110 transition">
-          <svg class="w-4 h-4 fill-blue-600" viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>
-        </div>
-        <span>หน้าแรก</span>
-      </button>
-
-      <button onclick="navigateTo('exam.html')" class="flex flex-col items-center text-slate-400 hover:text-slate-700 font-medium text-[10px] group transition">
-        <div class="w-8 h-8 rounded-full flex items-center justify-center mb-0.5 group-hover:bg-slate-100 transition">
-          <svg class="w-4 h-4 fill-slate-500" viewBox="0 0 24 24"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04c.39-.39.39-1.02 0-1.41l-2.34-2.34c-.39-.39-1.02-.39-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z"/></svg>
-        </div>
-        <span>คลังข้อสอบ</span>
-      </button>
-
-      <button onclick="navigateTo('practicum.html')" class="flex flex-col items-center text-slate-400 hover:text-slate-700 font-medium text-[10px] group transition">
-        <div class="w-8 h-8 rounded-full flex items-center justify-center mb-0.5 group-hover:bg-slate-100 transition">
-          <svg class="w-4 h-4 fill-slate-500" viewBox="0 0 24 24"><path d="M19 8c-1.66 0-3 1.34-3 3 0 .55.15 1.07.41 1.51L14.59 14.34C13.82 13.51 12.72 13 11.5 13H10v-3h1c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2s-2 .9-2 2v4c0 1.1.9 2 2 2h1v3H9.5c-1.22 0-2.32.51-3.09 1.34L4.59 12.51C4.85 12.07 5 11.55 5 11c0-1.66-1.34-3-3-3s-3 1.34-3 3 1.34 3 3 3c.55 0 1.07-.15 1.51-.41l1.82 1.82C6.15 16.03 7.74 17 9.5 17h5c1.76 0 3.35-.97 4.17-2.59l1.82-1.82c.44.26.96.41 1.51.41 1.66 0 3-1.34 3-3s-1.34-3-3-3z"/></svg>
-        </div>
-        <span>วอร์ดฝึก</span>
-      </button>
-
-      <button onclick="handleAuthClick()" class="flex flex-col items-center text-slate-400 hover:text-slate-700 font-medium text-[10px] group transition">
-        <div class="w-8 h-8 rounded-full flex items-center justify-center mb-0.5 group-hover:bg-slate-100 transition">
-          <svg class="w-4 h-4 fill-slate-500" viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
-        </div>
-        <span>บัญชี</span>
-      </button>
-    </nav>
-  </div>
-
-  <!-- ================= 5. MODAL ระบบยืนยันตัวตน OTP ทางอีเมลวิทยาลัย ================= -->
-  <div id="loginModal" class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-[38px] max-w-sm w-full p-6 sm:p-7 text-center space-y-4 shadow-2xl border border-white">
-      <div class="w-16 h-16 mx-auto rounded-3xl bg-blue-600 text-white flex items-center justify-center text-3xl shadow-lg shadow-blue-500/30">
-        <svg class="w-8 h-8 fill-white" viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z"/></svg>
-      </div>
-
-      <div>
-        <h3 class="text-lg font-black text-slate-900">เข้าสู่ระบบ Nursenote</h3>
-        <p class="text-xs text-slate-500 mt-1">ยืนยันรหัส OTP ผ่านอีเมลวิทยาลัยพยาบาลบรมราชชนนี ชัยนาท</p>
-      </div>
-
-      <!-- ขั้นที่ 1: กรอกอีเมลวิทยาลัยเพื่อขอรับรหัส OTP -->
-      <div id="stepEmailSection" class="space-y-3 text-left">
-        <div>
-          <label class="block text-[11px] font-bold text-slate-600 mb-1 ml-1">อีเมลวิทยาลัย (@bcnchainat.ac.th)</label>
-          <input type="email" id="inputUserEmail" placeholder="username@bcnchainat.ac.th" class="w-full border rounded-2xl p-3 text-xs font-semibold bg-slate-50 outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-        <button onclick="handleRequestOtp()" id="btnSendOtp" class="w-full py-3 bg-gradient-to-r from-blue-600 to-indigo-600 hover:opacity-95 text-white font-bold rounded-2xl text-xs shadow-md shadow-blue-500/25 transition">
-          ส่งรหัส OTP ไปยังอีเมล
-        </button>
-      </div>
-
-      <!-- ขั้นที่ 2: กรอกรหัส 6 หลักจากอีเมลจริง -->
-      <div id="stepOtpSection" class="space-y-3 text-left hidden">
-        <div>
-          <div class="flex justify-between items-center mb-1 ml-1">
-            <label class="text-[11px] font-bold text-slate-600">รหัสยืนยัน OTP (6 หลัก)</label>
-            <span class="text-[10px] text-blue-600 font-semibold cursor-pointer" onclick="backToEmailStep()">เปลี่ยนอีเมล</span>
-          </div>
-          <input type="text" id="inputOtpCode" maxlength="6" placeholder="123456" class="w-full border rounded-2xl p-3 text-center text-lg font-black tracking-widest bg-slate-50 outline-none focus:ring-2 focus:ring-emerald-500">
-          <p class="text-[10px] text-slate-400 mt-1 ml-1">*รหัสถูกส่งไปยังกล่องข้อความอีเมลของท่านแล้ว</p>
-        </div>
-        <button onclick="handleVerifyOtp()" id="btnConfirmOtp" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-95 text-white font-bold rounded-2xl text-xs shadow-md shadow-emerald-500/25 transition">
-          ยืนยันรหัส OTP เพื่อเข้าใช้งาน
-        </button>
-      </div>
-
-      <button onclick="closeLoginModal()" class="text-xs text-slate-400 hover:text-slate-600 font-semibold block w-full pt-1">
-        ยกเลิก
-      </button>
+  <div class="flex items-center gap-3">
+    <a href="index.html" class="w-11 h-11 rounded-full bg-white shadow flex items-center justify-center" aria-label="กลับหน้าแรก">
+      <svg class="w-5 h-5" viewBox="0 0 24 24" fill="#4f46e5"><path d="M15.4 7.4 14 6l-6 6 6 6 1.4-1.4L10.8 12z"/></svg>
+    </a>
+    <div class="min-w-0">
+      <h1 class="text-lg font-extrabold leading-tight">เข้าเวร / ออกเวร</h1>
+      <p id="who" class="text-xs text-slate-500 truncate">กำลังตรวจสอบบัญชี…</p>
     </div>
   </div>
 
-  <!-- SCRIPT LOGIC (OTP REAL EMAIL VERIFICATION) -->
-  <script>
-    const API_URL = "https://script.google.com/macros/s/AKfycbygTRS3dp8WQkGKpiRxKbsDdDjfQUAeZnHwid6PTX3ABskdSbQdbEBch7dkia3UlaSJ/exec";
-    const SOLE_ADMIN_EMAIL = "nuntabhorn@bcnchainat.ac.th";
-    let pendingLoginEmail = "";
+  <!-- สถานะ GPS -->
+  <div class="card p-4 flex items-center gap-3">
+    <div id="gpsIco" class="w-11 h-11 rounded-2xl bg-slate-100 flex items-center justify-center shrink-0">
+      <svg class="w-6 h-6" viewBox="0 0 24 24" fill="#64748b"><path d="M12 2a7 7 0 0 0-7 7c0 5.3 7 13 7 13s7-7.7 7-13a7 7 0 0 0-7-7zm0 9.5A2.5 2.5 0 1 1 12 6.5a2.5 2.5 0 0 1 0 5z"/></svg>
+    </div>
+    <div class="min-w-0 flex-1">
+      <div id="gpsTitle" class="text-sm font-bold pulse">กำลังหาตำแหน่ง…</div>
+      <div id="gpsSub" class="text-xs text-slate-500">กรุณาอนุญาตการเข้าถึงตำแหน่ง</div>
+    </div>
+  </div>
 
-    window.onload = function() {
-      checkLoginSession();
-    };
+  <!-- กล้อง -->
+  <div class="card p-3">
+    <div class="cam">
+      <video id="vid" autoplay playsinline muted></video>
+      <div id="oval" class="oval"></div>
+      <div id="camMsg" class="absolute bottom-3 inset-x-3 text-center text-sm font-semibold text-white bg-black/55 rounded-2xl py-2 px-3">กำลังโหลดระบบสแกนใบหน้า…</div>
+    </div>
+    <div class="grid grid-cols-2 gap-2 mt-3" role="group" aria-label="ประเภทการลงเวลา">
+      <button id="tIn" onclick="setType('in')" class="py-2.5 rounded-2xl text-sm font-bold">เข้าเวร</button>
+      <button id="tOut" onclick="setType('out')" class="py-2.5 rounded-2xl text-sm font-bold">ออกเวร</button>
+    </div>
+    <button id="btnScan" onclick="startScan()" disabled class="w-full mt-2.5 py-3.5 rounded-2xl text-white font-extrabold bg-gradient-to-r from-blue-600 to-indigo-600 shadow-lg shadow-blue-500/30 disabled:opacity-50 active:scale-[.98] transition">
+      เริ่มสแกนใบหน้า
+    </button>
+    <button onclick="resetFace()" class="w-full mt-1 py-2 text-xs text-slate-400 font-semibold">ลบข้อมูลใบหน้าของฉัน</button>
+  </div>
 
-    function navigateTo(url) {
-      window.location.href = url;
+  <!-- ประวัติ -->
+  <div class="card p-4">
+    <h2 class="text-sm font-extrabold mb-2">ประวัติล่าสุด</h2>
+    <div id="hist" class="space-y-2 text-sm"></div>
+  </div>
+</div>
+
+<script>
+/* ===== ตั้งค่า (แก้ได้) ===== */
+const API_URL = "https://script.google.com/macros/s/AKfycbygTRS3dp8WQkGKpiRxKbsDdDjfQUAeZnHwid6PTX3ABskdSbQdbEBch7dkia3UlaSJ/exec";
+// ⚠️ พิกัดด้านล่างเป็นค่าประมาณ — โปรดแก้เป็นพิกัดจริงของแหล่งฝึก (คลิกขวาที่ Google Maps > คัดลอกพิกัด)
+const SITES = [
+  { name: "วพบ.ชัยนาท",       lat: 15.1865, lng: 100.1262, r: 200 },
+  { name: "รพ.ชัยนาทนเรนทร", lat: 15.1830, lng: 100.1330, r: 250 }
+];
+const MAX_ACCURACY = 100;   // เมตร: GPS เพี้ยนเกินนี้ไม่ให้เช็คอิน
+const MATCH_DIST   = 0.5;   // ยิ่งน้อยยิ่งเข้มงวด
+const MODEL_URL = "https://cdn.jsdelivr.net/npm/@vladmandic/face-api@1.7.12/model/";
+
+/* ===== สถานะ ===== */
+const $ = id => document.getElementById(id);
+let user = null, pos = null, site = null, dist = null, type = "in", ready = false, busy = false;
+
+try { user = JSON.parse(localStorage.getItem("nursenote_user_session")); } catch (e) {}
+if (!user || !user.email || !user.token) {
+  Swal.fire({ icon: "warning", title: "ยังไม่ได้เข้าสู่ระบบ", text: "กรุณาเข้าสู่ระบบด้วยอีเมลวิทยาลัยที่หน้าแรกก่อน", confirmButtonText: "ไปหน้าแรก" })
+    .then(() => location.href = "index.html");
+} else $("who").textContent = user.name + " • " + user.email;
+
+const FACE_KEY = () => "nn_face_" + user.email, HIST_KEY = () => "nn_att_" + user.email;
+
+function setType(t) {
+  type = t;
+  const on = "bg-indigo-600 text-white shadow", off = "bg-slate-100 text-slate-500";
+  $("tIn").className = "py-2.5 rounded-2xl text-sm font-bold " + (t === "in" ? on : off);
+  $("tOut").className = "py-2.5 rounded-2xl text-sm font-bold " + (t === "out" ? on : off);
+}
+setType("in");
+const msg = t => $("camMsg").textContent = t;
+const oval = c => $("oval").className = "oval " + (c || "");
+
+/* ===== GPS ===== */
+function haversine(a, b, c, d) {
+  const R = 6371000, r = Math.PI / 180, dLa = (c - a) * r, dLo = (d - b) * r;
+  const x = Math.sin(dLa / 2) ** 2 + Math.cos(a * r) * Math.cos(c * r) * Math.sin(dLo / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(x));
+}
+function onPos(p) {
+  pos = p.coords;
+  let best = null;
+  SITES.forEach(s => { const d = haversine(pos.latitude, pos.longitude, s.lat, s.lng); if (!best || d < best.d) best = { s, d }; });
+  site = best.s; dist = best.d;
+  const inside = dist <= site.r, accOk = pos.accuracy <= MAX_ACCURACY;
+  $("gpsTitle").classList.remove("pulse");
+  $("gpsTitle").textContent = inside ? "อยู่ในพื้นที่: " + site.name : "อยู่นอกพื้นที่ (ห่าง " + Math.round(dist) + " ม.)";
+  $("gpsTitle").style.color = inside ? "#059669" : "#dc2626";
+  $("gpsSub").textContent = (accOk ? "" : "สัญญาณ GPS ไม่แม่นยำ ") + "ความคลาดเคลื่อน ±" + Math.round(pos.accuracy) + " ม. • จุดใกล้สุด: " + site.name;
+  $("gpsIco").style.background = inside && accOk ? "#d1fae5" : "#fee2e2";
+  updateBtn();
+}
+function onPosErr(e) {
+  $("gpsTitle").classList.remove("pulse");
+  $("gpsTitle").textContent = "ใช้ตำแหน่งไม่ได้";
+  $("gpsTitle").style.color = "#dc2626";
+  $("gpsSub").textContent = e.code === 1 ? "เปิดสิทธิ์ตำแหน่งให้เบราว์เซอร์ในการตั้งค่า แล้วโหลดหน้าใหม่" : "เปิด GPS แล้วลองใหม่อีกครั้ง";
+}
+if ("geolocation" in navigator)
+  navigator.geolocation.watchPosition(onPos, onPosErr, { enableHighAccuracy: true, maximumAge: 5000, timeout: 20000 });
+else onPosErr({ code: 0 });
+
+function gpsOk() { return pos && pos.accuracy <= MAX_ACCURACY && dist <= site.r; }
+function updateBtn() {
+  const b = $("btnScan");
+  b.disabled = busy || !ready || !user;
+  b.textContent = localStorage.getItem(user && FACE_KEY()) ? "สแกนหน้าเพื่อ" + (type === "in" ? "เข้าเวร" : "ออกเวร") : "ลงทะเบียนใบหน้า (ครั้งแรก)";
+}
+
+/* ===== กล้อง + โมเดล ===== */
+async function init() {
+  try {
+    const s = await navigator.mediaDevices.getUserMedia({ video: { facingMode: "user", width: 640, height: 480 }, audio: false });
+    $("vid").srcObject = s;
+  } catch (e) { msg("เปิดกล้องไม่ได้ — อนุญาตการใช้กล้อง และเปิดผ่าน HTTPS"); return; }
+  try {
+    await Promise.all([
+      faceapi.nets.tinyFaceDetector.loadFromUri(MODEL_URL),
+      faceapi.nets.faceLandmark68Net.loadFromUri(MODEL_URL),
+      faceapi.nets.faceRecognitionNet.loadFromUri(MODEL_URL)
+    ]);
+    ready = true; msg("พร้อมสแกน — จัดหน้าให้อยู่ในกรอบ"); updateBtn();
+  } catch (e) { msg("โหลดโมเดลสแกนใบหน้าไม่สำเร็จ ตรวจสอบอินเทอร์เน็ต"); }
+}
+if (user) init();
+
+/* ===== สแกนหน้า (ตรวจกะพริบตากันภาพถ่าย) ===== */
+const dd = (a, b) => Math.hypot(a.x - b.x, a.y - b.y);
+const ear = p => (dd(p[1], p[5]) + dd(p[2], p[4])) / (2 * dd(p[0], p[3]));
+
+async function startScan() {
+  const saved = localStorage.getItem(FACE_KEY());
+  if (saved) {
+    if (!gpsOk()) {
+      return Swal.fire({ icon: "error", title: "เช็คอินไม่ได้", text: !pos ? "ยังไม่พบตำแหน่ง GPS" : pos.accuracy > MAX_ACCURACY ? "สัญญาณ GPS ไม่แม่นยำ ลองออกไปที่โล่งแล้วลองใหม่" : "คุณอยู่นอกพื้นที่ฝึก (ห่าง " + Math.round(dist) + " ม.)" });
     }
+  } else {
+    const c = await Swal.fire({
+      icon: "info", title: "ลงทะเบียนใบหน้า",
+      html: "<div class='text-sm text-left'>ระบบจะเก็บ<b>ค่าตัวเลขของใบหน้า</b> (ไม่เก็บรูปถ่าย) ไว้ในเครื่องของคุณ เพื่อใช้ยืนยันตัวตนตอนเช็คอิน ตามนโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA) คุณลบได้ทุกเมื่อ</div>",
+      showCancelButton: true, confirmButtonText: "ยินยอม", cancelButtonText: "ยกเลิก"
+    });
+    if (!c.isConfirmed) return;
+  }
+  busy = true; updateBtn(); oval("");
+  const opt = new faceapi.TinyFaceDetectorOptions({ inputSize: 320, scoreThreshold: 0.5 });
+  let desc = null, sawOpen = false, sawClosed = false, blinked = false, t0 = Date.now();
+  msg("มองกล้อง แล้วกะพริบตา 1 ครั้ง");
+  while (Date.now() - t0 < 15000) {
+    const r = await faceapi.detectSingleFace($("vid"), opt).withFaceLandmarks().withFaceDescriptor();
+    if (!r) { oval("bad"); msg("ไม่พบใบหน้า — จัดหน้าให้อยู่ในกรอบ"); continue; }
+    oval("ok");
+    const m = r.landmarks, e = (ear(m.getLeftEye()) + ear(m.getRightEye())) / 2;
+    if (e > 0.27) { sawOpen = true; if (!blinked) desc = r.descriptor; if (sawClosed) blinked = true; }
+    else if (e < 0.2 && sawOpen) sawClosed = true;
+    if (blinked && desc) break;
+    msg(sawOpen ? "กะพริบตา 1 ครั้ง" : "ลืมตามองกล้อง");
+  }
+  if (!(blinked && desc)) { busy = false; oval("bad"); msg("สแกนไม่สำเร็จ ลองใหม่อีกครั้ง"); updateBtn(); return; }
 
-    function openLoginModal() {
-      backToEmailStep();
-      document.getElementById('loginModal').classList.remove('hidden');
-    }
+  if (!saved) {
+    localStorage.setItem(FACE_KEY(), JSON.stringify(Array.from(desc)));
+    busy = false; msg("ลงทะเบียนสำเร็จ"); updateBtn();
+    return Swal.fire({ icon: "success", title: "ลงทะเบียนใบหน้าแล้ว", text: "กดสแกนอีกครั้งเพื่อเช็คอิน", timer: 2200, showConfirmButton: false });
+  }
+  const score = faceapi.euclideanDistance(desc, new Float32Array(JSON.parse(saved)));
+  if (score > MATCH_DIST) { busy = false; oval("bad"); msg("ใบหน้าไม่ตรงกับที่ลงทะเบียน"); updateBtn(); return Swal.fire({ icon: "error", title: "ยืนยันตัวตนไม่ผ่าน", text: "ใบหน้าไม่ตรงกับที่ลงทะเบียนไว้" }); }
+  if (!gpsOk()) { busy = false; updateBtn(); return Swal.fire({ icon: "error", title: "ตำแหน่งเปลี่ยนไป", text: "ตรวจสอบ GPS อีกครั้ง" }); }
 
-    function closeLoginModal() {
-      document.getElementById('loginModal').classList.add('hidden');
-    }
+  const rec = { time: new Date().toISOString(), type, site: site.name, lat: +pos.latitude.toFixed(6), lng: +pos.longitude.toFixed(6), acc: Math.round(pos.accuracy), dist: Math.round(dist), score: +score.toFixed(3) };
+  msg("กำลังบันทึก…");
+  let d;
+  try {
+    const res = await fetch(API_URL, { method: "POST", body: JSON.stringify({ action: "checkIn", data: { token: user.token, ...rec } }) });
+    d = await res.json();
+  } catch (e) { d = { success: false, message: "เชื่อมต่อเซิร์ฟเวอร์ไม่ได้ ลองใหม่อีกครั้ง" }; }
+  busy = false; updateBtn();
+  if (!d.success) { oval("bad"); msg("บันทึกไม่สำเร็จ"); return Swal.fire({ icon: "error", title: "บันทึกไม่สำเร็จ", text: d.message }); }
+  const h = JSON.parse(localStorage.getItem(HIST_KEY()) || "[]"); h.unshift(rec);
+  localStorage.setItem(HIST_KEY(), JSON.stringify(h.slice(0, 30)));
+  msg("บันทึกเวลาแล้ว"); renderHist();
+  Swal.fire({ icon: "success", title: (type === "in" ? "เข้าเวร" : "ออกเวร") + "สำเร็จ", text: new Date().toLocaleTimeString("th-TH") + " • " + site.name, timer: 2500, showConfirmButton: false });
+}
 
-    function backToEmailStep() {
-      document.getElementById('stepEmailSection').classList.remove('hidden');
-      document.getElementById('stepOtpSection').classList.add('hidden');
-      document.getElementById('inputOtpCode').value = "";
-    }
+function resetFace() {
+  Swal.fire({ icon: "question", title: "ลบข้อมูลใบหน้า?", text: "ต้องลงทะเบียนใหม่ในครั้งถัดไป", showCancelButton: true, confirmButtonText: "ลบ", cancelButtonText: "ยกเลิก" })
+    .then(r => { if (r.isConfirmed) { localStorage.removeItem(FACE_KEY()); updateBtn(); } });
+}
 
-    async function handleRequestOtp() {
-      const email = document.getElementById('inputUserEmail').value.trim().toLowerCase();
-      
-      if (!email || !email.endsWith("@bcnchainat.ac.th")) {
-        Swal.fire({
-          icon: 'error',
-          title: 'ไม่ได้รับสิทธิ์เข้าใช้งาน!',
-          text: 'บุคคลภายนอกไม่สามารถเข้าใช้งานได้ กรุณาใช้อีเมลวิทยาลัย @bcnchainat.ac.th เท่านั้น'
-        });
-        return;
-      }
-
-      const btn = document.getElementById('btnSendOtp');
-      btn.disabled = true;
-      btn.innerText = "กำลังส่งรหัส OTP...";
-
-      try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'requestOTP', data: { email: email } })
-        });
-        const d = await res.json();
-        if (d.success) {
-          pendingLoginEmail = email;
-          document.getElementById('stepEmailSection').classList.add('hidden');
-          document.getElementById('stepOtpSection').classList.remove('hidden');
-          Swal.fire({
-            icon: 'info',
-            title: 'ส่งรหัส OTP แล้ว',
-            text: `กรุณาเปิดอีเมล ${email} เพื่อนำรหัส 6 หลักมายืนยัน`
-          });
-        } else {
-          Swal.fire({ icon: 'error', title: d.message });
-        }
-      } catch(e) {
-        Swal.fire({ icon: 'error', title: 'การเชื่อมต่อขัดข้อง ไม่สามารถส่งอีเมลได้' });
-      } finally {
-        btn.disabled = false;
-        btn.innerText = "ส่งรหัส OTP ไปยังอีเมล";
-      }
-    }
-
-    async function handleVerifyOtp() {
-      const otp = document.getElementById('inputOtpCode').value.trim();
-      if (!otp || otp.length !== 6) {
-        Swal.fire({ icon: 'warning', title: 'รหัสไม่ถูกต้อง', text: 'กรุณากรอกรหัส OTP ให้ครบ 6 หลัก' });
-        return;
-      }
-
-      const btn = document.getElementById('btnConfirmOtp');
-      btn.disabled = true;
-      btn.innerText = "กำลังตรวจสอบ...";
-
-      try {
-        const res = await fetch(API_URL, {
-          method: 'POST',
-          body: JSON.stringify({ action: 'verifyOTP', data: { email: pendingLoginEmail, otp: otp } })
-        });
-        const d = await res.json();
-        if (d.success) {
-          const userData = {
-            email: d.email,
-            name: d.name,
-            isAdmin: d.isAdmin
-          };
-          localStorage.setItem('nursenote_user_session', JSON.stringify(userData));
-          closeLoginModal();
-          Swal.fire({
-            icon: 'success',
-            title: 'ยืนยันตัวตนสำเร็จ',
-            text: `ยินดีต้อนรับ ${d.name}`,
-            timer: 1500,
-            showConfirmButton: false
-          }).then(() => {
-            window.location.reload();
-          });
-        } else {
-          Swal.fire({ icon: 'error', title: d.message });
-        }
-      } catch(e) {
-        Swal.fire({ icon: 'error', title: 'การตรวจสอบล้มเหลว' });
-      } finally {
-        btn.disabled = false;
-        btn.innerText = "ยืนยันรหัส OTP เพื่อเข้าใช้งาน";
-      }
-    }
-
-    function checkLoginSession() {
-      const session = localStorage.getItem('nursenote_user_session');
-      if (session) {
-        try {
-          const user = JSON.parse(session);
-          if (user.email && user.email.toLowerCase().endsWith("@bcnchainat.ac.th")) {
-            document.getElementById('dispUserName').textContent = `สวัสดี, ${user.name}`;
-            document.getElementById('dispUserYear').textContent = user.email;
-            document.getElementById('userStatusDot').className = "w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse";
-            document.getElementById('btnAuthText').textContent = "ออกจากระบบ";
-            
-            if (user.email.toLowerCase() === SOLE_ADMIN_EMAIL.toLowerCase()) {
-              document.getElementById('btnAdminShield').classList.remove('hidden');
-            }
-            return;
-          }
-        } catch(e) {}
-      }
-
-      localStorage.removeItem('nursenote_user_session');
-      document.getElementById('dispUserName').textContent = "ผู้ใช้งานทั่วไป (ยังไม่เข้าสู่ระบบ)";
-      document.getElementById('dispUserYear').textContent = "Nursenote • กรุณาเข้าสู่ระบบด้วยเมลวิทยาลัย";
-      document.getElementById('userStatusDot').className = "w-2.5 h-2.5 rounded-full bg-slate-400";
-      document.getElementById('btnAuthText').textContent = "เข้าสู่ระบบ (เมลวิทยาลัย)";
-      document.getElementById('btnAdminShield').classList.add('hidden');
-    }
-
-    function handleAuthClick() {
-      const session = localStorage.getItem('nursenote_user_session');
-      if (session) {
-        localStorage.removeItem('nursenote_user_session');
-        Swal.fire({ icon: 'success', title: 'ออกจากระบบเรียบร้อย', timer: 1000, showConfirmButton: false }).then(() => {
-          window.location.reload();
-        });
-      } else {
-        openLoginModal();
-      }
-    }
-
-    function openAdminSettingsModal() {
-      Swal.fire({
-        title: 'แผงควบคุม Nursenote (Admin)',
-        html: `
-          <div class="text-left text-xs space-y-2 p-2">
-            <p><strong>ผู้ดูแลระบบ:</strong> อาจารย์ นันตพร ทองเต็ม</p>
-            <p><strong>อีเมล:</strong> ${SOLE_ADMIN_EMAIL}</p>
-            <p class="text-slate-500 pt-1">• ระบบพร้อมใช้งานสำหรับบุคลากรและนักศึกษา วพบ.ชัยนาท</p>
-          </div>
-        `,
-        icon: 'info'
-      });
-    }
-  </script>
+function renderHist() {
+  if (!user) return;
+  const h = JSON.parse(localStorage.getItem(HIST_KEY()) || "[]").slice(0, 6);
+  $("hist").innerHTML = h.length ? h.map(r => {
+    const d = new Date(r.time), inn = r.type === "in";
+    return `<div class="flex items-center justify-between bg-slate-50 rounded-2xl px-3 py-2">
+      <div><div class="font-bold ${inn ? "text-emerald-600" : "text-rose-500"}">${inn ? "เข้าเวร" : "ออกเวร"}</div>
+      <div class="text-xs text-slate-500">${r.site} • ห่าง ${r.dist} ม.</div></div>
+      <div class="text-right text-xs text-slate-500"><div class="font-semibold text-slate-700">${d.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" })}</div>${d.toLocaleDateString("th-TH", { day: "numeric", month: "short" })}</div></div>`;
+  }).join("") : '<p class="text-xs text-slate-400">ยังไม่มีประวัติ — สแกนหน้าเพื่อเริ่มลงเวลา</p>';
+}
+renderHist();
+</script>
 </body>
 </html>
