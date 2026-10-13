@@ -326,10 +326,10 @@
       <div id="stepOtpSection" class="space-y-3 text-left hidden">
         <div>
           <div class="flex justify-between items-center mb-1 ml-1">
-            <label class="text-[11px] font-bold text-slate-600">รหัสยืนยัน OTP (6 หลัก)</label>
+            <label class="text-[11px] font-bold text-slate-600">รหัสยืนยัน OTP (6 หรือ 8 หลัก)</label>
             <span class="text-[10px] text-blue-600 font-semibold cursor-pointer" onclick="backToEmailStep()">เปลี่ยนอีเมล</span>
           </div>
-          <input type="text" id="inputOtpCode" maxlength="6" inputmode="numeric" placeholder="123456" class="w-full border rounded-2xl p-3 text-center text-lg font-black tracking-widest bg-slate-50 outline-none focus:ring-2 focus:ring-emerald-500">
+          <input type="text" id="inputOtpCode" maxlength="8" inputmode="numeric" placeholder="12345678" class="w-full border rounded-2xl p-3 text-center text-lg font-black tracking-widest bg-slate-50 outline-none focus:ring-2 focus:ring-emerald-500">
           <p class="text-[10px] text-slate-400 mt-1 ml-1">*รหัสถูกส่งไปยังกล่องข้อความอีเมลของท่านแล้ว</p>
         </div>
         <button onclick="handleVerifyOtp()" id="btnConfirmOtp" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-95 text-white font-bold rounded-2xl text-xs shadow-md shadow-emerald-500/25 transition">
@@ -448,8 +448,8 @@
     // ยืนยันรหัส OTP — เซิร์ฟเวอร์จะออก token ให้เก็บใน session
     async function handleVerifyOtp() {
       const otp = document.getElementById('inputOtpCode').value.trim();
-      if (!otp || otp.length !== 6) {
-        Swal.fire({ icon: 'warning', title: 'รหัสไม่ถูกต้อง', text: 'กรุณากรอกรหัส OTP ให้ครบ 6 หลัก' });
+      if (!/^\d{6,8}$/.test(otp)) {
+        Swal.fire({ icon: 'warning', title: 'รหัสไม่ถูกต้อง', text: 'กรุณากรอกรหัส OTP 6 หรือ 8 หลัก' });
         return;
       }
 
