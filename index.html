@@ -321,14 +321,18 @@
       <div id="stepOtpSection" class="space-y-3 text-left hidden">
         <div>
           <div class="flex justify-between items-center mb-1 ml-1">
-            <label class="text-[11px] font-bold text-slate-600">รหัสยืนยัน OTP (6 หรือ 8 หลัก)</label>
-            <span class="text-[10px] text-blue-600 font-semibold cursor-pointer" onclick="backToEmailStep()">เปลี่ยนอีเมล</span>
+            <label class="text-[11px] font-bold text-slate-600">รหัสยืนยัน OTP (6 หลัก)</label>
+            <div class="flex items-center gap-2">
+              <span class="text-[10px] text-indigo-600 font-semibold cursor-pointer hover:underline" onclick="handleRequestOtp()">ส่งรหัสใหม่</span>
+              <span class="text-slate-300">|</span>
+              <span class="text-[10px] text-blue-600 font-semibold cursor-pointer hover:underline" onclick="backToEmailStep()">เปลี่ยนอีเมล</span>
+            </div>
           </div>
-          <input type="text" id="inputOtpCode" maxlength="8" inputmode="numeric" placeholder="12345678" class="w-full border rounded-2xl p-3 text-center text-lg font-black tracking-widest bg-slate-50 outline-none focus:ring-2 focus:ring-emerald-500">
-          <p class="text-[10px] text-slate-400 mt-1 ml-1">*รหัสถูกส่งไปยังกล่องข้อความอีเมลของท่านแล้ว</p>
+          <input type="text" id="inputOtpCode" maxlength="6" inputmode="numeric" placeholder="123456" class="w-full border rounded-2xl p-3 text-center text-xl font-black tracking-[0.35em] bg-slate-50 outline-none focus:ring-2 focus:ring-emerald-500">
+          <p class="text-[10px] text-slate-400 mt-1 ml-1">*กรุณาตรวจดูรหัส 6 หลักในกล่องข้อความอีเมล (หรือโฟลเดอร์ขยะ/Spam)</p>
         </div>
         <button onclick="handleVerifyOtp()" id="btnConfirmOtp" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-95 text-white font-bold rounded-2xl text-xs shadow-md shadow-emerald-500/25 transition">
-          ยืนยันรหัส OTP เพื่อเข้าใช้งาน
+          ยืนยันรหัส OTP 6 หลักเพื่อเข้าใช้งาน
         </button>
       </div>
 
@@ -343,7 +347,6 @@
     let pendingLoginEmail = "";
 
     window.onload = async function() {
-      await syncSupabaseSession();
       checkLoginSession();
       // ถูกส่งมาจากหน้าอื่นเพราะยังไม่ได้ล็อกอิน / เซสชันหมดอายุ
       if (new URLSearchParams(window.location.search).get('login') === '1' && !getSession()) {
@@ -376,9 +379,9 @@
       document.getElementById('inputOtpCode').value = "";
     }
 
-    // ขอรับรหัส OTP ไปที่อีเมลจริง
+    // ขอรับรหัส OTP 6 หลักไปที่อีเมลจริงผ่านระบบหลัก (Apps Script) เสมอ เพื่อความเสถียร 100%
     async function handleRequestOtp() {
-      const email = document.getElementById('inputUserEmail').value.trim().toLowerCase();
+      const email = (document.getElementById('inputUserEmail').value || pendingLoginEmail || "").trim().toLowerCase();
       
       if (!email || !email.endsWith("@bcnchainat.ac.th")) {
         Swal.fire({
@@ -391,46 +394,27 @@
 
       const btn = document.getElementById('btnSendOtp');
       btn.disabled = true;
-      btn.innerText = "กำลังส่งรหัส OTP...";
+      btn.innerText = "กำลังส่งรหัส OTP 6 หลัก...";
 
       try {
-        let d;
-        if (window.NurseSupabase && NurseSupabase.enabled) {
-          try {
-            const client = await NurseSupabase.init();
-            const result = await client.auth.signInWithOtp({
-              email: email,
-              options: { shouldCreateUser: true, emailRedirectTo: window.location.href.split('?')[0] }
-            });
-            if (result.error) throw result.error;
-            d = { success: true };
-          } catch (supabaseError) {
-            // Keep the existing login available while Supabase email settings are being completed.
-            d = await fetchJson(API_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              body: JSON.stringify({ action: 'requestOTP', data: { email: email } })
-            });
-            if (!d.success) throw new Error(supabaseError.message || d.message);
-          }
-        } else {
-          d = await fetchJson(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action: 'requestOTP', data: { email: email } })
-          });
-        }
+        const d = await fetchJson(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'requestOTP', data: { email: email } })
+        });
         if (d.success) {
           pendingLoginEmail = email;
           document.getElementById('stepEmailSection').classList.add('hidden');
           document.getElementById('stepOtpSection').classList.remove('hidden');
+          document.getElementById('inputOtpCode').value = "";
+          document.getElementById('inputOtpCode').focus();
           Swal.fire({
             icon: 'info',
-            title: 'ส่งรหัส OTP แล้ว',
-            text: `กรุณาเปิดอีเมล ${email} เพื่อกดลิงก์ยืนยันหรือใช้รหัสที่ได้รับ`
+            title: 'ส่งรหัส OTP 6 หลักแล้ว',
+            text: `กรุณาเปิดอีเมล ${email} เพื่อนำรหัสตัวเลข 6 หลักมากรอก (มีอายุ 15 นาที)`
           });
         } else {
-          Swal.fire({ icon: 'error', title: d.message });
+          Swal.fire({ icon: 'error', title: d.message || 'ไม่สามารถส่ง OTP ได้' });
         }
       } catch(e) {
         Swal.fire({ icon: 'error', title: 'ส่ง OTP ไม่สำเร็จ', text: e.message || 'กรุณาลองใหม่อีกครั้ง' });
@@ -440,80 +424,55 @@
       }
     }
 
-    // ยืนยันรหัส OTP — เซิร์ฟเวอร์จะออก token ให้เก็บใน session
+    // ยืนยันรหัส OTP 6 หลัก — เซิร์ฟเวอร์จะออก token ให้เก็บใน session
     async function handleVerifyOtp() {
-      const otp = document.getElementById('inputOtpCode').value.trim();
-      if (!/^\d{6,8}$/.test(otp)) {
-        Swal.fire({ icon: 'warning', title: 'รหัสไม่ถูกต้อง', text: 'กรุณากรอกรหัส OTP 6 หรือ 8 หลัก' });
+      const otp = document.getElementById('inputOtpCode').value.trim().replace(/\s+/g, '');
+      if (!/^\d{6}$/.test(otp)) {
+        Swal.fire({ icon: 'warning', title: 'รหัสไม่ถูกต้อง', text: 'กรุณากรอกรหัส OTP ตัวเลข 6 หลักจากอีเมล' });
         return;
       }
 
       const btn = document.getElementById('btnConfirmOtp');
       btn.disabled = true;
-      btn.innerText = "กำลังตรวจสอบ...";
+      btn.innerText = "กำลังตรวจสอบรหัส...";
 
       try {
-        let d;
-        if (window.NurseSupabase && NurseSupabase.enabled) {
-          try {
-            const client = await NurseSupabase.init();
-            const result = await client.auth.verifyOtp({ email: pendingLoginEmail, token: otp, type: 'email' });
-            if (result.error) throw result.error;
-            const session = result.data && result.data.session;
-            if (!session) throw new Error('ไม่พบ session จาก Supabase');
-            await syncSupabaseSession();
-            d = { success: true, token: session.access_token };
-          } catch (supabaseError) {
-            d = await fetchJson(API_URL, {
-              method: 'POST',
-              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-              body: JSON.stringify({ action: 'verifyOTP', data: { email: pendingLoginEmail, otp: otp } })
-            });
-            if (!d.success) throw new Error(supabaseError.message || d.message);
-          }
-        } else {
-          d = await fetchJson(API_URL, {
-            method: 'POST',
-            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify({ action: 'verifyOTP', data: { email: pendingLoginEmail, otp: otp } })
-          });
-        }
+        const d = await fetchJson(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({ action: 'verifyOTP', data: { email: pendingLoginEmail, otp: otp } })
+        });
         if (d.success && d.token) {
-          // ถ้าล็อกอินสำเร็จผ่าน Apps Script (หรือ Supabase) ให้บันทึกเซสชันลง localStorage เสมอ
-          const role = (d.role || (pendingLoginEmail === SOLE_ADMIN_EMAIL ? 'admin' : 'student'));
+          const isSoleAdmin = pendingLoginEmail.toLowerCase() === SOLE_ADMIN_EMAIL.toLowerCase();
+          const role = isSoleAdmin ? 'admin' : 'student';
           const currentData = {
-            email: pendingLoginEmail,
-            name: d.name || pendingLoginEmail.split('@')[0],
-            isAdmin: Boolean(d.isAdmin || role === 'admin' || role === 'teacher' || pendingLoginEmail === SOLE_ADMIN_EMAIL),
+            email: pendingLoginEmail.toLowerCase(),
+            name: d.name || (isSoleAdmin ? "อาจารย์ นันตพร ทองเต็ม" : pendingLoginEmail.split('@')[0]),
+            isAdmin: isSoleAdmin,
             role: role,
             token: d.token,
-            provider: d.provider || 'appsscript'
+            provider: 'appsscript'
           };
           localStorage.setItem(SESSION_KEY, JSON.stringify(currentData));
           
-          if (window.NurseSupabase && NurseSupabase.enabled) {
-            try { await syncSupabaseSession(); } catch(e) {}
-          }
-          
-          const userData = getSession() || currentData;
           closeLoginModal();
           Swal.fire({
             icon: 'success',
             title: 'ยืนยันตัวตนสำเร็จ',
-            text: `ยินดีต้อนรับ ${userData.name}`,
-            timer: 1500,
+            text: `ยินดีต้อนรับ ${currentData.name}`,
+            timer: 1400,
             showConfirmButton: false
           }).then(() => {
             window.location.href = 'index.html';
           });
         } else {
-          Swal.fire({ icon: 'error', title: d.message || 'ยืนยันไม่สำเร็จ' });
+          Swal.fire({ icon: 'error', title: d.message || 'รหัส OTP ไม่ถูกต้อง' });
         }
       } catch(e) {
         Swal.fire({ icon: 'error', title: 'ยืนยัน OTP ไม่สำเร็จ', text: e.message || 'กรุณาลองใหม่อีกครั้ง' });
       } finally {
         btn.disabled = false;
-        btn.innerText = "ยืนยันรหัส OTP เพื่อเข้าใช้งาน";
+        btn.innerText = "ยืนยันรหัส OTP 6 หลักเพื่อเข้าใช้งาน";
       }
     }
 

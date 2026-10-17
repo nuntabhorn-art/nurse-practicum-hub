@@ -72,7 +72,7 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <button onclick="openAddItemModal()" id="btnAddItemBtn" class="clay-pill px-4 py-2 bg-gradient-to-r from-teal-500 to-cyan-600 text-white font-black text-xs shadow-md flex items-center gap-1.5 active:scale-95 transition">
+        <button onclick="openAddItemModal()" id="btnAddItemBtn" class="hidden clay-pill px-4 py-2 bg-gradient-to-r from-teal-500 to-cyan-600 text-white font-black text-xs shadow-md flex items-center gap-1.5 active:scale-95 transition">
           <i class="fa-solid fa-plus"></i> เพิ่มเนื้อหาความรู้
         </button>
       </div>
@@ -237,7 +237,10 @@
     let activeCategory = 'ทั้งหมด';
 
     window.onload = function() {
-      requireLogin();
+      const s = requireLogin();
+      if (s && s.isAdmin) {
+        document.getElementById('btnAddItemBtn').classList.remove('hidden');
+      }
       renderKnowledgeGrid();
     };
 

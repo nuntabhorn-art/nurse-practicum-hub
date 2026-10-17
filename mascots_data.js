@@ -1813,7 +1813,7 @@ root.HICLASS_MASCOTS = {
     },
     "B01": {
       "group": "student-boy",
-      "label": "ผมสั้นกับสมุดเหลือง",
+      "label": "ผมสั้นคล้องหูฟัง",
       "w": 420,
       "h": 440,
       "base": 405,

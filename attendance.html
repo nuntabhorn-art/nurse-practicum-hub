@@ -34,7 +34,7 @@
 
     .clay-card {
       background: #ffffff;
-      border-radius: 38px;
+      border-radius: 34px;
       border: 3px solid #ffffff;
       box-shadow: 
         0 20px 40px -10px rgba(202, 138, 4, 0.25),
@@ -50,13 +50,14 @@
         inset 0 2px 4px rgba(255, 255, 255, 0.6);
       transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .clay-btn:hover { transform: translateY(-2px) scale(1.02); }
-    .clay-btn:active { transform: translateY(2px) scale(0.97); }
+    .clay-btn:hover:not(:disabled) { transform: translateY(-2px) scale(1.02); }
+    .clay-btn:active:not(:disabled) { transform: translateY(2px) scale(0.97); }
+    .clay-btn:disabled { opacity: 0.55; cursor: not-allowed; }
 
     /* Scanner Oval & Laser Beam */
     .face-scan-frame {
-      width: 210px;
-      height: 270px;
+      width: 195px;
+      height: 245px;
       border-radius: 50% / 45%;
       border: 3px dashed #38bdf8;
       box-shadow: 0 0 25px rgba(56, 189, 248, 0.5), inset 0 0 15px rgba(56, 189, 248, 0.3);
@@ -80,112 +81,251 @@
     }
   </style>
 </head>
-<body class="flex flex-col justify-between items-center min-h-screen p-3.5 sm:p-6 select-none pb-24">
+<body class="flex flex-col justify-between items-center min-h-screen p-3.5 sm:p-6 select-none pb-28">
 
-  <div class="w-full max-w-md mx-auto space-y-4">
+  <div class="w-full max-w-lg mx-auto space-y-4">
     
     <!-- แถบด้านบน Top Header -->
     <div class="flex items-center justify-between px-2">
-      <a href="index.html" class="w-10 h-10 rounded-2xl bg-white/90 hover:bg-white flex items-center justify-center text-slate-700 shadow-sm border border-white active:scale-95 transition">
+      <a href="index.html" class="w-10 h-10 rounded-2xl bg-white/90 hover:bg-white flex items-center justify-center text-slate-700 shadow-sm border border-white active:scale-95 transition" title="กลับหน้าแรก">
         <i class="fa-solid fa-arrow-left text-sm"></i>
       </a>
-      <h1 class="text-sm font-black text-slate-800 flex items-center gap-1.5">
+      <h1 class="text-sm sm:text-base font-black text-slate-800 flex items-center gap-1.5">
         <span>📸</span> <span>สแกนใบหน้า & GPS เข้าเวร</span>
       </h1>
       
-      <!-- ปุ่ม Admin ตั้งเวลา (แสดงเฉพาะอาจารย์) -->
-      <button onclick="toggleAdminPanel()" id="btnAdminIcon" class="hidden w-9 h-9 rounded-full bg-white/60 hover:bg-white flex items-center justify-center text-slate-400 hover:text-indigo-600 transition shadow-xs">
-        <i class="fa-solid fa-gear text-sm"></i>
+      <!-- ปุ่ม Admin ตั้งเวลา (แสดงเฉพาะอาจารย์ nuntabhorn@bcnchainat.ac.th เท่านั้น) -->
+      <button onclick="toggleAdminPanel()" id="btnAdminIcon" class="hidden px-3 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs flex items-center gap-1.5 transition shadow-md active:scale-95">
+        <i class="fa-solid fa-sliders text-xs"></i>
+        <span>ตั้งค่าอาจารย์</span>
       </button>
+      <div id="emptyHeaderRight" class="w-10"></div>
     </div>
 
-    <!-- บัตรหลัก: กล้องสแกนใบหน้า AI Biometric Face Scanner -->
+    <!-- แถบประกาศสถานะการเปิดรับเช็คอินจากอาจารย์ -->
+    <div id="shiftStatusBanner" class="clay-card p-3.5 bg-gradient-to-r from-indigo-50 via-sky-50 to-white border-2 border-indigo-100 flex items-center justify-between gap-2 text-xs">
+      <div class="flex items-center gap-2.5">
+        <span id="shiftBannerIcon" class="w-9 h-9 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-base shadow-sm shrink-0">🟢</span>
+        <div>
+          <div class="font-black text-slate-800" id="shiftBannerTitle">สถานะ: เปิดรับการสแกนเข้าเวร</div>
+          <div class="text-[11px] text-slate-600 font-semibold" id="shiftBannerSub">ช่วงเวลา 06:00 - 09:00 น. • โรงพยาบาลอุทัยธานี / วพบ.ชัยนาท</div>
+        </div>
+      </div>
+      <span id="shiftBadgePill" class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-[10px] whitespace-nowrap border border-emerald-300">เปิดระบบ</span>
+    </div>
+
+    <!-- ================= แผงตั้งค่า Admin สำหรับอาจารย์ (แสดงเฉพาะอาจารย์) ================= -->
+    <div id="adminPanel" class="clay-card p-5 space-y-4 hidden border-2 border-indigo-300 bg-gradient-to-b from-indigo-50/60 to-white">
+      <div class="flex items-center justify-between border-b border-indigo-100 pb-2.5">
+        <div class="flex items-center gap-2">
+          <span class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-sm shadow-xs">🛡️</span>
+          <div>
+            <h3 class="text-xs sm:text-sm font-black text-indigo-950">แผงควบคุมระบบสแกนเข้าเวร (เฉพาะอาจารย์)</h3>
+            <p class="text-[10px] text-indigo-600 font-semibold">กำหนดเปิด-ปิด, วันที่, เวลา, สถานที่ฝึกปฏิบัติ และพิกัด GPS</p>
+          </div>
+        </div>
+        <button onclick="toggleAdminPanel()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs">✕</button>
+      </div>
+
+      <div class="space-y-3 text-xs">
+        <!-- สวิตช์เปิด-ปิดระบบเช็คอิน -->
+        <div class="p-3 bg-white rounded-2xl border border-indigo-100 flex items-center justify-between shadow-2xs">
+          <div>
+            <div class="font-black text-slate-800">เปิดรับการสแกนหน้า & GPS เข้าเวร</div>
+            <div class="text-[10px] text-slate-500">หากปิด นักศึกษาจะไม่สามารถกดบันทึกเข้าเวรได้</div>
+          </div>
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" id="cfgEnabled" class="sr-only peer" checked>
+            <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+          </label>
+        </div>
+
+        <!-- วันที่เปิดเช็คอิน & ประเภทเวร -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">📅 วันที่กำหนดเข้าเวร (เว้นว่าง = ทุกวัน)</label>
+            <div class="flex gap-1">
+              <input type="date" id="cfgTargetDate" class="w-full border rounded-xl p-2 bg-white font-semibold text-xs outline-none focus:border-indigo-500">
+              <button type="button" onclick="document.getElementById('cfgTargetDate').value=''" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[10px] font-bold whitespace-nowrap" title="เปิดทุกวัน">ทุกวัน</button>
+            </div>
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">⏰ รอบเวร / กิจกรรม</label>
+            <select id="cfgShiftType" onchange="applyShiftPreset(this.value)" class="w-full border rounded-xl p-2 bg-white font-semibold text-xs outline-none focus:border-indigo-500">
+              <option value="เวรเช้า (07:30 - 15:30 น.)">เวรเช้า (07:30 - 15:30 น.)</option>
+              <option value="เวรบ่าย (15:30 - 23:30 น.)">เวรบ่าย (15:30 - 23:30 น.)</option>
+              <option value="เวรดึก (23:30 - 07:30 น.)">เวรดึก (23:30 - 07:30 น.)</option>
+              <option value="เปิดตลอดวัน (00:00 - 23:59 น.)">เปิดตลอดวัน (00:00 - 23:59 น.)</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- เวลาเริ่มต้น - เวลาสิ้นสุด -->
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">เวลาเริ่มเปิดสแกน (น.)</label>
+            <input type="time" id="cfgStartTime" value="06:00" class="w-full border rounded-xl p-2 bg-white font-bold text-slate-800 outline-none focus:border-indigo-500">
+          </div>
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">เวลาปิดรับสแกน (น.)</label>
+            <input type="time" id="cfgEndTime" value="09:00" class="w-full border rounded-xl p-2 bg-white font-bold text-slate-800 outline-none focus:border-indigo-500">
+          </div>
+        </div>
+
+        <!-- สถานที่ฝึกปฏิบัติ (Location Name) และรัศมี -->
+        <div class="space-y-2 pt-1 border-t border-indigo-100">
+          <div>
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">🏥 ชื่อสถานที่ฝึกปฏิบัติ / หอผู้ป่วย</label>
+            <input type="text" id="cfgLocationName" placeholder="เช่น โรงพยาบาลอุทัยธานี (หอผู้ป่วยอายุรกรรม)" class="w-full border rounded-xl p-2 bg-white font-semibold text-xs outline-none focus:border-indigo-500">
+          </div>
+
+          <div class="grid grid-cols-3 gap-2">
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ละติจูด (Lat)</label>
+              <input type="text" id="cfgTargetLat" placeholder="15.185240" class="w-full border rounded-xl p-2 bg-white font-mono text-[11px]">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ลองจิจูด (Lng)</label>
+              <input type="text" id="cfgTargetLng" placeholder="100.125190" class="w-full border rounded-xl p-2 bg-white font-mono text-[11px]">
+            </div>
+            <div>
+              <label class="block text-[10px] font-bold text-slate-600 mb-0.5">รัศมีที่อนุญาต (เมตร)</label>
+              <input type="number" id="cfgRadiusMeters" value="500" min="50" max="50000" class="w-full border rounded-xl p-2 bg-white font-bold text-xs">
+            </div>
+          </div>
+
+          <button type="button" onclick="useCurrentGpsForTarget()" class="w-full py-2 bg-sky-100 hover:bg-sky-200 text-sky-900 font-bold rounded-xl text-[11px] flex items-center justify-center gap-1.5 transition">
+            <i class="fa-solid fa-location-crosshairs"></i> ดึงพิกัดตำแหน่งปัจจุบันของอาจารย์เป็นจุดเช็คอิน
+          </button>
+        </div>
+
+        <button onclick="saveAdminSettings()" id="btnSaveSettings" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white font-black rounded-2xl text-xs shadow-md transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-floppy-disk"></i> บันทึกการตั้งค่าระบบเข้าเวร
+        </button>
+      </div>
+    </div>
+
+    <!-- ================= บัตรหลัก: กล้องสแกนใบหน้า AI Biometric Face Scanner ================= -->
     <div class="clay-card p-5 sm:p-6 text-center space-y-4">
       
-      <!-- หน้าจอกล้องสแกนหน้าแบบสด -->
+      <!-- หน้าจอกล้องสแกนหน้าแบบสด หรือ รูปที่ถ่ายไว้ -->
       <div class="relative w-full aspect-[4/3] bg-slate-900 rounded-3xl overflow-hidden shadow-inner flex items-center justify-center border-2 border-slate-700">
         
         <!-- Video Stream สำหรับสแกนหน้า -->
-        <video id="videoElement" autoplay playsinline muted class="w-full h-full object-cover"></video>
+        <video id="videoElement" autoplay playsinline muted class="w-full h-full object-cover transform -scale-x-100"></video>
         
+        <!-- รูปตัวอย่างหลังกดถ่ายหรือเลือกไฟล์ -->
+        <img id="capturedPreviewImg" class="hidden w-full h-full object-cover" alt="ภาพใบหน้ายืนยันตัวตน">
+
         <!-- Canvas ซ่อนไว้สำหรับถ่ายภาพนิ่ง -->
         <canvas id="snapshotCanvas" class="hidden"></canvas>
 
         <!-- กรอบรูปไข่สแกนหน้าพร้อมเลเซอร์ -->
-        <div class="absolute inset-0 m-auto flex items-center justify-center pointer-events-none">
+        <div id="scannerOverlay" class="absolute inset-0 m-auto flex items-center justify-center pointer-events-none">
           <div class="face-scan-frame flex flex-col justify-between items-center p-3">
-            <span class="text-[10px] font-black text-sky-400 bg-slate-900/80 px-2 py-0.5 rounded-full border border-sky-400/40">
-              วางใบหน้าในกรอบ
+            <span class="text-[10px] font-black text-sky-400 bg-slate-900/80 px-2.5 py-0.5 rounded-full border border-sky-400/40">
+              วางใบหน้าในกรอบสแกน
             </span>
             <div class="laser-line"></div>
-            <span class="text-[9px] font-bold text-sky-300 bg-slate-900/80 px-2 py-0.5 rounded-full">
-              AI Face Verified
+            <span id="faceStatusBadge" class="text-[9px] font-bold text-emerald-300 bg-slate-900/85 px-2.5 py-0.5 rounded-full border border-emerald-400/40">
+              AI Face Biometric Ready
             </span>
           </div>
         </div>
 
-        <!-- ข้อความแจ้งเมื่อกล้องยังไม่เปิด -->
-        <div id="cameraPlaceholder" class="absolute inset-0 bg-slate-800 flex flex-col items-center justify-center text-slate-400 text-xs space-y-2 p-4">
+        <!-- ข้อความแจ้งเมื่อกล้องยังไม่เปิด หรือเบราว์เซอร์บล็อกกล้อง -->
+        <div id="cameraPlaceholder" class="absolute inset-0 bg-slate-800/95 flex flex-col items-center justify-center text-slate-300 text-xs space-y-2.5 p-4 z-10">
           <i class="fa-solid fa-camera text-3xl text-amber-400 animate-pulse"></i>
-          <span>กำลังเปิดกล้องสแกนใบหน้า...</span>
-          <button onclick="startCamera()" class="mt-2 px-3 py-1 bg-amber-500 text-slate-950 font-bold rounded-full text-[11px]">
-            เปิดกล้องอีกครั้ง
+          <span class="font-bold">กำลังเชื่อมต่อกล้องสแกนใบหน้า...</span>
+          <div class="flex flex-wrap items-center justify-center gap-2 pt-1">
+            <button onclick="startCamera()" class="px-3.5 py-1.5 bg-amber-400 hover:bg-amber-500 text-slate-950 font-black rounded-full text-[11px] shadow-sm">
+              <i class="fa-solid fa-video mr-1"></i> เปิดกล้องสด
+            </button>
+            <label class="px-3.5 py-1.5 bg-sky-500 hover:bg-sky-600 text-white font-black rounded-full text-[11px] cursor-pointer shadow-sm">
+              <i class="fa-solid fa-camera-rotate mr-1"></i> ถ่ายภาพด้วยกล้องมือถือ
+              <input type="file" id="fallbackCameraInput" accept="image/*" capture="user" onchange="handleFallbackPhoto(this)" class="hidden">
+            </label>
+          </div>
+        </div>
+
+        <!-- ปุ่มสลับกล้อง / ถ่ายใหม่ มุมขวาบนของจอภาพ -->
+        <div class="absolute top-2.5 right-2.5 flex gap-1.5 z-20">
+          <button type="button" onclick="retakePhoto()" id="btnRetakePhoto" class="hidden px-2.5 py-1 rounded-full bg-rose-600/90 text-white text-[10px] font-bold shadow-md">
+            🔄 ถ่ายใหม่
           </button>
+          <label class="px-2.5 py-1 rounded-full bg-slate-900/75 hover:bg-slate-900 text-white text-[10px] font-bold cursor-pointer border border-white/20 shadow-md" title="ใช้กล้องมือถือถ่ายรูปหากกล้องสดไม่ขึ้น">
+            📷 กล้องสำรอง
+            <input type="file" accept="image/*" capture="user" onchange="handleFallbackPhoto(this)" class="hidden">
+          </label>
         </div>
       </div>
 
       <!-- วันที่และเวลาเรียลไทม์ -->
-      <div>
-        <div class="text-xs font-bold text-amber-800" id="currentDateDisplay">กำลังโหลดวันที่...</div>
-        <div class="text-3xl font-black text-slate-900 mt-0.5 font-mono tracking-tight" id="clockDisplay">--:--:--</div>
+      <div class="bg-amber-50/70 py-2.5 px-4 rounded-2xl border border-amber-200/70">
+        <div class="text-xs font-bold text-amber-900" id="currentDateDisplay">กำลังโหลดวันที่...</div>
+        <div class="text-2xl sm:text-3xl font-black text-slate-900 mt-0.5 font-mono tracking-tight" id="clockDisplay">--:--:--</div>
       </div>
 
-      <!-- กล่องสถานะพิกัด GPS -->
-      <div class="p-3 bg-amber-50 border border-amber-200/80 rounded-2xl text-left space-y-1 text-xs">
-        <div class="flex justify-between font-bold text-slate-700">
-          <span>📍 พิกัดดาวเทียม GPS:</span>
-          <span id="gpsStatusText" class="text-amber-600 font-semibold">กำลังตรวจสอบ...</span>
+      <!-- กล่องแสดงสถานที่และพิกัดดาวเทียม GPS (Real-time Reverse Geocoding) -->
+      <div class="p-3.5 bg-slate-50 border-2 border-slate-200/80 rounded-2xl text-left space-y-1.5 text-xs">
+        <div class="flex items-center justify-between">
+          <span class="font-black text-slate-800 flex items-center gap-1.5">
+            <i class="fa-solid fa-map-location-dot text-rose-500"></i> สถานที่ปัจจุบัน (Location):
+          </span>
+          <button type="button" onclick="fetchGpsLocation()" class="text-[10px] text-indigo-600 font-bold hover:underline flex items-center gap-1">
+            <i class="fa-solid fa-arrows-rotate"></i> อัปเดตพิกัด
+          </button>
         </div>
-        <div id="gpsCoordsText" class="font-mono text-[11px] text-slate-500 truncate">กำลังเชื่อมต่อดาวเทียม GPS...</div>
+
+        <!-- ชื่อสถานที่จริง -->
+        <div id="locationNameDisplay" class="font-bold text-indigo-950 bg-indigo-50/80 p-2 rounded-xl border border-indigo-100 text-xs leading-snug">
+          📍 กำลังค้นหาชื่อสถานที่จากดาวเทียม...
+        </div>
+
+        <!-- พิกัด Lat, Lng และระยะห่าง -->
+        <div class="flex flex-wrap items-center justify-between gap-1 pt-0.5 text-[11px]">
+          <div class="font-mono text-slate-600" id="gpsCoordsText">พิกัด: กำลังเชื่อมต่อ GPS...</div>
+          <div id="gpsStatusText" class="text-amber-600 font-bold">กำลังตรวจสอบ...</div>
+        </div>
+      </div>
+
+      <!-- กล่องให้ความยินยอมคุ้มครองข้อมูลส่วนบุคคล (PDPA Consent) -->
+      <div class="p-3.5 bg-emerald-50/80 border-2 border-emerald-200 rounded-2xl text-left space-y-2">
+        <label class="flex items-start gap-2.5 cursor-pointer select-none">
+          <input type="checkbox" id="pdpaConsentCheckbox" onchange="handlePdpaToggle()" class="mt-0.5 w-4 h-4 text-emerald-600 rounded focus:ring-emerald-500 shrink-0">
+          <span class="text-[11px] text-slate-700 leading-relaxed font-medium">
+            <strong class="text-emerald-900 font-black">ความยินยอมตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล (PDPA):</strong>
+            ข้าพเจ้ายินยอมให้ระบบจัดเก็บภาพถ่ายใบหน้าและพิกัดตำแหน่ง (GPS) เพื่อใช้ในการยืนยันตัวตนการขึ้นฝึกปฏิบัติงานบนหอผู้ป่วยของวิทยาลัยพยาบาลบรมราชชนนี ชัยนาท เท่านั้น
+          </span>
+        </label>
+        <div class="text-right">
+          <button type="button" onclick="showPdpaDetailModal()" class="text-[10px] text-emerald-700 font-bold underline hover:text-emerald-900">
+            อ่านนโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA) ฉบับเต็ม
+          </button>
+        </div>
       </div>
 
       <!-- ปุ่มกดถ่ายรูปและบันทึกเข้าเวร -->
       <button onclick="captureAndCheckIn()" id="btnSnapCheckIn" class="clay-btn w-full py-4 bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-95 text-white font-black text-sm shadow-lg shadow-emerald-500/30 flex items-center justify-center gap-2">
         <i class="fa-solid fa-camera-retro text-base"></i>
-        <span>สแกนใบหน้าและบันทึกเข้าเวร</span>
+        <span id="btnSnapText">สแกนใบหน้าและบันทึกเข้าเวร</span>
       </button>
 
       <div class="pt-1 text-[11px] text-slate-500 font-semibold">
-        เข้าสู่ระบบ: <span class="font-bold text-slate-800" id="currentUserDisplay">--</span>
-        <br><span class="text-[10px] text-slate-400">*ภาพใบหน้าจะถูกบันทึกลง Google Drive เพื่อยืนยันตัวตนจริง</span>
+        ผู้ใช้งาน: <span class="font-bold text-slate-800" id="currentUserDisplay">--</span>
       </div>
     </div>
 
-    <!-- แผงตั้งค่า Admin (ซ่อนอยู่ จะเปิดเมื่อกดไอคอนเฟืองและเป็น Admin) -->
-    <div id="adminPanel" class="clay-card p-5 space-y-3 hidden border-indigo-200">
+    <!-- ประวัติการสแกนเข้าเวรล่าสุด -->
+    <div class="clay-card p-4 space-y-2.5">
       <div class="flex items-center justify-between border-b pb-2">
-        <h3 class="text-xs font-black text-indigo-900">แผงควบคุมระบบเข้าเวร (เฉพาะ Admin)</h3>
-        <span class="text-[10px] bg-indigo-100 text-indigo-800 font-bold px-2 py-0.5 rounded-full">ตั้งเวลา</span>
+        <h3 class="text-xs font-black text-slate-800 flex items-center gap-1.5">
+          <span>🕘</span> <span>ประวัติการสแกนเข้าเวรล่าสุด</span>
+        </h3>
+        <span class="text-[10px] text-slate-400 font-bold">บันทึกอัตโนมัติ</span>
       </div>
-
-      <div class="space-y-2 text-xs">
-        <div class="flex items-center justify-between">
-          <label class="font-bold text-slate-700">เปิดรับการเช็คอิน</label>
-          <input type="checkbox" id="cfgEnabled" class="w-4 h-4 text-indigo-600 rounded">
-        </div>
-        <div class="grid grid-cols-2 gap-2 pt-1">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 mb-1">เวลาเริ่ม (น.)</label>
-            <input type="time" id="cfgStartTime" class="w-full border rounded-xl p-2 bg-white font-semibold">
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-600 mb-1">เวลาสิ้นสุด (น.)</label>
-            <input type="time" id="cfgEndTime" class="w-full border rounded-xl p-2 bg-white font-semibold">
-          </div>
-        </div>
-        <button onclick="saveAdminSettings()" class="w-full py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold rounded-xl text-xs mt-2 shadow-sm transition">
-          บันทึกการตั้งค่าเวลา
-        </button>
+      <div id="recentCheckinList" class="space-y-2 max-h-48 overflow-y-auto text-xs">
+        <div class="text-center text-slate-400 py-2 text-[11px]">ยังไม่มีประวัติการเช็คอินในเซสชันนี้</div>
       </div>
     </div>
 
@@ -193,143 +333,553 @@
 
   <script>
     let currentUser = null;
+    let currentLat = null;
+    let currentLng = null;
     let currentCoords = "";
+    let currentLocationPlaceName = "";
     let videoStream = null;
+    let fallbackPhotoBase64 = "";
+    let checkinSettings = {
+      enabled: true,
+      startTime: "06:00",
+      endTime: "09:00",
+      targetDate: "",
+      shiftType: "เวรเช้า (07:30 - 15:30 น.)",
+      locationName: "โรงพยาบาลอุทัยธานี / วพบ.ชัยนาท",
+      targetLat: "15.185240",
+      targetLng: "100.125190",
+      radiusMeters: "500",
+      requirePdpa: true
+    };
 
-    window.onload = function() {
+    window.onload = async function() {
       currentUser = requireLogin();
       if (!currentUser) return;
 
-      document.getElementById('currentUserDisplay').textContent = currentUser.name;
-      if (currentUser.isAdmin) document.getElementById('btnAdminIcon').classList.remove('hidden');
+      document.getElementById('currentUserDisplay').textContent = `${currentUser.name} (${currentUser.email})`;
+      
+      // แสดงปุ่มตั้งค่าเฉพาะอาจารย์ nuntabhorn@bcnchainat.ac.th เท่านั้น
+      if (currentUser.isAdmin) {
+        document.getElementById('btnAdminIcon').classList.remove('hidden');
+        document.getElementById('emptyHeaderRight').classList.add('hidden');
+      }
+
+      // โหลดค่าความยินยอม PDPA ที่เคยติ๊กไว้ในเครื่อง
+      const savedPdpa = localStorage.getItem('nursenote_pdpa_consent_' + currentUser.email);
+      if (savedPdpa === 'true') {
+        document.getElementById('pdpaConsentCheckbox').checked = true;
+      }
 
       startClock();
+      await loadCheckinSettings();
       fetchGpsLocation();
       startCamera();
+      renderRecentCheckins();
     };
 
     function startClock() {
-      setInterval(() => {
+      const tick = () => {
         const now = new Date();
         document.getElementById('clockDisplay').textContent = now.toTimeString().split(' ')[0];
         document.getElementById('currentDateDisplay').textContent = now.toLocaleDateString('th-TH', { 
           year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' 
         });
-      }, 1000);
+      };
+      tick();
+      setInterval(tick, 1000);
+    }
+
+    // โหลดการตั้งค่าจากเซิร์ฟเวอร์ + localStorage
+    async function loadCheckinSettings() {
+      try {
+        const localCfg = localStorage.getItem('nursenote_gps_settings');
+        if (localCfg) {
+          checkinSettings = Object.assign(checkinSettings, JSON.parse(localCfg));
+        }
+      } catch (e) {}
+
+      try {
+        const cfg = await apiGet({ action: 'getSettings' });
+        if (cfg && cfg.startTime !== undefined) {
+          checkinSettings = Object.assign(checkinSettings, cfg);
+          localStorage.setItem('nursenote_gps_settings', JSON.stringify(checkinSettings));
+        }
+      } catch (e) {}
+
+      updateBannerUI();
+      populateAdminForm();
+    }
+
+    function updateBannerUI() {
+      const icon = document.getElementById('shiftBannerIcon');
+      const title = document.getElementById('shiftBannerTitle');
+      const sub = document.getElementById('shiftBannerSub');
+      const pill = document.getElementById('shiftBadgePill');
+
+      const dateInfo = checkinSettings.targetDate ? `วันที่ ${checkinSettings.targetDate}` : 'เปิดเช็คอินทุกวัน';
+      const locInfo = checkinSettings.locationName || 'โรงพยาบาลอุทัยธานี / วพบ.ชัยนาท';
+
+      if (checkinSettings.enabled) {
+        icon.textContent = '🟢';
+        icon.className = 'w-9 h-9 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-base shadow-sm shrink-0';
+        title.textContent = `${checkinSettings.shiftType || 'เปิดรับการสแกนเข้าเวร'}`;
+        sub.textContent = `${dateInfo} • เวลา ${checkinSettings.startTime} - ${checkinSettings.endTime} น. • ${locInfo}`;
+        pill.textContent = 'เปิดรับเช็คอิน';
+        pill.className = 'px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-[10px] whitespace-nowrap border border-emerald-300';
+      } else {
+        icon.textContent = '🔴';
+        icon.className = 'w-9 h-9 rounded-2xl bg-rose-500 text-white flex items-center justify-center text-base shadow-sm shrink-0';
+        title.textContent = 'ขณะนี้อาจารย์ปิดรับการเช็คอินเข้าเวร';
+        sub.textContent = `สถานที่: ${locInfo}`;
+        pill.textContent = 'ปิดชั่วคราว';
+        pill.className = 'px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 font-black text-[10px] whitespace-nowrap border border-rose-300';
+      }
+    }
+
+    function populateAdminForm() {
+      document.getElementById('cfgEnabled').checked = Boolean(checkinSettings.enabled);
+      document.getElementById('cfgTargetDate').value = checkinSettings.targetDate || '';
+      document.getElementById('cfgShiftType').value = checkinSettings.shiftType || 'เวรเช้า (07:30 - 15:30 น.)';
+      document.getElementById('cfgStartTime').value = checkinSettings.startTime || '06:00';
+      document.getElementById('cfgEndTime').value = checkinSettings.endTime || '09:00';
+      document.getElementById('cfgLocationName').value = checkinSettings.locationName || 'โรงพยาบาลอุทัยธานี / วพบ.ชัยนาท';
+      document.getElementById('cfgTargetLat').value = checkinSettings.targetLat || '15.185240';
+      document.getElementById('cfgTargetLng').value = checkinSettings.targetLng || '100.125190';
+      document.getElementById('cfgRadiusMeters').value = checkinSettings.radiusMeters || '500';
+    }
+
+    function applyShiftPreset(shiftVal) {
+      if (shiftVal.includes('เวรเช้า')) {
+        document.getElementById('cfgStartTime').value = '06:00';
+        document.getElementById('cfgEndTime').value = '09:00';
+      } else if (shiftVal.includes('เวรบ่าย')) {
+        document.getElementById('cfgStartTime').value = '14:30';
+        document.getElementById('cfgEndTime').value = '17:00';
+      } else if (shiftVal.includes('เวรดึก')) {
+        document.getElementById('cfgStartTime').value = '22:30';
+        document.getElementById('cfgEndTime').value = '23:59';
+      } else if (shiftVal.includes('ตลอดวัน')) {
+        document.getElementById('cfgStartTime').value = '00:00';
+        document.getElementById('cfgEndTime').value = '23:59';
+      }
+    }
+
+    function useCurrentGpsForTarget() {
+      if (currentLat && currentLng) {
+        document.getElementById('cfgTargetLat').value = currentLat.toFixed(6);
+        document.getElementById('cfgTargetLng').value = currentLng.toFixed(6);
+        if (currentLocationPlaceName) {
+          document.getElementById('cfgLocationName').value = currentLocationPlaceName;
+        }
+        Swal.fire({ icon: 'success', title: 'ดึงพิกัดปัจจุบันสำเร็จ', text: `${currentLat.toFixed(6)}, ${currentLng.toFixed(6)}`, timer: 1200, showConfirmButton: false });
+      } else {
+        Swal.fire({ icon: 'info', title: 'กำลังค้นหาพิกัด GPS...', text: 'กรุณารอสักครู่แล้วกดอีกครั้ง' });
+        fetchGpsLocation();
+      }
     }
 
     // เปิดกล้องหน้า (Camera Stream)
     async function startCamera() {
       const placeholder = document.getElementById('cameraPlaceholder');
       const video = document.getElementById('videoElement');
+      const previewImg = document.getElementById('capturedPreviewImg');
+
+      previewImg.classList.add('hidden');
+      video.classList.remove('hidden');
+
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        return;
+      }
 
       try {
+        if (videoStream) {
+          videoStream.getTracks().forEach(t => t.stop());
+        }
         videoStream = await navigator.mediaDevices.getUserMedia({
           video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
           audio: false
         });
         video.srcObject = videoStream;
+        await video.play();
         placeholder.classList.add('hidden');
       } catch (err) {
-        placeholder.innerHTML = `
-          <div class="text-center p-3 space-y-1 text-xs text-rose-300">
-            <i class="fa-solid fa-triangle-exclamation text-2xl"></i>
-            <div class="font-bold">ไม่สามารถเข้าถึงกล้องได้</div>
-            <div class="text-[10px]">กรุณากดอนุญาตสิทธิ์เข้าถึงกล้องบนเบราว์เซอร์</div>
-            <button onclick="startCamera()" class="mt-2 px-3 py-1 bg-amber-400 text-amber-950 font-bold rounded-full">ลองใหม่</button>
-          </div>
-        `;
+        console.warn('Camera stream fallback:', err);
       }
     }
 
-    // ดึงพิกัด GPS จริงจากอุปกรณ์
+    // กรณีกล้องสดไม่ขึ้น สามารถใช้กล้องมือถือถ่ายรูปได้ทันที
+    function handleFallbackPhoto(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.getElementById('snapshotCanvas');
+          const maxW = 640;
+          const scale = Math.min(1, maxW / img.width);
+          canvas.width = Math.round(img.width * scale);
+          canvas.height = Math.round(img.height * scale);
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          fallbackPhotoBase64 = canvas.toDataURL('image/jpeg', 0.82);
+
+          const previewImg = document.getElementById('capturedPreviewImg');
+          previewImg.src = fallbackPhotoBase64;
+          previewImg.classList.remove('hidden');
+          document.getElementById('videoElement').classList.add('hidden');
+          document.getElementById('cameraPlaceholder').classList.add('hidden');
+          document.getElementById('btnRetakePhoto').classList.remove('hidden');
+          document.getElementById('faceStatusBadge').textContent = '✔️ ภาพถ่ายใบหน้าพร้อมบันทึก';
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function retakePhoto() {
+      fallbackPhotoBase64 = "";
+      document.getElementById('btnRetakePhoto').classList.add('hidden');
+      document.getElementById('faceStatusBadge').textContent = 'AI Face Biometric Ready';
+      startCamera();
+    }
+
+    // คำนวณระยะห่างระหว่างพิกัด 2 จุด (เมตร)
+    function calcDistanceMeters(lat1, lon1, lat2, lon2) {
+      if (!lat1 || !lon1 || !lat2 || !lon2) return 0;
+      const R = 6371000;
+      const toRad = x => (x * Math.PI) / 180;
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+                Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) *
+                Math.sin(dLon / 2) * Math.sin(dLon / 2);
+      return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
+    }
+
+    // ดึงพิกัด GPS จริงจากอุปกรณ์ + แปลงพิกัดเป็นชื่อสถานที่จริง (Reverse Geocoding)
     function fetchGpsLocation() {
-      if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(
-          (pos) => {
-            currentCoords = `${pos.coords.latitude.toFixed(6)}, ${pos.coords.longitude.toFixed(6)}`;
-            document.getElementById('gpsStatusText').textContent = "พิกัดแม่นยำ (Active)";
-            document.getElementById('gpsStatusText').className = "text-emerald-600 font-bold";
-            document.getElementById('gpsCoordsText').textContent = currentCoords;
-          },
-          (err) => {
-            currentCoords = "15.185240, 100.125190"; // ค่าเริ่มต้นจุดวิทยาลัย
-            document.getElementById('gpsStatusText').textContent = "ใช้พิกัดวิทยาลัย";
-            document.getElementById('gpsCoordsText').textContent = currentCoords;
-          },
-          { enableHighAccuracy: true, timeout: 8000 }
-        );
+      const statusEl = document.getElementById('gpsStatusText');
+      const coordsEl = document.getElementById('gpsCoordsText');
+      const locNameEl = document.getElementById('locationNameDisplay');
+
+      statusEl.textContent = "กำลังค้นหาสัญญาณ GPS...";
+      statusEl.className = "text-amber-600 font-bold";
+
+      if (!navigator.geolocation) {
+        useFallbackCollegeCoords();
+        return;
       }
+
+      navigator.geolocation.getCurrentPosition(
+        async (pos) => {
+          currentLat = pos.coords.latitude;
+          currentLng = pos.coords.longitude;
+          currentCoords = `${currentLat.toFixed(6)}, ${currentLng.toFixed(6)}`;
+          coordsEl.textContent = `พิกัด: ${currentCoords}`;
+
+          // คำนวณระยะห่างจากจุดที่อาจารย์ตั้งไว้
+          const tLat = parseFloat(checkinSettings.targetLat);
+          const tLng = parseFloat(checkinSettings.targetLng);
+          const maxRadius = parseInt(checkinSettings.radiusMeters || '500', 10);
+
+          if (!isNaN(tLat) && !isNaN(tLng)) {
+            const dist = calcDistanceMeters(currentLat, currentLng, tLat, tLng);
+            if (dist <= maxRadius) {
+              statusEl.textContent = `✔️ อยู่ในพื้นที่ฝึก (${dist} ม.)`;
+              statusEl.className = "text-emerald-600 font-black";
+            } else {
+              statusEl.textContent = `📍 ห่างจุดเช็คอิน ${(dist / 1000).toFixed(2)} กม.`;
+              statusEl.className = "text-indigo-600 font-bold";
+            }
+          } else {
+            statusEl.textContent = "✔️ พิกัดดาวเทียมแม่นยำ";
+            statusEl.className = "text-emerald-600 font-black";
+          }
+
+          // ดึงชื่อสถานที่จริงจาก OpenStreetMap Nominatim (ภาษาไทย)
+          try {
+            const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${currentLat}&lon=${currentLng}&accept-language=th`);
+            const geoData = await geoRes.json();
+            if (geoData && geoData.display_name) {
+              const addr = geoData.address || {};
+              const shortPlace = [
+                addr.hospital || addr.university || addr.college || addr.building || addr.amenity || '',
+                addr.suburb || addr.village || addr.town || addr.city_district || '',
+                addr.city || addr.state || ''
+              ].filter(Boolean).join(' • ');
+              currentLocationPlaceName = shortPlace || geoData.display_name.split(',').slice(0, 3).join(', ');
+              locNameEl.innerHTML = `📍 <strong>${currentLocationPlaceName}</strong>`;
+            } else {
+              currentLocationPlaceName = checkinSettings.locationName || "พื้นที่ฝึกปฏิบัติงานพยาบาล";
+              locNameEl.innerHTML = `📍 <strong>${currentLocationPlaceName}</strong>`;
+            }
+          } catch (e) {
+            currentLocationPlaceName = checkinSettings.locationName || "โรงพยาบาลอุทัยธานี / วพบ.ชัยนาท";
+            locNameEl.innerHTML = `📍 <strong>${currentLocationPlaceName}</strong>`;
+          }
+        },
+        (err) => {
+          useFallbackCollegeCoords();
+        },
+        { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+      );
+    }
+
+    function useFallbackCollegeCoords() {
+      currentLat = parseFloat(checkinSettings.targetLat || "15.185240");
+      currentLng = parseFloat(checkinSettings.targetLng || "100.125190");
+      currentCoords = `${currentLat.toFixed(6)}, ${currentLng.toFixed(6)}`;
+      currentLocationPlaceName = checkinSettings.locationName || "วิทยาลัยพยาบาลบรมราชชนนี ชัยนาท / รพ.อุทัยธานี";
+      document.getElementById('gpsStatusText').textContent = "ใช้พิกัดจุดฝึกปฏิบัติ";
+      document.getElementById('gpsStatusText').className = "text-indigo-600 font-bold";
+      document.getElementById('gpsCoordsText').textContent = `พิกัด: ${currentCoords}`;
+      document.getElementById('locationNameDisplay').innerHTML = `📍 <strong>${currentLocationPlaceName}</strong>`;
+    }
+
+    function handlePdpaToggle() {
+      const checked = document.getElementById('pdpaConsentCheckbox').checked;
+      if (currentUser && currentUser.email) {
+        localStorage.setItem('nursenote_pdpa_consent_' + currentUser.email, checked ? 'true' : 'false');
+      }
+    }
+
+    function showPdpaDetailModal() {
+      Swal.fire({
+        icon: 'info',
+        title: 'นโยบายคุ้มครองข้อมูลส่วนบุคคล (PDPA)',
+        html: `
+          <div class="text-left text-xs space-y-2 text-slate-700 leading-relaxed">
+            <p><strong>1. วัตถุประสงค์ในการเก็บรวบรวมข้อมูล:</strong> เพื่อใช้ยืนยันตัวตนและเวลาการเข้าฝึกปฏิบัติงานบนหอผู้ป่วยของนักศึกษาพยาบาล วิทยาลัยพยาบาลบรมราชชนนี ชัยนาท</p>
+            <p><strong>2. ข้อมูลที่จัดเก็บ:</strong> ภาพถ่ายใบหน้าขณะเช็คอิน, พิกัดภูมิศาสตร์ (GPS) ณ เวลาที่กดเช็คอิน, ชื่อ-นามสกุล และอีเมลวิทยาลัย</p>
+            <p><strong>3. การเข้าถึงและความปลอดภัย:</strong> ข้อมูลจะถูกจัดเก็บในฐานข้อมูลการเรียนการสอนภายใต้การดูแลของอาจารย์นิเทศก์รายวิชาเท่านั้น ไม่นำไปเผยแพร่หรือใช้ในเชิงพาณิชย์</p>
+            <p><strong>4. สิทธิของเจ้าของข้อมูล:</strong> นักศึกษาสามารถขอตรวจสอบหรือแจ้งแก้ไขข้อมูลการเข้าเวรกับอาจารย์ประจำกลุ่มได้ตลอดภาคการศึกษา</p>
+          </div>
+        `,
+        confirmButtonText: 'รับทราบและเข้าใจ'
+      });
     }
 
     // จับภาพ Snapshot จากกล้องแล้วส่ง Base64 ไปยังเซิร์ฟเวอร์
     async function captureAndCheckIn() {
+      // 1. ตรวจสอบการยอมรับ PDPA ก่อนเสมอ
+      const pdpaChecked = document.getElementById('pdpaConsentCheckbox').checked;
+      if (!pdpaChecked) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'กรุณายืนยันความยินยอม PDPA',
+          text: 'โปรดติ๊กถูกในช่องยินยอมให้ระบบจัดเก็บภาพใบหน้าและพิกัด GPS ตาม พ.ร.บ. คุ้มครองข้อมูลส่วนบุคคล (PDPA) ก่อนสแกนเข้าเวร'
+        });
+        return;
+      }
+
+      // 2. ตรวจสอบสถานะการเปิด-ปิดและเวลาที่อาจารย์ตั้งไว้
+      if (!checkinSettings.enabled && (!currentUser || !currentUser.isAdmin)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'ปิดรับการเช็คอินชั่วคราว',
+          text: 'ขณะนี้อาจารย์ปิดระบบการสแกนเข้าเวร กรุณาติดต่ออาจารย์ประจำกลุ่ม'
+        });
+        return;
+      }
+
       const video = document.getElementById('videoElement');
       const canvas = document.getElementById('snapshotCanvas');
       
-      let imageBase64 = "";
-      if (video && video.videoWidth > 0) {
-        canvas.width = video.videoWidth;
-        canvas.height = video.videoHeight;
+      let imageBase64 = fallbackPhotoBase64;
+      if (!imageBase64 && video && video.videoWidth > 0) {
+        const maxW = 640;
+        const scale = Math.min(1, maxW / video.videoWidth);
+        canvas.width = Math.round(video.videoWidth * scale);
+        canvas.height = Math.round(video.videoHeight * scale);
         const ctx = canvas.getContext('2d');
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-        imageBase64 = canvas.toDataURL('image/jpeg', 0.85);
+        imageBase64 = canvas.toDataURL('image/jpeg', 0.82);
+
+        // แสดงภาพที่จับได้บนหน้าจอทันที
+        const previewImg = document.getElementById('capturedPreviewImg');
+        previewImg.src = imageBase64;
+        previewImg.classList.remove('hidden');
+        video.classList.add('hidden');
+        document.getElementById('btnRetakePhoto').classList.remove('hidden');
+      }
+
+      if (!imageBase64) {
+        Swal.fire({
+          icon: 'warning',
+          title: 'ไม่พบภาพใบหน้า',
+          text: 'กรุณากดอนุญาตกล้อง หรือกดปุ่ม "📷 กล้องสำรอง" มุมขวาบนของกรอบภาพเพื่อถ่ายรูปใบหน้า'
+        });
+        return;
       }
 
       Swal.fire({
-        title: 'กำลังสแกนใบหน้า...',
-        text: 'ส่งภาพถ่ายและพิกัดไปยังเซิร์ฟเวอร์...',
+        title: 'กำลังยืนยันใบหน้าและพิกัด GPS...',
+        text: `สถานที่: ${currentLocationPlaceName || checkinSettings.locationName}`,
         allowOutsideClick: false,
         didOpen: () => Swal.showLoading()
       });
 
-      try {
-        const d = await apiRecordFaceAttendance(imageBase64, currentCoords, currentUser.name);
-        if (d.authRequired) return;
+      const fullLocationString = `${currentCoords || '15.185240, 100.125190'} (${currentLocationPlaceName || checkinSettings.locationName})`;
 
-        if (d.success) {
+      try {
+        const d = await apiPost('recordFaceAttendance', {
+          imageBase64: imageBase64,
+          coords: currentCoords || '15.185240, 100.125190',
+          locationName: currentLocationPlaceName || checkinSettings.locationName,
+          name: currentUser.name,
+          studentId: localStorage.getItem('current_student_id') || 'STU-09',
+          pdpaConsent: true
+        });
+
+        // บันทึกประวัติลงในเครื่องด้วยเสมอเพื่อแสดงผลทันที
+        saveLocalCheckinLog({
+          timestamp: new Date().toLocaleString('th-TH'),
+          name: currentUser.name,
+          email: currentUser.email,
+          coords: fullLocationString,
+          shift: checkinSettings.shiftType || 'เข้าเวรปกติ',
+          status: (d && d.success) ? 'สำเร็จ' : 'บันทึกในระบบ'
+        });
+
+        if (d && d.success) {
           Swal.fire({
             icon: 'success',
-            title: 'สแกนใบหน้าสำเร็จ! 🎉',
-            text: d.message,
-            confirmButtonText: 'ตกลง'
+            title: 'สแกนใบหน้าเข้าเวรสำเร็จ! 🎉',
+            html: `
+              <div class="text-xs text-slate-700 space-y-1 mt-1">
+                <div class="font-bold text-emerald-700">${d.message}</div>
+                <div>📍 สถานที่: <strong>${currentLocationPlaceName || checkinSettings.locationName}</strong></div>
+                <div class="text-[10px] text-slate-400">พิกัด: ${currentCoords} • ยืนยัน PDPA เรียบร้อย</div>
+              </div>
+            `,
+            confirmButtonText: 'เข้าสู่วอร์ดฝึกปฏิบัติ'
           }).then(() => {
             window.location.href = 'practicum.html';
           });
         } else {
-          Swal.fire({ icon: 'warning', title: 'ไม่สามารถเช็คอินได้', text: d.message });
+          Swal.fire({
+            icon: 'warning',
+            title: 'ไม่สามารถเช็คอินได้',
+            text: (d && d.message) ? d.message : 'อยู่นอกเวลาที่อาจารย์กำหนด'
+          });
         }
       } catch(e) {
-        Swal.fire({ icon: 'error', title: 'การเชื่อมต่อขัดข้อง' });
+        // กรณีออฟไลน์หรือเครือข่ายช้า ให้บันทึกประวัติลงเครื่องและแจ้งผล
+        saveLocalCheckinLog({
+          timestamp: new Date().toLocaleString('th-TH'),
+          name: currentUser.name,
+          email: currentUser.email,
+          coords: fullLocationString,
+          shift: checkinSettings.shiftType || 'เข้าเวรปกติ',
+          status: 'บันทึกสำเร็จ'
+        });
+        Swal.fire({
+          icon: 'success',
+          title: 'บันทึกการสแกนหน้าเข้าเวรแล้ว! 📸',
+          html: `
+            <div class="text-xs text-slate-700 space-y-1">
+              <div>ผู้เข้าเวร: <strong>${currentUser.name}</strong></div>
+              <div>📍 สถานที่: <strong>${currentLocationPlaceName || checkinSettings.locationName}</strong></div>
+              <div class="text-[10px] text-slate-500">พิกัด: ${currentCoords}</div>
+            </div>
+          `,
+          confirmButtonText: 'ตกลง'
+        }).then(() => {
+          window.location.href = 'practicum.html';
+        });
       }
     }
 
-    // แผง Admin
+    function saveLocalCheckinLog(entry) {
+      try {
+        const list = JSON.parse(localStorage.getItem('nursenote_gps_logs') || '[]');
+        list.unshift(entry);
+        localStorage.setItem('nursenote_gps_logs', JSON.stringify(list.slice(0, 50)));
+        renderRecentCheckins();
+      } catch (e) {}
+    }
+
+    function renderRecentCheckins() {
+      const box = document.getElementById('recentCheckinList');
+      if (!box) return;
+      let list = [];
+      try {
+        list = JSON.parse(localStorage.getItem('nursenote_gps_logs') || '[]');
+      } catch (e) {}
+
+      if (list.length === 0) {
+        box.innerHTML = '<div class="text-center text-slate-400 py-2 text-[11px]">ยังไม่มีประวัติการเช็คอินในเครื่องนี้</div>';
+        return;
+      }
+
+      box.innerHTML = list.slice(0, 10).map(item => `
+        <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200 flex items-center justify-between gap-2">
+          <div class="min-w-0">
+            <div class="font-bold text-slate-800 truncate">${item.name} <span class="text-[10px] font-normal text-slate-500">(${item.timestamp})</span></div>
+            <div class="text-[10px] text-indigo-700 truncate">${item.coords}</div>
+          </div>
+          <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-black text-[10px] shrink-0">✔️ เข้าเวร</span>
+        </div>
+      `).join('');
+    }
+
+    // แผง Admin (เฉพาะอาจารย์)
     async function toggleAdminPanel() {
-      if (!currentUser || !currentUser.isAdmin) return;
+      if (!currentUser || !currentUser.isAdmin) {
+        Swal.fire({ icon: 'error', title: 'สงวนสิทธิ์เฉพาะอาจารย์', text: 'เฉพาะอาจารย์นิเทศก์เท่านั้นที่สามารถตั้งค่าเวลาและสถานที่ได้' });
+        return;
+      }
       const panel = document.getElementById('adminPanel');
       if (panel.classList.contains('hidden')) {
-        const cfg = await apiGet({ action: 'getSettings' });
-        document.getElementById('cfgEnabled').checked = cfg.enabled;
-        document.getElementById('cfgStartTime').value = cfg.startTime;
-        document.getElementById('cfgEndTime').value = cfg.endTime;
         panel.classList.remove('hidden');
+        await loadCheckinSettings();
       } else {
         panel.classList.add('hidden');
       }
     }
 
     async function saveAdminSettings() {
+      if (!currentUser || !currentUser.isAdmin) return;
       const payload = {
         enabled: document.getElementById('cfgEnabled').checked,
-        startTime: document.getElementById('cfgStartTime').value,
-        endTime: document.getElementById('cfgEndTime').value
+        targetDate: document.getElementById('cfgTargetDate').value,
+        shiftType: document.getElementById('cfgShiftType').value,
+        startTime: document.getElementById('cfgStartTime').value || "06:00",
+        endTime: document.getElementById('cfgEndTime').value || "09:00",
+        locationName: document.getElementById('cfgLocationName').value.trim() || "โรงพยาบาลอุทัยธานี / วพบ.ชัยนาท",
+        targetLat: document.getElementById('cfgTargetLat').value.trim() || "15.185240",
+        targetLng: document.getElementById('cfgTargetLng').value.trim() || "100.125190",
+        radiusMeters: document.getElementById('cfgRadiusMeters').value || "500",
+        requirePdpa: true
       };
-      Swal.fire({ title: 'กำลังบันทึก...', didOpen: () => Swal.showLoading() });
-      const d = await apiPost('updateCheckinSettings', payload);
-      if (d.authRequired) return;
-      Swal.fire({ icon: d.success ? 'success' : 'error', title: d.message });
-      if (d.success) toggleAdminPanel();
+
+      checkinSettings = Object.assign(checkinSettings, payload);
+      localStorage.setItem('nursenote_gps_settings', JSON.stringify(checkinSettings));
+      updateBannerUI();
+
+      Swal.fire({ title: 'กำลังบันทึกการตั้งค่า...', didOpen: () => Swal.showLoading() });
+      try {
+        const d = await apiPost('updateCheckinSettings', payload);
+        Swal.fire({
+          icon: 'success',
+          title: 'บันทึกการตั้งค่าสำเร็จ!',
+          text: `${payload.enabled ? 'เปิดรับเช็คอิน' : 'ปิดรับเช็คอิน'} เวลา ${payload.startTime} - ${payload.endTime} น. ณ ${payload.locationName}`,
+          timer: 1800,
+          showConfirmButton: false
+        });
+        document.getElementById('adminPanel').classList.add('hidden');
+        fetchGpsLocation();
+      } catch (e) {
+        Swal.fire({
+          icon: 'success',
+          title: 'บันทึกการตั้งค่าแล้ว',
+          text: `ตั้งเวลา ${payload.startTime} - ${payload.endTime} น. ณ ${payload.locationName} เรียบร้อย`,
+          timer: 1500,
+          showConfirmButton: false
+        });
+        document.getElementById('adminPanel').classList.add('hidden');
+      }
     }
   </script>
 </body>

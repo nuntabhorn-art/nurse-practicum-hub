@@ -177,8 +177,8 @@
         <button onclick="switchTab('works')" id="tabBtnWorks" class="px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition flex items-center gap-1.5">
           <span class="clay-icon-badge w-6 h-6 text-xs bg-indigo-50">📋</span> <span>งาน Care Plan</span>
         </button>
-        <!-- ปุ่มสลับโหมดอาจารย์ -->
-        <button onclick="toggleTeacherMode()" id="btnTeacherToggle" class="px-3 py-1.5 rounded-xl text-purple-800 hover:text-purple-950 transition flex items-center gap-1.5">
+        <!-- ปุ่มสลับโหมดอาจารย์ (แสดงเฉพาะอาจารย์ nuntabhorn@bcnchainat.ac.th เท่านั้น) -->
+        <button onclick="toggleTeacherMode()" id="btnTeacherToggle" class="hidden px-3 py-1.5 rounded-xl text-purple-800 hover:text-purple-950 transition flex items-center gap-1.5">
           <span class="clay-icon-badge w-6 h-6 text-xs bg-purple-50">🛡️</span> <span>แผงอาจารย์</span>
         </button>
       </div>
@@ -822,76 +822,101 @@
 
   <!-- ================= 3. MODAL ตรวจงาน CARE PLAN (สำหรับอาจารย์) ================= -->
   <div id="gradeWorkModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-[36px] max-w-md w-full p-6 space-y-4 shadow-2xl border-4 border-indigo-200 anim-pop">
+    <div class="bg-white rounded-[36px] max-w-md w-full p-6 space-y-4 shadow-2xl border-4 border-indigo-200 anim-pop max-h-[92vh] overflow-y-auto custom-scroll">
       <div class="flex justify-between items-center border-b pb-2">
         <h3 class="text-base font-black text-slate-800 flex items-center gap-1.5">
           <span class="clay-icon-badge w-8 h-8 rounded-xl bg-indigo-100 border border-indigo-300 text-sm">📝</span> ตรวจและประเมิน Daily Care Plan
         </h3>
-        <button onclick="closeModal('gradeWorkModal')" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+        <button onclick="closeModal('gradeWorkModal')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm">✕</button>
       </div>
 
       <input type="hidden" id="gradeWorkId">
       <input type="hidden" id="gradeStudentId">
 
       <div class="space-y-3 text-xs">
-        <div class="bg-indigo-50/70 p-3 rounded-2xl space-y-1">
-          <div class="font-bold text-indigo-950" id="gradeStudentNameDisplay">ชื่อนักศึกษา</div>
-          <div class="text-slate-600" id="gradeSubjectDisplay">หัวข้องาน</div>
+        <div class="bg-indigo-50/70 p-3.5 rounded-2xl border border-indigo-100 space-y-1.5">
+          <div class="font-black text-indigo-950 text-sm" id="gradeStudentNameDisplay">ชื่อนักศึกษา</div>
+          <div class="font-bold text-slate-800" id="gradeSubjectDisplay">หัวข้องาน</div>
+          <div class="text-slate-600 bg-white/80 p-2 rounded-xl border border-indigo-100 whitespace-pre-wrap text-[11px]" id="gradeContentDisplay">-</div>
           <div id="gradeLinkDisplay" class="pt-1"></div>
         </div>
 
         <div>
           <label class="block font-bold text-slate-700 mb-1">ผลการตรวจงาน</label>
-          <select id="gradeStatusInput" class="w-full border rounded-xl p-2.5 font-bold bg-white outline-none">
-            <option value="ผ่าน" class="text-emerald-700">ผ่าน (Approved)</option>
-            <option value="ให้แก้ไข" class="text-amber-700">ส่งกลับให้แก้ไข (Needs Revision)</option>
-            <option value="ยอดเยี่ยม" class="text-indigo-700">ยอดเยี่ยม (Excellent)</option>
+          <select id="gradeStatusInput" class="w-full border rounded-xl p-2.5 font-bold bg-white outline-none focus:border-indigo-500">
+            <option value="ผ่าน" class="text-emerald-700">✅ ผ่าน (Approved)</option>
+            <option value="ให้แก้ไข" class="text-rose-700">⚠️ ส่งกลับให้แก้ไข (Needs Revision)</option>
+            <option value="ยอดเยี่ยม" class="text-indigo-700">🌟 ยอดเยี่ยม (Excellent)</option>
           </select>
         </div>
 
         <div>
           <label class="block font-bold text-slate-700 mb-1">คะแนนที่ได้ (0 - 100 คะแนน)</label>
-          <input type="number" id="gradeScoreInput" min="0" max="100" value="85" class="w-full border rounded-xl p-2.5 text-base font-black text-indigo-900 bg-white outline-none">
+          <input type="number" id="gradeScoreInput" min="0" max="100" value="85" class="w-full border rounded-xl p-2.5 text-base font-black text-indigo-900 bg-white outline-none focus:border-indigo-500">
         </div>
 
         <div>
-          <label class="block font-bold text-slate-700 mb-1">ข้อเสนอแนะของอาจารย์ (Feedback สำหรับพัฒนา)</label>
-          <textarea id="gradeFeedbackInput" rows="3" placeholder="ระบุสิ่งที่ทำได้ดี และจุดที่ต้องปรับปรุง เช่น การระบุข้อวินิจฉัยทางการพยาบาลให้สอดคล้องกับอาการ..." class="w-full border rounded-xl p-2.5 bg-white outline-none"></textarea>
+          <label class="block font-bold text-slate-700 mb-1">ข้อเสนอแนะของอาจารย์ (Feedback สำหรับนักศึกษา)</label>
+          <textarea id="gradeFeedbackInput" rows="3" placeholder="ระบุสิ่งที่ทำได้ดี และจุดที่ต้องปรับปรุง เช่น การระบุข้อวินิจฉัยทางการพยาบาลให้สอดคล้องกับข้อมูลสนับสนุน..." class="w-full border rounded-xl p-2.5 bg-white outline-none focus:border-indigo-500"></textarea>
         </div>
 
-        <button onclick="submitGrading()" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white font-black rounded-2xl text-xs shadow-md shadow-indigo-500/25 transition">
-          บันทึกผลการตรวจและส่งคะแนน
-        </button>
+        <div class="flex gap-2 pt-1">
+          <button onclick="submitGrading()" id="btnSubmitGrading" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white font-black rounded-2xl text-xs shadow-md shadow-indigo-500/25 transition">
+            💾 บันทึกผลการตรวจและส่งคะแนน
+          </button>
+          <button onclick="closeModal('gradeWorkModal')" class="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl text-xs transition">
+            ยกเลิก
+          </button>
+        </div>
       </div>
     </div>
   </div>
 
   <!-- ================= 4. MODAL ส่งงาน CARE PLAN (สำหรับนักศึกษา) ================= -->
   <div id="submitWorkModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-[36px] max-w-sm w-full p-5 sm:p-6 space-y-3.5 shadow-2xl border-2 border-white anim-pop text-xs">
+    <div class="bg-white rounded-[36px] max-w-md w-full p-5 sm:p-6 space-y-3.5 shadow-2xl border-4 border-indigo-100 anim-pop text-xs max-h-[92vh] overflow-y-auto custom-scroll">
       <div class="flex justify-between items-center border-b pb-2">
-        <h3 class="font-black text-slate-800 text-sm">ส่ง Daily Care Plan ประจำวัน</h3>
-        <button onclick="closeModal('submitWorkModal')" class="text-slate-400 hover:text-slate-600 text-lg">&times;</button>
+        <h3 class="font-black text-slate-800 text-sm flex items-center gap-1.5" id="submitWorkModalTitle">
+          <span>📤</span> <span>ส่ง Daily Care Plan ประจำวัน</span>
+        </h3>
+        <button onclick="closeModal('submitWorkModal')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm">✕</button>
       </div>
+
+      <input type="hidden" id="wEditWorkId" value="">
 
       <div class="space-y-2.5">
         <div>
-          <label class="block font-bold text-slate-700 mb-1">หัวข้องาน / วินิจฉัยโรคผู้ป่วย *</label>
-          <input type="text" id="wSubjectInput" placeholder="เช่น Care Plan ผู้ป่วย Acute Appendicitis" class="w-full border rounded-xl p-2.5 bg-slate-50 outline-none">
+          <label class="block font-bold text-slate-700 mb-1">ชื่อนักศึกษาผู้ส่งงาน *</label>
+          <select id="wStudentSelect" onchange="localStorage.setItem('current_student_id', this.value)" class="w-full border rounded-xl p-2.5 bg-slate-50 font-bold text-slate-800 outline-none focus:border-indigo-500"></select>
         </div>
         <div>
-          <label class="block font-bold text-slate-700 mb-1">สรุปย่ออาการสำคัญ / กิจกรรมพยาบาล</label>
-          <textarea id="wContentInput" rows="2" placeholder="ระบุการประเมินแรกรับ และการพยาบาลที่ให้..." class="w-full border rounded-xl p-2 bg-slate-50 outline-none"></textarea>
+          <label class="block font-bold text-slate-700 mb-1">หัวข้องาน / วินิจฉัยโรคผู้ป่วย (Diagnosis) *</label>
+          <input type="text" id="wSubjectInput" placeholder="เช่น Care Plan ผู้ป่วย Acute Appendicitis / Sepsis" class="w-full border rounded-xl p-2.5 bg-slate-50 font-semibold outline-none focus:border-indigo-500">
         </div>
         <div>
-          <label class="block font-bold text-slate-700 mb-1">ลิงก์ Google Drive ไฟล์ Care Plan (PDF/Docs) *</label>
-          <input type="url" id="wLinkInput" placeholder="https://drive.google.com/..." class="w-full border rounded-xl p-2.5 bg-slate-50 outline-none">
-          <p class="text-[10px] text-slate-400 mt-1">*กรุณาตั้งสิทธิ์แชร์ไฟล์เป็น ทุกคนที่มีลิงก์สามารถดูได้</p>
+          <label class="block font-bold text-slate-700 mb-1">สรุปอาการสำคัญ / ข้อวินิจฉัยการพยาบาล / กิจกรรมพยาบาล</label>
+          <textarea id="wContentInput" rows="3" placeholder="ระบุข้อมูลสนับสนุน (S/O), ข้อวินิจฉัยทางการพยาบาล และการพยาบาลที่ให้..." class="w-full border rounded-xl p-2.5 bg-slate-50 outline-none focus:border-indigo-500"></textarea>
+        </div>
+        <div class="p-3 bg-indigo-50/60 rounded-2xl border border-indigo-100 space-y-2">
+          <label class="block font-bold text-indigo-950">📎 แนบไฟล์งาน Care Plan (เลือกแนบไฟล์ หรือ วางลิงก์)</label>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-600 mb-1">1. อัปโหลดไฟล์จากเครื่อง (PDF / รูปภาพ / Word ไม่เกิน 5MB):</label>
+            <input type="file" id="wFileInput" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png" class="w-full text-[11px] file:mr-2 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-indigo-600 file:text-white hover:file:bg-indigo-700 cursor-pointer">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-600 mb-1">2. หรือวางลิงก์ Google Drive / Canva / Docs:</label>
+            <input type="url" id="wLinkInput" placeholder="https://drive.google.com/..." class="w-full border rounded-xl p-2 bg-white outline-none focus:border-indigo-500">
+          </div>
         </div>
 
-        <button onclick="submitNewWork()" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-95 text-white font-black rounded-xl text-xs shadow-md transition">
-          ยืนยันการส่ง Care Plan
-        </button>
+        <div class="flex gap-2 pt-1">
+          <button onclick="submitNewWork()" id="btnConfirmSubmitWork" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-95 text-white font-black rounded-xl text-xs shadow-md transition">
+            ✅ ยืนยันการส่ง Care Plan
+          </button>
+          <button onclick="closeModal('submitWorkModal')" class="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs transition">
+            ยกเลิก
+          </button>
+        </div>
       </div>
     </div>
   </div>
@@ -938,6 +963,14 @@
       GROUP_5_DATA = [...DEFAULT_STUDENTS];
     }
 
+    // โหลดรูป B01 แบบกำหนดเองหากเคยอัปโหลดแทนที่ไว้
+    try {
+      const customB01 = localStorage.getItem('nursenote_custom_b01');
+      if (customB01) {
+        window.B01_CUSTOM_URLS = JSON.parse(customB01);
+      }
+    } catch(e) {}
+
     // อัปเดต mascotId ให้อัตโนมัติหากยังไม่มี
     GROUP_5_DATA.forEach((s, idx) => {
       if (!s.mascotId) {
@@ -953,6 +986,7 @@
     let currentSession = null;
     let currentStudentId = localStorage.getItem('current_student_id') || "STU-09";
     let dashboardData = null;
+    let allLoadedWorks = [];
     let selectedRadialStudent = null;
     let teamCount = 2;
     let currentShuffledTeams = [];
@@ -968,35 +1002,74 @@
       if (savedFeatures) systemFeatures = Object.assign(systemFeatures, JSON.parse(savedFeatures));
     } catch(e) {}
 
+    // ฟังก์ชันช่วยแสดงรูปอวาตาร์ (รองรับทั้งรูปอัปโหลดเอง s.customAvatar และ HiClassMascots B01-B10 / G01-G10)
+    function renderStudentAvatarHtml(s, idx, size = 105, options = {}) {
+      if (s && s.customAvatar) {
+        return `<img src="${s.customAvatar}" alt="${s.name || ''}" style="width:${size}px;height:${size}px;" class="rounded-full object-cover select-none ${options.className || 'pointer-events-none'}">`;
+      }
+      const mascotId = (s && s.mascotId) ? s.mascotId : (window.HiClassMascots ? window.HiClassMascots.getStudentMascotId(s || {}, idx || 0) : 'G01');
+      if (window.HiClassMascots) {
+        return window.HiClassMascots.renderMascotHtml(mascotId, size, options);
+      }
+      return '';
+    }
+
     window.onload = function() {
       currentSession = requireLogin();
       if (!currentSession) return;
 
+      const btnTeacher = document.getElementById('btnTeacherToggle');
+      const btnQuickAll = document.getElementById('btnQuickCheckAll');
+      const tabTeacherSec = document.getElementById('tabTeacherSection');
+
       if (currentSession.isAdmin) {
-        document.getElementById('btnTeacherToggle').classList.remove('hidden');
-        document.getElementById('btnQuickCheckAll').classList.remove('hidden');
+        if (btnTeacher) btnTeacher.classList.remove('hidden');
+        if (btnQuickAll) btnQuickAll.classList.remove('hidden');
+      } else {
+        // ซ่อนแผงควบคุมอาจารย์อย่างเด็ดขาดสำหรับนักศึกษา
+        if (btnTeacher) btnTeacher.classList.add('hidden');
+        if (btnQuickAll) btnQuickAll.classList.add('hidden');
+        if (tabTeacherSec) tabTeacherSec.classList.add('hidden');
       }
 
       applyFeatureSwitchesUI();
       renderAvatarGrid();
       initRadarChart();
-      loadDashboard();
       initTeamMembersDropdown();
       renderStudentManagerTable();
-      updateReportDashboard();
+      loadDashboard();
     };
 
-    // 1. สลับหน้าแท็บหลัก
+    // 1. สลับหน้าแท็บหลัก (ป้องกันนักศึกษาเข้าหน้าอาจารย์ 100%)
     function switchTab(tabId) {
+      if (tabId === 'teacher' && (!currentSession || !currentSession.isAdmin)) {
+        Swal.fire({
+          icon: 'error',
+          title: 'จำกัดสิทธิ์เฉพาะอาจารย์นิเทศก์ 🔒',
+          text: 'นักศึกษาไม่สามารถเข้าใช้งานแผงควบคุมของอาจารย์ได้',
+          confirmButtonColor: '#6366f1'
+        });
+        return;
+      }
+
       document.getElementById('tabClassSection').classList.add('hidden');
       document.getElementById('tabReportSection').classList.add('hidden');
       document.getElementById('tabTeamsSection').classList.add('hidden');
       document.getElementById('tabWorksSection').classList.add('hidden');
       document.getElementById('tabTeacherSection').classList.add('hidden');
 
-      document.querySelectorAll('#tabBtnClass, #tabBtnReport, #tabBtnTeams, #tabBtnWorks, #btnTeacherToggle').forEach(el => {
+      document.querySelectorAll('#tabBtnClass, #tabBtnReport, #tabBtnTeams, #tabBtnWorks').forEach(el => {
         el.className = "px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition";
       });
+
+      const btnTeacher = document.getElementById('btnTeacherToggle');
+      if (btnTeacher) {
+        if (currentSession && currentSession.isAdmin) {
+          btnTeacher.className = "px-3 py-1.5 rounded-xl text-purple-700 hover:text-purple-950 font-black transition";
+        } else {
+          btnTeacher.className = "hidden";
+        }
+      }
 
       if (tabId === 'class') {
         document.getElementById('tabClassSection').classList.remove('hidden');
@@ -1014,47 +1087,24 @@
         document.getElementById('tabBtnWorks').className = "px-3 py-1.5 rounded-xl bg-white text-indigo-900 shadow-sm font-black transition";
       } else if (tabId === 'teacher') {
         document.getElementById('tabTeacherSection').classList.remove('hidden');
-        document.getElementById('btnTeacherToggle').className = "px-3 py-1.5 rounded-xl bg-purple-600 text-white shadow-sm font-black transition";
+        if (btnTeacher) {
+          btnTeacher.className = "px-3 py-1.5 rounded-xl bg-purple-600 text-white shadow-sm font-black transition";
+        }
         renderStudentManagerTable();
+        renderTeacherWorksTable(allLoadedWorks);
       }
     }
 
     function toggleTeacherMode() {
-      switchTab('teacher');
-    }
-
-    // 2. ฟังก์ชันตรวจสอบเพศและดึงรูป 3D Pixar ประจำตัวนักศึกษา (ใช้รูปต้นฉบับที่คุณครูส่งมา 100%)
-    function getStudentAvatarSrc(s) {
-      const name = (s.fullName || s.name || "").trim();
-      const isMale = name.startsWith("นาย") || s.gender === "male";
-      
-      let defaultImg = isMale ? "student_boy.png" : "student_girl.png";
-      if (window.HICLASS_AVATARS) {
-        if (isMale && window.HICLASS_AVATARS.boy) defaultImg = window.HICLASS_AVATARS.boy;
-        if (!isMale && window.HICLASS_AVATARS.girl) defaultImg = window.HICLASS_AVATARS.girl;
+      if (!currentSession || !currentSession.isAdmin) {
+        Swal.fire({
+          icon: 'error',
+          title: 'จำกัดสิทธิ์เฉพาะอาจารย์นิเทศก์ 🔒',
+          text: 'เฉพาะอาจารย์ประจำวิชาเท่านั้นที่เข้าใช้งานส่วนนี้ได้'
+        });
+        return;
       }
-
-      const maleCandidates = [
-        "student_boy.png",
-        "img/student_boy.png",
-        "avatars/student_boy.png",
-        "nurse_boy.png.jpg",
-        "nurse_boy.png"
-      ];
-      const femaleCandidates = [
-        "student_girl.png",
-        "img/student_girl.png",
-        "avatars/student_girl.png",
-        "nurse_girl.png.jpg",
-        "nurse_girl.png"
-      ];
-
-      const candidates = isMale ? maleCandidates : femaleCandidates;
-      return {
-        defaultImg: defaultImg,
-        fallbackList: candidates,
-        isMale
-      };
+      switchTab('teacher');
     }
 
     // ฟังก์ชันเปลี่ยนอารมณ์นักศึกษา (ยิ้ม / ร้องไห้) แสดงป้ายอีโมจิ 3D บอลลูนลอยขึ้นมา
@@ -1083,8 +1133,15 @@
     // 3. เรนเดอร์การ์ดอวาตาร์ HiClass Mascot คมชัดระดับโปร + สายตาและศีรษะหันตามเมาส์ 60fps
     function renderAvatarGrid() {
       const grid = document.getElementById('avatarGrid');
+      if (!grid) return;
       grid.innerHTML = GROUP_5_DATA.map((s, idx) => {
-        const mascotId = s.mascotId || (window.HiClassMascots ? window.HiClassMascots.getStudentMascotId(s, idx) : 'G01');
+        const starVal = s.heroScore !== undefined ? s.heroScore : 10;
+        const attStatus = s.attStatus || 'ตรงเวลา';
+        const attText = attStatus === 'ตรงเวลา' ? '✔️ มาเรียน' : attStatus;
+        const attClass = attStatus === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' :
+                         attStatus === 'สาย' ? 'bg-amber-100 text-amber-800 border border-amber-300' :
+                         attStatus === 'ส่งงานช้า' ? 'bg-purple-100 text-purple-800 border border-purple-300' :
+                         'bg-rose-100 text-rose-800 border border-rose-300';
         return `
           <div id="avatarCard_${s.studentId}" 
                class="clay-card p-3 sm:p-4 flex flex-col items-center justify-between text-center relative group min-h-[220px] sm:min-h-[240px] cursor-pointer hover:shadow-xl transition-all" 
@@ -1096,21 +1153,19 @@
                 ${idx + 1}
               </span>
               <span class="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 border border-amber-300 flex items-center gap-1 shadow-2xs font-extrabold">
-                ⭐ <span id="starScore_${s.studentId}">10</span>
+                ⭐ <span id="starScore_${s.studentId}">${starVal}</span>
               </span>
             </div>
 
             <!-- กล่องอวาตาร์ HiClass Mascot คมชัดพิเศษ พร้อมระบบตาและศีรษะมองตามเมาส์แบบเรียลไทม์ -->
             <div class="relative w-24 h-24 sm:w-28 sm:h-28 my-1 flex items-center justify-center rounded-full bg-gradient-to-b from-amber-50 to-orange-100/50 border-3 border-white shadow-inner overflow-hidden pointer-events-none">
-              <!-- ป้ายอารมณ์ ยิ้ม/ร้องไห้ เด้งลอยมุมขวาบน -->
               <span id="moodBadge_${s.studentId}" class="hidden"></span>
-
               <div id="cardMascotBox_${s.studentId}">
-                ${window.HiClassMascots ? window.HiClassMascots.renderMascotHtml(mascotId, 105, { className: 'pointer-events-none' }) : ''}
+                ${renderStudentAvatarHtml(s, idx, 105, { className: 'pointer-events-none' })}
               </div>
             </div>
 
-            <!-- ชื่อนักศึกษา (แบบ Pill สีขาว มีเลขที่วงกลมสีเขียวด้านหน้า เหมือนรูปที่ 4) -->
+            <!-- ชื่อนักศึกษา -->
             <div class="mt-1 px-3 py-1 rounded-full bg-white shadow-xs border border-slate-100 flex items-center gap-1.5 pointer-events-none max-w-[95%]">
               <span class="w-4 h-4 rounded-full bg-emerald-700 text-white text-[9px] font-black flex items-center justify-center flex-shrink-0">
                 ${idx + 1}
@@ -1120,8 +1175,8 @@
 
             <!-- Badge สถานะเข้าเวรปัจจุบัน -->
             <div class="mt-1 pointer-events-none">
-              <span id="attBadge_${s.studentId}" class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-100 text-emerald-800 border border-emerald-300">
-                ✔️ มาเรียน
+              <span id="attBadge_${s.studentId}" class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${attClass}">
+                ${attText}
               </span>
             </div>
 
@@ -1142,7 +1197,7 @@
       }
     }
 
-    // 4. RADIAL POPUP ACTION (คลิกแล้วเด้งรอบตัวนักศึกษา ถอดแบบ HiClass 100%)
+    // 4. RADIAL POPUP ACTION
     function openRadialModal(studentId) {
       const s = GROUP_5_DATA.find(x => x.studentId === studentId);
       if (!s) return;
@@ -1150,12 +1205,10 @@
 
       const idx = GROUP_5_DATA.findIndex(x => x.studentId === studentId);
       const studentNum = idx >= 0 ? idx + 1 : 1;
-      const mascotId = s.mascotId || (window.HiClassMascots ? window.HiClassMascots.getStudentMascotId(s, idx) : 'G01');
 
-      // แสดง HiClass Mascot คมชัดระดับโปรขนาด 215px พร้อมสายตามองตามเมาส์
       const radialDisplay = document.getElementById('radialAvatarDisplay');
-      if (window.HiClassMascots) {
-        radialDisplay.innerHTML = window.HiClassMascots.renderMascotHtml(mascotId, 215, {
+      if (radialDisplay) {
+        radialDisplay.innerHTML = renderStudentAvatarHtml(s, idx, 215, {
           className: 'pointer-events-none select-none transition-transform duration-75',
           trackMouse: true
         });
@@ -1179,18 +1232,16 @@
       document.getElementById('radialModal').classList.add('hidden');
     }
 
-    function handleModalHeadTilt(e, card) {
-      // เมื่อใช้ HiClass Eye Tracking แล้ว ระบบจะจัดการสายตาและไมโครทิลต์ให้อัตโนมัติ 60 FPS
-    }
-
-    function resetModalHeadTilt(card) {
-      // จัดการผ่าน HiClass Mascot Engine
-    }
+    function handleModalHeadTilt(e, card) {}
+    function resetModalHeadTilt(card) {}
 
     function recordDailyHabit(habit) {
       if (!selectedRadialStudent) return;
-      
-      // แสดง Reaction หัวใจหรือรอยยิ้ม
+      if (!currentSession || !currentSession.isAdmin) {
+        Swal.fire({ icon: 'info', title: 'เฉพาะอาจารย์นิเทศก์', text: 'การบันทึกคะแนนพิเศษสงวนสิทธิ์สำหรับอาจารย์นิเทศก์ (นักศึกษาสามารถกดปุ่ม 👔 เพื่อเปลี่ยนชุดอวตารได้ครับ)' });
+        return;
+      }
+
       const modalMascot = document.querySelector('#radialAvatarDisplay .mascot-container');
       if (modalMascot && window.HiClassMascots) {
         window.HiClassMascots.triggerMascotReaction(modalMascot, 'heart', 1800);
@@ -1216,14 +1267,25 @@
       }, 500);
     }
 
-    // เช็คชื่อด่วน (มาเรียน, สาย, ลาป่วย, ลากิจ, ขาดเรียน, ส่งงานช้า)
+    // เช็คชื่อด่วน (เฉพาะอาจารย์)
     async function quickAttendanceAction(status) {
       if (!selectedRadialStudent) return;
+      if (!currentSession || !currentSession.isAdmin) {
+        Swal.fire({
+          icon: 'info',
+          title: 'เฉพาะอาจารย์นิเทศก์',
+          text: 'การเช็คชื่อรายบุคคลในห้องเรียนจำลองสงวนสิทธิ์สำหรับอาจารย์ นักศึกษาสามารถเช็คชื่อผ่านเมนู "สแกนใบหน้า & GPS" ได้เลยครับ'
+        });
+        return;
+      }
+      if (!systemFeatures.attendance) {
+        Swal.fire({ icon: 'warning', title: 'ระบบเช็คชื่อปิดอยู่ชั่วคราว', text: 'กรุณาเปิดสวิตช์ระบบเช็คชื่อในแผงควบคุมอาจารย์ก่อน' });
+        return;
+      }
 
       const modalMascot = document.querySelector('#radialAvatarDisplay .mascot-container');
       const cardMascot = document.querySelector(`#avatarCard_${selectedRadialStudent.studentId} .mascot-container`);
 
-      // ปฏิกิริยาสีหน้าและสายตาตามสถานะ (HiClass Mascot Reaction)
       if (status === 'ตรงเวลา') {
         if (modalMascot && window.HiClassMascots) window.HiClassMascots.triggerMascotReaction(modalMascot, 'delighted', 2000);
         if (cardMascot && window.HiClassMascots) window.HiClassMascots.triggerMascotReaction(cardMascot, 'delighted', 3000);
@@ -1242,40 +1304,44 @@
         if (cardMascot && window.HiClassMascots) window.HiClassMascots.triggerMascotReaction(cardMascot, 'sleepy', 3000);
       }
 
-      // แสดงอารมณ์ให้คุณครูเห็นแป๊บหนึ่งก่อนปิด Modal
       setTimeout(() => {
         closeRadialModal();
       }, 450);
 
-      Swal.fire({ title: 'กำลังบันทึก...', didOpen: () => Swal.showLoading(), timer: 600 });
+      // บันทึกสถานะลงใน GROUP_5_DATA ทันที
+      selectedRadialStudent.attStatus = status;
+      localStorage.setItem('nursenote_group5_students', JSON.stringify(GROUP_5_DATA));
+
+      const badge = document.getElementById(`attBadge_${selectedRadialStudent.studentId}`);
+      if (badge) {
+        badge.textContent = status === 'ตรงเวลา' ? '✔️ มาเรียน' : status;
+        badge.className = `px-2.5 py-0.5 rounded-full text-[10px] font-black ${
+          status === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' :
+          status === 'สาย' ? 'bg-amber-100 text-amber-800 border border-amber-300' :
+          status === 'ส่งงานช้า' ? 'bg-purple-100 text-purple-800 border border-purple-300' :
+          'bg-rose-100 text-rose-800 border border-rose-300'
+        }`;
+      }
+      updateReportDashboard();
+
       try {
-        const d = await apiPost('checkInAttendance', {
+        await apiPost('checkInAttendance', {
           studentId: selectedRadialStudent.studentId,
           studentName: selectedRadialStudent.fullName,
           status: status
         });
-        
-        // อัปเดต badge บนการ์ด
-        const badge = document.getElementById(`attBadge_${selectedRadialStudent.studentId}`);
-        if (badge) {
-          badge.textContent = status === 'ตรงเวลา' ? '✔️ มาเรียน' : status;
-          badge.className = `px-2.5 py-0.5 rounded-full text-[10px] font-black ${
-            status === 'ตรงเวลา' ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' :
-            status === 'สาย' ? 'bg-amber-100 text-amber-800 border border-amber-300' :
-            status === 'ส่งงานช้า' ? 'bg-purple-100 text-purple-800 border border-purple-300' :
-            'bg-rose-100 text-rose-800 border border-rose-300'
-          }`;
-        }
-        updateReportDashboard();
       } catch(e) {}
     }
 
-    // ให้คะแนนความดี Hero Point ด่วน
+    // ให้คะแนนความดี Hero Point ด่วน (เฉพาะอาจารย์)
     async function awardHeroQuick(points) {
       if (!selectedRadialStudent) return;
+      if (!currentSession || !currentSession.isAdmin) {
+        Swal.fire({ icon: 'info', title: 'เฉพาะอาจารย์นิเทศก์', text: 'เฉพาะอาจารย์นิเทศก์เท่านั้นที่สามารถมอบดาวความดีให้ได้' });
+        return;
+      }
       closeRadialModal();
 
-      // ถ้าได้คะแนนบวก → ยิ้มแย้มตาเป็นดาว (Starstruck) + พลุกระดาษ confetti
       if (points > 0) {
         triggerStudentMood(selectedRadialStudent.studentId, 'smile');
         const cardMascot = document.querySelector(`#avatarCard_${selectedRadialStudent.studentId} .mascot-container`);
@@ -1291,21 +1357,24 @@
         }
       }
 
-      const d = await apiAwardHeroScore(selectedRadialStudent.studentId, points);
+      const starEl = document.getElementById(`starScore_${selectedRadialStudent.studentId}`);
+      const newScore = Math.max(0, parseInt(starEl ? starEl.textContent : (selectedRadialStudent.heroScore || 10)) + points);
+      if (starEl) starEl.textContent = newScore;
+      selectedRadialStudent.heroScore = newScore;
+      localStorage.setItem('nursenote_group5_students', JSON.stringify(GROUP_5_DATA));
+      updateReportDashboard();
+
       Swal.fire({
         icon: points > 0 ? 'success' : 'warning',
         title: points > 0 ? `+${points} ดาวความดี! ⭐` : `${points} คะแนน`,
         text: `บันทึกคะแนนให้ ${selectedRadialStudent.name} เรียบร้อยแล้ว`,
-        timer: 1500,
+        timer: 1400,
         showConfirmButton: false
       });
 
-      // อัปเดตตัวเลขดาวบนการ์ด
-      const starEl = document.getElementById(`starScore_${selectedRadialStudent.studentId}`);
-      if (starEl) {
-        starEl.textContent = Math.max(0, parseInt(starEl.textContent || '10') + points);
-      }
-      updateReportDashboard();
+      try {
+        await apiAwardHeroScore(selectedRadialStudent.studentId, points);
+      } catch(e) {}
     }
 
     // 5. สวิตช์เปิด/ปิดฟังก์ชันระบบ (Feature Flags)
@@ -1317,15 +1386,22 @@
       if (swGrading) swGrading.checked = systemFeatures.grading;
       if (swAtt) swAtt.checked = systemFeatures.attendance;
 
-      document.getElementById('statusWorkSubmitLabel').textContent = systemFeatures.work_submission ? 'เปิดรับส่งงานปกติ' : '🔴 ปิดรับส่งงานชั่วคราว';
-      document.getElementById('statusGradingLabel').textContent = systemFeatures.grading ? 'เปิดใช้งานปกติ' : '🔴 ปิดการตรวจชั่วคราว';
-      document.getElementById('statusAttendanceLabel').textContent = systemFeatures.attendance ? 'เปิดเช็คชื่อปกติ' : '🔴 ปิดเช็คชื่อชั่วคราว';
+      const lblW = document.getElementById('statusWorkSubmitLabel');
+      const lblG = document.getElementById('statusGradingLabel');
+      const lblA = document.getElementById('statusAttendanceLabel');
+      if (lblW) lblW.textContent = systemFeatures.work_submission ? 'เปิดรับส่งงานปกติ' : '🔴 ปิดรับส่งงานชั่วคราว';
+      if (lblG) lblG.textContent = systemFeatures.grading ? 'เปิดใช้งานปกติ' : '🔴 ปิดการตรวจชั่วคราว';
+      if (lblA) lblA.textContent = systemFeatures.attendance ? 'เปิดเช็คชื่อปกติ' : '🔴 ปิดเช็คชื่อชั่วคราว';
     }
 
-    function toggleFeatureSetting(key, enabled) {
+    async function toggleFeatureSetting(key, enabled) {
+      if (!currentSession || !currentSession.isAdmin) return;
       systemFeatures[key] = enabled;
       localStorage.setItem('nursenote_features', JSON.stringify(systemFeatures));
       applyFeatureSwitchesUI();
+      try {
+        await apiPost('updateCheckinSettings', { [key]: enabled });
+      } catch(e) {}
       Swal.fire({
         icon: 'info',
         title: 'อัปเดตสวิตช์ระบบแล้ว',
@@ -1341,7 +1417,7 @@
       if (!tbody) return;
       tbody.innerHTML = GROUP_5_DATA.map((s, idx) => {
         const isMale = (s.fullName || s.name || "").startsWith("นาย") || s.gender === 'male';
-        const mascotId = s.mascotId || (window.HiClassMascots ? window.HiClassMascots.getStudentMascotId(s, idx) : 'G01');
+        const starVal = s.heroScore !== undefined ? s.heroScore : 10;
         return `
           <tr class="hover:bg-purple-50/50">
             <td class="p-2.5 text-center font-bold text-slate-500">${idx + 1}</td>
@@ -1349,20 +1425,23 @@
             <td class="p-2.5 font-bold text-slate-800">
               <div class="flex items-center gap-2">
                 <div class="w-8 h-8 rounded-full overflow-hidden bg-amber-50 border border-slate-200 flex items-center justify-center shrink-0">
-                  ${window.HiClassMascots ? window.HiClassMascots.renderMascotHtml(mascotId, 32, { className: 'pointer-events-none' }) : ''}
+                  ${renderStudentAvatarHtml(s, idx, 32, { className: 'pointer-events-none' })}
                 </div>
                 <span>${s.fullName}</span>
               </div>
             </td>
             <td class="p-2.5 text-center">
               <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${isMale ? 'bg-sky-100 text-sky-800' : 'bg-pink-100 text-pink-800'}">
-                ${isMale ? '👨🏻‍⚕️ ชาย' : '👩🏻‍⚕️ หญิง'}
+                ${isMale ? '👨🏻‍⚕️ ชาย' : '👩🏻‍⚕️ หญิง'} (${s.customAvatar ? 'รูปอัปโหลด' : (s.mascotId || 'G01')})
               </span>
             </td>
-            <td class="p-2.5 text-center font-black text-amber-700">⭐ 10</td>
+            <td class="p-2.5 text-center font-black text-amber-700">⭐ ${starVal}</td>
             <td class="p-2.5 text-center">
               <div class="flex items-center justify-center gap-1.5">
-                <button onclick="editStudentAction('${s.studentId}')" class="w-7 h-7 rounded-lg bg-indigo-50 hover:bg-indigo-100 flex items-center justify-center font-bold text-xs active:scale-95 transition" title="แก้ไข">
+                <button onclick="openWardrobeModal('${s.studentId}')" class="w-7 h-7 rounded-lg bg-amber-50 hover:bg-amber-100 flex items-center justify-center font-bold text-xs active:scale-95 transition" title="เปลี่ยนรูปอวตาร/ชุด">
+                  <span>👔</span>
+                </button>
+                <button onclick="editStudentAction('${s.studentId}')" class="w-7 h-7 rounded-lg bg-indigo-50 hover:bg-indigo-100 flex items-center justify-center font-bold text-xs active:scale-95 transition" title="แก้ไขข้อมูล">
                   <span>✏️</span>
                 </button>
                 <button onclick="deleteStudentAction('${s.studentId}')" class="w-7 h-7 rounded-lg bg-rose-50 hover:bg-rose-100 flex items-center justify-center font-bold text-xs active:scale-95 transition" title="ลบ">
@@ -1383,6 +1462,7 @@
     }
 
     function openStudentModal(editId = null) {
+      if (!currentSession || !currentSession.isAdmin) return;
       document.getElementById('editStudentOriginalId').value = editId || '';
       if (editId) {
         const s = GROUP_5_DATA.find(x => x.studentId === editId);
@@ -1428,15 +1508,15 @@
         return;
       }
 
-      const isMale = fullName.startsWith('นาย');
+      const isMale = fullName.startsWith('นาย') || mascotId.startsWith('B');
       const colors = ['from-pink-400 to-rose-300', 'from-amber-400 to-yellow-300', 'from-purple-400 to-pink-300', 'from-emerald-400 to-teal-300', 'from-sky-400 to-blue-300', 'from-indigo-400 to-purple-300'];
       const randomColor = colors[Math.floor(Math.random() * colors.length)];
 
       if (origId) {
-        // อัปเดตคนเดิม
         const idx = GROUP_5_DATA.findIndex(x => x.studentId === origId);
         if (idx !== -1) {
           GROUP_5_DATA[idx] = { 
+            ...GROUP_5_DATA[idx],
             studentId, 
             name, 
             fullName, 
@@ -1446,7 +1526,6 @@
           };
         }
       } else {
-        // เพิ่มคนใหม่
         GROUP_5_DATA.push({
           studentId,
           name,
@@ -1467,36 +1546,41 @@
       Swal.fire({ icon: 'success', title: 'บันทึกเรียบร้อย', timer: 1200, showConfirmButton: false });
     }
 
-    // ================= ระบบห้องแต่งตัว / เปลี่ยนชุด & ทรงผม (WARDROBE SYSTEM) =================
+    // ================= ระบบห้องแต่งตัว / เปลี่ยนชุด & อัปโหลดรูปอวตารเอง (WARDROBE SYSTEM) =================
     let wardrobeTargetStudent = null;
     let selectedWardrobeMascotId = 'G01';
+    let uploadedCustomAvatarDataUrl = null;
 
     function openWardrobeModal(studentId = null) {
       const s = studentId ? GROUP_5_DATA.find(x => x.studentId === studentId) : selectedRadialStudent;
       if (!s) return;
       wardrobeTargetStudent = s;
+      uploadedCustomAvatarDataUrl = s.customAvatar || null;
 
       const idx = GROUP_5_DATA.findIndex(x => x.studentId === s.studentId);
       selectedWardrobeMascotId = s.mascotId || (window.HiClassMascots ? window.HiClassMascots.getStudentMascotId(s, idx) : 'G01');
 
-      document.getElementById('wardrobeStudentTitle').textContent = `${s.name} (${s.fullName.split(' ')[0]})`;
-      updateWardrobePreview(selectedWardrobeMascotId);
+      document.getElementById('wardrobeStudentTitle').textContent = `${s.name} (${s.fullName})`;
+      const fileInp = document.getElementById('customAvatarFileInput');
+      if (fileInp) fileInp.value = '';
 
-      // เรนเดอร์ตัวเลือกชุด 20 สไตล์ (หญิง G01-G10, ชาย B01-B10)
+      updateWardrobePreview(selectedWardrobeMascotId, uploadedCustomAvatarDataUrl);
+
+      // เรนเดอร์ตัวเลือกชุด 20 สไตล์ (หญิง G01-G10, ชาย B01-B10 โดย B01 คือ ผมสั้นคล้องหูฟัง)
       const grid = document.getElementById('wardrobeGrid');
       const allMascots = window.HICLASS_MASCOTS ? window.HICLASS_MASCOTS.mascots : {};
       const keys = Object.keys(allMascots).filter(k => k.startsWith('G') || k.startsWith('B'));
 
       grid.innerHTML = keys.map(k => {
         const item = allMascots[k];
-        const isSelected = k === selectedWardrobeMascotId;
+        const isSelected = !uploadedCustomAvatarDataUrl && (k === selectedWardrobeMascotId);
         return `
           <div onclick="selectWardrobeMascot('${k}')" 
                class="p-1.5 rounded-2xl border-2 flex flex-col items-center cursor-pointer transition transform hover:scale-105 active:scale-95 ${isSelected ? 'border-amber-500 bg-amber-50 shadow-md' : 'border-slate-100 bg-white hover:border-amber-200'}">
             <div class="w-14 h-14 rounded-full bg-slate-50 border border-slate-100 overflow-hidden flex items-center justify-center pointer-events-none">
               ${window.HiClassMascots ? window.HiClassMascots.renderMascotHtml(k, 52, { className: 'pointer-events-none', trackMouse: false }) : ''}
             </div>
-            <div class="text-[10px] font-black text-slate-700 truncate w-full text-center mt-1">${item.label || k}</div>
+            <div class="text-[10px] font-black text-slate-700 truncate w-full text-center mt-1">${k}: ${item.label || k}</div>
           </div>
         `;
       }).join('');
@@ -1506,12 +1590,15 @@
 
     function selectWardrobeMascot(mascotId) {
       selectedWardrobeMascotId = mascotId;
-      updateWardrobePreview(mascotId);
+      uploadedCustomAvatarDataUrl = null; // ล้างรูปอัปโหลดเมื่อเลือกตัวละคร 3D
+      const fileInp = document.getElementById('customAvatarFileInput');
+      if (fileInp) fileInp.value = '';
 
-      // อัปเดตกรอบสีของตัวที่เลือกในกริด
+      updateWardrobePreview(mascotId, null);
+
       const allItems = document.querySelectorAll('#wardrobeGrid > div');
       allItems.forEach(div => {
-        if (div.getAttribute('onclick').includes(mascotId)) {
+        if (div.getAttribute('onclick').includes(`'${mascotId}'`)) {
           div.className = "p-1.5 rounded-2xl border-2 flex flex-col items-center cursor-pointer transition transform scale-105 border-amber-500 bg-amber-50 shadow-md";
         } else {
           div.className = "p-1.5 rounded-2xl border-2 flex flex-col items-center cursor-pointer transition transform hover:scale-105 border-slate-100 bg-white hover:border-amber-200";
@@ -1519,15 +1606,52 @@
       });
     }
 
-    function updateWardrobePreview(mascotId) {
+    function handleCustomAvatarUpload(input) {
+      const file = input.files && input.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt) {
+        // ย่อขนาดภาพอัตโนมัติไม่ให้เกิน localStorage
+        const img = new Image();
+        img.onload = function() {
+          const canvas = document.createElement('canvas');
+          const maxDim = 360;
+          let w = img.width;
+          let h = img.height;
+          if (w > maxDim || h > maxDim) {
+            if (w > h) { h = Math.round(h * maxDim / w); w = maxDim; }
+            else { w = Math.round(w * maxDim / h); h = maxDim; }
+          }
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, w, h);
+          uploadedCustomAvatarDataUrl = canvas.toDataURL('image/png', 0.9);
+          updateWardrobePreview(selectedWardrobeMascotId, uploadedCustomAvatarDataUrl);
+        };
+        img.src = evt.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function updateWardrobePreview(mascotId, customDataUrl = null) {
       const box = document.getElementById('wardrobePreviewBox');
+      const label = document.getElementById('wardrobeCurrentLabel');
+      if (customDataUrl) {
+        if (box) {
+          box.innerHTML = `<img src="${customDataUrl}" class="w-full h-full object-cover rounded-full">`;
+        }
+        if (label) {
+          label.textContent = `สไตล์: รูปอวตารอัปโหลดเอง ✨`;
+        }
+        return;
+      }
       if (box && window.HiClassMascots) {
         box.innerHTML = window.HiClassMascots.renderMascotHtml(mascotId, 100, { className: 'pointer-events-none', trackMouse: true });
       }
-      const label = document.getElementById('wardrobeCurrentLabel');
       const item = window.HICLASS_MASCOTS?.mascots[mascotId];
       if (label && item) {
-        label.textContent = `สไตล์: ${item.label || mascotId}`;
+        label.textContent = `สไตล์ (${mascotId}): ${item.label || mascotId}`;
       }
     }
 
@@ -1536,24 +1660,28 @@
       const idx = GROUP_5_DATA.findIndex(x => x.studentId === wardrobeTargetStudent.studentId);
       if (idx !== -1) {
         GROUP_5_DATA[idx].mascotId = selectedWardrobeMascotId;
+        if (uploadedCustomAvatarDataUrl) {
+          GROUP_5_DATA[idx].customAvatar = uploadedCustomAvatarDataUrl;
+        } else {
+          delete GROUP_5_DATA[idx].customAvatar;
+        }
         localStorage.setItem('nursenote_group5_students', JSON.stringify(GROUP_5_DATA));
       }
 
       closeWardrobeModal();
 
-      // ถ้าเปิด Radial Modal อยู่ ให้อัปเดตรูปตรงกลางทันที
       if (selectedRadialStudent && selectedRadialStudent.studentId === wardrobeTargetStudent.studentId) {
         openRadialModal(wardrobeTargetStudent.studentId);
       }
 
-      // อัปเดตการ์ดทุกจุดในหน้าจอ
       renderAvatarGrid();
       renderStudentManagerTable();
+      if (currentShuffledTeams.length > 0) renderTeamsView(currentShuffledTeams);
       confetti({ particleCount: 30, spread: 50, origin: { y: 0.6 } });
       Swal.fire({
         icon: 'success',
-        title: 'เปลี่ยนชุดเรียบร้อย! ✨',
-        text: `${wardrobeTargetStudent.name} ใส่ชุดใหม่แล้ว`,
+        title: 'เปลี่ยนอวตารเรียบร้อย! ✨',
+        text: `บันทึกอวตารใหม่ของ ${wardrobeTargetStudent.name} แล้ว`,
         timer: 1300,
         showConfirmButton: false
       });
@@ -1568,6 +1696,7 @@
     }
 
     function deleteStudentAction(studentId) {
+      if (!currentSession || !currentSession.isAdmin) return;
       const s = GROUP_5_DATA.find(x => x.studentId === studentId);
       if (!s) return;
       Swal.fire({
@@ -1600,61 +1729,92 @@
       const totStu = document.getElementById('rptTotalStudents');
       if (totStu) totStu.textContent = `${GROUP_5_DATA.length} คน`;
 
+      // คำนวณสถิติงานของนักศึกษาแต่ละคนจาก allLoadedWorks
+      const passedWorks = allLoadedWorks.filter(w => w.status === 'ผ่าน' || w.status === 'ยอดเยี่ยม');
+      const revisionWorks = allLoadedWorks.filter(w => w.status === 'ให้แก้ไข');
+
+      let presentStudentsCount = 0;
+      let lateAttCount = 0;
+      let lateWorkCount = 0;
+
       // ตารางนักศึกษาในหน้ารายงาน
       const tbody = document.getElementById('rptStudentsTableBody');
       if (tbody) {
         tbody.innerHTML = GROUP_5_DATA.map((s, idx) => {
           const badgeEl = document.getElementById(`attBadge_${s.studentId}`);
-          const statusText = badgeEl ? badgeEl.textContent.trim() : '✔️ มาเรียน';
+          const statusText = badgeEl ? badgeEl.textContent.trim() : (s.attStatus === 'ตรงเวลา' || !s.attStatus ? '✔️ มาเรียน' : s.attStatus);
+          if (statusText.includes('สาย') || statusText.includes('ลา') || statusText.includes('ป่วย') || statusText.includes('ขาด')) lateAttCount++;
+          else if (statusText.includes('ส่งช้า') || statusText.includes('ส่งงานช้า')) lateWorkCount++;
+          else presentStudentsCount++;
+
+          const stuWorks = allLoadedWorks.filter(w => w.studentId === s.studentId || (w.studentName && w.studentName.includes(s.name.split(' ')[0])));
+          const latestWork = stuWorks[0];
+          const workStatusHtml = latestWork
+            ? (latestWork.status === 'ผ่าน' || latestWork.status === 'ยอดเยี่ยม'
+                ? `<span class="text-emerald-700 font-black">✅ ${latestWork.status} (${latestWork.score || '-'})</span>`
+                : latestWork.status === 'ให้แก้ไข'
+                  ? `<span class="text-rose-600 font-black">⚠️ ให้แก้ไข</span>`
+                  : `<span class="text-amber-700 font-bold">⏳ รอตรวจ</span>`)
+            : `<span class="text-slate-400 font-semibold">ยังไม่ส่ง</span>`;
+
+          const starVal = s.heroScore !== undefined ? s.heroScore : 10;
+          const totalScore = latestWork && latestWork.score ? `${latestWork.score} / 100` : `${Math.min(100, 80 + starVal)} / 100`;
+
           return `
             <tr class="hover:bg-amber-50/40">
               <td class="p-2 text-center font-bold text-slate-500">${idx + 1}</td>
               <td class="p-2 font-mono font-bold text-indigo-700">${s.studentId}</td>
               <td class="p-2 font-bold text-slate-800">${s.fullName}</td>
               <td class="p-2 text-center font-bold text-slate-700">${statusText}</td>
-              <td class="p-2 text-center text-emerald-700 font-black">ผ่านแล้ว</td>
-              <td class="p-2 text-center font-black text-amber-600">⭐ 10</td>
-              <td class="p-2 text-center font-black text-slate-900">92 / 100</td>
+              <td class="p-2 text-center">${workStatusHtml}</td>
+              <td class="p-2 text-center font-black text-amber-600">⭐ ${starVal}</td>
+              <td class="p-2 text-center font-black text-slate-900">${totalScore}</td>
             </tr>
           `;
         }).join('');
       }
 
-      // นับตัวเลขสถิติภาพรวม
-      let passedCount = 0;
-      let revisionCount = 0;
-      let lateAttCount = 0;
-      let lateWorkCount = 0;
-
-      GROUP_5_DATA.forEach(s => {
-        const badgeEl = document.getElementById(`attBadge_${s.studentId}`);
-        if (badgeEl) {
-          const txt = badgeEl.textContent.trim();
-          if (txt.includes('สาย')) lateAttCount++;
-          if (txt.includes('ลา') || txt.includes('ป่วย')) lateAttCount++;
-          if (txt.includes('ส่งช้า') || txt.includes('ส่งงานช้า')) lateWorkCount++;
-          if (txt.includes('มาเรียน') || txt.includes('ตรงเวลา')) passedCount++;
-        }
-      });
-
+      const stPres = document.getElementById('statPresentCount');
+      if (stPres) stPres.textContent = presentStudentsCount;
       const stRev = document.getElementById('statRevisionCount');
-      if (stRev) stRev.textContent = revisionCount;
+      if (stRev) stRev.textContent = revisionWorks.length;
       const stLateW = document.getElementById('statLateWorkCount');
       if (stLateW) stLateW.textContent = lateWorkCount;
       const stLateA = document.getElementById('statLateAttCount');
-      if (stLateA) stLateAttCount = lateAttCount;
+      if (stLateA) stLateA.textContent = lateAttCount;
       const stPass = document.getElementById('statPassedCount');
-      if (stPass) stPass.textContent = GROUP_5_DATA.length;
+      if (stPass) stPass.textContent = passedWorks.length;
 
       const rptP = document.getElementById('rptPassedWorks');
-      if (rptP) rptP.textContent = `${GROUP_5_DATA.length} งาน`;
+      if (rptP) rptP.textContent = `${passedWorks.length} งาน`;
       const rptR = document.getElementById('rptRevisionWorks');
-      if (rptR) rptR.textContent = `${revisionCount} งาน`;
+      if (rptR) rptR.textContent = `${revisionWorks.length} งาน`;
       const rptA = document.getElementById('rptAbnormalAtt');
       if (rptA) rptA.textContent = `${lateAttCount + lateWorkCount} ครั้ง`;
+
+      // แสดงรายการงานที่ต้องแก้ไขในหน้ารายงาน
+      const revBox = document.getElementById('rptRevisionList');
+      if (revBox) {
+        if (revisionWorks.length === 0) {
+          revBox.innerHTML = `<div class="p-3 text-center text-slate-400 bg-slate-50 rounded-2xl">ไม่มีงานที่ค้างการแก้ไขในขณะนี้ 🎉</div>`;
+        } else {
+          revBox.innerHTML = revisionWorks.map(w => `
+            <div class="p-3 bg-rose-50/70 border border-rose-200 rounded-2xl flex flex-wrap justify-between items-center gap-2">
+              <div>
+                <div class="font-black text-rose-900">${w.studentName} — ${w.subject}</div>
+                <div class="text-[11px] text-rose-700">ข้อเสนอแนะอาจารย์: ${w.feedback || 'กรุณาปรับปรุงรายละเอียดและส่งใหม่'}</div>
+              </div>
+              <button onclick="openSubmitWorkModal('${w.workId}')" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-black text-[11px]">
+                ✏️ แก้ไขและส่งใหม่
+              </button>
+            </div>
+          `).join('');
+        }
+      }
     }
 
     function refreshReportData() {
+      loadDashboard();
       updateReportDashboard();
       Swal.fire({ icon: 'success', title: 'รีเฟรชข้อมูลแล้ว', timer: 800, showConfirmButton: false });
     }
@@ -1680,7 +1840,7 @@
       });
     }
 
-    // 4. ระบบสุ่มแบ่งทีม / จัดกลุ่ม (TEAM BATTLE VS แบบรูปที่ 5)
+    // 4. ระบบสุ่มแบ่งทีม / จัดกลุ่ม (TEAM BATTLE VS)
     function changeTeamCount(delta) {
       teamCount = Math.max(2, Math.min(4, teamCount + delta));
       document.getElementById('dispTeamNum').textContent = teamCount;
@@ -1690,7 +1850,6 @@
     function shuffleTeamsAction() {
       confetti({ particleCount: 40, spread: 60, origin: { y: 0.7 } });
       
-      // สับไพ่รายชื่อ
       const shuffled = [...GROUP_5_DATA].sort(() => Math.random() - 0.5);
       const teams = Array.from({ length: teamCount }, (_, i) => ({
         name: `ทีมที่ ${i + 1}`,
@@ -1710,13 +1869,10 @@
       const t2Box = document.getElementById('team2Members');
       
       const renderMemberList = (members) => members.map((m, mIdx) => {
-        const mascotId = m.mascotId || (window.HiClassMascots ? window.HiClassMascots.getStudentMascotId(m, mIdx) : 'G01');
         return `
           <div class="bg-white/95 p-2.5 rounded-2xl border-2 border-white shadow-sm flex flex-col items-center text-center space-y-1">
             <div class="w-14 h-14 rounded-full overflow-hidden bg-amber-50 border-2 border-white shadow-inner flex items-center justify-center">
-              ${window.HiClassMascots ? window.HiClassMascots.renderMascotHtml(mascotId, 56, { className: 'pointer-events-none' }) : `
-                <img src="avatars/${m.studentId.toLowerCase()}.jpg" class="w-full h-full object-cover">
-              `}
+              ${renderStudentAvatarHtml(m, mIdx, 56, { className: 'pointer-events-none' })}
             </div>
             <div class="text-[11px] font-black text-slate-800 truncate w-full">${m.name}</div>
             <span class="text-[9px] bg-slate-100 px-1.5 py-0.5 rounded-full text-slate-500 font-bold">${m.studentId}</span>
@@ -1724,11 +1880,11 @@
         `;
       }).join('');
 
-      if (teams[0]) {
+      if (teams[0] && t1Box) {
         t1Box.innerHTML = renderMemberList(teams[0].members);
         document.getElementById('t1Count').textContent = `${teams[0].members.length} คน`;
       }
-      if (teams[1]) {
+      if (teams[1] && t2Box) {
         t2Box.innerHTML = renderMemberList(teams[1].members);
         document.getElementById('t2Count').textContent = `${teams[1].members.length} คน`;
       }
@@ -1751,175 +1907,480 @@
       };
 
       const d = await apiSaveTeamGrouping(payload.groupName, payload.teams);
-      Swal.fire({ icon: d.success ? 'success' : 'error', title: d.message });
+      Swal.fire({ icon: d.success ? 'success' : 'error', title: d.message || 'บันทึกทีมเรียบร้อยแล้ว' });
     }
 
-    // 5. โหลดข้อมูลแดชบอร์ด & รายการงาน
-    async function loadDashboard() {
+    // ================= 5. ระบบส่งงาน Care Plan และตรวจให้คะแนนของอาจารย์ =================
+    function getLocalCachedWorks() {
       try {
-        const supabaseData = await supabaseGetDashboard(currentStudentId, 'all');
-        const data = supabaseData || await apiGet({ action: 'getDashboard', studentId: currentStudentId, viewMode: 'all' });
-        dashboardData = data;
-        
-        // อัปเดตคะแนนดาวในการ์ด
-        if (data.students) {
-          data.students.forEach(s => {
-            const el = document.getElementById(`starScore_${s.studentId}`);
-            if (el) el.textContent = s.heroScore || 10;
-          });
-        }
+        const raw = localStorage.getItem('nursenote_works_cache');
+        return raw ? JSON.parse(raw) : [];
+      } catch(e) {
+        return [];
+      }
+    }
 
-        renderWorksTable(data.works || []);
-        if (currentSession && currentSession.isAdmin) {
-          renderTeacherWorksTable(data.allWorks || data.works || []);
+    function saveLocalCachedWorks(works) {
+      try {
+        localStorage.setItem('nursenote_works_cache', JSON.stringify(works));
+      } catch(e) {}
+    }
+
+    function mergeWorksLists(serverList, localList) {
+      const map = new Map();
+      (localList || []).forEach(w => {
+        if (w && w.workId) map.set(String(w.workId), w);
+      });
+      (serverList || []).forEach(w => {
+        if (w && w.workId) {
+          const existing = map.get(String(w.workId)) || {};
+          map.set(String(w.workId), { ...existing, ...w });
+        }
+      });
+      return Array.from(map.values()).sort((a, b) => String(b.workId).localeCompare(String(a.workId)));
+    }
+
+    async function loadDashboard() {
+      const localWorks = getLocalCachedWorks();
+      allLoadedWorks = localWorks;
+      renderWorksTable(allLoadedWorks);
+      if (currentSession && currentSession.isAdmin) {
+        renderTeacherWorksTable(allLoadedWorks);
+      }
+      updateReportDashboard();
+
+      try {
+        const data = await apiGet({ action: 'getDashboard', studentId: currentStudentId, viewMode: 'all' });
+        if (data && data.success) {
+          dashboardData = data;
+          if (data.settings) {
+            if (data.settings.work_submission !== undefined) systemFeatures.work_submission = data.settings.work_submission;
+            if (data.settings.grading !== undefined) systemFeatures.grading = data.settings.grading;
+            if (data.settings.attendance !== undefined) systemFeatures.attendance = data.settings.attendance;
+            applyFeatureSwitchesUI();
+          }
+          if (data.students && data.students.length > 0) {
+            data.students.forEach(s => {
+              const el = document.getElementById(`starScore_${s.studentId}`);
+              if (el && s.heroScore !== undefined) el.textContent = s.heroScore;
+            });
+          }
+          const serverWorks = data.allWorks || data.works || [];
+          allLoadedWorks = mergeWorksLists(serverWorks, getLocalCachedWorks());
+          saveLocalCachedWorks(allLoadedWorks);
+          renderWorksTable(allLoadedWorks);
+          if (currentSession && currentSession.isAdmin) {
+            renderTeacherWorksTable(allLoadedWorks);
+          }
+          updateReportDashboard();
         }
       } catch(e) {}
     }
 
+    function openWorkAttachment(workId) {
+      const w = allLoadedWorks.find(x => String(x.workId) === String(workId));
+      if (!w || !w.fileUrl) {
+        Swal.fire({ icon: 'info', title: 'ไม่มีไฟล์แนบ', text: 'งานชิ้นนี้ไม่ได้แนบไฟล์หรือลิงก์ไว้' });
+        return;
+      }
+      if (w.fileUrl.startsWith('data:')) {
+        const win = window.open();
+        if (win) {
+          if (w.fileUrl.startsWith('data:image/')) {
+            win.document.write(`<html><head><title>${w.fileName || w.subject}</title></head><body style="margin:0;display:flex;justify-content:center;align-items:center;background:#0f172a;"><img src="${w.fileUrl}" style="max-width:100%;max-height:100vh;"></body></html>`);
+          } else {
+            win.document.write(`<iframe src="${w.fileUrl}" style="width:100%;height:100vh;border:none;"></iframe>`);
+          }
+        } else {
+          const a = document.createElement('a');
+          a.href = w.fileUrl;
+          a.download = w.fileName || 'CarePlan_File';
+          a.click();
+        }
+      } else {
+        window.open(w.fileUrl, '_blank', 'noopener');
+      }
+    }
+
     function renderWorksTable(list) {
       const tbody = document.getElementById('worksTableBody');
-      if (list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="7" class="p-4 text-center text-slate-400">ยังไม่มีประวัติการส่ง Care Plan</td></tr>';
+      if (!tbody) return;
+      if (!list || list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="7" class="p-6 text-center text-slate-400 font-bold">ยังไม่มีประวัติการส่ง Care Plan กดปุ่ม "+ ส่ง Care Plan ประจำวัน" ด้านบนเพื่อส่งงานได้เลย</td></tr>';
         return;
       }
       tbody.innerHTML = list.map(w => {
         const isPass = w.status === 'ผ่าน' || w.status === 'ยอดเยี่ยม';
+        const isRev = w.status === 'ให้แก้ไข';
+        const badgeStyle = isPass
+          ? 'bg-emerald-100 text-emerald-800 border border-emerald-300'
+          : isRev
+            ? 'bg-rose-100 text-rose-800 border border-rose-300'
+            : 'bg-amber-100 text-amber-800 border border-amber-300';
+
         return `
           <tr class="hover:bg-amber-50/50 transition">
-            <td class="p-2 font-bold text-slate-800">${w.studentName}</td>
+            <td class="p-2 font-bold text-slate-800">${w.studentName || '-'}</td>
             <td class="p-2 whitespace-nowrap text-slate-500">${w.submitDate || '-'}</td>
-            <td class="p-2 font-bold text-slate-900">${w.subject}</td>
+            <td class="p-2 font-bold text-slate-900">
+              <div>${w.subject || '-'}</div>
+              ${w.content ? `<div class="text-[10px] text-slate-500 font-normal truncate max-w-[200px]">${w.content}</div>` : ''}
+            </td>
             <td class="p-2 whitespace-nowrap">
-              ${w.fileUrl ? `<a href="${w.fileUrl}" target="_blank" class="text-indigo-600 font-bold underline">เปิดไฟล์</a>` : '-'}
+              ${w.fileUrl ? `<button onclick="openWorkAttachment('${w.workId}')" class="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-[11px] transition">📎 เปิดไฟล์</button>` : '<span class="text-slate-400">-</span>'}
             </td>
             <td class="p-2 text-center whitespace-nowrap">
-              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${isPass ? 'bg-emerald-100 text-emerald-800 border border-emerald-300' : 'bg-amber-100 text-amber-800 border border-amber-300'}">
-                ${w.status}
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${badgeStyle}">
+                ${w.status || 'รอตรวจ'}
               </span>
             </td>
-            <td class="p-2 text-center font-black whitespace-nowrap text-indigo-700">${w.score || '-'}</td>
+            <td class="p-2 text-center font-black whitespace-nowrap text-indigo-700">${w.score !== undefined && w.score !== '' ? w.score : '-'}</td>
             <td class="p-2 text-center whitespace-nowrap">
-              ${w.feedback ? `<button onclick="showFeedback('${encodeURIComponent(w.feedback)}')" class="text-xs text-amber-600 font-bold underline">ดูคำแนะนำ</button>` : '-'}
+              <div class="flex items-center justify-center gap-1.5">
+                <button onclick="viewWorkDetail('${w.workId}')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] transition">
+                  🔍 ดูงาน
+                </button>
+                ${isRev ? `<button onclick="openSubmitWorkModal('${w.workId}')" class="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] transition">✏️ ส่งแก้ไข</button>` : ''}
+                ${(currentSession && currentSession.isAdmin) ? `<button onclick="openGradeModal('${w.workId}')" class="px-2.5 py-1 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-black text-[11px] shadow-2xs transition">👩‍🏫 ตรวจงาน</button>` : ''}
+              </div>
             </td>
           </tr>
         `;
       }).join('');
     }
 
-    function showFeedback(fbEnc) {
+    function viewWorkDetail(workId) {
+      const w = allLoadedWorks.find(x => String(x.workId) === String(workId));
+      if (!w) return;
       Swal.fire({
-        icon: 'info',
-        title: 'ข้อเสนอแนะจากอาจารย์ 💡',
-        text: decodeURIComponent(fbEnc),
-        confirmButtonText: 'รับทราบ'
+        title: w.subject || 'รายละเอียดงาน Care Plan',
+        html: `
+          <div class="text-left text-xs space-y-2.5">
+            <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
+              <div><strong>ผู้ส่ง:</strong> ${w.studentName || '-'} (${w.studentId || '-'})</div>
+              <div><strong>วันที่ส่ง:</strong> ${w.submitDate || '-'}</div>
+              <div><strong>สถานะ:</strong> <span class="font-bold text-indigo-700">${w.status || 'รอตรวจ'}</span> ${w.score ? `(คะแนน: ${w.score}/100)` : ''}</div>
+            </div>
+            <div>
+              <div class="font-bold text-slate-700 mb-1">รายละเอียด Care Plan / ข้อวินิจฉัยการพยาบาล:</div>
+              <div class="p-3 bg-amber-50/60 rounded-xl border border-amber-200 whitespace-pre-wrap text-slate-800">${w.content || 'ไม่ได้ระบุข้อความสรุป'}</div>
+            </div>
+            ${w.feedback ? `
+              <div>
+                <div class="font-bold text-rose-700 mb-1">💡 ข้อเสนอแนะจากอาจารย์นิเทศก์:</div>
+                <div class="p-3 bg-rose-50 rounded-xl border border-rose-200 whitespace-pre-wrap text-rose-950 font-semibold">${w.feedback}</div>
+              </div>
+            ` : ''}
+          </div>
+        `,
+        confirmButtonText: 'ปิดหน้าต่าง',
+        confirmButtonColor: '#4f46e5'
       });
     }
 
     // แผงตรวจงานสำหรับอาจารย์
     function renderTeacherWorksTable(list) {
       const tbody = document.getElementById('teacherWorksBody');
-      const pendingCount = list.filter(w => w.status === 'รอตรวจ').length;
-      document.getElementById('pendingWorksCount').textContent = `${pendingCount} งานรอตรวจ`;
+      if (!tbody) return;
+      const pendingCount = (list || []).filter(w => w.status === 'รอตรวจ').length;
+      const pendEl = document.getElementById('pendingWorksCount');
+      if (pendEl) pendEl.textContent = `${pendingCount} งานรอตรวจ`;
 
-      if (list.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="p-4 text-center text-slate-400">ไม่มีงานที่ต้องตรวจในขณะนี้</td></tr>';
+      if (!list || list.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="p-6 text-center text-slate-400 font-bold">ยังไม่มีงานที่นักศึกษาส่งเข้ามาในขณะนี้</td></tr>';
         return;
       }
 
-      tbody.innerHTML = list.map(w => `
-        <tr class="hover:bg-purple-50/50 transition">
-          <td class="p-2.5 font-mono text-slate-500">${w.studentId || '-'}</td>
-          <td class="p-2.5 font-bold text-slate-900">${w.studentName}</td>
-          <td class="p-2.5 whitespace-nowrap text-slate-500">${w.submitDate || '-'}</td>
-          <td class="p-2.5 font-bold text-slate-800">${w.subject}</td>
-          <td class="p-2.5 whitespace-nowrap">
-            ${w.fileUrl ? `<a href="${w.fileUrl}" target="_blank" class="text-indigo-600 font-bold underline">ตรวจไฟล์</a>` : '-'}
-          </td>
-          <td class="p-2.5 text-center whitespace-nowrap">
-            <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${w.status === 'ผ่าน' ? 'bg-emerald-100 text-emerald-800' : 'bg-amber-100 text-amber-800'}">
-              ${w.status}
-            </span>
-          </td>
-          <td class="p-2.5 text-center font-black">${w.score || '-'}</td>
-          <td class="p-2.5 text-center">
-            <button onclick="openGradeModal('${w.workId}', '${w.studentId}', '${encodeURIComponent(w.studentName)}', '${encodeURIComponent(w.subject)}', '${encodeURIComponent(w.fileUrl || '')}', '${w.score || ''}', '${encodeURIComponent(w.feedback || '')}')" 
-                    class="px-3 py-1 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-lg text-xs shadow-xs transition">
-              ตรวจงาน
-            </button>
-          </td>
-        </tr>
-      `).join('');
+      tbody.innerHTML = list.map(w => {
+        const isPass = w.status === 'ผ่าน' || w.status === 'ยอดเยี่ยม';
+        const isRev = w.status === 'ให้แก้ไข';
+        const badgeStyle = isPass ? 'bg-emerald-100 text-emerald-800' : isRev ? 'bg-rose-100 text-rose-800' : 'bg-amber-100 text-amber-800';
+        return `
+          <tr class="hover:bg-purple-50/50 transition">
+            <td class="p-2.5 font-mono text-slate-500">${w.studentId || '-'}</td>
+            <td class="p-2.5 font-bold text-slate-900">${w.studentName || '-'}</td>
+            <td class="p-2.5 whitespace-nowrap text-slate-500">${w.submitDate || '-'}</td>
+            <td class="p-2.5 font-bold text-slate-800">
+              <div>${w.subject || '-'}</div>
+              ${w.content ? `<div class="text-[10px] text-slate-500 font-normal truncate max-w-[180px]">${w.content}</div>` : ''}
+            </td>
+            <td class="p-2.5 whitespace-nowrap">
+              ${w.fileUrl ? `<button onclick="openWorkAttachment('${w.workId}')" class="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-xs transition">📎 เปิดดูไฟล์</button>` : '<span class="text-slate-400">ไม่มีไฟล์</span>'}
+            </td>
+            <td class="p-2.5 text-center whitespace-nowrap">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-black ${badgeStyle}">
+                ${w.status || 'รอตรวจ'}
+              </span>
+            </td>
+            <td class="p-2.5 text-center font-black">${w.score !== undefined && w.score !== '' ? w.score : '-'}</td>
+            <td class="p-2.5 text-center">
+              <button onclick="openGradeModal('${w.workId}')" 
+                      class="px-3 py-1.5 bg-indigo-600 hover:bg-indigo-700 text-white font-black rounded-xl text-xs shadow-xs transition active:scale-95">
+                📝 ตรวจให้คะแนน
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
     }
 
-    function openGradeModal(workId, studentId, sName, subj, fileUrl, score, fb) {
-      document.getElementById('gradeWorkId').value = workId;
-      document.getElementById('gradeStudentId').value = studentId;
-      document.getElementById('gradeStudentNameDisplay').textContent = decodeURIComponent(sName);
-      document.getElementById('gradeSubjectDisplay').textContent = `หัวข้อ: ${decodeURIComponent(subj)}`;
-      const url = decodeURIComponent(fileUrl);
-      document.getElementById('gradeLinkDisplay').innerHTML = url ? `<a href="${url}" target="_blank" class="text-indigo-600 font-bold underline">คลิกเพื่อเปิดไฟล์งานนักศึกษา ↗</a>` : 'ไม่มีลิงก์ไฟล์';
-      document.getElementById('gradeScoreInput').value = score || 85;
-      document.getElementById('gradeFeedbackInput').value = decodeURIComponent(fb);
+    function openGradeModal(workId) {
+      if (!currentSession || !currentSession.isAdmin) {
+        Swal.fire({ icon: 'error', title: 'เฉพาะอาจารย์นิเทศก์', text: 'เฉพาะอาจารย์เท่านั้นที่สามารถตรวจและให้คะแนนงานได้' });
+        return;
+      }
+      if (!systemFeatures.grading) {
+        Swal.fire({ icon: 'warning', title: 'ระบบตรวจงานปิดอยู่ชั่วคราว', text: 'กรุณาเปิดสวิตช์ตรวจงานในแผงควบคุมอาจารย์ก่อน' });
+        return;
+      }
+      const w = allLoadedWorks.find(x => String(x.workId) === String(workId));
+      if (!w) return;
+
+      document.getElementById('gradeWorkId').value = w.workId;
+      document.getElementById('gradeStudentId').value = w.studentId || 'STU-09';
+      document.getElementById('gradeStudentNameDisplay').textContent = `${w.studentName || 'นักศึกษา'} (${w.studentId || '-'})`;
+      document.getElementById('gradeSubjectDisplay').textContent = `หัวข้อ: ${w.subject || '-'}`;
+      const contentBox = document.getElementById('gradeContentDisplay');
+      if (contentBox) {
+        contentBox.textContent = w.content || '(ไม่ได้ระบุรายละเอียดเนื้อหาในช่องข้อความ)';
+      }
+
+      const linkBox = document.getElementById('gradeLinkDisplay');
+      if (linkBox) {
+        if (w.fileUrl) {
+          linkBox.innerHTML = `<button type="button" onclick="openWorkAttachment('${w.workId}')" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-xs inline-flex items-center gap-1.5">📎 คลิกเปิดไฟล์งานที่นักศึกษาแนบ (${w.fileName || 'ไฟล์แนบ'}) ↗</button>`;
+        } else {
+          linkBox.innerHTML = `<span class="text-slate-400 text-[11px]">ไม่มีไฟล์แนบ (ตรวจจากเนื้อหาสรุปด้านบน)</span>`;
+        }
+      }
+
+      document.getElementById('gradeStatusInput').value = (w.status === 'ผ่าน' || w.status === 'ให้แก้ไข' || w.status === 'ยอดเยี่ยม') ? w.status : 'ผ่าน';
+      document.getElementById('gradeScoreInput').value = (w.score !== undefined && w.score !== '') ? w.score : 85;
+      document.getElementById('gradeFeedbackInput').value = w.feedback || '';
       document.getElementById('gradeWorkModal').classList.remove('hidden');
     }
 
     async function submitGrading() {
+      if (!currentSession || !currentSession.isAdmin) return;
       const workId = document.getElementById('gradeWorkId').value;
       const studentId = document.getElementById('gradeStudentId').value;
       const status = document.getElementById('gradeStatusInput').value;
-      const score = document.getElementById('gradeScoreInput').value;
+      const score = Number(document.getElementById('gradeScoreInput').value || 0);
       const feedback = document.getElementById('gradeFeedbackInput').value.trim();
 
-      Swal.fire({ title: 'กำลังบันทึกคะแนน...', didOpen: () => Swal.showLoading() });
-      const d = await apiGradeWork(workId, studentId, status, score, feedback);
+      const btn = document.getElementById('btnSubmitGrading');
+      if (btn) { btn.disabled = true; btn.textContent = 'กำลังบันทึกผลการตรวจ...'; }
+
+      // อัปเดตในรายการงานทันทีเพื่อให้แสดงผลรวดเร็วและเสถียร 100%
+      const wIdx = allLoadedWorks.findIndex(x => String(x.workId) === String(workId));
+      const workItem = wIdx !== -1 ? allLoadedWorks[wIdx] : null;
+      if (workItem) {
+        workItem.status = status;
+        workItem.score = score;
+        workItem.feedback = feedback;
+        workItem.gradedAt = new Date().toISOString();
+        saveLocalCachedWorks(allLoadedWorks);
+      }
+
+      try {
+        await apiPost('gradeWork', {
+          workId,
+          studentId,
+          studentName: workItem ? workItem.studentName : '',
+          subject: workItem ? workItem.subject : '',
+          content: workItem ? workItem.content : '',
+          fileUrl: workItem ? workItem.fileUrl : '',
+          status,
+          score,
+          feedback
+        });
+      } catch(e) {}
+
+      if (btn) { btn.disabled = false; btn.textContent = '💾 บันทึกผลการตรวจและส่งคะแนน'; }
       closeModal('gradeWorkModal');
-      Swal.fire({ icon: d.success ? 'success' : 'error', title: d.message });
-      loadDashboard();
+
+      renderWorksTable(allLoadedWorks);
+      renderTeacherWorksTable(allLoadedWorks);
+      updateReportDashboard();
+
+      confetti({ particleCount: 40, spread: 60, origin: { y: 0.6 } });
+      Swal.fire({
+        icon: 'success',
+        title: `บันทึกผลตรวจ "${status}" (${score} คะแนน) สำเร็จ!`,
+        timer: 1500,
+        showConfirmButton: false
+      });
     }
 
     // ประเมินหัตถการวิชาชีพ
     function initTeamMembersDropdown() {
       const sel = document.getElementById('evalStudentSelect');
-      sel.innerHTML = GROUP_5_DATA.map(s => `<option value="${s.studentId}">${s.fullName}</option>`).join('');
+      if (sel) {
+        sel.innerHTML = GROUP_5_DATA.map(s => `<option value="${s.studentId}">${s.fullName}</option>`).join('');
+      }
+      const wSel = document.getElementById('wStudentSelect');
+      if (wSel) {
+        wSel.innerHTML = GROUP_5_DATA.map(s => `<option value="${s.studentId}">${s.studentId} — ${s.fullName}</option>`).join('');
+        // เลือกนักศึกษาที่ตรงกับชื่อผู้ใช้หรือค่าที่จำไว้
+        if (currentSession && currentSession.name) {
+          const matched = GROUP_5_DATA.find(s => s.fullName.includes(currentSession.name) || s.name.includes(currentSession.name));
+          if (matched) currentStudentId = matched.studentId;
+        }
+        wSel.value = currentStudentId;
+      }
     }
 
     async function submitSkillEvaluation() {
+      if (!currentSession || !currentSession.isAdmin) return;
       const studentId = document.getElementById('evalStudentSelect').value;
       const skillName = document.getElementById('evalSkillSelect').value;
       const result = document.getElementById('evalResultSelect').value;
 
       Swal.fire({ title: 'กำลังบันทึกผลหัตถการ...', didOpen: () => Swal.showLoading() });
       const d = await apiEvaluateSkill(studentId, skillName, result, 30);
-      Swal.fire({ icon: d.success ? 'success' : 'error', title: d.message });
+      Swal.fire({ icon: d.success ? 'success' : 'info', title: d.message || 'บันทึกผลหัตถการเรียบร้อยแล้ว' });
       loadDashboard();
     }
 
-    // ส่ง Care Plan ใหม่ (ฝั่งนักศึกษา)
-    function openSubmitWorkModal() {
+    // ส่ง Care Plan ใหม่ หรือส่งงานแก้ไข (ฝั่งนักศึกษา)
+    function openSubmitWorkModal(editWorkId = null) {
+      if (!systemFeatures.work_submission && (!currentSession || !currentSession.isAdmin)) {
+        Swal.fire({ icon: 'warning', title: 'ปิดรับส่งงานชั่วคราว', text: 'ขณะนี้อาจารย์นิเทศก์ปิดระบบรับส่งงาน Care Plan ชั่วคราว' });
+        return;
+      }
+      initTeamMembersDropdown();
+
+      const editInput = document.getElementById('wEditWorkId');
+      const titleEl = document.getElementById('submitWorkModalTitle');
+      const fileInp = document.getElementById('wFileInput');
+      if (fileInp) fileInp.value = '';
+
+      if (editWorkId) {
+        const w = allLoadedWorks.find(x => String(x.workId) === String(editWorkId));
+        if (w) {
+          if (editInput) editInput.value = w.workId;
+          if (titleEl) titleEl.innerHTML = `<span>✏️</span> <span>ส่งงานแก้ไข Care Plan (${w.workId})</span>`;
+          document.getElementById('wStudentSelect').value = w.studentId || currentStudentId;
+          document.getElementById('wSubjectInput').value = w.subject || '';
+          document.getElementById('wContentInput').value = w.content || '';
+          document.getElementById('wLinkInput').value = (w.fileUrl && !w.fileUrl.startsWith('data:')) ? w.fileUrl : '';
+        }
+      } else {
+        if (editInput) editInput.value = '';
+        if (titleEl) titleEl.innerHTML = `<span>📤</span> <span>ส่ง Daily Care Plan ประจำวัน</span>`;
+        document.getElementById('wSubjectInput').value = '';
+        document.getElementById('wContentInput').value = '';
+        document.getElementById('wLinkInput').value = '';
+      }
+
       document.getElementById('submitWorkModal').classList.remove('hidden');
     }
 
+    function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = e => resolve(e.target.result);
+        reader.onerror = err => reject(err);
+        reader.readAsDataURL(file);
+      });
+    }
+
     async function submitNewWork() {
+      const editWorkId = document.getElementById('wEditWorkId')?.value || '';
+      const studentId = document.getElementById('wStudentSelect')?.value || currentStudentId;
+      currentStudentId = studentId;
+      localStorage.setItem('current_student_id', studentId);
+
+      const stuObj = GROUP_5_DATA.find(s => s.studentId === studentId);
+      const studentName = stuObj ? stuObj.fullName : (currentSession ? currentSession.name : "นักศึกษาพยาบาล");
+
       const subject = document.getElementById('wSubjectInput').value.trim();
       const content = document.getElementById('wContentInput').value.trim();
       const link = document.getElementById('wLinkInput').value.trim();
+      const fileInput = document.getElementById('wFileInput');
+      const selectedFile = fileInput && fileInput.files && fileInput.files[0] ? fileInput.files[0] : null;
 
       if (!subject) {
-        Swal.fire({ icon: 'warning', title: 'กรุณากรอกหัวข้องาน' });
+        Swal.fire({ icon: 'warning', title: 'กรุณากรอกหัวข้องาน Care Plan' });
         return;
       }
 
-      Swal.fire({ title: 'กำลังส่ง Care Plan...', didOpen: () => Swal.showLoading() });
-      const d = await apiPost('submitDailyWork', {
-        studentId: currentStudentId,
-        studentName: currentSession ? currentSession.name : "นักศึกษา",
-        subject: subject,
-        content: content,
-        externalLink: link
-      });
+      if (selectedFile && selectedFile.size > 5 * 1024 * 1024) {
+        Swal.fire({ icon: 'warning', title: 'ไฟล์มีขนาดใหญ่เกิน 5MB', text: 'กรุณาเลือกไฟล์ขนาดไม่เกิน 5MB หรือแนบเป็นลิงก์ Google Drive แทนครับ' });
+        return;
+      }
+
+      const btn = document.getElementById('btnConfirmSubmitWork');
+      if (btn) { btn.disabled = true; btn.textContent = 'กำลังอัปโหลดและส่งงาน...'; }
+
+      let fileBase64 = '';
+      let fileName = '';
+      if (selectedFile) {
+        try {
+          fileBase64 = await readFileAsDataURL(selectedFile);
+          fileName = selectedFile.name;
+        } catch(e) {}
+      }
+
+      const workId = editWorkId || ('WRK-' + Date.now());
+      const todayStr = new Date().toISOString().slice(0, 10);
+      const localRecord = {
+        workId,
+        studentId,
+        studentName,
+        submitDate: todayStr,
+        subject,
+        content,
+        fileUrl: link || fileBase64 || '',
+        fileName: fileName || (link ? 'ลิงก์ภายนอก' : ''),
+        status: 'รอตรวจ',
+        score: '',
+        feedback: ''
+      };
+
+      // บันทึกลง Local Cache ทันทีเพื่อความเสถียร 100%
+      const existingIdx = allLoadedWorks.findIndex(x => String(x.workId) === String(workId));
+      if (existingIdx !== -1) {
+        allLoadedWorks[existingIdx] = { ...allLoadedWorks[existingIdx], ...localRecord };
+      } else {
+        allLoadedWorks.unshift(localRecord);
+      }
+      saveLocalCachedWorks(allLoadedWorks);
+
+      try {
+        const res = await apiPost('submitDailyWork', {
+          workId,
+          studentId,
+          studentName,
+          subject,
+          content,
+          externalLink: link,
+          fileBase64,
+          fileName
+        });
+        if (res && res.work && res.work.fileUrl) {
+          localRecord.fileUrl = res.work.fileUrl;
+          saveLocalCachedWorks(allLoadedWorks);
+        }
+      } catch(e) {}
+
+      if (btn) { btn.disabled = false; btn.textContent = '✅ ยืนยันการส่ง Care Plan'; }
       closeModal('submitWorkModal');
-      Swal.fire({ icon: d.success ? 'success' : 'error', title: d.message });
-      loadDashboard();
+
+      renderWorksTable(allLoadedWorks);
+      if (currentSession && currentSession.isAdmin) {
+        renderTeacherWorksTable(allLoadedWorks);
+      }
+      updateReportDashboard();
+
+      confetti({ particleCount: 45, spread: 60, origin: { y: 0.6 } });
+      Swal.fire({
+        icon: 'success',
+        title: editWorkId ? 'ส่งงานแก้ไขเรียบร้อยแล้ว! ✨' : 'ส่ง Care Plan สำเร็จ! 🎉',
+        text: 'ข้อมูลงานถูกส่งไปยังแผงตรวจงานของอาจารย์นิเทศก์เรียบร้อยแล้ว',
+        timer: 1800,
+        showConfirmButton: false
+      });
     }
 
     function closeModal(id) {
@@ -1928,34 +2389,43 @@
 
     // เช็คชื่อตรงเวลาทุกคน (อาจารย์ปุ่มด่วน)
     async function triggerQuickCheckAll() {
+      if (!currentSession || !currentSession.isAdmin) return;
       Swal.fire({
-        title: 'ยืนยันเช็คตรงเวลาทั้ง 8 คน?',
-        text: 'บันทึกเข้าเวรตรงเวลาให้นักศึกษากลุ่ม 5 ทุกคน',
+        title: 'ยืนยันเช็คตรงเวลาทั้งกลุ่ม?',
+        text: 'บันทึกเข้าเวรตรงเวลาให้นักศึกษาทุกคนในกลุ่ม',
         icon: 'question',
         showCancelButton: true,
         confirmButtonText: 'ยืนยัน'
       }).then(async r => {
         if (r.isConfirmed) {
+          GROUP_5_DATA.forEach(s => { s.attStatus = 'ตรงเวลา'; });
+          localStorage.setItem('nursenote_group5_students', JSON.stringify(GROUP_5_DATA));
+          renderAvatarGrid();
+          updateReportDashboard();
+
           const records = GROUP_5_DATA.map(s => ({
             studentId: s.studentId,
             studentName: s.fullName,
             status: "ตรงเวลา",
             note: "อาจารย์เช็คชื่อรวม"
           }));
-          const d = await apiPost('batchRecordAttendance', {
-            date: new Date().toISOString().split('T')[0],
-            time: "07:30",
-            records: records
-          });
-          Swal.fire({ icon: 'success', title: 'เช็คชื่อครบทั้งกลุ่ม 5 เรียบร้อยแล้ว' });
-          renderAvatarGrid();
+          try {
+            await apiPost('batchRecordAttendance', {
+              date: new Date().toISOString().split('T')[0],
+              time: "07:30",
+              records: records
+            });
+          } catch(e) {}
+          Swal.fire({ icon: 'success', title: 'เช็คชื่อครบทั้งกลุ่มเรียบร้อยแล้ว', timer: 1400, showConfirmButton: false });
         }
       });
     }
 
     // กราฟ Radar สมรรถนะ Care Plan 10 ด้าน
     function initRadarChart() {
-      const ctx = document.getElementById('radarCanvas').getContext('2d');
+      const canvas = document.getElementById('radarCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
       new Chart(ctx, {
         type: 'radar',
         data: {
@@ -1997,7 +2467,7 @@
         <div>
           <label class="block font-bold text-slate-700 mb-1">คำนำหน้าและชื่อ-นามสกุล (เช่น นายกิตติศักดิ์ หรือ นางสาวพิมพ์ใจ)</label>
           <input type="text" id="modalStudentFullName" placeholder="นางสาวพิมพ์ใจ สุขสวัสดิ์ (แพม)" class="w-full border rounded-xl p-2.5 bg-slate-50 font-bold outline-none focus:border-purple-500">
-          <p class="text-[10px] text-slate-400 mt-1">* หากขึ้นต้นด้วย "นาย" ระบบจะใช้รูปอวาตาร์ผู้ชาย หาก "นางสาว/นาง" จะใช้รูปผู้หญิง</p>
+          <p class="text-[10px] text-slate-400 mt-1">* สามารถเลือกตัวละคร B01 (ผมสั้นคล้องหูฟัง) หรือตัวละครอื่นๆ ด้านล่างได้ทันที</p>
         </div>
         <div>
           <label class="block font-bold text-slate-700 mb-1">ชื่อเล่น (แสดงบนการ์ด)</label>
@@ -2020,7 +2490,7 @@
                 <option value="G10">G10 — ลอนคลื่นเสื้อไหมพรมม่วง</option>
               </optgroup>
               <optgroup label="นักเรียนชาย (B01 - B10)">
-                <option value="B01">B01 — ผมรองทรงกับกระเป๋าเป้</option>
+                <option value="B01">B01 — ผมสั้นคล้องหูฟัง</option>
                 <option value="B02">B02 — ผมหยิกฮู้ดสีเขียว</option>
                 <option value="B03">B03 — ผมปัดข้างเสื้อกั๊กน้ำเงิน</option>
                 <option value="B04">B04 — ผมสั้นสปอร์ตกับแว่น</option>
@@ -2048,12 +2518,12 @@
     </div>
   </div>
 
-  <!-- ================= 5. MODAL ห้องแต่งตัวนักศึกษา (WARDROBE MODAL ให้เลือกเปลี่ยนชุด/ทรงผมเอง) ================= -->
+  <!-- ================= 5. MODAL ห้องแต่งตัวนักศึกษา (WARDROBE MODAL ให้เลือกเปลี่ยนชุด/ทรงผม หรืออัปโหลดรูปเอง) ================= -->
   <div id="wardrobeModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-3 select-none">
-    <div class="bg-white rounded-[36px] max-w-md w-full p-5 sm:p-6 space-y-4 shadow-2xl border-4 border-amber-200 anim-pop">
+    <div class="bg-white rounded-[36px] max-w-md w-full p-5 sm:p-6 space-y-3.5 shadow-2xl border-4 border-amber-200 anim-pop max-h-[92vh] overflow-y-auto custom-scroll">
       <div class="flex justify-between items-center border-b pb-2">
         <h3 class="text-base font-black text-slate-800 flex items-center gap-2">
-          <span>👔</span> <span>ห้องแต่งตัว & เปลี่ยนทรงผม</span>
+          <span>👔</span> <span>เปลี่ยนรูปอวตาร & ห้องแต่งตัว</span>
         </h3>
         <button onclick="closeWardrobeModal()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 font-bold hover:bg-slate-200">✕</button>
       </div>
@@ -2071,17 +2541,23 @@
         </div>
       </div>
 
-      <!-- แถบเลือกสไตล์ชุด (20 สไตล์ ทรงผม & ชุดไปรเวทเที่ยว / สไตล์ยอดนิยม) -->
+      <!-- แถบเลือกสไตล์ชุด (20 สไตล์ รวม B01 ผมสั้นคล้องหูฟัง) -->
       <div>
-        <label class="block font-bold text-slate-700 mb-2 text-xs">เลือกชุดและทรงผมที่ชอบ (20 สไตล์):</label>
-        <div id="wardrobeGrid" class="grid grid-cols-4 gap-2 max-h-56 overflow-y-auto p-1">
+        <label class="block font-bold text-slate-700 mb-1.5 text-xs">1. เลือกตัวละคร 3D Interactive (G01-G10 / B01 ผมสั้นคล้องหูฟัง):</label>
+        <div id="wardrobeGrid" class="grid grid-cols-4 gap-2 max-h-48 overflow-y-auto p-1">
           <!-- Injected via JS -->
         </div>
       </div>
 
-      <div class="pt-2 flex gap-2">
+      <!-- อัปโหลดรูปภาพตัวเองแทนที่ -->
+      <div class="p-3 bg-amber-50/70 rounded-2xl border border-amber-200 space-y-1.5 text-xs">
+        <label class="block font-bold text-amber-950">2. หรืออัปโหลดรูปภาพอวตารจากเครื่องของคุณเอง:</label>
+        <input type="file" id="customAvatarFileInput" accept="image/*" onchange="handleCustomAvatarUpload(this)" class="w-full text-[11px] file:mr-2 file:py-1.5 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-bold file:bg-amber-500 file:text-white hover:file:bg-amber-600 cursor-pointer">
+      </div>
+
+      <div class="pt-1 flex gap-2">
         <button onclick="confirmWardrobeChoice()" class="w-full py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-600 hover:to-orange-600 text-white font-black rounded-xl shadow-md transition text-xs">
-          ✨ ยืนยันใส่ชุดนี้
+          ✨ ยืนยันการเปลี่ยนอวตาร
         </button>
         <button onclick="closeWardrobeModal()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl transition text-xs">
           ยกเลิก

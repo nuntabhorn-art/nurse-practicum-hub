@@ -48,16 +48,10 @@
     // กำหนด URL ของรูปตามสถานะที่แท้จริง (directions ต้องมาก่อนเป็นค่าเริ่มต้น)
     let bgUrl = '';
     if (id === 'B01') {
-      if (isReaction) {
-        // เมื่อมี Reaction เช่น ยิ้ม ดีใจ ร้องไห้
-        bgUrl = 'reactions.png';
-      } else {
-        // สถานะปกติ: ให้แสดง Directions เป็นหลัก
-        // หากมี directions.png/directions.jpg หรือ directions.webp ในระบบ
-        bgUrl = window.HICLASS_USE_LOCAL
-          ? `classroom-mascots/B01/directions.webp`
-          : `https://myhiclass.com/classroom-mascots/B01/directions.webp`;
-      }
+      // ตัวละคร B01 ใช้รูปพยาบาลชายคล้องหูฟังถือสมุดเหลือง (directions.png / reactions.png) เสมอ
+      bgUrl = window.B01_CUSTOM_URLS
+        ? (isReaction ? window.B01_CUSTOM_URLS.reactions : window.B01_CUSTOM_URLS.directions)
+        : (isReaction ? 'reactions.png' : 'directions.png');
     } else {
       // สำหรับตัวละครอื่น
       bgUrl = window.HICLASS_USE_LOCAL 

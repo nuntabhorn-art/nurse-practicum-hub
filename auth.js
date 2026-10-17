@@ -2,43 +2,27 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbxV-LwNHAA5FQSgGTghWyWppGdYo3bEiUoD6RdSYYMXOj24ZK2MO56_GXeO_zz_yd8/exec";
 const SESSION_KEY = "nursenote_user_session";
 
+const SOLE_TEACHER_EMAIL = "nuntabhorn@bcnchainat.ac.th";
+
+function isUserTeacherAdmin(email) {
+  return Boolean(email && String(email).trim().toLowerCase() === SOLE_TEACHER_EMAIL);
+}
+
 function getSession() {
   try {
     const s = JSON.parse(localStorage.getItem(SESSION_KEY) || "null");
-    if (s && s.token && s.email && s.email.toLowerCase().endsWith("@bcnchainat.ac.th")) return s;
+    if (s && s.token && s.email && s.email.toLowerCase().endsWith("@bcnchainat.ac.th")) {
+      s.email = s.email.toLowerCase().trim();
+      s.isAdmin = isUserTeacherAdmin(s.email);
+      s.role = s.isAdmin ? "admin" : "student";
+      return s;
+    }
   } catch (e) {}
   return null;
 }
 
 async function syncSupabaseSession() {
-  if (!window.NurseSupabase || !NurseSupabase.enabled) return getSession();
-  try {
-    const client = await NurseSupabase.init();
-    if (!client) return getSession();
-    const result = await client.auth.getSession();
-    const session = result && result.data && result.data.session;
-    if (!session || !session.user || !session.user.email) return getSession();
-
-    const profileResult = await client
-      .from('profiles')
-      .select('full_name, role')
-      .eq('id', session.user.id)
-      .maybeSingle();
-    const profile = profileResult && profileResult.data;
-    const userData = {
-      email: session.user.email.toLowerCase(),
-      name: profile && profile.full_name ? profile.full_name : session.user.email.split('@')[0],
-      isAdmin: Boolean(profile && (profile.role === 'admin' || profile.role === 'teacher')),
-      role: profile && profile.role ? profile.role : 'student',
-      userId: session.user.id,
-      token: session.access_token,
-      provider: 'supabase'
-    };
-    localStorage.setItem(SESSION_KEY, JSON.stringify(userData));
-    return userData;
-  } catch (e) {
-    return getSession();
-  }
+  return getSession();
 }
 
 function goLogin() {
