@@ -164,18 +164,22 @@
       </div>
 
       <!-- แถบสลับโหมดหลัก (สำหรับทุกคน และมีโหมดอาจารย์) -->
-      <div class="flex items-center bg-amber-100/80 p-1.5 rounded-2xl border border-amber-300 text-xs font-black gap-1">
+      <div class="flex flex-wrap items-center bg-amber-100/80 p-1.5 rounded-2xl border border-amber-300 text-xs font-black gap-1">
         <button onclick="switchTab('class')" id="tabBtnClass" class="px-3 py-1.5 rounded-xl bg-white text-amber-900 shadow-sm transition flex items-center gap-1.5">
           <span class="clay-icon-badge w-6 h-6 text-xs bg-amber-50">🏥</span> <span>ห้องเรียน/วอร์ด</span>
         </button>
-        <button onclick="switchTab('report')" id="tabBtnReport" class="px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition flex items-center gap-1.5">
-          <span class="clay-icon-badge w-6 h-6 text-xs bg-teal-50">📊</span> <span>รายงานผล & สถานะ</span>
-        </button>
-        <button onclick="switchTab('teams')" id="tabBtnTeams" class="px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition flex items-center gap-1.5">
-          <span class="clay-icon-badge w-6 h-6 text-xs bg-rose-50">⚡</span> <span>สุ่มทีม VS</span>
+        <button onclick="switchTab('ypt')" id="tabBtnYpt" class="px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition flex items-center gap-1.5 relative">
+          <span class="clay-icon-badge w-6 h-6 text-xs bg-orange-100" id="headerYptIcon">💡</span> <span>เปิดไฟอ่านหนังสือ (YPT)</span>
+          <span id="headerYptTimerBadge" class="hidden px-1.5 py-0.5 rounded-full bg-orange-500 text-white text-[9px] font-mono">ON</span>
         </button>
         <button onclick="switchTab('works')" id="tabBtnWorks" class="px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition flex items-center gap-1.5">
           <span class="clay-icon-badge w-6 h-6 text-xs bg-indigo-50">📋</span> <span>งาน Care Plan</span>
+        </button>
+        <button onclick="switchTab('teams')" id="tabBtnTeams" class="px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition flex items-center gap-1.5">
+          <span class="clay-icon-badge w-6 h-6 text-xs bg-rose-50">⚡</span> <span>สุ่มทีม & วอร์ด</span>
+        </button>
+        <button onclick="switchTab('report')" id="tabBtnReport" class="px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition flex items-center gap-1.5">
+          <span class="clay-icon-badge w-6 h-6 text-xs bg-teal-50">📊</span> <span>รายงานผล</span>
         </button>
         <!-- ปุ่มสลับโหมดอาจารย์ (แสดงเฉพาะอาจารย์ nuntabhorn@bcnchainat.ac.th เท่านั้น) -->
         <button onclick="toggleTeacherMode()" id="btnTeacherToggle" class="hidden px-3 py-1.5 rounded-xl text-purple-800 hover:text-purple-950 transition flex items-center gap-1.5">
@@ -227,11 +231,14 @@
           </div>
           <div>
             <div class="text-sm font-black text-slate-800">นักศึกษาฝึกปฏิบัติการพยาบาล (กลุ่ม 5)</div>
-            <div class="text-xs text-slate-500 font-semibold">รพ.อุทัยธานี • คลิกที่ตัวนักศึกษาเพื่อเช็คชื่อ หรือให้คะแนนพิเศษ 🌟</div>
+            <div class="text-xs text-slate-500 font-semibold">คลิกที่ตัวนักศึกษาเพื่อเช็คชื่อ, ให้คะแนนภารกิจพิเศษ หรือเปลี่ยนชุดอวตาร 🌟</div>
           </div>
         </div>
 
-        <div class="flex items-center gap-2">
+        <div class="flex flex-wrap items-center gap-2">
+          <button onclick="switchTab('ypt')" class="px-3 py-1.5 rounded-2xl bg-orange-100 hover:bg-orange-200 text-orange-900 font-black text-xs border border-orange-300 flex items-center gap-1.5 transition">
+            <span>🪑🔥</span> <span>ห้องเปิดไฟอ่านหนังสือ (YPT)</span>
+          </button>
           <span class="px-3 py-1.5 rounded-2xl bg-emerald-100 text-emerald-800 font-black text-xs border border-emerald-300 flex items-center gap-1.5">
             <span class="clay-icon-badge w-5 h-5 text-[10px] bg-emerald-200">✔️</span> มาเรียน: <span id="statPresentCount">8</span>/8 คน
           </span>
@@ -241,14 +248,159 @@
         </div>
       </div>
 
-      <!-- กริดอวาตาร์ 3D นักศึกษา 8 คน (สไตล์รูปที่ 4 พร้อม 3D Mouse Tilt) -->
+      <!-- กริดอวาตาร์ 3D นักศึกษา 8 คน -->
       <div id="avatarGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4 sm:gap-5 pt-1">
         <!-- Rendered by JavaScript -->
       </div>
     </section>
 
-    <!-- ================= TAB 2: สุ่มแบ่งทีม / จัดกลุ่มทำงานกลุ่ม (Team Battle VS แบบรูปที่ 5) ================= -->
-    
+    <!-- ================= TAB YPT: ระบบเปิดไฟอ่านหนังสือ & ทำงานกลุ่ม (YPT Study With Me & Live Chat) ================= -->
+    <section id="tabYptSection" class="space-y-4 hidden anim-pop">
+      <!-- แบนเนอร์ประกาศจากอาจารย์ประจำกลุ่ม -->
+      <div class="clay-card p-4 bg-gradient-to-r from-slate-900 via-indigo-950 to-slate-900 text-white border-2 border-amber-400/80 flex flex-wrap items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-500 to-orange-400 flex items-center justify-center text-2xl shadow-lg shrink-0" id="yptMainStatusEmoji">
+            🪑🔥
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2 py-0.5 rounded-full bg-amber-400 text-slate-950 font-black text-[10px]">YPT NURSE STUDY ROOM</span>
+              <span class="text-xs text-amber-300 font-bold" id="yptOnlineCounter">🟢 กำลังเปิดไฟทำงาน 1 คน</span>
+            </div>
+            <h2 class="text-sm sm:text-base font-black text-white mt-0.5" id="yptAnnouncementText">
+              📢 ตั้งใจอ่านหนังสือและทำ Care Plan นะคะเด็กๆ 🩺🔥
+            </h2>
+          </div>
+        </div>
+        <!-- ปุ่มควบคุมสำหรับอาจารย์ -->
+        <div id="yptTeacherControlsBar" class="hidden flex flex-wrap items-center gap-1.5">
+          <button onclick="editYptAnnouncement()" class="px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-slate-950 font-black text-[11px] transition">
+            ✏️ แก้ไขประกาศ
+          </button>
+          <button onclick="rewardAllStudyingStudents()" class="px-3 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-400 text-white font-black text-[11px] transition">
+            ⭐ ให้ดาวคนที่เปิดไฟอยู่ (+1)
+          </button>
+          <button onclick="toggleYptChatPermission()" id="btnToggleYptChat" class="px-3 py-1.5 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-[11px] transition">
+            💬 เปิดแชทอยู่
+          </button>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        <!-- คอลัมน์ซ้าย+กลาง (2 ส่วน): โต๊ะอ่านหนังสือของฉัน + กระดานไฟอ่านหนังสือของสมาชิกกลุ่ม -->
+        <div class="lg:col-span-2 space-y-4">
+          
+          <!-- การ์ดควบคุมการเปิดไฟอ่านหนังสือของฉัน -->
+          <div id="myYptLampCard" class="clay-card p-5 bg-gradient-to-br from-slate-900 via-slate-800 to-indigo-950 text-white border-3 border-amber-300/60 space-y-4">
+            <div class="flex flex-wrap items-center justify-between gap-3">
+              <div class="flex items-center gap-3.5">
+                <!-- ไอคอนเปลี่ยนตามระยะเวลาที่เปิดไฟ -->
+                <div id="myYptStageBadge" class="w-16 h-16 rounded-3xl bg-slate-800 border-2 border-amber-400/50 flex flex-col items-center justify-center text-3xl shadow-inner relative">
+                  <span id="myYptStageIcon">🌙</span>
+                </div>
+                <div>
+                  <div class="text-[11px] font-bold text-amber-300" id="myYptStageTitle">สถานะ: ปิดไฟพักผ่อน (กดเปิดไฟเมื่อเริ่มทำงาน/อ่านหนังสือ)</div>
+                  <div class="text-2xl sm:text-3xl font-mono font-black tracking-wider text-white" id="myYptTimerDisplay">00:00:00</div>
+                  <div class="text-[10px] text-slate-300">ยิ่งเปิดไฟอ่านหนังสือนาน ไอคอนจะอัปเกรดจาก 💡 โคมไฟ ➔ 🪑📚 นั่งโต๊ะหนังสือ ➔ 🪑🔥 โต๊ะไฟลุกโชน!</div>
+                </div>
+              </div>
+
+              <!-- ปุ่มสวิตช์เปิด/ปิดไฟอ่านหนังสือ -->
+              <button onclick="toggleMyYptLamp()" id="btnMyYptSwitch" class="clay-pill-btn px-6 py-3.5 bg-gradient-to-r from-amber-400 via-orange-500 to-rose-500 text-slate-950 font-black text-xs sm:text-sm shadow-xl flex items-center gap-2">
+                <span class="text-lg">💡</span> <span id="btnMyYptSwitchText">เปิดไฟอ่านหนังสือ / ทำงาน</span>
+              </button>
+            </div>
+
+            <!-- เลือกชื่อตัวเองและภารกิจที่กำลังทำ -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-2 border-t border-slate-700/80 text-xs">
+              <div>
+                <label class="block text-[10px] font-bold text-amber-200 mb-1">👤 ระบุตัวตนของคุณในห้องเรียน:</label>
+                <select id="yptIdentitySelect" onchange="onChangeYptIdentity(this.value)" class="w-full rounded-xl p-2 bg-slate-800 text-white border border-slate-600 font-bold outline-none focus:border-amber-400"></select>
+              </div>
+              <div>
+                <label class="block text-[10px] font-bold text-amber-200 mb-1">📖 กิจกรรมที่กำลังโฟกัส (แสดงให้ครูและเพื่อนเห็น):</label>
+                <input type="text" id="yptActivityInput" oninput="onChangeYptActivity(this.value)" value="กำลังเขียน Care Plan ประจำวัน 📝" placeholder="เช่น อ่านหนังสือสอบสภา / ทำ Care Plan" class="w-full rounded-xl p-2 bg-slate-800 text-white border border-slate-600 font-bold outline-none focus:border-amber-400">
+              </div>
+            </div>
+
+            <!-- แถบอธิบายระดับไอคอนความขยัน (YPT Level Guide) -->
+            <div class="grid grid-cols-4 gap-1.5 text-center text-[10px] bg-slate-950/60 p-2.5 rounded-2xl border border-slate-800">
+              <div class="p-1.5 rounded-xl bg-slate-900/90 text-slate-400">
+                <div class="text-base">💡📖</div>
+                <div class="font-bold text-amber-200">0-15 นาที</div>
+                <div>เริ่มเปิดไฟอ่าน</div>
+              </div>
+              <div class="p-1.5 rounded-xl bg-slate-900/90 text-slate-300">
+                <div class="text-base">🪑📚</div>
+                <div class="font-bold text-amber-300">15-45 นาที</div>
+                <div>นั่งโต๊ะหนังสือ</div>
+              </div>
+              <div class="p-1.5 rounded-xl bg-slate-900/90 text-slate-200">
+                <div class="text-base">🪑🔥</div>
+                <div class="font-bold text-orange-400">45-90 นาที</div>
+                <div>ขยันเข้มข้นไฟลุก</div>
+              </div>
+              <div class="p-1.5 rounded-xl bg-slate-900/90 text-white">
+                <div class="text-base">🪑⚡👑</div>
+                <div class="font-bold text-purple-300">90+ นาที</div>
+                <div>โหมดเทพอ่านหนัก</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- กระดานแสดงสถานะโต๊ะหนังสือของทุกคนในกลุ่ม (YPT Study Room Grid) -->
+          <div class="clay-card p-4 sm:p-5 space-y-3 bg-slate-900 text-white border-2 border-slate-700">
+            <div class="flex items-center justify-between border-b border-slate-800 pb-2">
+              <h3 class="text-xs sm:text-sm font-black text-amber-300 flex items-center gap-2">
+                <span>🪑</span> <span>โต๊ะอ่านหนังสือของสมาชิกกลุ่ม 5 & อาจารย์นิเทศก์</span>
+              </h3>
+              <button onclick="syncYptRoomFromServer()" class="text-[11px] text-sky-300 hover:underline font-bold">🔄 อัปเดตสถานะสด</button>
+            </div>
+
+            <div id="yptMembersGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-3 gap-3">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- คอลัมน์ขวา (1 ส่วน): ช่องแชทกลุ่มห้องอ่านหนังสือ (Live Study Chat) -->
+        <div class="clay-card p-4 flex flex-col justify-between bg-white border-2 border-amber-200 h-[540px]">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-2.5">
+            <div>
+              <h3 class="text-xs sm:text-sm font-black text-slate-800 flex items-center gap-1.5">
+                <span>💬</span> <span>แชทกลุ่มห้องอ่านหนังสือ</span>
+              </h3>
+              <p class="text-[10px] text-slate-500" id="yptChatStatusSub">พูดคุย ถามการบ้าน หรือส่งกำลังใจให้เพื่อนๆ</p>
+            </div>
+            <button onclick="clearYptChatAction()" id="btnClearYptChat" class="hidden px-2 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-[10px]">
+              🗑️ ล้างแชท
+            </button>
+          </div>
+
+          <!-- รายการข้อความแชท -->
+          <div id="yptChatMessagesBox" class="flex-1 overflow-y-auto custom-scroll py-3 space-y-2.5 text-xs pr-1">
+            <!-- Rendered by JS -->
+          </div>
+
+          <!-- ปุ่มส่งข้อความด่วน (Quick Stickers) -->
+          <div class="flex gap-1 overflow-x-auto pb-1.5 pt-1 border-t border-slate-100 text-[10px]">
+            <button type="button" onclick="sendQuickYptCheer('✌️ สู้ๆ นะทุกคน ปั่น Care Plan กัน!')" class="px-2 py-1 rounded-full bg-amber-50 hover:bg-amber-100 text-amber-900 font-bold whitespace-nowrap border border-amber-200">✌️ สู้ๆ นะทุกคน</button>
+            <button type="button" onclick="sendQuickYptCheer('🪑🔥 เปิดไฟอ่านหนังสือลุยยาวๆ!')" class="px-2 py-1 rounded-full bg-orange-50 hover:bg-orange-100 text-orange-900 font-bold whitespace-nowrap border border-orange-200">🪑🔥 ลุยอ่านยาวๆ</button>
+            <button type="button" onclick="sendQuickYptCheer('🎉 ส่งงาน Care Plan เรียบร้อยแล้ว!')" class="px-2 py-1 rounded-full bg-emerald-50 hover:bg-emerald-100 text-emerald-900 font-bold whitespace-nowrap border border-emerald-200">🎉 ส่งงานเสร็จแล้ว</button>
+          </div>
+
+          <!-- ช่องพิมพ์ข้อความแชท -->
+          <div class="flex gap-1.5 pt-1">
+            <input type="text" id="yptChatInput" onkeydown="if(event.key==='Enter') sendYptChatMessage()" placeholder="พิมพ์ข้อความในห้องอ่านหนังสือ..." class="flex-1 border rounded-xl px-3 py-2 text-xs bg-slate-50 font-semibold outline-none focus:border-amber-500">
+            <button onclick="sendYptChatMessage()" class="px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:opacity-95 text-white font-black text-xs shadow-sm">
+              ส่ง
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= TAB REPORT: รายงานการส่งงาน ตรวจงานตีกลับ สถิติขึ้นเวร และพิมพ์ PDF ================= -->
     <section id="tabReportSection" class="space-y-4 hidden anim-pop">
       
@@ -258,7 +410,7 @@
           <h2 class="text-base font-black text-slate-800 flex items-center gap-2">
             <span class="clay-icon-badge w-8 h-8 rounded-xl bg-rose-100 border border-rose-300 text-sm">📑</span> รายงานสถิติและผลการฝึกปฏิบัติการพยาบาล
           </h2>
-          <p class="text-xs text-slate-500 mt-0.5">สรุปงานส่ง, งานตีกลับแก้ไข, บันทึกขึ้นเวร (ตรงเวลา/สาย/ลา/ขาด/ส่งงานช้า)</p>
+          <p class="text-xs text-slate-500 mt-0.5">สรุปงานส่ง, งานตีกลับแก้ไข, บันทึกขึ้นเวร (ตรงเวลา/สาย/ลา/ขาด/ส่งงานช้า) • คะแนนของเพื่อนจะซ่อนตามสิทธิ์ความเป็นส่วนตัว</p>
         </div>
         <div class="flex items-center gap-2">
           <button onclick="exportReportToPDF()" class="clay-pill-btn px-4 py-2.5 bg-gradient-to-r from-rose-500 to-pink-600 text-white font-black text-xs shadow-md flex items-center gap-1.5 active:scale-95 transition">
@@ -339,61 +491,31 @@
 
     </section>
 
+    <!-- ================= TAB TEAMS: สุ่มแบ่งทีม + เปลี่ยนชื่อหอผู้ป่วย (Ward) ได้อิสระ ================= -->
     <section id="tabTeamsSection" class="space-y-4 hidden anim-pop">
       
-      <!-- กล่องสังเวียนแบ่งทีม -->
-      <div class="clay-card p-5 sm:p-7 space-y-6">
+      <div class="clay-card p-5 sm:p-7 space-y-5">
         
-        <!-- ส่วนหัว VS กลางจอ -->
-        <div class="text-center relative">
-          <div class="inline-block px-5 py-1.5 rounded-full bg-amber-400 text-amber-950 font-black text-xs shadow-md border-2 border-white mb-2">
-            🎲 กิจกรรมแบ่งกลุ่มทำงาน / Case Conference
+        <!-- ส่วนหัว VS กลางจอ พร้อมช่องตั้งชื่อกลุ่ม/รพ. -->
+        <div class="text-center space-y-2">
+          <div class="inline-block px-5 py-1.5 rounded-full bg-amber-400 text-amber-950 font-black text-xs shadow-md border-2 border-white">
+            🎲 กิจกรรมแบ่งกลุ่มขึ้นวอร์ด / Case Conference
           </div>
-          <h2 class="text-xl sm:text-2xl font-black text-slate-800">สุ่มแบ่งทีมฝึกปฏิบัติการพยาบาล</h2>
-          <p class="text-xs text-slate-500 mt-1">แบ่งกลุ่มอัตโนมัติอย่างยุติธรรม พร้อมบันทึกลงชีตวิชาการพยาบาล</p>
+          <h2 class="text-xl sm:text-2xl font-black text-slate-800">สุ่มแบ่งทีมและกำหนดหอผู้ป่วย (Ward)</h2>
+          <p class="text-xs text-slate-500">สามารถพิมพ์เปลี่ยนชื่อหอผู้ป่วย (Ward) ของแต่ละทีมด้านล่างได้ตามต้องการ ระบบจะบันทึกจำไว้ให้อัตโนมัติ</p>
+
+          <div class="max-w-md mx-auto pt-1 flex items-center gap-2 bg-amber-50/80 px-3.5 py-2 rounded-2xl border border-amber-200 text-xs">
+            <span class="font-black text-amber-900 whitespace-nowrap">🏥 ชื่อกลุ่ม/รพ.:</span>
+            <input type="text" id="teamGroupNameInput" value="กลุ่ม 5 รพ.อุทัยธานี" oninput="saveCustomTeamWardsToLocal()" class="w-full bg-white border border-amber-300 rounded-xl px-2.5 py-1 font-bold text-slate-800 outline-none focus:border-amber-500">
+          </div>
         </div>
 
-        <!-- กล่องเปรียบเทียบทีม (2 ทีม หรือตามที่เลือก) -->
+        <!-- กล่องเปรียบเทียบทีม (รองรับ 2 - 4 ทีม พร้อมช่องเปลี่ยนชื่อ Ward ในแต่ละทีม) -->
         <div id="teamsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-5 relative">
-          
-          <!-- ตราสัญลักษณ์ VS ลอยตรงกลาง -->
-          <div class="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white border-4 border-amber-300 shadow-2xl items-center justify-center font-black text-xl text-rose-500 z-20 anim-bobble">
-            VS
-          </div>
-
-          <!-- ทีมที่ 1 (Team 1 ฟ้า) -->
-          <div class="team-box-blue p-5 space-y-3 min-h-[260px] flex flex-col justify-between">
-            <div class="flex justify-between items-center border-b border-sky-300 pb-2">
-              <div class="flex items-center gap-2">
-                <span class="w-8 h-8 rounded-full bg-sky-500 text-white flex items-center justify-center font-black text-sm">1</span>
-                <span class="font-black text-sky-950 text-base">ทีมที่ 1 (Team 1)</span>
-              </div>
-              <span class="text-xs font-bold text-sky-700 bg-white/70 px-2.5 py-0.5 rounded-full" id="t1Count">0 คน</span>
-            </div>
-            <div id="team1Members" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 py-2">
-              <!-- สมาชิกทีม 1 -->
-            </div>
-            <div class="text-[11px] text-sky-700 font-bold text-center">🛡️ วอร์ดอายุรกรรมชาย</div>
-          </div>
-
-          <!-- ทีมที่ 2 (Team 2 ชมพู) -->
-          <div class="team-box-pink p-5 space-y-3 min-h-[260px] flex flex-col justify-between">
-            <div class="flex justify-between items-center border-b border-pink-300 pb-2">
-              <div class="flex items-center gap-2">
-                <span class="w-8 h-8 rounded-full bg-pink-500 text-white flex items-center justify-center font-black text-sm">2</span>
-                <span class="font-black text-pink-950 text-base">ทีมที่ 2 (Team 2)</span>
-              </div>
-              <span class="text-xs font-bold text-pink-700 bg-white/70 px-2.5 py-0.5 rounded-full" id="t2Count">0 คน</span>
-            </div>
-            <div id="team2Members" class="grid grid-cols-2 sm:grid-cols-3 gap-2.5 py-2">
-              <!-- สมาชิกทีม 2 -->
-            </div>
-            <div class="text-[11px] text-pink-700 font-bold text-center">🩺 วอร์ดอายุรกรรมหญิง</div>
-          </div>
-
+          <!-- Rendered dynamically by renderTeamsView() -->
         </div>
 
-        <!-- แถบปุ่มควบคุมด้านล่าง (ตามภาพที่ 5 เป๊ะๆ) -->
+        <!-- แถบปุ่มควบคุมด้านล่าง -->
         <div class="flex flex-wrap items-center justify-center gap-3 pt-4 border-t border-slate-100">
           
           <!-- ปุ่มปรับจำนวนทีม [-] 2 [+] -->
@@ -403,55 +525,70 @@
             <button onclick="changeTeamCount(1)" class="w-7 h-7 rounded-full bg-amber-400 text-amber-950 flex items-center justify-center text-sm hover:bg-amber-500 active:scale-95 transition">+</button>
           </div>
 
-          <!-- ปุ่มหลักสุ่มแบ่งทีม (สีส้ม/ชมพูไล่เฉดใหญ่) -->
+          <!-- ปุ่มหลักสุ่มแบ่งทีม -->
           <button onclick="shuffleTeamsAction()" class="clay-pill-btn px-8 py-3 bg-gradient-to-r from-rose-500 via-pink-500 to-amber-500 text-white font-black text-sm sm:text-base shadow-lg shadow-rose-500/30 flex items-center gap-2">
             <span>✨</span> <span>สุ่มแบ่งทีม</span>
           </button>
 
           <!-- ปุ่มบันทึกผลการแบ่งทีม -->
           <button onclick="saveTeamsToSheet()" id="btnSaveTeams" class="clay-pill-btn px-6 py-3 bg-slate-700 hover:bg-slate-800 text-white font-black text-xs sm:text-sm shadow-md flex items-center gap-2">
-            <span>💾</span> <span>บันทึก</span>
+            <span>💾</span> <span>บันทึกทีมและชื่อ Ward</span>
           </button>
 
           <!-- ปุ่มล้างทีม -->
-          <button onclick="resetTeams()" class="w-10 h-10 rounded-full bg-rose-100 hover:bg-rose-200 text-rose-600 flex items-center justify-center text-sm active:scale-95 transition clay-icon-badge" title="ล้างทีม">
-            <span>🗑️</span>
+          <button onclick="resetTeams()" class="w-10 h-10 rounded-full bg-rose-100 hover:bg-rose-200 text-rose-600 flex items-center justify-center text-sm active:scale-95 transition clay-icon-badge" title="สุ่มใหม่">
+            <span>🔄</span>
           </button>
         </div>
 
       </div>
     </section>
 
-    <!-- ================= TAB 3: งาน Care Plan & สมรรถนะ (สำหรับนักศึกษา & อาจารย์) ================= -->
+    <!-- ================= TAB 3: งาน Care Plan & สมรรถนะ 10 ด้าน + ระบบความเป็นส่วนตัว ================= -->
     <section id="tabWorksSection" class="space-y-4 hidden anim-pop">
       
-      <!-- ส่วนบน: สรุปและปุ่มส่ง Care Plan ใหม่ -->
-      <div class="clay-card p-5 flex flex-wrap items-center justify-between gap-3">
-        <div>
-          <h2 class="text-base font-black text-slate-800 flex items-center gap-2">
-            <span class="clay-icon-badge w-8 h-8 rounded-xl bg-indigo-100 border border-indigo-300 text-sm">📋</span> การส่งงานและประเมิน Daily Care Plan
-          </h2>
-          <p class="text-xs text-slate-500 mt-0.5">ส่งงานทุกสิ้นสุดเวร (ภายใน 18:00 น.) เพื่อรับคะแนนสมรรถนะวิชาชีพ</p>
+      <!-- ส่วนบน: สรุป, เลือกตัวตนนักศึกษา, ตั้งค่าสิทธิ์การมองเห็นของเพื่อน และปุ่มส่ง Care Plan -->
+      <div class="clay-card p-5 space-y-3">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-base font-black text-slate-800 flex items-center gap-2">
+              <span class="clay-icon-badge w-8 h-8 rounded-xl bg-indigo-100 border border-indigo-300 text-sm">📋</span> การส่งงานและประเมิน Daily Care Plan
+            </h2>
+            <p class="text-xs text-slate-500 mt-0.5">🔒 ระบบคุ้มครองความเป็นส่วนตัว: นักศึกษาจะไม่เห็นไฟล์งานและคะแนนของเพื่อน ยกเว้นเพื่อนเปิดสิทธิ์อนุญาตให้ดู</p>
+          </div>
+          <button onclick="openSubmitWorkModal()" class="clay-pill-btn px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md flex items-center gap-2">
+            <span>📤</span> + ส่ง Care Plan ประจำวัน
+          </button>
         </div>
-        <button onclick="openSubmitWorkModal()" class="clay-pill-btn px-5 py-2.5 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs shadow-md flex items-center gap-2">
-          <span>📤</span> + ส่ง Care Plan ประจำวัน
-        </button>
+
+        <!-- แถบเลือกชื่อตัวเอง & สวิตช์อนุญาตให้เพื่อนดูงานของฉัน -->
+        <div class="p-3 bg-indigo-50/70 rounded-2xl border border-indigo-100 flex flex-wrap items-center justify-between gap-3 text-xs">
+          <div class="flex items-center gap-2 flex-wrap">
+            <span class="font-black text-indigo-950">👤 มุมมองนักศึกษาของ:</span>
+            <select id="activeWorkStudentSelect" onchange="onChangeActiveWorkStudent(this.value)" class="border border-indigo-200 rounded-xl px-3 py-1.5 bg-white font-bold text-slate-800 outline-none focus:border-indigo-500"></select>
+          </div>
+          <label class="flex items-center gap-2 cursor-pointer select-none bg-white px-3 py-1.5 rounded-xl border border-indigo-200 shadow-2xs">
+            <input type="checkbox" id="myDefaultPeerPrivacyToggle" onchange="toggleAllMyWorksPrivacy(this.checked)" class="w-4 h-4 text-indigo-600 rounded">
+            <span class="font-bold text-slate-700" id="myPrivacyStatusLabel">🔒 ซ่อนงานและคะแนนของฉันจากเพื่อน (เห็นเฉพาะอาจารย์)</span>
+          </label>
+        </div>
       </div>
 
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-4">
         
-        <!-- สมรรถนะ Care Plan 10 ด้าน (Radar Chart) -->
+        <!-- สมรรถนะ Care Plan 10 ด้าน (Radar Chart เชื่อมกับคะแนนการตรวจของอาจารย์) -->
         <div class="clay-card p-4 flex flex-col justify-between items-center space-y-3">
-          <div class="w-full border-b pb-2">
+          <div class="w-full border-b pb-2 flex items-center justify-between gap-1">
             <h3 class="font-black text-xs text-slate-800 flex items-center gap-1.5">
               <span class="clay-icon-badge w-6 h-6 rounded-lg bg-amber-100 border border-amber-300 text-xs">📊</span> สมรรถนะ Care Plan 10 ด้าน
             </h3>
+            <span class="text-[10px] font-bold text-amber-800 bg-amber-100 px-2 py-0.5 rounded-full" id="radarTargetLabel">คะแนนล่าสุด</span>
           </div>
-          <div class="w-full flex items-center justify-center p-2">
-            <canvas id="radarCanvas" width="230" height="230"></canvas>
+          <div class="w-full flex items-center justify-center p-1">
+            <canvas id="radarCanvas" width="240" height="240"></canvas>
           </div>
           <div class="text-[11px] text-center text-slate-600 font-bold bg-amber-50 p-2 rounded-2xl w-full border border-amber-200">
-            ⭐ คะแนนเฉลี่ยสมรรถนะ: <span id="dispAvgCompetency" class="text-amber-800 font-black">3.2 / 4.0</span>
+            ⭐ คะแนนเฉลี่ยสมรรถนะ 10 ด้าน: <span id="dispAvgCompetency" class="text-amber-800 font-black">3.4 / 4.0</span>
           </div>
         </div>
 
@@ -461,7 +598,7 @@
             <h3 class="font-black text-xs text-slate-800 flex items-center gap-1.5">
               <span class="clay-icon-badge w-6 h-6 rounded-lg bg-indigo-100 border border-indigo-300 text-xs">📝</span> ประวัติงานและผลการตรวจจากอาจารย์
             </h3>
-            <span class="text-[10px] font-bold text-slate-400">อัปเดตเรียลไทม์</span>
+            <span class="text-[10px] font-bold text-slate-500">คลิกปุ่ม 🔒/👁️ เพื่อสลับสิทธิ์การมองเห็นของเพื่อน</span>
           </div>
 
           <div class="overflow-x-auto custom-scroll max-h-96">
@@ -474,7 +611,7 @@
                   <th class="p-2">ไฟล์</th>
                   <th class="p-2 text-center">สถานะ</th>
                   <th class="p-2 text-center">คะแนน</th>
-                  <th class="p-2 text-center">จัดการ</th>
+                  <th class="p-2 text-center">สิทธิ์เพื่อน / จัดการ</th>
                 </tr>
               </thead>
               <tbody id="worksTableBody" class="divide-y divide-slate-100">
@@ -787,45 +924,87 @@
         </span>
       </div>
 
-      <!-- 7. แถบ Action Pills ด้านล่างตรงกลาง (ดาว, ดื่มนม, แปรงฟัน, อาหารกลางวัน เหมือนรูปที่ 4) -->
-      <div class="absolute -bottom-10 left-1/2 transform -translate-x-1/2 z-20 bg-white/95 px-4 py-2 rounded-full shadow-2xl border border-slate-100 flex items-center gap-2.5">
-        <!-- ปุ่มให้ดาว +1 / +3 -->
+      <!-- 7. แถบ Action Pills ด้านล่างตรงกลาง (ดาว + ภารกิจเสริมที่อาจารย์เพิ่ม/แก้ไขเองได้) -->
+      <div class="absolute -bottom-12 left-1/2 transform -translate-x-1/2 z-20 bg-white/95 px-3.5 py-2 rounded-full shadow-2xl border border-slate-100 flex items-center gap-2 max-w-[95vw] overflow-x-auto">
+        <!-- ปุ่มให้ดาว +1 -->
         <button onclick="awardHeroQuick(1)" 
                 onmouseenter="focusRadialMascot(7)" 
                 onmouseleave="focusRadialMascot(null)" 
-                class="px-3.5 py-1.5 rounded-full bg-amber-400 hover:bg-amber-500 text-amber-950 font-black text-xs shadow-sm flex items-center gap-1.5 active:scale-95 transition">
-          ⭐ <span id="radialStarValue">3</span>
+                class="px-3 py-1.5 rounded-full bg-amber-400 hover:bg-amber-500 text-amber-950 font-black text-xs shadow-sm flex items-center gap-1 active:scale-95 transition shrink-0">
+          ⭐ <span id="radialStarValue">10</span>
         </button>
-        <!-- ปุ่มบันทึกกิจกรรมเสริม (นม, แปรงฟัน, อาหาร) -->
-        <button onclick="recordDailyHabit('นม')" 
-                onmouseenter="focusRadialMascot(7)" 
-                onmouseleave="focusRadialMascot(null)" 
-                class="w-8 h-8 rounded-full bg-slate-100 hover:bg-sky-100 text-slate-700 hover:text-sky-600 flex items-center justify-center text-sm shadow-2xs transition active:scale-90" title="ดื่มนม">
-          🥛
-        </button>
-        <button onclick="recordDailyHabit('แปรงฟัน')" 
-                onmouseenter="focusRadialMascot(7)" 
-                onmouseleave="focusRadialMascot(null)" 
-                class="w-8 h-8 rounded-full bg-slate-100 hover:bg-teal-100 text-slate-700 hover:text-teal-600 flex items-center justify-center text-sm shadow-2xs transition active:scale-90" title="แปรงฟัน">
-          🪥
-        </button>
-        <button onclick="recordDailyHabit('อาหาร')" 
-                onmouseenter="focusRadialMascot(7)" 
-                onmouseleave="focusRadialMascot(null)" 
-                class="w-8 h-8 rounded-full bg-slate-100 hover:bg-orange-100 text-slate-700 hover:text-orange-600 flex items-center justify-center text-sm shadow-2xs transition active:scale-90" title="อาหารกลางวัน / เวรอาหาร">
-          🍴
+        <!-- ปุ่มบันทึกภารกิจเสริม (เรนเดอร์แบบไดนามิกจาก customMissions) -->
+        <div id="radialMissionsContainer" class="flex items-center gap-1.5"></div>
+        <!-- ปุ่มให้อาจารย์เพิ่ม/ตั้งค่าภารกิจใหม่ได้ตามต้องการ -->
+        <button id="btnManageMissionsRadial" onclick="openMissionManagerModal()" 
+                class="w-8 h-8 rounded-full bg-purple-100 hover:bg-purple-200 text-purple-700 flex items-center justify-center text-xs font-black shadow-2xs transition active:scale-90 shrink-0" 
+                title="เพิ่ม/แก้ไขภารกิจเสริม (เฉพาะอาจารย์)">
+          ➕
         </button>
       </div>
 
     </div>
   </div>
 
-  <!-- ================= 3. MODAL ตรวจงาน CARE PLAN (สำหรับอาจารย์) ================= -->
+  <!-- ================= 2.5 MODAL จัดการภารกิจเสริมประจำวัน (เพิ่ม/ลบ/แก้ไข ภารกิจตรงดื่มนม แปรงฟัน กินข้าว) ================= -->
+  <div id="missionManagerModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
+    <div class="bg-white rounded-[36px] max-w-md w-full p-5 sm:p-6 space-y-4 shadow-2xl border-4 border-purple-200 anim-pop max-h-[90vh] overflow-y-auto custom-scroll">
+      <div class="flex justify-between items-center border-b pb-2">
+        <h3 class="text-base font-black text-slate-800 flex items-center gap-2">
+          <span class="clay-icon-badge w-8 h-8 rounded-xl bg-purple-100 border border-purple-300 text-sm">🎯</span> ตั้งค่าภารกิจเสริมประจำวัน
+        </h3>
+        <button onclick="closeModal('missionManagerModal')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm">✕</button>
+      </div>
+
+      <p class="text-[11px] text-slate-600 font-semibold">
+        อาจารย์สามารถเพิ่มภารกิจใหม่ๆ นอกเหนือจาก ดื่มนม แปรงฟัน รับประทานอาหาร ได้ตามต้องการ เช่น อ่านหนังสือทบทวน, ส่งเวรตรงเวลา, ช่วยเหลือเพื่อน ฯลฯ
+      </p>
+
+      <!-- ฟอร์มเพิ่มภารกิจใหม่ -->
+      <div class="p-3.5 bg-purple-50/70 rounded-2xl border border-purple-200 space-y-2.5 text-xs">
+        <div class="font-black text-purple-950">➕ เพิ่มภารกิจใหม่</div>
+        <div class="grid grid-cols-4 gap-2">
+          <div>
+            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ไอคอน</label>
+            <input type="text" id="newMissionIcon" value="📖" placeholder="📖" class="w-full border rounded-xl p-2 text-center text-base bg-white outline-none focus:border-purple-500">
+          </div>
+          <div class="col-span-2">
+            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ชื่อภารกิจ</label>
+            <input type="text" id="newMissionTitle" placeholder="เช่น อ่านหนังสือ / ช่วยเพื่อน" class="w-full border rounded-xl p-2 font-bold bg-white outline-none focus:border-purple-500">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ดาว (+)</label>
+            <input type="number" id="newMissionPoints" value="1" min="1" max="10" class="w-full border rounded-xl p-2 text-center font-black text-amber-700 bg-white outline-none focus:border-purple-500">
+          </div>
+        </div>
+        <button onclick="addNewCustomMission()" class="w-full py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-black text-xs shadow-sm transition active:scale-95">
+          ➕ เพิ่มลงในแถบภารกิจ
+        </button>
+      </div>
+
+      <!-- รายการภารกิจทั้งหมด -->
+      <div>
+        <div class="flex justify-between items-center mb-1.5">
+          <span class="text-xs font-black text-slate-700">รายการภารกิจปัจจุบัน</span>
+          <button onclick="resetDefaultMissions()" class="text-[10px] font-bold text-slate-400 hover:text-rose-600 underline">คืนค่าเริ่มต้น</button>
+        </div>
+        <div id="customMissionsListBox" class="space-y-1.5 max-h-52 overflow-y-auto pr-1"></div>
+      </div>
+
+      <div class="pt-1 flex justify-end">
+        <button onclick="closeModal('missionManagerModal')" class="px-5 py-2.5 bg-slate-800 hover:bg-slate-900 text-white font-black rounded-xl text-xs transition">
+          เสร็จสิ้น
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ================= 3. MODAL ตรวจงาน CARE PLAN ตามเกณฑ์เรดาร์ชาร์ท 10 ด้าน (สำหรับอาจารย์) ================= -->
   <div id="gradeWorkModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
-    <div class="bg-white rounded-[36px] max-w-md w-full p-6 space-y-4 shadow-2xl border-4 border-indigo-200 anim-pop max-h-[92vh] overflow-y-auto custom-scroll">
+    <div class="bg-white rounded-[36px] max-w-lg w-full p-5 sm:p-6 space-y-4 shadow-2xl border-4 border-indigo-200 anim-pop max-h-[92vh] overflow-y-auto custom-scroll">
       <div class="flex justify-between items-center border-b pb-2">
         <h3 class="text-base font-black text-slate-800 flex items-center gap-1.5">
-          <span class="clay-icon-badge w-8 h-8 rounded-xl bg-indigo-100 border border-indigo-300 text-sm">📝</span> ตรวจและประเมิน Daily Care Plan
+          <span class="clay-icon-badge w-8 h-8 rounded-xl bg-indigo-100 border border-indigo-300 text-sm">📝</span> ตรวจและประเมิน Care Plan (Rubric 10 ด้าน)
         </h3>
         <button onclick="closeModal('gradeWorkModal')" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-sm">✕</button>
       </div>
@@ -841,18 +1020,34 @@
           <div id="gradeLinkDisplay" class="pt-1"></div>
         </div>
 
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">ผลการตรวจงาน</label>
-          <select id="gradeStatusInput" class="w-full border rounded-xl p-2.5 font-bold bg-white outline-none focus:border-indigo-500">
-            <option value="ผ่าน" class="text-emerald-700">✅ ผ่าน (Approved)</option>
-            <option value="ให้แก้ไข" class="text-rose-700">⚠️ ส่งกลับให้แก้ไข (Needs Revision)</option>
-            <option value="ยอดเยี่ยม" class="text-indigo-700">🌟 ยอดเยี่ยม (Excellent)</option>
-          </select>
+        <!-- หัวข้อให้คะแนนตามเรดาร์ชาร์ท 10 ด้าน (เต็มด้านละ 4.0 คะแนน) -->
+        <div class="p-3.5 rounded-2xl bg-amber-50/70 border border-amber-200 space-y-2.5">
+          <div class="flex flex-wrap justify-between items-center gap-1">
+            <span class="font-black text-amber-950 text-xs flex items-center gap-1">📊 ให้คะแนนตามหัวข้อเรดาร์ชาร์ท 10 ด้าน (0 - 4 คะแนน)</span>
+            <div class="flex gap-1">
+              <button type="button" onclick="fillAllRubricScores(4.0)" class="px-2 py-0.5 rounded-lg bg-emerald-100 hover:bg-emerald-200 text-emerald-800 font-bold text-[10px]">ดีเยี่ยม (4.0)</button>
+              <button type="button" onclick="fillAllRubricScores(3.5)" class="px-2 py-0.5 rounded-lg bg-amber-100 hover:bg-amber-200 text-amber-800 font-bold text-[10px]">ดีมาก (3.5)</button>
+              <button type="button" onclick="fillAllRubricScores(3.0)" class="px-2 py-0.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-[10px]">ผ่าน (3.0)</button>
+            </div>
+          </div>
+
+          <div id="radarRubricInputsContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
         </div>
 
-        <div>
-          <label class="block font-bold text-slate-700 mb-1">คะแนนที่ได้ (0 - 100 คะแนน)</label>
-          <input type="number" id="gradeScoreInput" min="0" max="100" value="85" class="w-full border rounded-xl p-2.5 text-base font-black text-indigo-900 bg-white outline-none focus:border-indigo-500">
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">ผลการตรวจงาน</label>
+            <select id="gradeStatusInput" class="w-full border rounded-xl p-2.5 font-bold bg-white outline-none focus:border-indigo-500">
+              <option value="ผ่าน" class="text-emerald-700">✅ ผ่าน (Approved)</option>
+              <option value="ให้แก้ไข" class="text-rose-700">⚠️ ส่งกลับให้แก้ไข (Needs Revision)</option>
+              <option value="ยอดเยี่ยม" class="text-indigo-700">🌟 ยอดเยี่ยม (Excellent)</option>
+            </select>
+          </div>
+
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">คะแนนรวมสุทธิ (0 - 100)</label>
+            <input type="number" id="gradeScoreInput" min="0" max="100" value="85" class="w-full border rounded-xl p-2 text-base font-black text-indigo-900 bg-white outline-none focus:border-indigo-500">
+          </div>
         </div>
 
         <div>
@@ -862,7 +1057,7 @@
 
         <div class="flex gap-2 pt-1">
           <button onclick="submitGrading()" id="btnSubmitGrading" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white font-black rounded-2xl text-xs shadow-md shadow-indigo-500/25 transition">
-            💾 บันทึกผลการตรวจและส่งคะแนน
+            💾 บันทึกผลการตรวจ & อัปเดตเรดาร์ชาร์ท
           </button>
           <button onclick="closeModal('gradeWorkModal')" class="px-4 py-3 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-2xl text-xs transition">
             ยกเลิก
@@ -872,7 +1067,7 @@
     </div>
   </div>
 
-  <!-- ================= 4. MODAL ส่งงาน CARE PLAN (สำหรับนักศึกษา) ================= -->
+  <!-- ================= 4. MODAL ส่งงาน CARE PLAN (สำหรับนักศึกษา พร้อมตัวเลือกสิทธิ์เพื่อนดูงาน) ================= -->
   <div id="submitWorkModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm hidden z-50 flex items-center justify-center p-4">
     <div class="bg-white rounded-[36px] max-w-md w-full p-5 sm:p-6 space-y-3.5 shadow-2xl border-4 border-indigo-100 anim-pop text-xs max-h-[92vh] overflow-y-auto custom-scroll">
       <div class="flex justify-between items-center border-b pb-2">
@@ -887,7 +1082,7 @@
       <div class="space-y-2.5">
         <div>
           <label class="block font-bold text-slate-700 mb-1">ชื่อนักศึกษาผู้ส่งงาน *</label>
-          <select id="wStudentSelect" onchange="localStorage.setItem('current_student_id', this.value)" class="w-full border rounded-xl p-2.5 bg-slate-50 font-bold text-slate-800 outline-none focus:border-indigo-500"></select>
+          <select id="wStudentSelect" onchange="onChangeActiveStudent(this.value)" class="w-full border rounded-xl p-2.5 bg-slate-50 font-bold text-slate-800 outline-none focus:border-indigo-500"></select>
         </div>
         <div>
           <label class="block font-bold text-slate-700 mb-1">หัวข้องาน / วินิจฉัยโรคผู้ป่วย (Diagnosis) *</label>
@@ -908,6 +1103,15 @@
             <input type="url" id="wLinkInput" placeholder="https://drive.google.com/..." class="w-full border rounded-xl p-2 bg-white outline-none focus:border-indigo-500">
           </div>
         </div>
+
+        <!-- ตั้งค่าความเป็นส่วนตัวของงานชิ้นนี้ -->
+        <label class="flex items-start gap-2.5 p-3 rounded-2xl bg-emerald-50/70 border border-emerald-200 cursor-pointer">
+          <input type="checkbox" id="wAllowPeerView" class="w-4 h-4 mt-0.5 accent-emerald-600 rounded">
+          <div>
+            <div class="font-black text-emerald-950 text-xs">🔓 อนุญาตให้เพื่อนในกลุ่มดูงานและคะแนนของงานชิ้นนี้ได้</div>
+            <div class="text-[10px] text-emerald-700 font-semibold">หากไม่ติ๊ก งานและคะแนนจะถูกซ่อนเป็นส่วนตัว (เห็นเฉพาะคุณและอาจารย์นิเทศก์เท่านั้น)</div>
+          </div>
+        </label>
 
         <div class="flex gap-2 pt-1">
           <button onclick="submitNewWork()" id="btnConfirmSubmitWork" class="w-full py-3 bg-gradient-to-r from-emerald-500 to-teal-600 hover:opacity-95 text-white font-black rounded-xl text-xs shadow-md transition">
@@ -990,6 +1194,38 @@
     let selectedRadialStudent = null;
     let teamCount = 2;
     let currentShuffledTeams = [];
+    let radarChartInstance = null;
+
+    // ภารกิจเสริมเริ่มต้น (ดื่มนม, แปรงฟัน, อาหาร) ที่อาจารย์สามารถเพิ่ม/ลบ/แก้ไขเองได้
+    const DEFAULT_MISSIONS = [
+      { id: 'm_milk', icon: '🥛', title: 'ดื่มนม', points: 1 },
+      { id: 'm_brush', icon: '🪥', title: 'แปรงฟัน', points: 1 },
+      { id: 'm_food', icon: '🍴', title: 'รับประทานอาหาร', points: 1 },
+      { id: 'm_book', icon: '📖', title: 'อ่านหนังสือทบทวน', points: 2 }
+    ];
+    let customMissions = [];
+    try {
+      const savedMissions = localStorage.getItem('nursenote_custom_missions');
+      customMissions = savedMissions ? JSON.parse(savedMissions) : [...DEFAULT_MISSIONS];
+      if (!Array.isArray(customMissions) || customMissions.length === 0) customMissions = [...DEFAULT_MISSIONS];
+    } catch(e) {
+      customMissions = [...DEFAULT_MISSIONS];
+    }
+
+    // ชื่อหอผู้ป่วย (Ward) สำหรับระบบสุ่มทีมที่แก้ไขและจำค่าไว้ได้
+    const DEFAULT_TEAM_WARDS = [
+      "หอผู้ป่วยอายุรกรรมชาย 1 (Male Med 1)",
+      "หอผู้ป่วยศัลยกรรมหญิง (Female Surg)",
+      "หอผู้ป่วยหนัก ICU / อุบัติเหตุฉุกเฉิน",
+      "หอผู้ป่วยกุมารเวชกรรม / ออร์โธปิดิกส์"
+    ];
+    let customTeamWards = [];
+    try {
+      const savedWards = localStorage.getItem('nursenote_team_wards');
+      customTeamWards = savedWards ? JSON.parse(savedWards) : [...DEFAULT_TEAM_WARDS];
+    } catch(e) {
+      customTeamWards = [...DEFAULT_TEAM_WARDS];
+    }
 
     // สถานะสวิตช์ฟังก์ชันระบบ
     let systemFeatures = {
@@ -1021,22 +1257,32 @@
       const btnTeacher = document.getElementById('btnTeacherToggle');
       const btnQuickAll = document.getElementById('btnQuickCheckAll');
       const tabTeacherSec = document.getElementById('tabTeacherSection');
+      const yptTeacherBox = document.getElementById('yptTeacherControlBox');
 
       if (currentSession.isAdmin) {
         if (btnTeacher) btnTeacher.classList.remove('hidden');
         if (btnQuickAll) btnQuickAll.classList.remove('hidden');
+        if (yptTeacherBox) yptTeacherBox.classList.remove('hidden');
       } else {
         // ซ่อนแผงควบคุมอาจารย์อย่างเด็ดขาดสำหรับนักศึกษา
         if (btnTeacher) btnTeacher.classList.add('hidden');
         if (btnQuickAll) btnQuickAll.classList.add('hidden');
         if (tabTeacherSec) tabTeacherSec.classList.add('hidden');
+        if (yptTeacherBox) yptTeacherBox.classList.add('hidden');
+      }
+
+      const savedGroupTitle = localStorage.getItem('nursenote_team_group_title');
+      if (savedGroupTitle && document.getElementById('teamGroupNameInput')) {
+        document.getElementById('teamGroupNameInput').value = savedGroupTitle;
       }
 
       applyFeatureSwitchesUI();
-      renderAvatarGrid();
-      initRadarChart();
       initTeamMembersDropdown();
+      renderAvatarGrid();
+      renderRadialMissionsBar();
+      initRadarChart();
       renderStudentManagerTable();
+      initYptStudyRoom();
       loadDashboard();
     };
 
@@ -1052,15 +1298,18 @@
         return;
       }
 
-      document.getElementById('tabClassSection').classList.add('hidden');
-      document.getElementById('tabReportSection').classList.add('hidden');
-      document.getElementById('tabTeamsSection').classList.add('hidden');
-      document.getElementById('tabWorksSection').classList.add('hidden');
-      document.getElementById('tabTeacherSection').classList.add('hidden');
+      ['tabClassSection', 'tabReportSection', 'tabTeamsSection', 'tabWorksSection', 'tabYptSection', 'tabTeacherSection'].forEach(secId => {
+        const el = document.getElementById(secId);
+        if (el) el.classList.add('hidden');
+      });
 
-      document.querySelectorAll('#tabBtnClass, #tabBtnReport, #tabBtnTeams, #tabBtnWorks').forEach(el => {
+      document.querySelectorAll('#tabBtnClass, #tabBtnReport, #tabBtnTeams, #tabBtnWorks, #tabBtnYpt').forEach(el => {
         el.className = "px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition";
       });
+      const yptBtn = document.getElementById('tabBtnYpt');
+      if (yptBtn && tabId !== 'ypt') {
+        yptBtn.className = "px-3 py-1.5 rounded-xl text-amber-800 hover:text-amber-950 transition flex items-center gap-1";
+      }
 
       const btnTeacher = document.getElementById('btnTeacherToggle');
       if (btnTeacher) {
@@ -1085,6 +1334,13 @@
       } else if (tabId === 'works') {
         document.getElementById('tabWorksSection').classList.remove('hidden');
         document.getElementById('tabBtnWorks').className = "px-3 py-1.5 rounded-xl bg-white text-indigo-900 shadow-sm font-black transition";
+        renderWorksTable(allLoadedWorks);
+      } else if (tabId === 'ypt') {
+        document.getElementById('tabYptSection').classList.remove('hidden');
+        if (yptBtn) yptBtn.className = "px-3 py-1.5 rounded-xl bg-slate-900 text-amber-300 shadow-sm font-black transition flex items-center gap-1";
+        renderYptMembersGrid();
+        renderYptChatMessages();
+        syncYptWithServer();
       } else if (tabId === 'teacher') {
         document.getElementById('tabTeacherSection').classList.remove('hidden');
         if (btnTeacher) {
@@ -1142,9 +1398,12 @@
                          attStatus === 'สาย' ? 'bg-amber-100 text-amber-800 border border-amber-300' :
                          attStatus === 'ส่งงานช้า' ? 'bg-purple-100 text-purple-800 border border-purple-300' :
                          'bg-rose-100 text-rose-800 border border-rose-300';
+        const isStudyingNow = window.yptState && window.yptState.members && window.yptState.members[s.studentId] && window.yptState.members[s.studentId].isStudying;
+        const yptStageInfo = isStudyingNow ? getYptStageInfo(window.yptState.members[s.studentId].studySeconds || 0) : null;
+
         return `
           <div id="avatarCard_${s.studentId}" 
-               class="clay-card p-3 sm:p-4 flex flex-col items-center justify-between text-center relative group min-h-[220px] sm:min-h-[240px] cursor-pointer hover:shadow-xl transition-all" 
+               class="clay-card p-3 sm:p-4 flex flex-col items-center justify-between text-center relative group min-h-[220px] sm:min-h-[240px] cursor-pointer hover:shadow-xl transition-all ${isStudyingNow ? 'ring-2 ring-amber-400' : ''}" 
                onclick="openRadialModal('${s.studentId}')">
             
             <!-- Badge เลขที่และคะแนนดาว Hero (มุมบน) -->
@@ -1173,11 +1432,12 @@
               <span class="text-xs sm:text-sm font-black text-slate-800 truncate">${s.name}</span>
             </div>
 
-            <!-- Badge สถานะเข้าเวรปัจจุบัน -->
-            <div class="mt-1 pointer-events-none">
+            <!-- Badge สถานะเข้าเวรปัจจุบัน + ป้ายเปิดไฟอ่านหนังสือ -->
+            <div class="mt-1 flex flex-wrap items-center justify-center gap-1 pointer-events-none">
               <span id="attBadge_${s.studentId}" class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${attClass}">
                 ${attText}
               </span>
+              ${isStudyingNow ? `<span class="px-2 py-0.5 rounded-full text-[9px] font-black bg-slate-900 text-amber-300 border border-amber-400 animate-pulse">${yptStageInfo.icon} กำลังอ่าน</span>` : ''}
             </div>
 
           </div>
@@ -1197,7 +1457,96 @@
       }
     }
 
-    // 4. RADIAL POPUP ACTION
+    // 4. RADIAL POPUP ACTION & ระบบจัดการภารกิจเสริมตามที่อาจารย์ต้องการ
+    function renderRadialMissionsBar() {
+      const container = document.getElementById('radialMissionsContainer');
+      if (container) {
+        container.innerHTML = customMissions.map(m => `
+          <button onclick="recordDailyHabit('${m.id}')" 
+                  onmouseenter="focusRadialMascot(7)" 
+                  onmouseleave="focusRadialMascot(null)" 
+                  class="px-2.5 h-8 rounded-full bg-slate-100 hover:bg-amber-100 text-slate-700 hover:text-amber-900 flex items-center gap-1 text-xs font-bold shadow-2xs transition active:scale-90 shrink-0" 
+                  title="${m.title} (+${m.points || 1} ดาว)">
+            <span>${m.icon || '🎯'}</span>
+            <span class="text-[10px] font-black hidden sm:inline">${m.title}</span>
+          </button>
+        `).join('');
+      }
+      const btnManage = document.getElementById('btnManageMissionsRadial');
+      if (btnManage) {
+        if (currentSession && currentSession.isAdmin) btnManage.classList.remove('hidden');
+        else btnManage.classList.add('hidden');
+      }
+    }
+
+    function openMissionManagerModal() {
+      if (!currentSession || !currentSession.isAdmin) {
+        Swal.fire({ icon: 'info', title: 'เฉพาะอาจารย์นิเทศก์', text: 'เฉพาะอาจารย์เท่านั้นที่สามารถเพิ่มหรือแก้ไขรายการภารกิจได้' });
+        return;
+      }
+      renderCustomMissionsManagerList();
+      document.getElementById('missionManagerModal').classList.remove('hidden');
+    }
+
+    function renderCustomMissionsManagerList() {
+      const box = document.getElementById('customMissionsListBox');
+      if (!box) return;
+      box.innerHTML = customMissions.map((m, idx) => `
+        <div class="flex items-center justify-between p-2.5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+          <div class="flex items-center gap-2">
+            <span class="text-base">${m.icon || '🎯'}</span>
+            <div>
+              <div class="font-black text-slate-800">${m.title}</div>
+              <div class="text-[10px] font-bold text-amber-600">+${m.points || 1} ดาวความดี</div>
+            </div>
+          </div>
+          <button onclick="deleteCustomMission(${idx})" class="px-2.5 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 text-rose-600 font-bold text-[11px] transition">
+            🗑️ ลบ
+          </button>
+        </div>
+      `).join('');
+    }
+
+    function addNewCustomMission() {
+      const icon = (document.getElementById('newMissionIcon')?.value || '🎯').trim() || '🎯';
+      const title = (document.getElementById('newMissionTitle')?.value || '').trim();
+      const points = Math.max(1, Math.min(20, parseInt(document.getElementById('newMissionPoints')?.value || '1', 10)));
+      if (!title) {
+        Swal.fire({ icon: 'warning', title: 'กรุณาระบุชื่อภารกิจ', text: 'เช่น อ่านหนังสือ, ส่งเวรตรงเวลา, ช่วยเพื่อนทำแผล' });
+        return;
+      }
+      customMissions.push({
+        id: 'm_' + Date.now(),
+        icon,
+        title,
+        points
+      });
+      localStorage.setItem('nursenote_custom_missions', JSON.stringify(customMissions));
+      document.getElementById('newMissionTitle').value = '';
+      renderCustomMissionsManagerList();
+      renderRadialMissionsBar();
+      apiPost('updateCheckinSettings', { custom_missions: JSON.stringify(customMissions) }).catch(() => {});
+    }
+
+    function deleteCustomMission(idx) {
+      if (customMissions.length <= 1) {
+        Swal.fire({ icon: 'warning', title: 'ต้องมีอย่างน้อย 1 ภารกิจ' });
+        return;
+      }
+      customMissions.splice(idx, 1);
+      localStorage.setItem('nursenote_custom_missions', JSON.stringify(customMissions));
+      renderCustomMissionsManagerList();
+      renderRadialMissionsBar();
+      apiPost('updateCheckinSettings', { custom_missions: JSON.stringify(customMissions) }).catch(() => {});
+    }
+
+    function resetDefaultMissions() {
+      customMissions = [...DEFAULT_MISSIONS];
+      localStorage.setItem('nursenote_custom_missions', JSON.stringify(customMissions));
+      renderCustomMissionsManagerList();
+      renderRadialMissionsBar();
+    }
+
     function openRadialModal(studentId) {
       const s = GROUP_5_DATA.find(x => x.studentId === studentId);
       if (!s) return;
@@ -1225,6 +1574,7 @@
         document.getElementById('radialStarValue').textContent = starEl.textContent || '10';
       }
 
+      renderRadialMissionsBar();
       document.getElementById('radialModal').classList.remove('hidden');
     }
 
@@ -1235,12 +1585,18 @@
     function handleModalHeadTilt(e, card) {}
     function resetModalHeadTilt(card) {}
 
-    function recordDailyHabit(habit) {
+    function recordDailyHabit(missionIdOrName) {
       if (!selectedRadialStudent) return;
       if (!currentSession || !currentSession.isAdmin) {
-        Swal.fire({ icon: 'info', title: 'เฉพาะอาจารย์นิเทศก์', text: 'การบันทึกคะแนนพิเศษสงวนสิทธิ์สำหรับอาจารย์นิเทศก์ (นักศึกษาสามารถกดปุ่ม 👔 เพื่อเปลี่ยนชุดอวตารได้ครับ)' });
+        Swal.fire({ icon: 'info', title: 'เฉพาะอาจารย์นิเทศก์', text: 'การบันทึกคะแนนภารกิจพิเศษสงวนสิทธิ์สำหรับอาจารย์นิเทศก์ (นักศึกษาสามารถกดปุ่ม 👔 เพื่อเปลี่ยนชุดอวตารได้ครับ)' });
         return;
       }
+
+      const foundMission = customMissions.find(m => m.id === missionIdOrName || m.title === missionIdOrName) || {
+        icon: '🌟',
+        title: missionIdOrName,
+        points: 1
+      };
 
       const modalMascot = document.querySelector('#radialAvatarDisplay .mascot-container');
       if (modalMascot && window.HiClassMascots) {
@@ -1252,19 +1608,11 @@
       }
 
       confetti({ particleCount: 35, spread: 60, origin: { y: 0.7 } });
-      const titles = { 'นม': 'ดื่มนม 🥛', 'แปรงฟัน': 'แปรงฟัน 🪥', 'อาหาร': 'รับประทานอาหาร 🍴' };
       
       setTimeout(() => {
         closeRadialModal();
-        Swal.fire({
-          icon: 'success',
-          title: `บันทึก: ${titles[habit] || habit}`,
-          text: `บันทึกกิจวัตรประจำวันของ ${selectedRadialStudent.name} สำเร็จ`,
-          timer: 1500,
-          showConfirmButton: false
-        });
-        awardHeroQuick(1);
-      }, 500);
+        awardHeroQuick(foundMission.points || 1, `${foundMission.icon} ${foundMission.title}`);
+      }, 450);
     }
 
     // เช็คชื่อด่วน (เฉพาะอาจารย์)
@@ -1334,7 +1682,7 @@
     }
 
     // ให้คะแนนความดี Hero Point ด่วน (เฉพาะอาจารย์)
-    async function awardHeroQuick(points) {
+    async function awardHeroQuick(points, reasonTitle = '') {
       if (!selectedRadialStudent) return;
       if (!currentSession || !currentSession.isAdmin) {
         Swal.fire({ icon: 'info', title: 'เฉพาะอาจารย์นิเทศก์', text: 'เฉพาะอาจารย์นิเทศก์เท่านั้นที่สามารถมอบดาวความดีให้ได้' });
@@ -1366,9 +1714,9 @@
 
       Swal.fire({
         icon: points > 0 ? 'success' : 'warning',
-        title: points > 0 ? `+${points} ดาวความดี! ⭐` : `${points} คะแนน`,
+        title: reasonTitle ? `บันทึก: ${reasonTitle} (+${points} ⭐)` : (points > 0 ? `+${points} ดาวความดี! ⭐` : `${points} คะแนน`),
         text: `บันทึกคะแนนให้ ${selectedRadialStudent.name} เรียบร้อยแล้ว`,
-        timer: 1400,
+        timer: 1500,
         showConfirmButton: false
       });
 
@@ -1590,7 +1938,7 @@
 
     function selectWardrobeMascot(mascotId) {
       selectedWardrobeMascotId = mascotId;
-      uploadedCustomAvatarDataUrl = null; // ล้างรูปอัปโหลดเมื่อเลือกตัวละคร 3D
+      uploadedCustomAvatarDataUrl = null;
       const fileInp = document.getElementById('customAvatarFileInput');
       if (fileInp) fileInp.value = '';
 
@@ -1611,7 +1959,6 @@
       if (!file) return;
       const reader = new FileReader();
       reader.onload = function(evt) {
-        // ย่อขนาดภาพอัตโนมัติไม่ให้เกิน localStorage
         const img = new Image();
         img.onload = function() {
           const canvas = document.createElement('canvas');
@@ -1720,7 +2067,23 @@
       });
     }
 
-    // 7. หน้ารายงานสรุปผล และพิมพ์ PDF (Ward Performance Report)
+    // ตรวจสอบสิทธิ์การดูงานและคะแนน (ป้องกันนักศึกษาดูงานและคะแนนเพื่อน ยกเว้นเพื่อนเปิดสิทธิ์ให้ดู)
+    function isWorkOwnedByCurrentStudent(w) {
+      if (!w) return false;
+      if (w.studentId && w.studentId === currentStudentId) return true;
+      const myStu = GROUP_5_DATA.find(s => s.studentId === currentStudentId);
+      if (myStu && w.studentName && w.studentName.includes(myStu.name.split(' ')[0])) return true;
+      return false;
+    }
+
+    function canCurrentUserViewWork(w) {
+      if (!w) return false;
+      if (currentSession && currentSession.isAdmin) return true;
+      if (isWorkOwnedByCurrentStudent(w)) return true;
+      return w.allowPeerView === true || String(w.allowPeerView) === 'true';
+    }
+
+    // 7. หน้ารายงานสรุปผล และพิมพ์ PDF (Ward Performance Report - ซ่อนคะแนนเพื่อนหากไม่ได้รับอนุญาต)
     function updateReportDashboard() {
       const dateStr = new Date().toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric' });
       const hdr = document.getElementById('reportHeaderDate');
@@ -1729,7 +2092,6 @@
       const totStu = document.getElementById('rptTotalStudents');
       if (totStu) totStu.textContent = `${GROUP_5_DATA.length} คน`;
 
-      // คำนวณสถิติงานของนักศึกษาแต่ละคนจาก allLoadedWorks
       const passedWorks = allLoadedWorks.filter(w => w.status === 'ผ่าน' || w.status === 'ยอดเยี่ยม');
       const revisionWorks = allLoadedWorks.filter(w => w.status === 'ให้แก้ไข');
 
@@ -1737,7 +2099,6 @@
       let lateAttCount = 0;
       let lateWorkCount = 0;
 
-      // ตารางนักศึกษาในหน้ารายงาน
       const tbody = document.getElementById('rptStudentsTableBody');
       if (tbody) {
         tbody.innerHTML = GROUP_5_DATA.map((s, idx) => {
@@ -1749,16 +2110,21 @@
 
           const stuWorks = allLoadedWorks.filter(w => w.studentId === s.studentId || (w.studentName && w.studentName.includes(s.name.split(' ')[0])));
           const latestWork = stuWorks[0];
+          const isMeOrAdmin = (currentSession && currentSession.isAdmin) || (s.studentId === currentStudentId);
+          const canSeeScore = isMeOrAdmin || (latestWork && canCurrentUserViewWork(latestWork));
+
           const workStatusHtml = latestWork
             ? (latestWork.status === 'ผ่าน' || latestWork.status === 'ยอดเยี่ยม'
-                ? `<span class="text-emerald-700 font-black">✅ ${latestWork.status} (${latestWork.score || '-'})</span>`
+                ? `<span class="text-emerald-700 font-black">✅ ${latestWork.status} ${canSeeScore ? `(${latestWork.score || '-'})` : '🔒'}</span>`
                 : latestWork.status === 'ให้แก้ไข'
                   ? `<span class="text-rose-600 font-black">⚠️ ให้แก้ไข</span>`
                   : `<span class="text-amber-700 font-bold">⏳ รอตรวจ</span>`)
             : `<span class="text-slate-400 font-semibold">ยังไม่ส่ง</span>`;
 
           const starVal = s.heroScore !== undefined ? s.heroScore : 10;
-          const totalScore = latestWork && latestWork.score ? `${latestWork.score} / 100` : `${Math.min(100, 80 + starVal)} / 100`;
+          const totalScore = canSeeScore
+            ? (latestWork && latestWork.score ? `${latestWork.score} / 100` : `${Math.min(100, 80 + starVal)} / 100`)
+            : `<span class="text-slate-400 font-bold text-[11px]">🔒 ส่วนตัว</span>`;
 
           return `
             <tr class="hover:bg-amber-50/40">
@@ -1792,13 +2158,13 @@
       const rptA = document.getElementById('rptAbnormalAtt');
       if (rptA) rptA.textContent = `${lateAttCount + lateWorkCount} ครั้ง`;
 
-      // แสดงรายการงานที่ต้องแก้ไขในหน้ารายงาน
       const revBox = document.getElementById('rptRevisionList');
       if (revBox) {
-        if (revisionWorks.length === 0) {
-          revBox.innerHTML = `<div class="p-3 text-center text-slate-400 bg-slate-50 rounded-2xl">ไม่มีงานที่ค้างการแก้ไขในขณะนี้ 🎉</div>`;
+        const visibleRevisions = revisionWorks.filter(w => canCurrentUserViewWork(w));
+        if (visibleRevisions.length === 0) {
+          revBox.innerHTML = `<div class="p-3 text-center text-slate-400 bg-slate-50 rounded-2xl">ไม่มีงานของคุณที่ค้างการแก้ไขในขณะนี้ 🎉</div>`;
         } else {
-          revBox.innerHTML = revisionWorks.map(w => `
+          revBox.innerHTML = visibleRevisions.map(w => `
             <div class="p-3 bg-rose-50/70 border border-rose-200 rounded-2xl flex flex-wrap justify-between items-center gap-2">
               <div>
                 <div class="font-black text-rose-900">${w.studentName} — ${w.subject}</div>
@@ -1840,7 +2206,7 @@
       });
     }
 
-    // 4. ระบบสุ่มแบ่งทีม / จัดกลุ่ม (TEAM BATTLE VS)
+    // 4. ระบบสุ่มแบ่งทีม / จัดกลุ่ม พร้อมแก้ไขชื่อหอผู้ป่วย (Ward) ได้อิสระ
     function changeTeamCount(delta) {
       teamCount = Math.max(2, Math.min(4, teamCount + delta));
       document.getElementById('dispTeamNum').textContent = teamCount;
@@ -1852,7 +2218,7 @@
       
       const shuffled = [...GROUP_5_DATA].sort(() => Math.random() - 0.5);
       const teams = Array.from({ length: teamCount }, (_, i) => ({
-        name: `ทีมที่ ${i + 1}`,
+        name: customTeamWards[i] || DEFAULT_TEAM_WARDS[i] || `ทีมที่ ${i + 1} (Ward ${i + 1})`,
         members: []
       }));
 
@@ -1864,30 +2230,75 @@
       renderTeamsView(teams);
     }
 
+    function updateTeamWardName(teamIdx, newName) {
+      const cleanName = (newName || '').trim() || `ทีมที่ ${teamIdx + 1}`;
+      customTeamWards[teamIdx] = cleanName;
+      localStorage.setItem('nursenote_team_wards', JSON.stringify(customTeamWards));
+      if (currentShuffledTeams[teamIdx]) {
+        currentShuffledTeams[teamIdx].name = cleanName;
+      }
+    }
+
+    function applyWardPreset(teamIdx, wardName) {
+      updateTeamWardName(teamIdx, wardName);
+      const inp = document.getElementById(`teamWardInput_${teamIdx}`);
+      if (inp) inp.value = wardName;
+    }
+
     function renderTeamsView(teams) {
-      const t1Box = document.getElementById('team1Members');
-      const t2Box = document.getElementById('team2Members');
-      
-      const renderMemberList = (members) => members.map((m, mIdx) => {
+      const container = document.getElementById('teamsContainer');
+      if (!container) return;
+
+      const styles = [
+        { bg: 'from-rose-50 to-orange-50', border: 'border-rose-200', badge: 'bg-rose-500', text: 'text-rose-900', icon: '🏥' },
+        { bg: 'from-sky-50 to-indigo-50', border: 'border-sky-200', badge: 'bg-sky-500', text: 'text-sky-900', icon: '🩺' },
+        { bg: 'from-emerald-50 to-teal-50', border: 'border-emerald-200', badge: 'bg-emerald-600', text: 'text-emerald-900', icon: '💚' },
+        { bg: 'from-purple-50 to-pink-50', border: 'border-purple-200', badge: 'bg-purple-600', text: 'text-purple-900', icon: '✨' }
+      ];
+
+      const wardPresets = ['Med ชาย', 'Med หญิง', 'Surg ชาย', 'Surg หญิง', 'ICU', 'ER', 'LR/OR', 'Ped'];
+
+      container.innerHTML = teams.map((t, idx) => {
+        const st = styles[idx % styles.length];
+        const wardVal = t.name || customTeamWards[idx] || `ทีมที่ ${idx + 1}`;
         return `
-          <div class="bg-white/95 p-2.5 rounded-2xl border-2 border-white shadow-sm flex flex-col items-center text-center space-y-1">
-            <div class="w-14 h-14 rounded-full overflow-hidden bg-amber-50 border-2 border-white shadow-inner flex items-center justify-center">
-              ${renderStudentAvatarHtml(m, mIdx, 56, { className: 'pointer-events-none' })}
+          <div class="rounded-[32px] bg-gradient-to-br ${st.bg} border-4 ${st.border} p-5 shadow-lg space-y-3">
+            <div class="flex flex-col gap-2 border-b ${st.border} pb-3">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-black ${st.text} flex items-center gap-1.5">
+                  <span class="w-7 h-7 rounded-xl ${st.badge} text-white flex items-center justify-center shadow-sm">${st.icon}</span>
+                  <span>ชื่อหอผู้ป่วย / Ward ที่ ${idx + 1} (คลิกพิมพ์แก้ไขได้):</span>
+                </span>
+                <span class="px-3 py-1 rounded-full bg-white ${st.text} text-xs font-black shadow-xs">${t.members.length} คน</span>
+              </div>
+              <input type="text" id="teamWardInput_${idx}" value="${wardVal.replace(/"/g, '&quot;')}"
+                     onchange="updateTeamWardName(${idx}, this.value)"
+                     oninput="updateTeamWardName(${idx}, this.value)"
+                     placeholder="พิมพ์ชื่อ Ward เช่น หอผู้ป่วยอายุรกรรมชาย 1..."
+                     class="w-full px-3.5 py-2 rounded-xl bg-white border-2 ${st.border} font-black text-sm text-slate-800 outline-none focus:ring-2 focus:ring-amber-400 shadow-2xs">
+              <div class="flex flex-wrap gap-1 pt-0.5">
+                <span class="text-[10px] font-bold text-slate-400 mr-1 self-center">เลือกด่วน:</span>
+                ${wardPresets.map(wp => `
+                  <button type="button" onclick="applyWardPreset(${idx}, 'หอผู้ป่วย ${wp}')" class="px-2 py-0.5 rounded-lg bg-white/80 hover:bg-white text-slate-600 hover:text-slate-900 font-bold text-[10px] border border-slate-200 transition">
+                    ${wp}
+                  </button>
+                `).join('')}
+              </div>
             </div>
-            <div class="text-[11px] font-black text-slate-800 truncate w-full">${m.name}</div>
-            <span class="text-[9px] bg-slate-100 px-1.5 py-0.5 rounded-full text-slate-500 font-bold">${m.studentId}</span>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+              ${t.members.map((m, mIdx) => `
+                <div class="bg-white/95 p-2.5 rounded-2xl border-2 border-white shadow-sm flex flex-col items-center text-center space-y-1">
+                  <div class="w-14 h-14 rounded-full overflow-hidden bg-amber-50 border-2 border-white shadow-inner flex items-center justify-center">
+                    ${renderStudentAvatarHtml(m, mIdx, 56, { className: 'pointer-events-none' })}
+                  </div>
+                  <div class="text-[11px] font-black text-slate-800 truncate w-full">${m.name}</div>
+                  <span class="text-[9px] bg-slate-100 px-1.5 py-0.5 rounded-full text-slate-500 font-bold">${m.studentId}</span>
+                </div>
+              `).join('')}
+            </div>
           </div>
         `;
       }).join('');
-
-      if (teams[0] && t1Box) {
-        t1Box.innerHTML = renderMemberList(teams[0].members);
-        document.getElementById('t1Count').textContent = `${teams[0].members.length} คน`;
-      }
-      if (teams[1] && t2Box) {
-        t2Box.innerHTML = renderMemberList(teams[1].members);
-        document.getElementById('t2Count').textContent = `${teams[1].members.length} คน`;
-      }
     }
 
     function resetTeams() {
@@ -1896,21 +2307,24 @@
 
     async function saveTeamsToSheet() {
       if (currentShuffledTeams.length === 0) return;
-      Swal.fire({ title: 'กำลังบันทึกทีมลงชีต...', didOpen: () => Swal.showLoading() });
+      const groupTitle = (document.getElementById('teamGroupNameInput')?.value || 'กลุ่ม 5 รพ.อุทัยธานี').trim();
+      localStorage.setItem('nursenote_team_group_title', groupTitle);
+
+      Swal.fire({ title: 'กำลังบันทึกทีมและชื่อ Ward ลงชีต...', didOpen: () => Swal.showLoading() });
       
       const payload = {
-        groupName: "กลุ่ม 5 รพ.อุทัยธานี",
-        teams: currentShuffledTeams.map(t => ({
-          name: t.name,
+        groupName: groupTitle,
+        teams: currentShuffledTeams.map((t, idx) => ({
+          name: document.getElementById(`teamWardInput_${idx}`)?.value || t.name,
           members: t.members.map(m => ({ studentId: m.studentId, name: m.fullName }))
         }))
       };
 
       const d = await apiSaveTeamGrouping(payload.groupName, payload.teams);
-      Swal.fire({ icon: d.success ? 'success' : 'error', title: d.message || 'บันทึกทีมเรียบร้อยแล้ว' });
+      Swal.fire({ icon: d.success ? 'success' : 'error', title: d.message || 'บันทึกทีมและชื่อ Ward เรียบร้อยแล้ว' });
     }
 
-    // ================= 5. ระบบส่งงาน Care Plan และตรวจให้คะแนนของอาจารย์ =================
+    // ================= 5. ระบบส่งงาน Care Plan, สิทธิ์การมองเห็นของเพื่อน, และการตรวจตามเรดาร์ชาร์ท 10 ด้าน =================
     function getLocalCachedWorks() {
       try {
         const raw = localStorage.getItem('nursenote_works_cache');
@@ -1948,6 +2362,7 @@
         renderTeacherWorksTable(allLoadedWorks);
       }
       updateReportDashboard();
+      updateRadarChartForStudent(currentStudentId);
 
       try {
         const data = await apiGet({ action: 'getDashboard', studentId: currentStudentId, viewMode: 'all' });
@@ -1957,6 +2372,16 @@
             if (data.settings.work_submission !== undefined) systemFeatures.work_submission = data.settings.work_submission;
             if (data.settings.grading !== undefined) systemFeatures.grading = data.settings.grading;
             if (data.settings.attendance !== undefined) systemFeatures.attendance = data.settings.attendance;
+            if (data.settings.custom_missions) {
+              try {
+                const parsedM = JSON.parse(data.settings.custom_missions);
+                if (Array.isArray(parsedM) && parsedM.length > 0) {
+                  customMissions = parsedM;
+                  localStorage.setItem('nursenote_custom_missions', JSON.stringify(customMissions));
+                  renderRadialMissionsBar();
+                }
+              } catch(e) {}
+            }
             applyFeatureSwitchesUI();
           }
           if (data.students && data.students.length > 0) {
@@ -1973,13 +2398,23 @@
             renderTeacherWorksTable(allLoadedWorks);
           }
           updateReportDashboard();
+          updateRadarChartForStudent(currentStudentId);
         }
       } catch(e) {}
     }
 
     function openWorkAttachment(workId) {
       const w = allLoadedWorks.find(x => String(x.workId) === String(workId));
-      if (!w || !w.fileUrl) {
+      if (!w) return;
+      if (!canCurrentUserViewWork(w)) {
+        Swal.fire({
+          icon: 'warning',
+          title: '🔒 งานชิ้นนี้ตั้งค่าเป็นส่วนตัว',
+          text: 'เจ้าของงานยังไม่ได้เปิดสิทธิ์ให้เพื่อนในกลุ่มดูไฟล์งานและคะแนน (เฉพาะเจ้าของงานและอาจารย์นิเทศก์เท่านั้นที่เปิดดูได้)'
+        });
+        return;
+      }
+      if (!w.fileUrl) {
         Swal.fire({ icon: 'info', title: 'ไม่มีไฟล์แนบ', text: 'งานชิ้นนี้ไม่ได้แนบไฟล์หรือลิงก์ไว้' });
         return;
       }
@@ -2002,6 +2437,20 @@
       }
     }
 
+    // หัวข้อสมรรถนะ 10 ด้านตามเรดาร์ชาร์ท
+    const RADAR_DIMENSIONS = [
+      { key: 'data', label: '1. ข้อมูลสนับสนุน (S/O)' },
+      { key: 'diag', label: '2. ข้อวินิจฉัยการพยาบาล' },
+      { key: 'goal', label: '3. เป้าหมายการพยาบาล' },
+      { key: 'crit', label: '4. เกณฑ์การประเมินผล' },
+      { key: 'act',  label: '5. กิจกรรมการพยาบาล' },
+      { key: 'eval', label: '6. การประเมินผลลัพธ์' },
+      { key: 'honest', label: '7. ความซื่อสัตย์วิชาชีพ' },
+      { key: 'ontime', label: '8. การตรงต่อเวลา' },
+      { key: 'ref',  label: '9. การอ้างอิงหลักฐาน' },
+      { key: 'rep',  label: '10. การเขียนรายงาน' }
+    ];
+
     function renderWorksTable(list) {
       const tbody = document.getElementById('worksTableBody');
       if (!tbody) return;
@@ -2018,29 +2467,57 @@
             ? 'bg-rose-100 text-rose-800 border border-rose-300'
             : 'bg-amber-100 text-amber-800 border border-amber-300';
 
+        const isOwner = isWorkOwnedByCurrentStudent(w);
+        const canView = canCurrentUserViewWork(w);
+        const isPeerAllowed = w.allowPeerView === true || String(w.allowPeerView) === 'true';
+
         return `
-          <tr class="hover:bg-amber-50/50 transition">
-            <td class="p-2 font-bold text-slate-800">${w.studentName || '-'}</td>
+          <tr class="hover:bg-amber-50/50 transition ${isOwner ? 'bg-indigo-50/20' : ''}">
+            <td class="p-2 font-bold text-slate-800">
+              <div class="flex items-center gap-1">
+                <span>${w.studentName || '-'}</span>
+                ${isOwner ? '<span class="px-1.5 py-0.5 rounded-md bg-indigo-100 text-indigo-700 text-[9px] font-black">งานของฉัน</span>' : ''}
+              </div>
+            </td>
             <td class="p-2 whitespace-nowrap text-slate-500">${w.submitDate || '-'}</td>
             <td class="p-2 font-bold text-slate-900">
-              <div>${w.subject || '-'}</div>
-              ${w.content ? `<div class="text-[10px] text-slate-500 font-normal truncate max-w-[200px]">${w.content}</div>` : ''}
+              ${canView ? `
+                <div>${w.subject || '-'}</div>
+                ${w.content ? `<div class="text-[10px] text-slate-500 font-normal truncate max-w-[200px]">${w.content}</div>` : ''}
+              ` : `
+                <div class="text-slate-400 font-semibold flex items-center gap-1">
+                  <span>🔒 ปกปิดหัวข้อและเนื้อหางาน (ส่วนตัว)</span>
+                </div>
+              `}
             </td>
             <td class="p-2 whitespace-nowrap">
-              ${w.fileUrl ? `<button onclick="openWorkAttachment('${w.workId}')" class="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-[11px] transition">📎 เปิดไฟล์</button>` : '<span class="text-slate-400">-</span>'}
+              ${canView
+                ? (w.fileUrl ? `<button onclick="openWorkAttachment('${w.workId}')" class="px-2.5 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 text-indigo-700 font-bold text-[11px] transition">📎 เปิดไฟล์</button>` : '<span class="text-slate-400">-</span>')
+                : '<span class="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-400 font-bold text-[10px]">🔒 ซ่อนไฟล์</span>'}
             </td>
             <td class="p-2 text-center whitespace-nowrap">
               <span class="px-2.5 py-0.5 rounded-full text-[10px] font-black ${badgeStyle}">
                 ${w.status || 'รอตรวจ'}
               </span>
             </td>
-            <td class="p-2 text-center font-black whitespace-nowrap text-indigo-700">${w.score !== undefined && w.score !== '' ? w.score : '-'}</td>
+            <td class="p-2 text-center font-black whitespace-nowrap text-indigo-700">
+              ${canView
+                ? (w.score !== undefined && w.score !== '' ? w.score : '-')
+                : '<span class="px-2 py-0.5 rounded-lg bg-slate-100 text-slate-400 font-bold text-[10px]" title="เฉพาะเจ้าของงานและอาจารย์ที่เห็นคะแนน">🔒 ปิดซ่อน</span>'}
+            </td>
             <td class="p-2 text-center whitespace-nowrap">
-              <div class="flex items-center justify-center gap-1.5">
-                <button onclick="viewWorkDetail('${w.workId}')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] transition">
-                  🔍 ดูงาน
-                </button>
-                ${isRev ? `<button onclick="openSubmitWorkModal('${w.workId}')" class="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] transition">✏️ ส่งแก้ไข</button>` : ''}
+              <div class="flex items-center justify-center gap-1.5 flex-wrap">
+                ${canView
+                  ? `<button onclick="viewWorkDetail('${w.workId}')" class="px-2.5 py-1 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-[11px] transition">🔍 ดูงาน</button>`
+                  : `<span class="text-[10px] text-slate-400 font-semibold">🔒 เพื่อนยังไม่เปิดสิทธิ์</span>`}
+                ${(isOwner || (currentSession && currentSession.isAdmin)) ? `
+                  <button onclick="toggleSingleWorkPrivacy('${w.workId}')" 
+                          class="px-2 py-1 rounded-lg font-bold text-[10px] border transition ${isPeerAllowed ? 'bg-emerald-50 border-emerald-300 text-emerald-800 hover:bg-emerald-100' : 'bg-slate-100 border-slate-300 text-slate-600 hover:bg-slate-200'}"
+                          title="คลิกเพื่อสลับการอนุญาตให้เพื่อนดูงานชิ้นนี้">
+                    ${isPeerAllowed ? '🔓 เพื่อนดูได้' : '🔒 ส่วนตัว'}
+                  </button>
+                ` : ''}
+                ${(isRev && isOwner) ? `<button onclick="openSubmitWorkModal('${w.workId}')" class="px-2.5 py-1 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-[11px] transition">✏️ ส่งแก้ไข</button>` : ''}
                 ${(currentSession && currentSession.isAdmin) ? `<button onclick="openGradeModal('${w.workId}')" class="px-2.5 py-1 rounded-lg bg-purple-600 hover:bg-purple-700 text-white font-black text-[11px] shadow-2xs transition">👩‍🏫 ตรวจงาน</button>` : ''}
               </div>
             </td>
@@ -2049,9 +2526,75 @@
       }).join('');
     }
 
+    async function toggleSingleWorkPrivacy(workId) {
+      const w = allLoadedWorks.find(x => String(x.workId) === String(workId));
+      if (!w) return;
+      if (!isWorkOwnedByCurrentStudent(w) && (!currentSession || !currentSession.isAdmin)) {
+        Swal.fire({ icon: 'warning', title: 'เปลี่ยนสิทธิ์ได้เฉพาะเจ้าของงานเท่านั้น' });
+        return;
+      }
+      const nextVal = !(w.allowPeerView === true || String(w.allowPeerView) === 'true');
+      w.allowPeerView = nextVal;
+      saveLocalCachedWorks(allLoadedWorks);
+      renderWorksTable(allLoadedWorks);
+      updateReportDashboard();
+
+      apiPost('toggleWorkPrivacy', { workId: w.workId, studentId: w.studentId, allowPeerView: nextVal }).catch(() => {});
+      Swal.fire({
+        icon: 'info',
+        title: nextVal ? '🔓 เปิดให้เพื่อนในกลุ่มดูงานนี้ได้แล้ว' : '🔒 ซ่อนงานและคะแนนเป็นส่วนตัวแล้ว',
+        timer: 1200,
+        showConfirmButton: false
+      });
+    }
+
+    async function toggleAllMyWorksPrivacy(allowPeerView) {
+      localStorage.setItem(`nursenote_peer_privacy_${currentStudentId}`, allowPeerView ? 'true' : 'false');
+      allLoadedWorks.forEach(w => {
+        if (isWorkOwnedByCurrentStudent(w)) {
+          w.allowPeerView = allowPeerView;
+          apiPost('toggleWorkPrivacy', { workId: w.workId, studentId: w.studentId, allowPeerView }).catch(() => {});
+        }
+      });
+      saveLocalCachedWorks(allLoadedWorks);
+      renderWorksTable(allLoadedWorks);
+      updateReportDashboard();
+    }
+
     function viewWorkDetail(workId) {
       const w = allLoadedWorks.find(x => String(x.workId) === String(workId));
       if (!w) return;
+      if (!canCurrentUserViewWork(w)) {
+        Swal.fire({
+          icon: 'warning',
+          title: '🔒 งานและคะแนนถูกซ่อนเป็นส่วนตัว',
+          text: 'นักศึกษาไม่สามารถดูงานหรือคะแนนของเพื่อนได้ ยกเว้นเพื่อนจะกดเปิดสิทธิ์ "🔓 เพื่อนดูได้"'
+        });
+        return;
+      }
+
+      let rubricHtml = '';
+      if (w.rubricJson) {
+        try {
+          const rObj = typeof w.rubricJson === 'string' ? JSON.parse(w.rubricJson) : w.rubricJson;
+          if (rObj && typeof rObj === 'object') {
+            rubricHtml = `
+              <div class="p-2.5 bg-indigo-50/70 rounded-xl border border-indigo-200">
+                <div class="font-black text-indigo-950 mb-1.5">📊 คะแนนรายด้านตามเรดาร์ชาร์ท (เต็ม 4.0):</div>
+                <div class="grid grid-cols-2 gap-1 text-[11px]">
+                  ${RADAR_DIMENSIONS.map(d => `
+                    <div class="flex justify-between bg-white px-2 py-1 rounded border border-indigo-100">
+                      <span class="text-slate-700">${d.label}</span>
+                      <span class="font-black text-indigo-700">${rObj[d.key] !== undefined ? Number(rObj[d.key]).toFixed(1) : '-'}</span>
+                    </div>
+                  `).join('')}
+                </div>
+              </div>
+            `;
+          }
+        } catch(e) {}
+      }
+
       Swal.fire({
         title: w.subject || 'รายละเอียดงาน Care Plan',
         html: `
@@ -2059,12 +2602,13 @@
             <div class="p-2.5 bg-slate-50 rounded-xl border border-slate-200">
               <div><strong>ผู้ส่ง:</strong> ${w.studentName || '-'} (${w.studentId || '-'})</div>
               <div><strong>วันที่ส่ง:</strong> ${w.submitDate || '-'}</div>
-              <div><strong>สถานะ:</strong> <span class="font-bold text-indigo-700">${w.status || 'รอตรวจ'}</span> ${w.score ? `(คะแนน: ${w.score}/100)` : ''}</div>
+              <div><strong>สถานะ:</strong> <span class="font-bold text-indigo-700">${w.status || 'รอตรวจ'}</span> ${w.score ? `(คะแนนรวม: ${w.score}/100)` : ''}</div>
             </div>
             <div>
               <div class="font-bold text-slate-700 mb-1">รายละเอียด Care Plan / ข้อวินิจฉัยการพยาบาล:</div>
               <div class="p-3 bg-amber-50/60 rounded-xl border border-amber-200 whitespace-pre-wrap text-slate-800">${w.content || 'ไม่ได้ระบุข้อความสรุป'}</div>
             </div>
+            ${rubricHtml}
             ${w.feedback ? `
               <div>
                 <div class="font-bold text-rose-700 mb-1">💡 ข้อเสนอแนะจากอาจารย์นิเทศก์:</div>
@@ -2124,6 +2668,80 @@
       }).join('');
     }
 
+    // สร้างช่องให้คะแนน 10 ด้านตามเรดาร์ชาร์ทในหน้าตรวจงาน
+    function renderRadarRubricInputs(existingRubric = null) {
+      const container = document.getElementById('radarRubricInputsContainer');
+      if (!container) return;
+      let parsed = {};
+      if (existingRubric) {
+        try {
+          parsed = typeof existingRubric === 'string' ? JSON.parse(existingRubric) : existingRubric;
+        } catch(e) { parsed = {}; }
+      }
+      container.innerHTML = RADAR_DIMENSIONS.map(d => {
+        const val = parsed && parsed[d.key] !== undefined ? Number(parsed[d.key]) : 3.5;
+        return `
+          <div class="bg-white p-2 rounded-xl border border-amber-200 flex items-center justify-between gap-2">
+            <label class="text-[11px] font-bold text-slate-700 truncate">${d.label}</label>
+            <div class="flex items-center gap-1.5 shrink-0">
+              <input type="range" id="rubricRange_${d.key}" min="0" max="4" step="0.5" value="${val}"
+                     oninput="onRubricItemInput('${d.key}', this.value)"
+                     class="w-16 accent-indigo-600 cursor-pointer">
+              <input type="number" id="rubricNum_${d.key}" min="0" max="4" step="0.5" value="${val}"
+                     oninput="onRubricItemInput('${d.key}', this.value)"
+                     class="w-12 border rounded-lg p-1 text-center font-black text-indigo-800 text-xs">
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function onRubricItemInput(key, val) {
+      const num = Math.max(0, Math.min(4, parseFloat(val) || 0));
+      const rEl = document.getElementById(`rubricRange_${key}`);
+      const nEl = document.getElementById(`rubricNum_${key}`);
+      if (rEl && rEl.value != num) rEl.value = num;
+      if (nEl && nEl.value != num) nEl.value = num;
+      recalculateRubricTotalScore();
+    }
+
+    function fillAllRubricScores(scoreVal) {
+      RADAR_DIMENSIONS.forEach(d => {
+        const rEl = document.getElementById(`rubricRange_${d.key}`);
+        const nEl = document.getElementById(`rubricNum_${d.key}`);
+        if (rEl) rEl.value = scoreVal;
+        if (nEl) nEl.value = scoreVal;
+      });
+      recalculateRubricTotalScore();
+    }
+
+    function recalculateRubricTotalScore() {
+      let sum = 0;
+      RADAR_DIMENSIONS.forEach(d => {
+        const v = parseFloat(document.getElementById(`rubricNum_${d.key}`)?.value || '0') || 0;
+        sum += v;
+      });
+      // คะแนนเต็ม 10 ด้าน ด้านละ 4 = 40 คะแนน แปลงเป็นฐาน 100 คะแนน
+      const total100 = Math.round((sum / 40) * 100);
+      const scoreInp = document.getElementById('gradeScoreInput');
+      if (scoreInp) scoreInp.value = total100;
+
+      const statusSel = document.getElementById('gradeStatusInput');
+      if (statusSel) {
+        if (total100 >= 90) statusSel.value = 'ยอดเยี่ยม';
+        else if (total100 >= 65) statusSel.value = 'ผ่าน';
+        else statusSel.value = 'ให้แก้ไข';
+      }
+    }
+
+    function getCurrentRubricObjectFromModal() {
+      const obj = {};
+      RADAR_DIMENSIONS.forEach(d => {
+        obj[d.key] = Math.max(0, Math.min(4, parseFloat(document.getElementById(`rubricNum_${d.key}`)?.value || '3.5') || 0));
+      });
+      return obj;
+    }
+
     function openGradeModal(workId) {
       if (!currentSession || !currentSession.isAdmin) {
         Swal.fire({ icon: 'error', title: 'เฉพาะอาจารย์นิเทศก์', text: 'เฉพาะอาจารย์เท่านั้นที่สามารถตรวจและให้คะแนนงานได้' });
@@ -2154,8 +2772,13 @@
         }
       }
 
+      renderRadarRubricInputs(w.rubricJson);
       document.getElementById('gradeStatusInput').value = (w.status === 'ผ่าน' || w.status === 'ให้แก้ไข' || w.status === 'ยอดเยี่ยม') ? w.status : 'ผ่าน';
-      document.getElementById('gradeScoreInput').value = (w.score !== undefined && w.score !== '') ? w.score : 85;
+      if (w.score !== undefined && w.score !== '') {
+        document.getElementById('gradeScoreInput').value = w.score;
+      } else {
+        recalculateRubricTotalScore();
+      }
       document.getElementById('gradeFeedbackInput').value = w.feedback || '';
       document.getElementById('gradeWorkModal').classList.remove('hidden');
     }
@@ -2167,20 +2790,27 @@
       const status = document.getElementById('gradeStatusInput').value;
       const score = Number(document.getElementById('gradeScoreInput').value || 0);
       const feedback = document.getElementById('gradeFeedbackInput').value.trim();
+      const rubricObj = getCurrentRubricObjectFromModal();
+      const rubricJson = JSON.stringify(rubricObj);
 
       const btn = document.getElementById('btnSubmitGrading');
       if (btn) { btn.disabled = true; btn.textContent = 'กำลังบันทึกผลการตรวจ...'; }
 
-      // อัปเดตในรายการงานทันทีเพื่อให้แสดงผลรวดเร็วและเสถียร 100%
       const wIdx = allLoadedWorks.findIndex(x => String(x.workId) === String(workId));
       const workItem = wIdx !== -1 ? allLoadedWorks[wIdx] : null;
       if (workItem) {
         workItem.status = status;
         workItem.score = score;
         workItem.feedback = feedback;
+        workItem.rubricJson = rubricJson;
         workItem.gradedAt = new Date().toISOString();
         saveLocalCachedWorks(allLoadedWorks);
       }
+
+      // บันทึกคะแนนเรดาร์ชาร์ทล่าสุดของนักศึกษาคนนั้นไว้ใน localStorage ด้วย
+      try {
+        localStorage.setItem(`nursenote_radar_${studentId}`, rubricJson);
+      } catch(e) {}
 
       try {
         await apiPost('gradeWork', {
@@ -2192,41 +2822,76 @@
           fileUrl: workItem ? workItem.fileUrl : '',
           status,
           score,
-          feedback
+          feedback,
+          rubricJson
         });
       } catch(e) {}
 
-      if (btn) { btn.disabled = false; btn.textContent = '💾 บันทึกผลการตรวจและส่งคะแนน'; }
+      if (btn) { btn.disabled = false; btn.textContent = '💾 บันทึกผลการตรวจ & อัปเดตเรดาร์ชาร์ท'; }
       closeModal('gradeWorkModal');
 
       renderWorksTable(allLoadedWorks);
       renderTeacherWorksTable(allLoadedWorks);
       updateReportDashboard();
+      updateRadarChartForStudent(studentId);
 
       confetti({ particleCount: 40, spread: 60, origin: { y: 0.6 } });
       Swal.fire({
         icon: 'success',
-        title: `บันทึกผลตรวจ "${status}" (${score} คะแนน) สำเร็จ!`,
-        timer: 1500,
+        title: `บันทึกผลตรวจ "${status}" (${score}/100) สำเร็จ!`,
+        text: 'อัปเดตกราฟเรดาร์ชาร์ท 10 ด้านของนักศึกษาเรียบร้อยแล้ว',
+        timer: 1600,
         showConfirmButton: false
       });
     }
 
-    // ประเมินหัตถการวิชาชีพ
+    // สลับนักศึกษาที่กำลังใช้งานอยู่
+    function onChangeActiveStudent(studentId) {
+      if (!studentId) return;
+      currentStudentId = studentId;
+      localStorage.setItem('current_student_id', studentId);
+
+      const sel1 = document.getElementById('wStudentSelect');
+      const sel2 = document.getElementById('activeWorkStudentSelect');
+      if (sel1 && sel1.value !== studentId) sel1.value = studentId;
+      if (sel2 && sel2.value !== studentId) sel2.value = studentId;
+
+      const pref = localStorage.getItem(`nursenote_peer_privacy_${studentId}`) === 'true';
+      const privChk = document.getElementById('myDefaultPeerPrivacyToggle');
+      if (privChk) privChk.checked = pref;
+
+      renderWorksTable(allLoadedWorks);
+      updateReportDashboard();
+      updateRadarChartForStudent(studentId);
+    }
+
+    // ประเมินหัตถการวิชาชีพ & ตั้งค่า Dropdown นักศึกษา
     function initTeamMembersDropdown() {
       const sel = document.getElementById('evalStudentSelect');
       if (sel) {
         sel.innerHTML = GROUP_5_DATA.map(s => `<option value="${s.studentId}">${s.fullName}</option>`).join('');
       }
+      if (currentSession && currentSession.name && !currentSession.isAdmin) {
+        const matched = GROUP_5_DATA.find(s => s.fullName.includes(currentSession.name) || s.name.includes(currentSession.name));
+        if (matched) {
+          currentStudentId = matched.studentId;
+          localStorage.setItem('current_student_id', currentStudentId);
+        }
+      }
+      const optionsHtml = GROUP_5_DATA.map(s => `<option value="${s.studentId}">${s.studentId} — ${s.fullName}</option>`).join('');
       const wSel = document.getElementById('wStudentSelect');
       if (wSel) {
-        wSel.innerHTML = GROUP_5_DATA.map(s => `<option value="${s.studentId}">${s.studentId} — ${s.fullName}</option>`).join('');
-        // เลือกนักศึกษาที่ตรงกับชื่อผู้ใช้หรือค่าที่จำไว้
-        if (currentSession && currentSession.name) {
-          const matched = GROUP_5_DATA.find(s => s.fullName.includes(currentSession.name) || s.name.includes(currentSession.name));
-          if (matched) currentStudentId = matched.studentId;
-        }
+        wSel.innerHTML = optionsHtml;
         wSel.value = currentStudentId;
+      }
+      const actSel = document.getElementById('activeWorkStudentSelect');
+      if (actSel) {
+        actSel.innerHTML = optionsHtml;
+        actSel.value = currentStudentId;
+      }
+      const privChk = document.getElementById('myDefaultPeerPrivacyToggle');
+      if (privChk) {
+        privChk.checked = localStorage.getItem(`nursenote_peer_privacy_${currentStudentId}`) === 'true';
       }
     }
 
@@ -2253,6 +2918,7 @@
       const editInput = document.getElementById('wEditWorkId');
       const titleEl = document.getElementById('submitWorkModalTitle');
       const fileInp = document.getElementById('wFileInput');
+      const peerChk = document.getElementById('wAllowPeerView');
       if (fileInp) fileInp.value = '';
 
       if (editWorkId) {
@@ -2264,6 +2930,7 @@
           document.getElementById('wSubjectInput').value = w.subject || '';
           document.getElementById('wContentInput').value = w.content || '';
           document.getElementById('wLinkInput').value = (w.fileUrl && !w.fileUrl.startsWith('data:')) ? w.fileUrl : '';
+          if (peerChk) peerChk.checked = (w.allowPeerView === true || String(w.allowPeerView) === 'true');
         }
       } else {
         if (editInput) editInput.value = '';
@@ -2271,6 +2938,7 @@
         document.getElementById('wSubjectInput').value = '';
         document.getElementById('wContentInput').value = '';
         document.getElementById('wLinkInput').value = '';
+        if (peerChk) peerChk.checked = localStorage.getItem(`nursenote_peer_privacy_${currentStudentId}`) === 'true';
       }
 
       document.getElementById('submitWorkModal').classList.remove('hidden');
@@ -2288,8 +2956,7 @@
     async function submitNewWork() {
       const editWorkId = document.getElementById('wEditWorkId')?.value || '';
       const studentId = document.getElementById('wStudentSelect')?.value || currentStudentId;
-      currentStudentId = studentId;
-      localStorage.setItem('current_student_id', studentId);
+      onChangeActiveStudent(studentId);
 
       const stuObj = GROUP_5_DATA.find(s => s.studentId === studentId);
       const studentName = stuObj ? stuObj.fullName : (currentSession ? currentSession.name : "นักศึกษาพยาบาล");
@@ -2297,6 +2964,7 @@
       const subject = document.getElementById('wSubjectInput').value.trim();
       const content = document.getElementById('wContentInput').value.trim();
       const link = document.getElementById('wLinkInput').value.trim();
+      const allowPeerView = document.getElementById('wAllowPeerView')?.checked === true;
       const fileInput = document.getElementById('wFileInput');
       const selectedFile = fileInput && fileInput.files && fileInput.files[0] ? fileInput.files[0] : null;
 
@@ -2335,10 +3003,10 @@
         fileName: fileName || (link ? 'ลิงก์ภายนอก' : ''),
         status: 'รอตรวจ',
         score: '',
-        feedback: ''
+        feedback: '',
+        allowPeerView
       };
 
-      // บันทึกลง Local Cache ทันทีเพื่อความเสถียร 100%
       const existingIdx = allLoadedWorks.findIndex(x => String(x.workId) === String(workId));
       if (existingIdx !== -1) {
         allLoadedWorks[existingIdx] = { ...allLoadedWorks[existingIdx], ...localRecord };
@@ -2356,7 +3024,8 @@
           content,
           externalLink: link,
           fileBase64,
-          fileName
+          fileName,
+          allowPeerView
         });
         if (res && res.work && res.work.fileUrl) {
           localRecord.fileUrl = res.work.fileUrl;
@@ -2377,7 +3046,7 @@
       Swal.fire({
         icon: 'success',
         title: editWorkId ? 'ส่งงานแก้ไขเรียบร้อยแล้ว! ✨' : 'ส่ง Care Plan สำเร็จ! 🎉',
-        text: 'ข้อมูลงานถูกส่งไปยังแผงตรวจงานของอาจารย์นิเทศก์เรียบร้อยแล้ว',
+        text: allowPeerView ? 'เปิดสิทธิ์ให้เพื่อนในกลุ่มดูงานชิ้นนี้ได้' : 'งานและคะแนนถูกตั้งค่าเป็นส่วนตัว (เห็นเฉพาะคุณและอาจารย์)',
         timer: 1800,
         showConfirmButton: false
       });
@@ -2421,12 +3090,12 @@
       });
     }
 
-    // กราฟ Radar สมรรถนะ Care Plan 10 ด้าน
+    // กราฟ Radar สมรรถนะ Care Plan 10 ด้าน (อัปเดตตามคะแนนตรวจงานจริง)
     function initRadarChart() {
       const canvas = document.getElementById('radarCanvas');
       if (!canvas) return;
       const ctx = canvas.getContext('2d');
-      new Chart(ctx, {
+      radarChartInstance = new Chart(ctx, {
         type: 'radar',
         data: {
           labels: ['ข้อมูล', 'วินิจฉัย', 'เป้าหมาย', 'เกณฑ์วัด', 'กิจกรรม', 'ประเมิน', 'ซื่อสัตย์', 'ตรงเวลา', 'อ้างอิง', 'รายงาน'],
@@ -2444,6 +3113,530 @@
           plugins: { legend: { display: false } }
         }
       });
+      updateRadarChartForStudent(currentStudentId);
+    }
+
+    function updateRadarChartForStudent(studentId) {
+      if (!radarChartInstance) return;
+      let rubricData = null;
+
+      // ค้นหาจากงานที่ตรวจแล้วล่าสุดของนักศึกษา
+      const gradedWork = allLoadedWorks.find(w => w.studentId === studentId && w.rubricJson);
+      if (gradedWork && gradedWork.rubricJson) {
+        try {
+          rubricData = typeof gradedWork.rubricJson === 'string' ? JSON.parse(gradedWork.rubricJson) : gradedWork.rubricJson;
+        } catch(e) {}
+      }
+      if (!rubricData) {
+        try {
+          const cached = localStorage.getItem(`nursenote_radar_${studentId}`);
+          if (cached) rubricData = JSON.parse(cached);
+        } catch(e) {}
+      }
+
+      if (rubricData) {
+        const arr = RADAR_DIMENSIONS.map(d => Number(rubricData[d.key] !== undefined ? rubricData[d.key] : 3.4));
+        radarChartInstance.data.datasets[0].data = arr;
+        radarChartInstance.update();
+      }
+    }
+
+    // ================= 6. ระบบเปิดไฟอ่านหนังสือ YPT STUDY WITH ME & แชทกลุ่มสด (อาจารย์ควบคุมดูแล) =================
+    window.yptState = {
+      isStudying: false,
+      myStudySeconds: 0,
+      mySubject: 'กำลังเขียน Care Plan / ทบทวนบทเรียน',
+      chatEnabled: true,
+      announcement: 'ยินดีต้อนรับสู่ห้องอ่านหนังสือกลุ่ม 5! เปิดโคมไฟเมื่อเริ่มอ่านหนังสือหรือเขียน Care Plan เพื่อสะสมเวลาเรียนร่วมกับเพื่อนๆ 💡📚',
+      members: {},
+      chats: []
+    };
+    let yptSecondInterval = null;
+    let yptSyncInterval = null;
+
+    function getYptStageInfo(sec) {
+      if (sec <= 0) {
+        return {
+          level: 0,
+          icon: '🌙',
+          badge: 'พักผ่อน (ปิดไฟ)',
+          desc: 'กดปุ่ม "เปิดไฟอ่านหนังสือ" เพื่อเริ่มจับเวลาและเปลี่ยนไอคอนโต๊ะหนังสือ',
+          cardClass: 'bg-slate-100 border-slate-200 text-slate-600'
+        };
+      } else if (sec < 900) {
+        // 0 - 15 นาที: เริ่มเปิดโคมไฟอ่านหนังสือ
+        return {
+          level: 1,
+          icon: '💡📖',
+          badge: 'Lv.1 เปิดโคมไฟเริ่มอ่านหนังสือ',
+          desc: 'เริ่มต้นโฟกัส! อ่านครบ 15 นาทีจะอัปเกรดเป็นไอคอนนั่งโต๊ะอ่านหนังสือ 🪑📚',
+          cardClass: 'bg-amber-50 border-amber-300 text-amber-900'
+        };
+      } else if (sec < 2700) {
+        // 15 - 45 นาที: นั่งโต๊ะอ่านหนังสือ
+        return {
+          level: 2,
+          icon: '🪑📚',
+          badge: 'Lv.2 นั่งโต๊ะอ่านหนังสือตั้งใจเรียน',
+          desc: 'กำลังโฟกัสได้ดีมาก! อ่านครบ 45 นาทีจะอัปเกรดเป็นโหมดนั่งโต๊ะอ่านหนังสือไฟลุก 🪑🔥',
+          cardClass: 'bg-sky-50 border-sky-300 text-sky-900'
+        };
+      } else if (sec < 5400) {
+        // 45 - 90 นาที: นั่งโต๊ะหนังสือขยันเข้มไฟลุก
+        return {
+          level: 3,
+          icon: '🪑🔥',
+          badge: 'Lv.3 นั่งโต๊ะหนังสือขยันเข้ม (ไฟลุก!)',
+          desc: 'สุดยอดความขยัน! กำลังลุยงานหนักอย่างต่อเนื่อง มุ่งสู่ระดับปรมาจารย์ 🪑⚡👑',
+          cardClass: 'bg-orange-50 border-orange-400 text-orange-950'
+        };
+      } else {
+        // 90+ นาที: ปรมาจารย์โต๊ะหนังสือออร่าสีทอง
+        return {
+          level: 4,
+          icon: '🪑⚡👑',
+          badge: 'Lv.4 ปรมาจารย์โต๊ะหนังสือ (โฟกัสขั้นสุดยอด!)',
+          desc: 'ขยันระดับตำนาน! นั่งโต๊ะอ่านหนังสือต่อเนื่องยาวนาน ขอปรบมือให้เลย 👏🌟',
+          cardClass: 'bg-purple-50 border-purple-400 text-purple-950'
+        };
+      }
+    }
+
+    function formatDurationHMS(totalSeconds) {
+      const sec = Math.max(0, Math.floor(totalSeconds || 0));
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
+      return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
+    }
+
+    function initYptStudyRoom() {
+      try {
+        const saved = localStorage.getItem(`nursenote_ypt_${currentStudentId}`);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          window.yptState.myStudySeconds = Number(parsed.myStudySeconds || 0);
+          window.yptState.isStudying = parsed.isStudying !== false; // เปิดไฟอัตโนมัติเมื่อเข้าใช้งานแอป
+          if (parsed.mySubject) window.yptState.mySubject = parsed.mySubject;
+        } else {
+          window.yptState.isStudying = true; // เข้าแอปปุ๊บ แสดงว่ากำลังทำงาน/อ่านหนังสือทันที
+        }
+        const savedRoom = localStorage.getItem('nursenote_ypt_room_cache');
+        if (savedRoom) {
+          const rParsed = JSON.parse(savedRoom);
+          if (rParsed.members) window.yptState.members = rParsed.members;
+          if (rParsed.chats) window.yptState.chats = rParsed.chats;
+          if (rParsed.announcement) window.yptState.announcement = rParsed.announcement;
+          if (rParsed.chatEnabled !== undefined) window.yptState.chatEnabled = rParsed.chatEnabled;
+        }
+      } catch(e) {
+        window.yptState.isStudying = true;
+      }
+
+      const subjInp = document.getElementById('myYptSubjectInput');
+      if (subjInp) subjInp.value = window.yptState.mySubject;
+
+      updateMyYptRecordInMembers();
+      updateMyYptUI();
+      renderYptMembersGrid();
+      renderYptChatMessages();
+
+      if (yptSecondInterval) clearInterval(yptSecondInterval);
+      yptSecondInterval = setInterval(() => {
+        if (window.yptState.isStudying) {
+          window.yptState.myStudySeconds += 1;
+          // เพิ่มเวลาให้เพื่อนที่กำลังเปิดไฟออนไลน์อยู่แบบเรียลไทม์
+          Object.keys(window.yptState.members).forEach(k => {
+            if (k !== getMyYptUserId() && window.yptState.members[k] && window.yptState.members[k].isStudying) {
+              window.yptState.members[k].studySeconds = (Number(window.yptState.members[k].studySeconds) || 0) + 1;
+            }
+          });
+          saveMyYptLocalState();
+          updateMyYptRecordInMembers();
+          updateMyYptUI();
+          if (window.yptState.myStudySeconds % 5 === 0) {
+            renderYptMembersGrid();
+          }
+        }
+      }, 1000);
+
+      // ซิงก์สถานะกับเซิร์ฟเวอร์ทุก 25 วินาที
+      syncYptWithServer();
+      if (yptSyncInterval) clearInterval(yptSyncInterval);
+      yptSyncInterval = setInterval(syncYptWithServer, 25000);
+    }
+
+    function getMyYptUserId() {
+      if (currentSession && currentSession.isAdmin) return 'TEACHER-ADMIN';
+      return currentStudentId || 'STU-09';
+    }
+
+    function getMyYptUserName() {
+      if (currentSession && currentSession.isAdmin) return `อ.${currentSession.name || 'อาจารย์นิเทศก์'}`;
+      const stu = GROUP_5_DATA.find(s => s.studentId === currentStudentId);
+      return stu ? stu.name : (currentSession ? currentSession.name : 'นักศึกษา');
+    }
+
+    function saveMyYptLocalState() {
+      try {
+        localStorage.setItem(`nursenote_ypt_${currentStudentId}`, JSON.stringify({
+          isStudying: window.yptState.isStudying,
+          myStudySeconds: window.yptState.myStudySeconds,
+          mySubject: window.yptState.mySubject,
+          updatedAt: Date.now()
+        }));
+        localStorage.setItem('nursenote_ypt_room_cache', JSON.stringify({
+          members: window.yptState.members,
+          chats: window.yptState.chats,
+          announcement: window.yptState.announcement,
+          chatEnabled: window.yptState.chatEnabled
+        }));
+      } catch(e) {}
+    }
+
+    function updateMyYptRecordInMembers() {
+      const uid = getMyYptUserId();
+      window.yptState.members[uid] = {
+        userId: uid,
+        name: getMyYptUserName(),
+        role: (currentSession && currentSession.isAdmin) ? 'teacher' : 'student',
+        isStudying: window.yptState.isStudying,
+        studySeconds: window.yptState.myStudySeconds,
+        subject: window.yptState.mySubject,
+        lastActive: Date.now()
+      };
+    }
+
+    function updateMyYptUI() {
+      const st = getYptStageInfo(window.yptState.isStudying ? window.yptState.myStudySeconds : 0);
+      const timerEl = document.getElementById('myYptTimerDisplay');
+      if (timerEl) timerEl.textContent = formatDurationHMS(window.yptState.myStudySeconds);
+
+      const iconEl = document.getElementById('myYptStageIcon');
+      if (iconEl) iconEl.textContent = st.icon;
+
+      const badgeEl = document.getElementById('myYptStageBadge');
+      if (badgeEl) {
+        badgeEl.textContent = st.badge;
+        badgeEl.className = `px-3 py-1 rounded-full text-xs font-black border ${st.cardClass}`;
+      }
+
+      const descEl = document.getElementById('myYptStageDesc');
+      if (descEl) descEl.textContent = st.desc;
+
+      const btn = document.getElementById('btnToggleMyYptLamp');
+      if (btn) {
+        if (window.yptState.isStudying) {
+          btn.innerHTML = '🔥 กำลังเปิดไฟอ่านหนังสือ (คลิกเพื่อพัก/ปิดไฟ)';
+          btn.className = 'w-full py-3.5 rounded-2xl bg-gradient-to-r from-rose-500 to-orange-500 hover:from-rose-600 hover:to-orange-600 text-white font-black text-sm shadow-lg transition transform active:scale-95 flex items-center justify-center gap-2';
+        } else {
+          btn.innerHTML = '💡 เปิดไฟอ่านหนังสือ (Start Study Timer)';
+          btn.className = 'w-full py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-orange-500 hover:from-amber-500 hover:to-orange-600 text-slate-950 font-black text-sm shadow-lg transition transform active:scale-95 flex items-center justify-center gap-2';
+        }
+      }
+
+      const dotHdr = document.getElementById('yptActiveDotHeader');
+      if (dotHdr) {
+        dotHdr.className = `w-2 h-2 rounded-full ${window.yptState.isStudying ? 'bg-amber-400 animate-ping' : 'bg-emerald-500'}`;
+      }
+    }
+
+    function toggleMyYptLamp() {
+      window.yptState.isStudying = !window.yptState.isStudying;
+      const subjInp = document.getElementById('myYptSubjectInput');
+      if (subjInp && subjInp.value.trim()) {
+        window.yptState.mySubject = subjInp.value.trim();
+      }
+      if (window.yptState.isStudying && window.yptState.myStudySeconds === 0) {
+        window.yptState.myStudySeconds = 1;
+      }
+      saveMyYptLocalState();
+      updateMyYptRecordInMembers();
+      updateMyYptUI();
+      renderYptMembersGrid();
+      renderAvatarGrid();
+
+      if (window.yptState.isStudying) {
+        confetti({ particleCount: 35, spread: 60, origin: { y: 0.7 } });
+      }
+      syncYptWithServer();
+    }
+
+    function updateMyYptSubject() {
+      const subjInp = document.getElementById('myYptSubjectInput');
+      if (subjInp) {
+        window.yptState.mySubject = subjInp.value.trim() || 'กำลังเขียน Care Plan / ทบทวนบทเรียน';
+        saveMyYptLocalState();
+        updateMyYptRecordInMembers();
+        renderYptMembersGrid();
+      }
+    }
+
+    function renderYptMembersGrid() {
+      const grid = document.getElementById('yptMembersGrid');
+      if (!grid) return;
+
+      let activeCount = 0;
+      let totalGroupSec = 0;
+
+      // แสดงการ์ดของนักศึกษาทุกคนในกลุ่ม 5 + อาจารย์นิเทศก์
+      const cardsHtml = GROUP_5_DATA.map((s, idx) => {
+        const mRec = window.yptState.members[s.studentId] || {
+          userId: s.studentId,
+          name: s.name,
+          isStudying: false,
+          studySeconds: 0,
+          subject: 'ยังไม่ได้เปิดโคมไฟ'
+        };
+        const isOn = Boolean(mRec.isStudying);
+        const sec = Number(mRec.studySeconds || 0);
+        if (isOn) activeCount++;
+        totalGroupSec += sec;
+
+        const st = getYptStageInfo(isOn ? Math.max(1, sec) : 0);
+
+        return `
+          <div class="rounded-3xl p-3.5 border-2 transition-all flex flex-col justify-between relative overflow-hidden ${
+            isOn
+              ? 'bg-gradient-to-b from-slate-900 via-indigo-950 to-slate-900 text-white border-amber-400 shadow-lg shadow-amber-500/10'
+              : 'bg-slate-50 text-slate-500 border-slate-200 opacity-85'
+          }">
+            ${isOn ? `<div class="absolute -top-6 -right-6 w-20 h-20 rounded-full bg-amber-400/20 blur-xl pointer-events-none"></div>` : ''}
+            
+            <div class="flex justify-between items-center text-[10px] font-black z-10">
+              <span class="px-2 py-0.5 rounded-full ${isOn ? 'bg-amber-400 text-slate-950' : 'bg-slate-200 text-slate-600'}">
+                ${isOn ? '💡 เปิดไฟอยู่' : '🌙 ปิดไฟ'}
+              </span>
+              <span class="text-lg" title="${st.badge}">${st.icon}</span>
+            </div>
+
+            <div class="my-2 flex flex-col items-center text-center z-10">
+              <div class="relative w-16 h-16 rounded-full ${isOn ? 'bg-amber-100/20 ring-2 ring-amber-400' : 'bg-white'} border-2 border-white shadow-inner flex items-center justify-center overflow-hidden">
+                ${renderStudentAvatarHtml(s, idx, 60, { className: 'pointer-events-none' })}
+              </div>
+              <div class="mt-1.5 font-black text-xs ${isOn ? 'text-white' : 'text-slate-700'} truncate w-full">${s.name}</div>
+              <div class="text-[10px] font-bold ${isOn ? 'text-amber-300' : 'text-slate-400'} truncate w-full">${isOn ? st.badge : 'พักผ่อน'}</div>
+            </div>
+
+            <div class="z-10 space-y-1 text-center">
+              <div class="py-1 px-2 rounded-xl ${isOn ? 'bg-white/10 text-amber-300' : 'bg-slate-200/70 text-slate-500'} font-mono font-black text-sm tracking-wider">
+                ${formatDurationHMS(sec)}
+              </div>
+              <div class="text-[10px] ${isOn ? 'text-indigo-200' : 'text-slate-400'} truncate px-1" title="${mRec.subject || ''}">
+                ${isOn ? `📝 ${mRec.subject || 'กำลังทำงาน/อ่านหนังสือ'}` : 'ออฟไลน์'}
+              </div>
+            </div>
+          </div>
+        `;
+      });
+
+      grid.innerHTML = cardsHtml.join('');
+
+      const cntEl = document.getElementById('yptActiveLampCount');
+      if (cntEl) cntEl.textContent = `${activeCount} คน`;
+      const totEl = document.getElementById('yptTotalGroupTime');
+      if (totEl) {
+        const hrs = Math.floor(totalGroupSec / 3600);
+        const mins = Math.floor((totalGroupSec % 3600) / 60);
+        totEl.textContent = `${hrs} ชม. ${mins} นาที`;
+      }
+      const annEl = document.getElementById('yptAnnouncementText');
+      if (annEl && window.yptState.announcement) {
+        annEl.textContent = window.yptState.announcement;
+      }
+      const lockBadge = document.getElementById('yptChatPermissionBadge');
+      const btnTogglePerm = document.getElementById('btnToggleYptChatPerm');
+      if (lockBadge) {
+        if (window.yptState.chatEnabled) {
+          lockBadge.textContent = '🟢 เปิดแชทปกติ';
+          lockBadge.className = 'px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-black';
+        } else {
+          lockBadge.textContent = '🔴 อาจารย์ล็อกแชทชั่วคราว';
+          lockBadge.className = 'px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 text-[10px] font-black';
+        }
+      }
+      if (btnTogglePerm) {
+        btnTogglePerm.textContent = window.yptState.chatEnabled ? '🔒 ปิดแชทชั่วคราว' : '🔓 เปิดให้แชทได้';
+      }
+    }
+
+    function renderYptChatMessages() {
+      const box = document.getElementById('yptChatMessagesBox');
+      if (!box) return;
+      const chats = window.yptState.chats || [];
+      if (chats.length === 0) {
+        box.innerHTML = `
+          <div class="text-center text-slate-400 text-xs py-10 font-bold">
+            💬 ยังไม่มีข้อความในห้องอ่านหนังสือ ส่งข้อความทักทายหรือถาม-ตอบ Care Plan กับเพื่อนและอาจารย์ได้เลย!
+          </div>
+        `;
+        return;
+      }
+      const myId = getMyYptUserId();
+      box.innerHTML = chats.map(c => {
+        const isMe = c.senderId === myId;
+        const isTeacher = c.senderRole === 'teacher';
+        const timeStr = c.timestamp ? new Date(c.timestamp).toLocaleTimeString('th-TH', { hour: '2-digit', minute: '2-digit' }) : '';
+        return `
+          <div class="flex flex-col ${isMe ? 'items-end' : 'items-start'}">
+            <div class="flex items-center gap-1 mb-0.5 px-1">
+              ${isTeacher ? '<span class="px-1.5 py-0.5 rounded bg-purple-600 text-white text-[9px] font-black">👩‍🏫 อาจารย์</span>' : ''}
+              <span class="text-[10px] font-black text-slate-600">${c.senderName || 'สมาชิก'}</span>
+              <span class="text-[9px] text-slate-400">${timeStr}</span>
+            </div>
+            <div class="max-w-[85%] px-3.5 py-2 rounded-2xl text-xs font-semibold shadow-2xs ${
+              isTeacher
+                ? 'bg-gradient-to-r from-purple-600 to-indigo-600 text-white rounded-tl-xs'
+                : isMe
+                  ? 'bg-indigo-600 text-white rounded-tr-xs'
+                  : 'bg-white border border-slate-200 text-slate-800 rounded-tl-xs'
+            }">
+              ${String(c.message || '').replace(/</g, '&lt;')}
+            </div>
+          </div>
+        `;
+      }).join('');
+      box.scrollTop = box.scrollHeight;
+    }
+
+    async function sendYptChatMessage() {
+      const inp = document.getElementById('yptChatInput');
+      if (!inp) return;
+      const msg = inp.value.trim();
+      if (!msg) return;
+
+      if (!window.yptState.chatEnabled && (!currentSession || !currentSession.isAdmin)) {
+        Swal.fire({ icon: 'warning', title: 'อาจารย์ปิดห้องแชทชั่วคราว', text: 'ขณะนี้อยู่ในโหมดโฟกัสอ่านหนังสือ อาจารย์นิเทศก์จึงล็อกแชทชั่วคราวครับ' });
+        return;
+      }
+
+      const chatItem = {
+        id: 'MSG-' + Date.now(),
+        senderId: getMyYptUserId(),
+        senderName: getMyYptUserName(),
+        senderRole: (currentSession && currentSession.isAdmin) ? 'teacher' : 'student',
+        message: msg,
+        timestamp: new Date().toISOString()
+      };
+
+      inp.value = '';
+      window.yptState.chats.push(chatItem);
+      if (window.yptState.chats.length > 60) window.yptState.chats = window.yptState.chats.slice(-60);
+      saveMyYptLocalState();
+      renderYptChatMessages();
+
+      try {
+        const res = await apiPost('sendYptChat', chatItem);
+        if (res && res.chats) {
+          window.yptState.chats = res.chats;
+          saveMyYptLocalState();
+          renderYptChatMessages();
+        }
+      } catch(e) {}
+    }
+
+    function sendQuickYptMessage(text) {
+      const inp = document.getElementById('yptChatInput');
+      if (inp) {
+        inp.value = text;
+        sendYptChatMessage();
+      }
+    }
+
+    async function editYptAnnouncement() {
+      if (!currentSession || !currentSession.isAdmin) return;
+      const { value: text } = await Swal.fire({
+        title: '📢 แก้ไขประกาศห้องอ่านหนังสือ YPT',
+        input: 'textarea',
+        inputValue: window.yptState.announcement,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึกประกาศ',
+        cancelButtonText: 'ยกเลิก'
+      });
+      if (text !== undefined) {
+        window.yptState.announcement = text.trim() || 'ตั้งใจอ่านหนังสือและเขียน Care Plan กันนะทุกคน 💡';
+        saveMyYptLocalState();
+        renderYptMembersGrid();
+        apiPost('updateYptRoomConfig', { announcement: window.yptState.announcement }).catch(() => {});
+      }
+    }
+
+    async function toggleYptChatPermission() {
+      if (!currentSession || !currentSession.isAdmin) return;
+      window.yptState.chatEnabled = !window.yptState.chatEnabled;
+      saveMyYptLocalState();
+      renderYptMembersGrid();
+      apiPost('updateYptRoomConfig', { chatEnabled: window.yptState.chatEnabled }).catch(() => {});
+      Swal.fire({
+        icon: 'info',
+        title: window.yptState.chatEnabled ? '🔓 เปิดห้องแชทให้นักศึกษาแล้ว' : '🔒 ล็อกห้องแชทชั่วคราว (โหมดโฟกัส)',
+        timer: 1300,
+        showConfirmButton: false
+      });
+    }
+
+    async function clearYptChatAction() {
+      if (!currentSession || !currentSession.isAdmin) return;
+      window.yptState.chats = [];
+      saveMyYptLocalState();
+      renderYptChatMessages();
+      apiPost('updateYptRoomConfig', { clearChat: true }).catch(() => {});
+      Swal.fire({ icon: 'success', title: 'ล้างข้อความแชททั้งหมดแล้ว', timer: 1100, showConfirmButton: false });
+    }
+
+    async function rewardAllStudyingStudents() {
+      if (!currentSession || !currentSession.isAdmin) return;
+      let count = 0;
+      GROUP_5_DATA.forEach(s => {
+        const m = window.yptState.members[s.studentId];
+        if (m && m.isStudying) {
+          s.heroScore = (s.heroScore !== undefined ? s.heroScore : 10) + 1;
+          const starEl = document.getElementById(`starScore_${s.studentId}`);
+          if (starEl) starEl.textContent = s.heroScore;
+          count++;
+          apiAwardHeroScore(s.studentId, 1).catch(() => {});
+        }
+      });
+      localStorage.setItem('nursenote_group5_students', JSON.stringify(GROUP_5_DATA));
+      confetti({ particleCount: 60, spread: 70, origin: { y: 0.6 } });
+      Swal.fire({
+        icon: 'success',
+        title: `🌟 มอบดาวความขยัน +1 ดาว สำเร็จ!`,
+        text: `มอบดาวให้นักศึกษาที่กำลังเปิดไฟอ่านหนังสือจำนวน ${count} คนเรียบร้อยแล้ว`,
+        timer: 1800,
+        showConfirmButton: false
+      });
+    }
+
+    async function syncYptWithServer() {
+      try {
+        updateMyYptRecordInMembers();
+        const res = await apiPost('updateYptStatus', {
+          userId: getMyYptUserId(),
+          name: getMyYptUserName(),
+          role: (currentSession && currentSession.isAdmin) ? 'teacher' : 'student',
+          isStudying: window.yptState.isStudying,
+          studySeconds: window.yptState.myStudySeconds,
+          subject: window.yptState.mySubject
+        });
+        if (res && res.success) {
+          if (res.members && typeof res.members === 'object') {
+            window.yptState.members = { ...window.yptState.members, ...res.members };
+            updateMyYptRecordInMembers();
+          }
+          if (Array.isArray(res.chats) && res.chats.length > 0) {
+            window.yptState.chats = res.chats;
+          }
+          if (res.roomConfig) {
+            if (res.roomConfig.announcement) window.yptState.announcement = res.roomConfig.announcement;
+            if (res.roomConfig.chatEnabled !== undefined) window.yptState.chatEnabled = res.roomConfig.chatEnabled;
+          }
+          saveMyYptLocalState();
+          renderYptMembersGrid();
+          renderYptChatMessages();
+          renderAvatarGrid();
+        }
+      } catch(e) {}
     }
   </script>
 
