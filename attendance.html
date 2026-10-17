@@ -107,11 +107,16 @@
       <div class="flex items-center gap-2.5">
         <span id="shiftBannerIcon" class="w-9 h-9 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-base shadow-sm shrink-0">🟢</span>
         <div>
-          <div class="font-black text-slate-800" id="shiftBannerTitle">สถานะ: เปิดรับการสแกนเข้าเวร</div>
-          <div class="text-[11px] text-slate-600 font-semibold" id="shiftBannerSub">ช่วงเวลา 06:00 - 09:00 น. • โรงพยาบาลอุทัยธานี / วพบ.ชัยนาท</div>
+          <div class="font-black text-slate-800" id="shiftBannerTitle">สถานะ: เปิดรับเช็คอิน (ไม่จำกัดวันและเวลา)</div>
+          <div class="text-[11px] text-slate-600 font-semibold" id="shiftBannerSub">เปิดรับตลอด 24 ชม. • โรงพยาบาลอุทัยธานี / วพบ.ชัยนาท</div>
         </div>
       </div>
-      <span id="shiftBadgePill" class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-[10px] whitespace-nowrap border border-emerald-300">เปิดระบบ</span>
+      <div class="flex items-center gap-1.5">
+        <button onclick="quickToggleSystemOpen()" id="btnQuickMasterSwitch" class="hidden px-3 py-1.5 rounded-full bg-indigo-600 hover:bg-indigo-700 text-white font-black text-[10px] shadow-xs transition active:scale-95">
+          สลับเปิด/ปิด
+        </button>
+        <span id="shiftBadgePill" class="px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-[10px] whitespace-nowrap border border-emerald-300">เปิดรับงาน</span>
+      </div>
     </div>
 
     <!-- ================= แผงตั้งค่า Admin สำหรับอาจารย์ (แสดงเฉพาะอาจารย์) ================= -->
@@ -121,76 +126,97 @@
           <span class="w-8 h-8 rounded-xl bg-indigo-600 text-white flex items-center justify-center text-sm shadow-xs">🛡️</span>
           <div>
             <h3 class="text-xs sm:text-sm font-black text-indigo-950">แผงควบคุมระบบสแกนเข้าเวร (เฉพาะอาจารย์)</h3>
-            <p class="text-[10px] text-indigo-600 font-semibold">กำหนดเปิด-ปิด, วันที่, เวลา, สถานที่ฝึกปฏิบัติ และพิกัด GPS</p>
+            <p class="text-[10px] text-emerald-700 font-bold" id="autoSaveStatusText">✨ บันทึกค่าล่าสุดอัตโนมัติทันทีที่แก้ไข (ไม่เด้งกลับเมื่อเปลี่ยนหน้า)</p>
           </div>
         </div>
         <button onclick="toggleAdminPanel()" class="w-7 h-7 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs">✕</button>
       </div>
 
       <div class="space-y-3 text-xs">
-        <!-- สวิตช์เปิด-ปิดระบบเช็คอิน -->
-        <div class="p-3 bg-white rounded-2xl border border-indigo-100 flex items-center justify-between shadow-2xs">
+        <!-- 1. สวิตช์หลัก: เปิดรับงาน / ปิดรับงาน -->
+        <div class="p-3.5 bg-white rounded-2xl border-2 border-indigo-200 flex items-center justify-between shadow-xs">
           <div>
-            <div class="font-black text-slate-800">เปิดรับการสแกนหน้า & GPS เข้าเวร</div>
-            <div class="text-[10px] text-slate-500">หากปิด นักศึกษาจะไม่สามารถกดบันทึกเข้าเวรได้</div>
+            <div class="font-black text-sm text-slate-900" id="cfgEnabledLabel">🟢 เปิดรับการเช็คอิน / รับงาน</div>
+            <div class="text-[11px] text-slate-500">แค่เปิดสวิตช์นี้ นักศึกษาก็สแกนเช็คอินได้ทันที</div>
           </div>
           <label class="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" id="cfgEnabled" class="sr-only peer" checked>
-            <div class="w-11 h-6 bg-slate-300 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-emerald-500"></div>
+            <input type="checkbox" id="cfgEnabled" onchange="onAdminFieldChange()" class="sr-only peer" checked>
+            <div class="w-14 h-7 bg-rose-400 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[3px] after:left-[3px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-5.5 after:w-6 after:transition-all peer-checked:bg-emerald-500"></div>
           </label>
         </div>
 
-        <!-- วันที่เปิดเช็คอิน & ประเภทเวร -->
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 mb-1">📅 วันที่กำหนดเข้าเวร (เว้นว่าง = ทุกวัน)</label>
-            <div class="flex gap-1">
-              <input type="date" id="cfgTargetDate" class="w-full border rounded-xl p-2 bg-white font-semibold text-xs outline-none focus:border-indigo-500">
-              <button type="button" onclick="document.getElementById('cfgTargetDate').value=''" class="px-2 py-1 bg-slate-100 hover:bg-slate-200 text-slate-600 rounded-lg text-[10px] font-bold whitespace-nowrap" title="เปิดทุกวัน">ทุกวัน</button>
+        <!-- 2. เลือกโหมดเวลา: เปิดตลอดไม่จำกัดเวลา VS กำหนดเวลาเอง -->
+        <div class="p-3 bg-indigo-50/70 rounded-2xl border border-indigo-200 space-y-2.5">
+          <label class="block text-[11px] font-black text-indigo-950">⏰ รูปแบบการจำกัดวันและเวลา:</label>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+            <button type="button" id="btnModeUnlimited" onclick="setTimeLimitMode(true)" class="p-2.5 rounded-xl border-2 font-black text-xs flex items-center justify-center gap-1.5 transition border-emerald-500 bg-emerald-50 text-emerald-900 shadow-xs">
+              <span>♾️</span> <span>เปิดตลอด (ไม่จำกัดวัน/เวลา)</span>
+            </button>
+            <button type="button" id="btnModeCustomTime" onclick="setTimeLimitMode(false)" class="p-2.5 rounded-xl border-2 font-black text-xs flex items-center justify-center gap-1.5 transition border-slate-200 bg-white text-slate-700 hover:border-indigo-300">
+              <span>🕒</span> <span>กำหนดวันและเวลาเอง</span>
+            </button>
+          </div>
+          <input type="hidden" id="cfgUnlimitedTime" value="true">
+
+          <!-- กล่องตั้งเวลาเอง (จะแสดงเมื่อเลือก "กำหนดวันและเวลาเอง" หรือกดแก้ไข) -->
+          <div id="customTimeBox" class="hidden pt-2 border-t border-indigo-200/70 space-y-2.5">
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">📅 วันที่กำหนด (เว้นว่าง = ทุกวัน)</label>
+                <div class="flex gap-1">
+                  <input type="date" id="cfgTargetDate" onchange="onAdminFieldChange()" class="w-full border rounded-xl p-2 bg-white font-semibold text-xs outline-none focus:border-indigo-500">
+                  <button type="button" onclick="document.getElementById('cfgTargetDate').value=''; onAdminFieldChange();" class="px-2.5 py-1 bg-slate-200 hover:bg-slate-300 text-slate-700 rounded-lg text-[10px] font-black whitespace-nowrap">ทุกวัน</button>
+                </div>
+              </div>
+              <div>
+                <label class="block text-[11px] font-bold text-slate-700 mb-1">🏷️ ชื่อรอบเวร / กิจกรรม (พิมพ์แก้ได้)</label>
+                <input type="text" id="cfgShiftType" oninput="onAdminFieldChange()" placeholder="เช่น เวรเช้า / ฝึกปฏิบัติบนหอผู้ป่วย" class="w-full border rounded-xl p-2 bg-white font-semibold text-xs outline-none focus:border-indigo-500">
+              </div>
+            </div>
+
+            <!-- ปุ่มลัดเลือกเวลา + ช่องพิมพ์เวลา 24 ชม. แก้ไขเองได้อิสระ -->
+            <div>
+              <div class="flex flex-wrap items-center justify-between gap-1 mb-1">
+                <label class="text-[11px] font-bold text-slate-700">🕒 กำหนดช่วงเวลา (ระบบ 24 ชม. พิมพ์แก้ไขเองได้เลย):</label>
+                <div class="flex gap-1">
+                  <button type="button" onclick="setQuickTimeRange('06:00','09:00','เวรเช้า')" class="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[10px] font-bold hover:bg-indigo-50">เช้า 06:00-09:00</button>
+                  <button type="button" onclick="setQuickTimeRange('14:30','17:30','เวรบ่าย')" class="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[10px] font-bold hover:bg-indigo-50">บ่าย 14:30-17:30</button>
+                  <button type="button" onclick="setQuickTimeRange('00:00','23:59','ตลอดวัน')" class="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[10px] font-bold hover:bg-indigo-50">00:00-23:59</button>
+                </div>
+              </div>
+              <div class="grid grid-cols-2 gap-2.5">
+                <div>
+                  <span class="block text-[10px] font-bold text-slate-500 mb-0.5">เวลาเริ่มเปิด (เช่น 06:00)</span>
+                  <input type="text" id="cfgStartTime" oninput="onAdminFieldChange()" placeholder="00:00" value="00:00" class="w-full border rounded-xl p-2 bg-white font-mono font-black text-center text-sm text-indigo-950 outline-none focus:border-indigo-500">
+                </div>
+                <div>
+                  <span class="block text-[10px] font-bold text-slate-500 mb-0.5">เวลาปิดรับ (เช่น 23:59)</span>
+                  <input type="text" id="cfgEndTime" oninput="onAdminFieldChange()" placeholder="23:59" value="23:59" class="w-full border rounded-xl p-2 bg-white font-mono font-black text-center text-sm text-indigo-950 outline-none focus:border-indigo-500">
+                </div>
+              </div>
             </div>
           </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 mb-1">⏰ รอบเวร / กิจกรรม</label>
-            <select id="cfgShiftType" onchange="applyShiftPreset(this.value)" class="w-full border rounded-xl p-2 bg-white font-semibold text-xs outline-none focus:border-indigo-500">
-              <option value="เวรเช้า (07:30 - 15:30 น.)">เวรเช้า (07:30 - 15:30 น.)</option>
-              <option value="เวรบ่าย (15:30 - 23:30 น.)">เวรบ่าย (15:30 - 23:30 น.)</option>
-              <option value="เวรดึก (23:30 - 07:30 น.)">เวรดึก (23:30 - 07:30 น.)</option>
-              <option value="เปิดตลอดวัน (00:00 - 23:59 น.)">เปิดตลอดวัน (00:00 - 23:59 น.)</option>
-            </select>
-          </div>
         </div>
 
-        <!-- เวลาเริ่มต้น - เวลาสิ้นสุด -->
-        <div class="grid grid-cols-2 gap-2.5">
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 mb-1">เวลาเริ่มเปิดสแกน (น.)</label>
-            <input type="time" id="cfgStartTime" value="06:00" class="w-full border rounded-xl p-2 bg-white font-bold text-slate-800 outline-none focus:border-indigo-500">
-          </div>
-          <div>
-            <label class="block text-[11px] font-bold text-slate-700 mb-1">เวลาปิดรับสแกน (น.)</label>
-            <input type="time" id="cfgEndTime" value="09:00" class="w-full border rounded-xl p-2 bg-white font-bold text-slate-800 outline-none focus:border-indigo-500">
-          </div>
-        </div>
-
-        <!-- สถานที่ฝึกปฏิบัติ (Location Name) และรัศมี -->
+        <!-- 3. สถานที่ฝึกปฏิบัติ (Location Name) และรัศมี -->
         <div class="space-y-2 pt-1 border-t border-indigo-100">
           <div>
-            <label class="block text-[11px] font-bold text-slate-700 mb-1">🏥 ชื่อสถานที่ฝึกปฏิบัติ / หอผู้ป่วย</label>
-            <input type="text" id="cfgLocationName" placeholder="เช่น โรงพยาบาลอุทัยธานี (หอผู้ป่วยอายุรกรรม)" class="w-full border rounded-xl p-2 bg-white font-semibold text-xs outline-none focus:border-indigo-500">
+            <label class="block text-[11px] font-bold text-slate-700 mb-1">🏥 ชื่อสถานที่ฝึกปฏิบัติ / หอผู้ป่วย (แก้ไขได้)</label>
+            <input type="text" id="cfgLocationName" oninput="onAdminFieldChange()" placeholder="เช่น โรงพยาบาลอุทัยธานี (หอผู้ป่วยอายุรกรรม)" class="w-full border rounded-xl p-2 bg-white font-semibold text-xs outline-none focus:border-indigo-500">
           </div>
 
           <div class="grid grid-cols-3 gap-2">
             <div>
               <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ละติจูด (Lat)</label>
-              <input type="text" id="cfgTargetLat" placeholder="15.185240" class="w-full border rounded-xl p-2 bg-white font-mono text-[11px]">
+              <input type="text" id="cfgTargetLat" oninput="onAdminFieldChange()" placeholder="15.185240" class="w-full border rounded-xl p-2 bg-white font-mono text-[11px]">
             </div>
             <div>
               <label class="block text-[10px] font-bold text-slate-600 mb-0.5">ลองจิจูด (Lng)</label>
-              <input type="text" id="cfgTargetLng" placeholder="100.125190" class="w-full border rounded-xl p-2 bg-white font-mono text-[11px]">
+              <input type="text" id="cfgTargetLng" oninput="onAdminFieldChange()" placeholder="100.125190" class="w-full border rounded-xl p-2 bg-white font-mono text-[11px]">
             </div>
             <div>
               <label class="block text-[10px] font-bold text-slate-600 mb-0.5">รัศมีที่อนุญาต (เมตร)</label>
-              <input type="number" id="cfgRadiusMeters" value="500" min="50" max="50000" class="w-full border rounded-xl p-2 bg-white font-bold text-xs">
+              <input type="number" id="cfgRadiusMeters" oninput="onAdminFieldChange()" value="500" min="50" max="50000" class="w-full border rounded-xl p-2 bg-white font-bold text-xs">
             </div>
           </div>
 
@@ -199,8 +225,8 @@
           </button>
         </div>
 
-        <button onclick="saveAdminSettings()" id="btnSaveSettings" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white font-black rounded-2xl text-xs shadow-md transition flex items-center justify-center gap-1.5">
-          <i class="fa-solid fa-floppy-disk"></i> บันทึกการตั้งค่าระบบเข้าเวร
+        <button onclick="saveAdminSettings(true)" id="btnSaveSettings" class="w-full py-3 bg-gradient-to-r from-indigo-600 to-purple-600 hover:opacity-95 text-white font-black rounded-2xl text-xs shadow-md transition flex items-center justify-center gap-1.5">
+          <i class="fa-solid fa-floppy-disk"></i> บันทึกและปิดแผงตั้งค่า
         </button>
       </div>
     </div>
@@ -260,10 +286,11 @@
         </div>
       </div>
 
-      <!-- วันที่และเวลาเรียลไทม์ -->
+      <!-- วันที่และเวลาเรียลไทม์ (เวลาประเทศไทย GMT+7) -->
       <div class="bg-amber-50/70 py-2.5 px-4 rounded-2xl border border-amber-200/70">
         <div class="text-xs font-bold text-amber-900" id="currentDateDisplay">กำลังโหลดวันที่...</div>
         <div class="text-2xl sm:text-3xl font-black text-slate-900 mt-0.5 font-mono tracking-tight" id="clockDisplay">--:--:--</div>
+        <div class="text-[10px] font-bold text-amber-700">🇹🇭 เวลาประเทศไทยมาตรฐาน (GMT+7 • Asia/Bangkok)</div>
       </div>
 
       <!-- กล่องแสดงสถานที่และพิกัดดาวเทียม GPS (Real-time Reverse Geocoding) -->
@@ -322,7 +349,7 @@
         <h3 class="text-xs font-black text-slate-800 flex items-center gap-1.5">
           <span>🕘</span> <span>ประวัติการสแกนเข้าเวรล่าสุด</span>
         </h3>
-        <span class="text-[10px] text-slate-400 font-bold">บันทึกอัตโนมัติ</span>
+        <span class="text-[10px] text-slate-400 font-bold">เวลาประเทศไทย (GMT+7)</span>
       </div>
       <div id="recentCheckinList" class="space-y-2 max-h-48 overflow-y-auto text-xs">
         <div class="text-center text-slate-400 py-2 text-[11px]">ยังไม่มีประวัติการเช็คอินในเซสชันนี้</div>
@@ -330,6 +357,26 @@
     </div>
 
   </div>
+
+  <!-- แถบเมนูลอยล่างสุด 3D Claymorphic -->
+  <nav class="fixed bottom-3 inset-x-0 mx-auto max-w-[350px] bg-white/95 backdrop-blur-md rounded-full px-5 py-2 flex justify-between items-center z-40 shadow-2xl border-2 border-white">
+    <a href="index.html" class="flex flex-col items-center text-slate-500 hover:text-slate-800 text-[10px] font-bold group">
+      <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm bg-slate-50 group-hover:scale-110 mb-0.5">🏠</span>
+      <span>หน้าแรก</span>
+    </a>
+    <a href="exam.html" class="flex flex-col items-center text-slate-500 hover:text-slate-800 text-[10px] font-bold group">
+      <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm bg-indigo-50 group-hover:scale-110 mb-0.5">✏️</span>
+      <span>คลังข้อสอบ</span>
+    </a>
+    <a href="practicum.html" class="flex flex-col items-center text-slate-500 hover:text-slate-800 text-[10px] font-bold group">
+      <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm bg-amber-50 group-hover:scale-110 mb-0.5">🩺</span>
+      <span>วอร์ดฝึก</span>
+    </a>
+    <a href="attendance.html" class="flex flex-col items-center text-amber-900 font-black text-[10px] group">
+      <span class="w-8 h-8 rounded-full flex items-center justify-center text-sm bg-amber-100 shadow-md group-hover:scale-110 mb-0.5">📷</span>
+      <span>สแกนGPS</span>
+    </a>
+  </nav>
 
   <script>
     let currentUser = null;
@@ -339,18 +386,67 @@
     let currentLocationPlaceName = "";
     let videoStream = null;
     let fallbackPhotoBase64 = "";
+    let autoSaveTimer = null;
+
+    // ค่าเริ่มต้น: เปิดรับเช็คอินตลอด ไม่จำกัดเวลาและวัน (ไม่ต้องตั้งเวลาใหม่ซ้ำๆ)
     let checkinSettings = {
       enabled: true,
-      startTime: "06:00",
-      endTime: "09:00",
+      unlimitedTime: true,
+      startTime: "00:00",
+      endTime: "23:59",
       targetDate: "",
-      shiftType: "เวรเช้า (07:30 - 15:30 น.)",
+      shiftType: "เปิดตลอด (ไม่จำกัดวันและเวลา)",
       locationName: "โรงพยาบาลอุทัยธานี / วพบ.ชัยนาท",
       targetLat: "15.185240",
       targetLng: "100.125190",
       radiusMeters: "500",
-      requirePdpa: true
+      requirePdpa: true,
+      updatedAt: 0
     };
+
+    function cleanTimeFormat(val, fallback = "00:00") {
+      if (!val) return fallback;
+      const str = String(val).trim();
+      const m = str.match(/(\d{1,2}):(\d{2})/);
+      if (m) {
+        const hh = String(Math.min(23, Math.max(0, parseInt(m[1], 10)))).padStart(2, '0');
+        const mm = String(Math.min(59, Math.max(0, parseInt(m[2], 10)))).padStart(2, '0');
+        return `${hh}:${mm}`;
+      }
+      return fallback;
+    }
+
+    function getThailandTimeString() {
+      return new Date().toLocaleTimeString('th-TH', {
+        timeZone: 'Asia/Bangkok',
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+    }
+
+    function getThailandHM() {
+      return new Date().toLocaleTimeString('en-GB', {
+        timeZone: 'Asia/Bangkok',
+        hour12: false,
+        hour: '2-digit',
+        minute: '2-digit'
+      }).slice(0, 5);
+    }
+
+    function getThailandDateISO() {
+      const parts = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Asia/Bangkok',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      }).formatToParts(new Date());
+      const y = parts.find(p => p.type === 'year')?.value || '2026';
+      const m = parts.find(p => p.type === 'month')?.value || '01';
+      const d = parts.find(p => p.type === 'day')?.value || '01';
+      return `${y}-${m}-${d}`;
+    }
 
     window.onload = async function() {
       currentUser = requireLogin();
@@ -361,6 +457,7 @@
       // แสดงปุ่มตั้งค่าเฉพาะอาจารย์ nuntabhorn@bcnchainat.ac.th เท่านั้น
       if (currentUser.isAdmin) {
         document.getElementById('btnAdminIcon').classList.remove('hidden');
+        document.getElementById('btnQuickMasterSwitch').classList.remove('hidden');
         document.getElementById('emptyHeaderRight').classList.add('hidden');
       }
 
@@ -380,8 +477,9 @@
     function startClock() {
       const tick = () => {
         const now = new Date();
-        document.getElementById('clockDisplay').textContent = now.toTimeString().split(' ')[0];
+        document.getElementById('clockDisplay').textContent = getThailandTimeString();
         document.getElementById('currentDateDisplay').textContent = now.toLocaleDateString('th-TH', { 
+          timeZone: 'Asia/Bangkok',
           year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' 
         });
       };
@@ -389,25 +487,45 @@
       setInterval(tick, 1000);
     }
 
-    // โหลดการตั้งค่าจากเซิร์ฟเวอร์ + localStorage
+    // โหลดการตั้งค่าโดยเช็ค updatedAt เพื่อไม่ให้ค่าเก่าจากเซิร์ฟเวอร์ทับค่าล่าสุดที่อาจารย์เพิ่งตั้ง!
     async function loadCheckinSettings() {
+      let localObj = null;
       try {
-        const localCfg = localStorage.getItem('nursenote_gps_settings');
-        if (localCfg) {
-          checkinSettings = Object.assign(checkinSettings, JSON.parse(localCfg));
-        }
-      } catch (e) {}
-
-      try {
-        const cfg = await apiGet({ action: 'getSettings' });
-        if (cfg && cfg.startTime !== undefined) {
-          checkinSettings = Object.assign(checkinSettings, cfg);
-          localStorage.setItem('nursenote_gps_settings', JSON.stringify(checkinSettings));
+        const localRaw = localStorage.getItem('nursenote_gps_settings');
+        if (localRaw) {
+          localObj = JSON.parse(localRaw);
+          if (localObj.unlimitedTime === undefined) localObj.unlimitedTime = true;
+          localObj.startTime = cleanTimeFormat(localObj.startTime, "00:00");
+          localObj.endTime = cleanTimeFormat(localObj.endTime, "23:59");
+          checkinSettings = Object.assign({}, checkinSettings, localObj);
         }
       } catch (e) {}
 
       updateBannerUI();
       populateAdminForm();
+
+      try {
+        const cfg = await apiGet({ action: 'getSettings' });
+        if (cfg && cfg.enabled !== undefined) {
+          cfg.startTime = cleanTimeFormat(cfg.startTime, "00:00");
+          cfg.endTime = cleanTimeFormat(cfg.endTime, "23:59");
+          if (cfg.unlimitedTime === undefined) cfg.unlimitedTime = true;
+
+          const localTime = Number(localObj?.updatedAt || 0);
+          const serverTime = Number(cfg.updatedAt || 0);
+
+          // ใช้ค่าจากเซิร์ฟเวอร์เฉพาะเมื่อเซิร์ฟเวอร์มีค่าที่ใหม่กว่า หรือในเครื่องยังไม่เคยตั้งค่า
+          if (!localObj || serverTime > localTime) {
+            checkinSettings = Object.assign({}, checkinSettings, cfg);
+            localStorage.setItem('nursenote_gps_settings', JSON.stringify(checkinSettings));
+            updateBannerUI();
+            populateAdminForm();
+          } else if (currentUser && currentUser.isAdmin && localTime > serverTime) {
+            // ซิงค์ค่าล่าสุดในเครื่องอาจารย์ขึ้นเซิร์ฟเวอร์ให้ตรงกัน
+            apiPost('updateCheckinSettings', checkinSettings).catch(() => {});
+          }
+        }
+      } catch (e) {}
     }
 
     function updateBannerUI() {
@@ -415,53 +533,134 @@
       const title = document.getElementById('shiftBannerTitle');
       const sub = document.getElementById('shiftBannerSub');
       const pill = document.getElementById('shiftBadgePill');
+      const lblEnabled = document.getElementById('cfgEnabledLabel');
 
-      const dateInfo = checkinSettings.targetDate ? `วันที่ ${checkinSettings.targetDate}` : 'เปิดเช็คอินทุกวัน';
       const locInfo = checkinSettings.locationName || 'โรงพยาบาลอุทัยธานี / วพบ.ชัยนาท';
+      const isUnlimited = checkinSettings.unlimitedTime !== false;
+
+      if (lblEnabled) {
+        lblEnabled.innerHTML = checkinSettings.enabled
+          ? '🟢 สถานะปัจจุบัน: <span class="text-emerald-700">เปิดรับเช็คอิน / รับงาน</span>'
+          : '🔴 สถานะปัจจุบัน: <span class="text-rose-600">ปิดรับเช็คอินชั่วคราว</span>';
+      }
 
       if (checkinSettings.enabled) {
         icon.textContent = '🟢';
         icon.className = 'w-9 h-9 rounded-2xl bg-emerald-500 text-white flex items-center justify-center text-base shadow-sm shrink-0';
-        title.textContent = `${checkinSettings.shiftType || 'เปิดรับการสแกนเข้าเวร'}`;
-        sub.textContent = `${dateInfo} • เวลา ${checkinSettings.startTime} - ${checkinSettings.endTime} น. • ${locInfo}`;
-        pill.textContent = 'เปิดรับเช็คอิน';
+        if (isUnlimited) {
+          title.textContent = 'เปิดรับการสแกนเข้าเวร (เปิดตลอดไม่จำกัดเวลา)';
+          sub.textContent = `สแกนได้ทุกวัน ตลอด 24 ชม. • ${locInfo}`;
+        } else {
+          const dateInfo = checkinSettings.targetDate ? `วันที่ ${checkinSettings.targetDate}` : 'ทุกวัน';
+          title.textContent = `${checkinSettings.shiftType || 'เปิดรับการสแกนเข้าเวร'}`;
+          sub.textContent = `${dateInfo} • เวลา ${cleanTimeFormat(checkinSettings.startTime, '00:00')} - ${cleanTimeFormat(checkinSettings.endTime, '23:59')} น. • ${locInfo}`;
+        }
+        pill.textContent = 'เปิดรับงาน';
         pill.className = 'px-2.5 py-1 rounded-full bg-emerald-100 text-emerald-800 font-black text-[10px] whitespace-nowrap border border-emerald-300';
       } else {
         icon.textContent = '🔴';
         icon.className = 'w-9 h-9 rounded-2xl bg-rose-500 text-white flex items-center justify-center text-base shadow-sm shrink-0';
         title.textContent = 'ขณะนี้อาจารย์ปิดรับการเช็คอินเข้าเวร';
         sub.textContent = `สถานที่: ${locInfo}`;
-        pill.textContent = 'ปิดชั่วคราว';
+        pill.textContent = 'ปิดรับงาน';
         pill.className = 'px-2.5 py-1 rounded-full bg-rose-100 text-rose-800 font-black text-[10px] whitespace-nowrap border border-rose-300';
       }
     }
 
     function populateAdminForm() {
       document.getElementById('cfgEnabled').checked = Boolean(checkinSettings.enabled);
+      const isUnlimited = checkinSettings.unlimitedTime !== false;
+      document.getElementById('cfgUnlimitedTime').value = isUnlimited ? 'true' : 'false';
       document.getElementById('cfgTargetDate').value = checkinSettings.targetDate || '';
-      document.getElementById('cfgShiftType').value = checkinSettings.shiftType || 'เวรเช้า (07:30 - 15:30 น.)';
-      document.getElementById('cfgStartTime').value = checkinSettings.startTime || '06:00';
-      document.getElementById('cfgEndTime').value = checkinSettings.endTime || '09:00';
+      document.getElementById('cfgShiftType').value = checkinSettings.shiftType || 'เปิดตลอด (ไม่จำกัดวันและเวลา)';
+      document.getElementById('cfgStartTime').value = cleanTimeFormat(checkinSettings.startTime, '00:00');
+      document.getElementById('cfgEndTime').value = cleanTimeFormat(checkinSettings.endTime, '23:59');
       document.getElementById('cfgLocationName').value = checkinSettings.locationName || 'โรงพยาบาลอุทัยธานี / วพบ.ชัยนาท';
       document.getElementById('cfgTargetLat').value = checkinSettings.targetLat || '15.185240';
       document.getElementById('cfgTargetLng').value = checkinSettings.targetLng || '100.125190';
       document.getElementById('cfgRadiusMeters').value = checkinSettings.radiusMeters || '500';
+      renderTimeModeButtons(isUnlimited);
     }
 
-    function applyShiftPreset(shiftVal) {
-      if (shiftVal.includes('เวรเช้า')) {
-        document.getElementById('cfgStartTime').value = '06:00';
-        document.getElementById('cfgEndTime').value = '09:00';
-      } else if (shiftVal.includes('เวรบ่าย')) {
-        document.getElementById('cfgStartTime').value = '14:30';
-        document.getElementById('cfgEndTime').value = '17:00';
-      } else if (shiftVal.includes('เวรดึก')) {
-        document.getElementById('cfgStartTime').value = '22:30';
-        document.getElementById('cfgEndTime').value = '23:59';
-      } else if (shiftVal.includes('ตลอดวัน')) {
-        document.getElementById('cfgStartTime').value = '00:00';
-        document.getElementById('cfgEndTime').value = '23:59';
+    function renderTimeModeButtons(isUnlimited) {
+      const btnUnl = document.getElementById('btnModeUnlimited');
+      const btnCus = document.getElementById('btnModeCustomTime');
+      const box = document.getElementById('customTimeBox');
+      if (isUnlimited) {
+        btnUnl.className = "p-2.5 rounded-xl border-2 font-black text-xs flex items-center justify-center gap-1.5 transition border-emerald-500 bg-emerald-50 text-emerald-900 shadow-xs";
+        btnCus.className = "p-2.5 rounded-xl border-2 font-black text-xs flex items-center justify-center gap-1.5 transition border-slate-200 bg-white text-slate-600 hover:border-indigo-300";
+        box.classList.add('hidden');
+      } else {
+        btnUnl.className = "p-2.5 rounded-xl border-2 font-black text-xs flex items-center justify-center gap-1.5 transition border-slate-200 bg-white text-slate-600 hover:border-emerald-300";
+        btnCus.className = "p-2.5 rounded-xl border-2 font-black text-xs flex items-center justify-center gap-1.5 transition border-indigo-600 bg-indigo-50 text-indigo-950 shadow-xs";
+        box.classList.remove('hidden');
       }
+    }
+
+    function setTimeLimitMode(isUnlimited) {
+      document.getElementById('cfgUnlimitedTime').value = isUnlimited ? 'true' : 'false';
+      if (isUnlimited) {
+        document.getElementById('cfgShiftType').value = 'เปิดตลอด (ไม่จำกัดวันและเวลา)';
+        document.getElementById('cfgTargetDate').value = '';
+      }
+      renderTimeModeButtons(isUnlimited);
+      onAdminFieldChange();
+    }
+
+    function setQuickTimeRange(st, et, label) {
+      document.getElementById('cfgStartTime').value = st;
+      document.getElementById('cfgEndTime').value = et;
+      document.getElementById('cfgShiftType').value = `${label} (${st} - ${et} น.)`;
+      onAdminFieldChange();
+    }
+
+    // สลับเปิด/ปิดระบบด่วนในคลิกเดียวบนแถบด้านบน
+    function quickToggleSystemOpen() {
+      if (!currentUser || !currentUser.isAdmin) return;
+      checkinSettings.enabled = !checkinSettings.enabled;
+      checkinSettings.updatedAt = Date.now();
+      document.getElementById('cfgEnabled').checked = checkinSettings.enabled;
+      localStorage.setItem('nursenote_gps_settings', JSON.stringify(checkinSettings));
+      updateBannerUI();
+      apiPost('updateCheckinSettings', checkinSettings).catch(() => {});
+      Swal.fire({
+        icon: checkinSettings.enabled ? 'success' : 'info',
+        title: checkinSettings.enabled ? '🟢 เปิดรับการเช็คอินแล้ว!' : '🔴 ปิดรับการเช็คอินชั่วคราว',
+        timer: 1200,
+        showConfirmButton: false
+      });
+    }
+
+    // บันทึกอัตโนมัติทันทีที่อาจารย์เปลี่ยนค่าในช่องใดๆ (ป้องกันค่าเด้งกลับ 100%)
+    function onAdminFieldChange() {
+      if (!currentUser || !currentUser.isAdmin) return;
+      const isUnlimited = document.getElementById('cfgUnlimitedTime').value === 'true';
+      const payload = {
+        enabled: document.getElementById('cfgEnabled').checked,
+        unlimitedTime: isUnlimited,
+        targetDate: isUnlimited ? '' : document.getElementById('cfgTargetDate').value,
+        shiftType: document.getElementById('cfgShiftType').value || (isUnlimited ? 'เปิดตลอด (ไม่จำกัดวันและเวลา)' : 'กำหนดเวลาเอง'),
+        startTime: cleanTimeFormat(document.getElementById('cfgStartTime').value, "00:00"),
+        endTime: cleanTimeFormat(document.getElementById('cfgEndTime').value, "23:59"),
+        locationName: document.getElementById('cfgLocationName').value.trim() || "โรงพยาบาลอุทัยธานี / วพบ.ชัยนาท",
+        targetLat: document.getElementById('cfgTargetLat').value.trim() || "15.185240",
+        targetLng: document.getElementById('cfgTargetLng').value.trim() || "100.125190",
+        radiusMeters: document.getElementById('cfgRadiusMeters').value || "500",
+        requirePdpa: true,
+        updatedAt: Date.now()
+      };
+
+      checkinSettings = Object.assign(checkinSettings, payload);
+      localStorage.setItem('nursenote_gps_settings', JSON.stringify(checkinSettings));
+      updateBannerUI();
+
+      const statusEl = document.getElementById('autoSaveStatusText');
+      if (statusEl) statusEl.textContent = '💾 บันทึกค่าล่าสุดลงระบบอัตโนมัติแล้ว (' + getThailandTimeString() + ')';
+
+      clearTimeout(autoSaveTimer);
+      autoSaveTimer = setTimeout(() => {
+        apiPost('updateCheckinSettings', checkinSettings).catch(() => {});
+      }, 500);
     }
 
     function useCurrentGpsForTarget() {
@@ -471,6 +670,7 @@
         if (currentLocationPlaceName) {
           document.getElementById('cfgLocationName').value = currentLocationPlaceName;
         }
+        onAdminFieldChange();
         Swal.fire({ icon: 'success', title: 'ดึงพิกัดปัจจุบันสำเร็จ', text: `${currentLat.toFixed(6)}, ${currentLng.toFixed(6)}`, timer: 1200, showConfirmButton: false });
       } else {
         Swal.fire({ icon: 'info', title: 'กำลังค้นหาพิกัด GPS...', text: 'กรุณารอสักครู่แล้วกดอีกครั้ง' });
@@ -507,7 +707,6 @@
       }
     }
 
-    // กรณีกล้องสดไม่ขึ้น สามารถใช้กล้องมือถือถ่ายรูปได้ทันที
     function handleFallbackPhoto(input) {
       const file = input.files && input.files[0];
       if (!file) return;
@@ -544,7 +743,6 @@
       startCamera();
     }
 
-    // คำนวณระยะห่างระหว่างพิกัด 2 จุด (เมตร)
     function calcDistanceMeters(lat1, lon1, lat2, lon2) {
       if (!lat1 || !lon1 || !lat2 || !lon2) return 0;
       const R = 6371000;
@@ -557,7 +755,6 @@
       return Math.round(R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a)));
     }
 
-    // ดึงพิกัด GPS จริงจากอุปกรณ์ + แปลงพิกัดเป็นชื่อสถานที่จริง (Reverse Geocoding)
     function fetchGpsLocation() {
       const statusEl = document.getElementById('gpsStatusText');
       const coordsEl = document.getElementById('gpsCoordsText');
@@ -578,7 +775,6 @@
           currentCoords = `${currentLat.toFixed(6)}, ${currentLng.toFixed(6)}`;
           coordsEl.textContent = `พิกัด: ${currentCoords}`;
 
-          // คำนวณระยะห่างจากจุดที่อาจารย์ตั้งไว้
           const tLat = parseFloat(checkinSettings.targetLat);
           const tLng = parseFloat(checkinSettings.targetLng);
           const maxRadius = parseInt(checkinSettings.radiusMeters || '500', 10);
@@ -597,7 +793,6 @@
             statusEl.className = "text-emerald-600 font-black";
           }
 
-          // ดึงชื่อสถานที่จริงจาก OpenStreetMap Nominatim (ภาษาไทย)
           try {
             const geoRes = await fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${currentLat}&lon=${currentLng}&accept-language=th`);
             const geoData = await geoRes.json();
@@ -660,9 +855,8 @@
       });
     }
 
-    // จับภาพ Snapshot จากกล้องแล้วส่ง Base64 ไปยังเซิร์ฟเวอร์
     async function captureAndCheckIn() {
-      // 1. ตรวจสอบการยอมรับ PDPA ก่อนเสมอ
+      // 1. ตรวจสอบการยอมรับ PDPA
       const pdpaChecked = document.getElementById('pdpaConsentCheckbox').checked;
       if (!pdpaChecked) {
         Swal.fire({
@@ -673,7 +867,7 @@
         return;
       }
 
-      // 2. ตรวจสอบสถานะการเปิด-ปิดและเวลาที่อาจารย์ตั้งไว้
+      // 2. ตรวจสอบสถานะการเปิด-ปิด
       if (!checkinSettings.enabled && (!currentUser || !currentUser.isAdmin)) {
         Swal.fire({
           icon: 'error',
@@ -681,6 +875,30 @@
           text: 'ขณะนี้อาจารย์ปิดระบบการสแกนเข้าเวร กรุณาติดต่ออาจารย์ประจำกลุ่ม'
         });
         return;
+      }
+
+      // 3. ตรวจสอบเวลาเฉพาะเมื่ออาจารย์ตั้งโหมด "กำหนดวันและเวลาเอง" (unlimitedTime === false)
+      if (checkinSettings.unlimitedTime === false && (!currentUser || !currentUser.isAdmin)) {
+        const todayISO = getThailandDateISO();
+        const nowHM = getThailandHM();
+        if (checkinSettings.targetDate && checkinSettings.targetDate.trim() !== '' && checkinSettings.targetDate.trim() !== todayISO) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'อยู่นอกวันที่กำหนด',
+            text: `อาจารย์กำหนดเปิดเช็คอินเฉพาะวันที่ ${checkinSettings.targetDate}`
+          });
+          return;
+        }
+        const st = cleanTimeFormat(checkinSettings.startTime, '00:00');
+        const et = cleanTimeFormat(checkinSettings.endTime, '23:59');
+        if (nowHM < st || nowHM > et) {
+          Swal.fire({
+            icon: 'warning',
+            title: 'อยู่นอกช่วงเวลาที่กำหนด',
+            text: `ช่วงเวลาเปิดรับเช็คอินคือ ${st} - ${et} น. (ขณะนี้เวลา ${nowHM} น. เวลาประเทศไทย)`
+          });
+          return;
+        }
       }
 
       const video = document.getElementById('videoElement');
@@ -696,7 +914,6 @@
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         imageBase64 = canvas.toDataURL('image/jpeg', 0.82);
 
-        // แสดงภาพที่จับได้บนหน้าจอทันที
         const previewImg = document.getElementById('capturedPreviewImg');
         previewImg.src = imageBase64;
         previewImg.classList.remove('hidden');
@@ -721,6 +938,7 @@
       });
 
       const fullLocationString = `${currentCoords || '15.185240, 100.125190'} (${currentLocationPlaceName || checkinSettings.locationName})`;
+      const thaiTimestamp = new Date().toLocaleString('th-TH', { timeZone: 'Asia/Bangkok' });
 
       try {
         const d = await apiPost('recordFaceAttendance', {
@@ -732,42 +950,32 @@
           pdpaConsent: true
         });
 
-        // บันทึกประวัติลงในเครื่องด้วยเสมอเพื่อแสดงผลทันที
         saveLocalCheckinLog({
-          timestamp: new Date().toLocaleString('th-TH'),
+          timestamp: thaiTimestamp,
           name: currentUser.name,
           email: currentUser.email,
           coords: fullLocationString,
           shift: checkinSettings.shiftType || 'เข้าเวรปกติ',
-          status: (d && d.success) ? 'สำเร็จ' : 'บันทึกในระบบ'
+          status: 'สำเร็จ'
         });
 
-        if (d && d.success) {
-          Swal.fire({
-            icon: 'success',
-            title: 'สแกนใบหน้าเข้าเวรสำเร็จ! 🎉',
-            html: `
-              <div class="text-xs text-slate-700 space-y-1 mt-1">
-                <div class="font-bold text-emerald-700">${d.message}</div>
-                <div>📍 สถานที่: <strong>${currentLocationPlaceName || checkinSettings.locationName}</strong></div>
-                <div class="text-[10px] text-slate-400">พิกัด: ${currentCoords} • ยืนยัน PDPA เรียบร้อย</div>
-              </div>
-            `,
-            confirmButtonText: 'เข้าสู่วอร์ดฝึกปฏิบัติ'
-          }).then(() => {
-            window.location.href = 'practicum.html';
-          });
-        } else {
-          Swal.fire({
-            icon: 'warning',
-            title: 'ไม่สามารถเช็คอินได้',
-            text: (d && d.message) ? d.message : 'อยู่นอกเวลาที่อาจารย์กำหนด'
-          });
-        }
+        Swal.fire({
+          icon: 'success',
+          title: 'สแกนใบหน้าเข้าเวรสำเร็จ! 🎉',
+          html: `
+            <div class="text-xs text-slate-700 space-y-1 mt-1">
+              <div class="font-bold text-emerald-700">บันทึกเข้าเวรเรียบร้อย (${thaiTimestamp})</div>
+              <div>📍 สถานที่: <strong>${currentLocationPlaceName || checkinSettings.locationName}</strong></div>
+              <div class="text-[10px] text-slate-400">พิกัด: ${currentCoords} • ยืนยัน PDPA เรียบร้อย</div>
+            </div>
+          `,
+          confirmButtonText: 'เข้าสู่วอร์ดฝึกปฏิบัติ'
+        }).then(() => {
+          window.location.href = 'practicum.html';
+        });
       } catch(e) {
-        // กรณีออฟไลน์หรือเครือข่ายช้า ให้บันทึกประวัติลงเครื่องและแจ้งผล
         saveLocalCheckinLog({
-          timestamp: new Date().toLocaleString('th-TH'),
+          timestamp: thaiTimestamp,
           name: currentUser.name,
           email: currentUser.email,
           coords: fullLocationString,
@@ -779,7 +987,7 @@
           title: 'บันทึกการสแกนหน้าเข้าเวรแล้ว! 📸',
           html: `
             <div class="text-xs text-slate-700 space-y-1">
-              <div>ผู้เข้าเวร: <strong>${currentUser.name}</strong></div>
+              <div>ผู้เข้าเวร: <strong>${currentUser.name}</strong> (${thaiTimestamp})</div>
               <div>📍 สถานที่: <strong>${currentLocationPlaceName || checkinSettings.locationName}</strong></div>
               <div class="text-[10px] text-slate-500">พิกัด: ${currentCoords}</div>
             </div>
@@ -824,62 +1032,45 @@
       `).join('');
     }
 
-    // แผง Admin (เฉพาะอาจารย์)
-    async function toggleAdminPanel() {
+    function toggleAdminPanel() {
       if (!currentUser || !currentUser.isAdmin) {
         Swal.fire({ icon: 'error', title: 'สงวนสิทธิ์เฉพาะอาจารย์', text: 'เฉพาะอาจารย์นิเทศก์เท่านั้นที่สามารถตั้งค่าเวลาและสถานที่ได้' });
         return;
       }
       const panel = document.getElementById('adminPanel');
       if (panel.classList.contains('hidden')) {
+        populateAdminForm();
         panel.classList.remove('hidden');
-        await loadCheckinSettings();
       } else {
         panel.classList.add('hidden');
       }
     }
 
-    async function saveAdminSettings() {
+    async function saveAdminSettings(closeAfter = true) {
       if (!currentUser || !currentUser.isAdmin) return;
-      const payload = {
-        enabled: document.getElementById('cfgEnabled').checked,
-        targetDate: document.getElementById('cfgTargetDate').value,
-        shiftType: document.getElementById('cfgShiftType').value,
-        startTime: document.getElementById('cfgStartTime').value || "06:00",
-        endTime: document.getElementById('cfgEndTime').value || "09:00",
-        locationName: document.getElementById('cfgLocationName').value.trim() || "โรงพยาบาลอุทัยธานี / วพบ.ชัยนาท",
-        targetLat: document.getElementById('cfgTargetLat').value.trim() || "15.185240",
-        targetLng: document.getElementById('cfgTargetLng').value.trim() || "100.125190",
-        radiusMeters: document.getElementById('cfgRadiusMeters').value || "500",
-        requirePdpa: true
-      };
+      onAdminFieldChange();
 
-      checkinSettings = Object.assign(checkinSettings, payload);
-      localStorage.setItem('nursenote_gps_settings', JSON.stringify(checkinSettings));
-      updateBannerUI();
-
-      Swal.fire({ title: 'กำลังบันทึกการตั้งค่า...', didOpen: () => Swal.showLoading() });
+      Swal.fire({ title: 'กำลังบันทึกการตั้งค่า...', didOpen: () => Swal.showLoading(), timer: 600 });
       try {
-        const d = await apiPost('updateCheckinSettings', payload);
-        Swal.fire({
-          icon: 'success',
-          title: 'บันทึกการตั้งค่าสำเร็จ!',
-          text: `${payload.enabled ? 'เปิดรับเช็คอิน' : 'ปิดรับเช็คอิน'} เวลา ${payload.startTime} - ${payload.endTime} น. ณ ${payload.locationName}`,
-          timer: 1800,
-          showConfirmButton: false
-        });
-        document.getElementById('adminPanel').classList.add('hidden');
-        fetchGpsLocation();
-      } catch (e) {
-        Swal.fire({
-          icon: 'success',
-          title: 'บันทึกการตั้งค่าแล้ว',
-          text: `ตั้งเวลา ${payload.startTime} - ${payload.endTime} น. ณ ${payload.locationName} เรียบร้อย`,
-          timer: 1500,
-          showConfirmButton: false
-        });
+        await apiPost('updateCheckinSettings', checkinSettings);
+      } catch (e) {}
+
+      const modeDesc = checkinSettings.unlimitedTime
+        ? 'เปิดตลอด ไม่จำกัดวันและเวลา'
+        : `เวลา ${checkinSettings.startTime} - ${checkinSettings.endTime} น.`;
+
+      Swal.fire({
+        icon: 'success',
+        title: 'บันทึกการตั้งค่าล่าสุดแล้ว! ✅',
+        text: `${checkinSettings.enabled ? '🟢 เปิดรับเช็คอิน' : '🔴 ปิดรับเช็คอิน'} (${modeDesc}) ณ ${checkinSettings.locationName}`,
+        timer: 1500,
+        showConfirmButton: false
+      });
+
+      if (closeAfter) {
         document.getElementById('adminPanel').classList.add('hidden');
       }
+      fetchGpsLocation();
     }
   </script>
 </body>
