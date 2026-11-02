@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="th">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ICU Cases · NurseNote</title>
+  <script src="auth.js"></script>
+  <style>
+    :root{font-family:system-ui,"Noto Sans Thai",sans-serif;color:#183047;background:#f3f7f8}*{box-sizing:border-box}body{margin:0}header{background:#123c53;color:white;padding:20px max(20px,calc((100vw - 960px)/2))}h1{margin:0;font-size:1.6rem}header p{margin:5px 0 0;color:#cde5e9}main{max-width:960px;margin:auto;padding:24px 16px 60px}nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}button{font:inherit;cursor:pointer;border:1px solid #b4cbd0;background:white;border-radius:9px;padding:9px 13px;color:#123c53}button:hover{border-color:#087e86}button.primary,.active{background:#087e86;color:white;border-color:#087e86}.card{background:white;border:1px solid #d9e5e7;border-radius:14px;padding:20px;margin:14px 0;box-shadow:0 2px 8px #123c5310}h2{margin:0 0 10px;font-size:1.35rem}h3{font-size:1.05rem;margin:16px 0 8px}p{line-height:1.65}.muted{color:#55717b}.badge{display:inline-block;background:#e8f5f3;color:#087e70;padding:4px 9px;border-radius:99px;font-size:.85rem}label{display:block;margin:8px 0;line-height:1.5}input[type=radio]{margin-right:8px}textarea,input[type=text],select{font:inherit;width:100%;padding:10px;border:1px solid #b4cbd0;border-radius:8px}textarea{min-height:110px}fieldset{border:0;padding:0;margin:18px 0}legend{font-weight:700;margin-bottom:7px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px}.step{font-weight:700;color:#087e86}.feedback{border-left:4px solid #087e86;background:#eef9f7;padding:12px;margin-top:14px}.danger{border-left-color:#b44a36;background:#fff3ef}.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:18px}.small{font-size:.9rem}.hidden{display:none}table{width:100%;border-collapse:collapse}td,th{padding:8px;border-bottom:1px solid #d9e5e7;text-align:left}footer{max-width:960px;margin:auto;padding:0 16px 32px;color:#55717b;font-size:.85rem}
+    .nav-back{display:inline-block;text-decoration:none;border:1px solid #b4cbd0;background:white;border-radius:9px;padding:9px 13px;color:#123c53}
+  </style>
+</head>
+<body>
+<header><h1>NurseNote · ICU Cases</h1><p>การเรียนรู้และประเมินภาคปฏิบัติตาม ADDIE · วพบ. ชัยนาท</p></header>
+<main>
+  <nav aria-label="เมนูหลัก"><a class="nav-back" href="practicum.html">← วอร์ดฝึก</a><button id="homeTab" class="active">ICU Cases</button><button id="assessTab">Rubric อาจารย์</button><button id="exportTab">Export ข้อมูล</button></nav>
+  <div id="app"></div>
+</main>
+<footer>ใช้กรณีผู้ป่วยจำลองเท่านั้น · เนื้อหาและเกณฑ์คะแนนต้องผ่านการทบทวนโดยผู้เชี่ยวชาญ ICU และอาจารย์ประจำรายวิชาก่อนใช้ประเมินจริง · ผลบันทึกในเบราว์เซอร์เครื่องนี้ และส่งไฟล์ให้อาจารย์เพื่อนำเข้า</footer>
+<script src="icu-cases.js"></script>
+</body></html>
+
